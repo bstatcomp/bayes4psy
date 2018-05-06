@@ -1,2 +1,2 @@
 # EasyBayes
-A library intended to simplify use of Bayesian statistics in R.
+A library intended to simplify the use of Bayesian statistics in R.
