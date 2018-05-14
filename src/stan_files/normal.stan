@@ -11,9 +11,9 @@ data {
 transformed data {
 	real yt[n];
 
-	yt[i] = y[i];
+	yt = y;
 	if (log_skewed == 1) {
-		yt[i] = log(yt[i]);
+		yt = log(yt);
 	}
 }
 
