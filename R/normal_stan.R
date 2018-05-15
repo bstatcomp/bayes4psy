@@ -1,13 +1,36 @@
 #' Bayesian normal model
 #'
 #' @export
-#' @param x Numeric vector of input values.
-#' @param y Numberic vector of output values.
+#' @param y Numeric vector of values.
 #' @param ... Arguments passed to `rstan::sampling` (e.g. iter, chains).
 #' @return An object of class `stanfit` returned by `rstan::sampling`
 #'
-normal_stan <- function(y, ...) {
-  standata <- list(n = length(y), y = y, yMu = 0, ySd = 1, uL = 0, uH = 2, log_skewed = FALSE)
-  out <- rstan::sampling(stanmodels$normal, data = standata, ...)
+normal_stan <- function(y,
+                        yMu = 0,
+                        ySd = 1,
+                        uL = 0,
+                        uH = 2,
+                        warmup = 1000,
+                        samples = 500,
+                        seed = sample.int(.Machine$integer.max, 1)) {
+
+  stan_data <- list(
+    n = length(y),
+    y = y,
+    yMu = yMu,
+    ySd = ySd,
+    uL = uL,
+    uH = uH,
+    log_skewed = FALSE
+  )
+
+  out <- rstan::sampling(stanmodels$normal,
+    data = stan_data,
+    chains = 1,
+    warmup = warmup,
+    samples = samples,
+    seed = seed
+  )
+
   return(out)
 }
