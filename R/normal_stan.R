@@ -11,7 +11,7 @@ normal_stan <- function(y,
                         uL = 0,
                         uH = 2,
                         warmup = 1000,
-                        samples = 500,
+                        iter = 1500,
                         seed = sample.int(.Machine$integer.max, 1)) {
 
   stan_data <- list(
@@ -28,7 +28,7 @@ normal_stan <- function(y,
     data = stan_data,
     chains = 1,
     warmup = warmup,
-    samples = samples,
+    iter = iter,
     seed = seed
   )
 

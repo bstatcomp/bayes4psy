@@ -4,7 +4,8 @@
 \alias{normal_stan}
 \title{Bayesian normal model}
 \usage{
-normal_stan(y, yMu = 0, ySd = 1, uL = 0, uH = 2, iter = 1000)
+normal_stan(y, yMu = 0, ySd = 1, uL = 0, uH = 2, warmup = 1000,
+  iter = 1500, seed = sample.int(.Machine$integer.max, 1))
 }
 \arguments{
 \item{y}{Numeric vector of values.}

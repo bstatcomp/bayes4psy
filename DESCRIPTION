@@ -1,15 +1,28 @@
 Package: EasyBayes
 Version: 0.0.0.9000
-Title: What the Package Does (One Line, Title Case)
-Description: What the package does (one paragraph).
-Authors@R: person("First", "Last", , "first.last@example.com", c("aut", "cre"))
+Title: Bayesian applied modelling for social sciences
+Description: A user-friendly implementation of Bayesian statistical methods commonly used in social sciences. All used models are precompiled, meaning that users only need to call appropriate functions using their data.
+Authors@R:
+    c(person("Jure", "Demšar", , "jure.demsar@fri.uni-lj.si", c("cre", "aut")),
+    person("Grega", "Repovš", , "grega.repovs@psy.ff.uni-lj.si", "aut"),
+    person("Erik", "Štrumbelj", , "erik.strumbelj@fri.uni-lj.si", "aut"))
 License: GPL (>=3)
 Encoding: UTF-8
 LazyData: true
 ByteCompile: true
-Depends: R (>= 3.4.0), Rcpp (>= 0.12.16), methods
-Imports: rstan (>= 2.17.3), rstantools (>= 1.5.0)
-LinkingTo: StanHeaders (>= 2.17.2), rstan (>= 2.17.3), BH (>= 1.66.0-1), Rcpp (>= 0.12.16), RcppEigen (>= 0.3.3.4.0)
+Depends:
+    R (>= 3.4.0),
+    Rcpp (>= 0.12.16),
+    methods
+Imports:
+    rstan (>= 2.17.3),
+    rstantools (>= 1.5.0)
+LinkingTo:
+    StanHeaders (>= 2.17.2),
+    rstan (>= 2.17.3),
+    BH (>= 1.66.0-1),
+    Rcpp (>= 0.12.16),
+    RcppEigen (>= 0.3.3.4.0)
 SystemRequirements: GNU make
 NeedsCompilation: yes
 RoxygenNote: 6.0.1
