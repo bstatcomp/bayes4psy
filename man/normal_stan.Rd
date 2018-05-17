@@ -4,13 +4,18 @@
 \alias{normal_stan}
 \title{Bayesian normal model}
 \usage{
-normal_stan(y, yMu = 0, ySd = 1, uL = 0, uH = 2, warmup = 1000,
-  iter = 1500, seed = sample.int(.Machine$integer.max, 1))
+normal_stan(y, log_skewed = FALSE)
 }
 \arguments{
 \item{y}{Numeric vector of values.}
 
-\item{...}{Arguments passed to `rstan::sampling` (e.g. iter, chains).}
+\item{log_skewed}{Optional parameter for determing if data is log skewed, default = FALSE.}
+
+\item{warmup}{Optional parameter for number of burnin, warmup steps, default = 1000.}
+
+\item{iter}{Optional parameter for number of iterations (warmup + samples), default = 1500.}
+
+\item{seed}{Optional parameter for determinng random seed used in Stan MCMC, default = sample.int(.Machine$integer.max, 1)}
 }
 \value{
 An object of class `stanfit` returned by `rstan::sampling`

@@ -1,0 +1,27 @@
+#' Bayesian t-test
+#'
+#' @export
+#' @param y1 Numeric vector of values for the first group.
+#' @param y1 Numeric vector of values for the second group.
+#' @param ROPE optional parameter for region of practical equivalence, defaults = NULL.
+#' @param seed Optional parameter for determinng random seed used in Stan MCMC, default = sample.int(.Machine$integer.max, 1)
+#' @return An object of class `ttest_bayes_results`
+#'
+ttest_bayes <- function(y1,
+                        y2,
+                        ROPE = 0) {
+
+  # fit normal distribution to first group
+  fit1 <- normal_stan(y1)
+  extract1 <- rstan::extract(fit1)
+
+  # fit normal distribution to second group
+  fit2 <- normal_stan(y2)
+  extract2 <- rstan::extract(fit2)
+
+  # create output class
+  out <- new("ttest_results", y1_samples = extract1, y2_samples = extract2, ROPE = ROPE)
+
+  # return
+  return(out)
+}
