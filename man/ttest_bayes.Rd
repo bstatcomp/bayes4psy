@@ -9,11 +9,9 @@ ttest_bayes(y1, y2, ROPE = 0)
 \arguments{
 \item{y1}{Numeric vector of values for the first group.}
 
+\item{y2}{Numeric vector of values for the second group.}
+
 \item{ROPE}{optional parameter for region of practical equivalence, defaults = NULL.}
-
-\item{y1}{Numeric vector of values for the second group.}
-
-\item{seed}{Optional parameter for determinng random seed used in Stan MCMC, default = sample.int(.Machine$integer.max, 1)}
 }
 \value{
 An object of class `ttest_bayes_results`
