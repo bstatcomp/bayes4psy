@@ -11,7 +11,7 @@ test_that("ttest works", {
   y_cameroon = rnorm(500, 160.4, 6.3)
 
   # test
-  ttest_results <- ttest_bayes(y_brazil, y_cameroon, ROPE = 1)
+  expect_warning(ttest_results <- ttest_bayes(y_brazil, y_cameroon, ROPE = 1))
 
   expect_equal(mean(ttest_results@y1_samples$mu), 155.7, tolerance = 1)
   expect_equal(mean(ttest_results@y2_samples$mu), 160.4, tolerance = 1)
