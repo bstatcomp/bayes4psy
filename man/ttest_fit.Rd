@@ -10,7 +10,7 @@ ttest_fit(y)
 \item{y}{Numeric vector of values.}
 }
 \value{
-An object of class `stanfit` returned by `rstan::sampling`
+An object of class `stanfit` returned by `rstan::sampling`.
 }
 \description{
 Bayesian Student's t-test model

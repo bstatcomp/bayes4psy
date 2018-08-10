@@ -1,0 +1,6 @@
+library(devtools)
+library(roxygen)
+roxygenise(clean=TRUE)
+document()
+options(devtools.install.args = "--no-multiarch")
+install(local = TRUE)

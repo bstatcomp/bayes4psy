@@ -17,6 +17,7 @@ Depends:
 Imports:
     rstan (>= 2.17.3),
     rstantools (>= 1.5.0)
+    ggplot2 (>= 2.2.1)
 LinkingTo:
     StanHeaders (>= 2.17.2),
     rstan (>= 2.17.3),
@@ -25,4 +26,4 @@ LinkingTo:
     RcppEigen (>= 0.3.3.4.0)
 SystemRequirements: GNU make
 NeedsCompilation: yes
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0

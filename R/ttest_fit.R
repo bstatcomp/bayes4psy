@@ -1,7 +1,7 @@
 #' Bayesian Student's t-test model
 #'
 #' @param y Numeric vector of values.
-#' @return An object of class `stanfit` returned by `rstan::sampling`
+#' @return An object of class `stanfit` returned by `rstan::sampling`.
 #'
 ttest_fit <- function(y) {
   yMu = mean(y)

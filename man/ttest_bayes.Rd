@@ -11,10 +11,10 @@ ttest_bayes(y1, y2, ROPE = 0)
 
 \item{y2}{Numeric vector of values for the second group.}
 
-\item{ROPE}{optional parameter for region of practical equivalence, defaults = NULL.}
+\item{ROPE}{Optional parameter for region of practical equivalence, default = NULL.}
 }
 \value{
-An object of class `ttest_bayes_results`
+An object of class `ttest_bayes_results`.
 }
 \description{
 Bayesian t-test
