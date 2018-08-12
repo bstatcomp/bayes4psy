@@ -2,7 +2,7 @@
 % Please edit documentation in R/ttest_fit.R
 \name{ttest_fit}
 \alias{ttest_fit}
-\title{Bayesian Student's t-test model}
+\title{Bayesian Student's t-test model fitting.}
 \usage{
 ttest_fit(y)
 }
@@ -13,5 +13,5 @@ ttest_fit(y)
 An object of class `stanfit` returned by `rstan::sampling`.
 }
 \description{
-Bayesian Student's t-test model
+Bayesian Student's t-test model fitting.
 }

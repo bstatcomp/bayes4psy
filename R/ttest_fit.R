@@ -1,4 +1,4 @@
-#' Bayesian Student's t-test model
+#' Bayesian Student's t-test model fitting.
 #'
 #' @param y Numeric vector of values.
 #' @return An object of class `stanfit` returned by `rstan::sampling`.

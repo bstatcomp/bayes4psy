@@ -1,4 +1,4 @@
-#' Bayesian t-test
+#' Bayesian t-test.
 #'
 #' @export
 #' @param y1 Numeric vector of values for the first group.

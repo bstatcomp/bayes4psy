@@ -2,8 +2,8 @@
 % Please edit documentation in R/mcmc_hdi.r
 \name{mcmc_hdi}
 \alias{mcmc_hdi}
-\title{© John Kruschke
-Computes highest density interval from a sample of representative values, estimated as shortest credible interval.}
+\title{Computes highest density interval from a sample of representative values, estimated as shortest credible interval.
+© John Kruschke}
 \usage{
 mcmc_hdi(samples, cred_mass = 0.95)
 }
@@ -16,6 +16,6 @@ mcmc_hdi(samples, cred_mass = 0.95)
 A vector containing the limits of the HDI.
 }
 \description{
-© John Kruschke
 Computes highest density interval from a sample of representative values, estimated as shortest credible interval.
+© John Kruschke
 }

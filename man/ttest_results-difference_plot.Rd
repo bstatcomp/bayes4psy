@@ -5,12 +5,12 @@
 \alias{difference_plot}
 \alias{difference_plot,ttest_results-method}
 \alias{difference_plot,ANY-method}
-\title{Plot difference histograms between two groups.}
+\title{difference_plot}
 \usage{
 difference_plot(object)
 
 \S4method{difference_plot}{ttest_results}(object)
 }
 \description{
-Plot difference histograms between two groups.
+\code{difference_plot} visualizes difference/equality of two tested groups.
 }

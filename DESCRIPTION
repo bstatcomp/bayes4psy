@@ -13,11 +13,11 @@ ByteCompile: true
 Depends:
     R (>= 3.4.0),
     Rcpp (>= 0.12.16),
+    ggplot2 (>= 2.2.1),
     methods
 Imports:
     rstan (>= 2.17.3),
-    rstantools (>= 1.5.0)
-    ggplot2 (>= 2.2.1)
+    rstantools (>= 1.5.0),
 LinkingTo:
     StanHeaders (>= 2.17.2),
     rstan (>= 2.17.3),

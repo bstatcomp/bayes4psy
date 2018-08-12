@@ -4,9 +4,9 @@
 \name{ttest_results-class}
 \alias{ttest_results-class}
 \alias{ttest_results}
-\title{An S4 class for storing results of Bayes t-test}
+\title{An S4 class for storing results of Bayesian t-test results.}
 \description{
-An S4 class for storing results of Bayes t-test
+An S4 class for storing results of Bayesian t-test results.
 }
 \section{Slots}{
 
@@ -18,3 +18,10 @@ An S4 class for storing results of Bayes t-test
 \item{\code{ROPE}}{region of practical equivalence.}
 }}
 
+\examples{
+ttest_results: prints difference/equality of two tested groups.
+
+summary(ttest_resuolts): prints difference/equality of two tested groups.
+
+difference_plot(ttest_results): visaualizes difference between two groups.
+}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/ttest_bayes.R
 \name{ttest_bayes}
 \alias{ttest_bayes}
-\title{Bayesian t-test}
+\title{Bayesian t-test.}
 \usage{
 ttest_bayes(y1, y2, ROPE = 0)
 }
@@ -17,5 +17,5 @@ ttest_bayes(y1, y2, ROPE = 0)
 An object of class `ttest_bayes_results`.
 }
 \description{
-Bayesian t-test
+Bayesian t-test.
 }
