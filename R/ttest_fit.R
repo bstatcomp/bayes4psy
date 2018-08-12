@@ -4,10 +4,10 @@
 #' @return An object of class `stanfit` returned by `rstan::sampling`.
 #'
 ttest_fit <- function(y) {
-  yMu = mean(y)
-  ySd = sd(y) * 1000
-  uL = sd(y) / 1000
-  uH = sd(y) * 1000
+  yMu <- mean(y)
+  ySd <- sd(y) * 1000
+  uL <- sd(y) / 1000
+  uH <- sd(y) * 1000
 
   stan_data <- list(
     n = length(y),

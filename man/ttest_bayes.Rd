@@ -4,14 +4,14 @@
 \alias{ttest_bayes}
 \title{Bayesian t-test.}
 \usage{
-ttest_bayes(y1, y2, ROPE = 0)
+ttest_bayes(y1, y2, rope = 0)
 }
 \arguments{
 \item{y1}{Numeric vector of values for the first group.}
 
 \item{y2}{Numeric vector of values for the second group.}
 
-\item{ROPE}{Optional parameter for region of practical equivalence, default = NULL.}
+\item{rope}{Optional parameter for region of practical equivalence, default = NULL.}
 }
 \value{
 An object of class `ttest_bayes_results`.

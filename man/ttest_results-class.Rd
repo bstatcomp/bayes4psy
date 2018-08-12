@@ -15,7 +15,7 @@ An S4 class for storing results of Bayesian t-test results.
 
 \item{\code{y2_samples}}{samples for the second group.}
 
-\item{\code{ROPE}}{region of practical equivalence.}
+\item{\code{rope}}{region of practical equivalence.}
 }}
 
 \examples{
