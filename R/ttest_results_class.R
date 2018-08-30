@@ -2,32 +2,43 @@
 ttest_results_check <- function(object) {
   errors <- character()
 
-  # ROPE < 0
-  if (object@rope < 0) {
-    msg <- "ROPE interval should have a positive value!"
+  # rope as a single number < 0
+  if (length(object@rope) > 2) {
+    msg <- "You provided more than two values for the ROPE interval!"
+  }
+  else if (!is.null(object@rope) && object@rope[1] == object@rope[2] && object@rope[1] < 0) {
+    msg <- "When a single number is provided for the ROPE interval it should be positive!"
     errors <- c(errors, msg)
   }
 
   if (length(errors) == 0) TRUE else errors
 }
 
+# set class unions to allow NULL values
+setClassUnion("numeric_or_null", c("numeric", "NULL"))
+setClassUnion("list_or_null", c("list", "NULL"))
+
 #' An S4 class for storing results of Bayesian t-test results.
 #' @slot y1_samples samples for the first group.
-#' @slot y2_samples samples for the second group.
-#' @slot rope region of practical equivalence.
+#' @slot y2_samples Optional variable: samples for the second group.
+#' @slot mu Optional variable: mean value for comparison with first group.
+#' @slot sigma Optional variable: variance for comparison with first group, used in combination with `mu` parameter.
+#' @slot rope Optional variable: region of practical equivalence.
 #' @examples
 #' ttest_results: prints difference/equality of two tested groups.
 #'
-#' summary(ttest_resuolts): prints difference/equality of two tested groups.
+#' summary(ttest_results): prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 #'
-#' difference_plot(ttest_results): visaualizes difference between two groups.
+#' difference_plot(ttest_results): a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 #' @exportClass ttest_results
 ttest_results <- setClass(
   "ttest_results",
   slots = c(
     y1_samples = "list",
-    y2_samples = "list",
-    rope = "numeric"
+    y2_samples = "list_or_null",
+    mu = "numeric_or_null",
+    sigma = "numeric_or_null",
+    rope = "numeric_or_null"
   ),
 
   validity = ttest_results_check
@@ -97,12 +108,19 @@ setMethod(f = "difference_plot", signature(object = "ttest_results"), definition
 
 
 ### Helper functions
-# print difference between two groups
+# print difference between the first group and the second object (a group, a mean value or a normal distribution)
 difference_print <- function(object) {
   # draw from samples
   n <- 1000
   y1 <- rnorm(n, mean(object@y1_samples$mu), mean(object@y1_samples$sigma))
-  y2 <- rnorm(n, mean(object@y2_samples$mu), mean(object@y2_samples$sigma))
+
+  y2 <- NULL
+  if (!is.null(object@y2_samples))
+    y2 <- rnorm(n, mean(object@y2_samples$mu), mean(object@y2_samples$sigma))
+  else if (!is.null(object@mu) && !is.null(object@sigma))
+    y2 <- rnorm(n, mean(object@mu), mean(object@sigma))
+  else if (!is.null(object@mu))
+    y2 <- rep(object@mu, n)
 
   # 1 > 2
   y1_greater <- sum((y1 - y2) > object@rope) / n

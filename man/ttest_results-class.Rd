@@ -13,15 +13,19 @@ An S4 class for storing results of Bayesian t-test results.
 \describe{
 \item{\code{y1_samples}}{samples for the first group.}
 
-\item{\code{y2_samples}}{samples for the second group.}
+\item{\code{y2_samples}}{Optional variable: samples for the second group.}
 
-\item{\code{rope}}{region of practical equivalence.}
+\item{\code{mu}}{Optional variable: mean value for comparison with first group.}
+
+\item{\code{sigma}}{Optional variable: variance for comparison with first group, used in combination with `mu` parameter.}
+
+\item{\code{rope}}{Optional variable: region of practical equivalence.}
 }}
 
 \examples{
 ttest_results: prints difference/equality of two tested groups.
 
-summary(ttest_resuolts): prints difference/equality of two tested groups.
+summary(ttest_results): prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 
-difference_plot(ttest_results): visaualizes difference between two groups.
+difference_plot(ttest_results): a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 }
