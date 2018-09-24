@@ -66,12 +66,12 @@ setGeneric(name = "difference_plot", function(object) standardGeneric("differenc
 setMethod(f = "difference_plot", signature(object = "ttest_results"), definition = function(object) {
   # draw from samples for first group
   n <- 100000
-  y1 <- rnorm(n, mean(object@y1_samples$mu), mean(object@y1_samples$sigma))
+  y1 <- rt.scaled(n, df = mean(object@y1_samples$nu), mean = mean(object@y1_samples$mu), sd = mean(object@y1_samples$sigma))
 
   # generate data for second group
   y2 <- NULL
   if (!is.null(object@y2_samples))
-    y2 <- rnorm(n, mean(object@y2_samples$mu), mean(object@y2_samples$sigma))
+    y2 <- rt.scaled(n, df = mean(object@y2_samples$nu), mean = mean(object@y2_samples$mu), sd = mean(object@y2_samples$sigma))
   else if (!is.null(object@mu)) {
     if (is.null(object@sigma))
       object@sigma = 0;
@@ -131,31 +131,33 @@ setGeneric(name = "comparison_plot", function(object) standardGeneric("compariso
 setMethod(f = "comparison_plot", signature(object = "ttest_results"), definition = function(object) {
   # draw from samples for first group
   n <- 10000
+  y1_nu <- mean(object@y1_samples$nu)
   y1_mu <- mean(object@y1_samples$mu)
   y1_sigma <- mean(object@y1_samples$sigma)
 
   # get x range
-  x_min <- y1_mu - 3 * y1_sigma
-  x_max <- y1_mu + 3 * y1_sigma
+  x_min <- y1_mu - 4 * y1_sigma
+  x_max <- y1_mu + 4 * y1_sigma
 
   y2_plot <- NULL
   # is second group calculated by stan fit?
   if (!is.null(object@y2_samples)) {
+    y2_nu <- mean(object@y1_samples$nu)
     y2_mu <- mean(object@y2_samples$mu)
     y2_sigma <- mean(object@y2_samples$sigma)
 
-    x_min <- min(x_min, y2_mu - 3 * y2_sigma)
-    x_max <- max(x_max, y2_mu + 3 * y2_sigma)
+    x_min <- min(x_min, y2_mu - 4 * y2_sigma)
+    x_max <- max(x_max, y2_mu + 4 * y2_sigma)
 
-    y2_plot <- stat_function(fun = dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
+    y2_plot <- stat_function(fun = dt.scaled, n = n, args = list(df = y2_nu, mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
   }
   # second group is given as a normal distribution
   else if (!is.null(object@mu) && !is.null(object@sigma)) {
     y2_mu <- object@mu
     y2_sigma <- object@sigma
 
-    x_min <- min(x_min, y2_mu - 3 * y2_sigma)
-    x_max <- max(x_max, y2_mu + 3 * y2_sigma)
+    x_min <- min(x_min, y2_mu - 4 * y2_sigma)
+    x_max <- max(x_max, y2_mu + 4 * y2_sigma)
 
     y2_plot <- stat_function(fun = dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
   }
@@ -171,7 +173,7 @@ setMethod(f = "comparison_plot", signature(object = "ttest_results"), definition
   x_range <- data.frame(value = c(x_min, x_max))
 
   graph <- ggplot(data = x_range, aes(x = value)) +
-    stat_function(fun = dnorm, n = n, args = list(mean = y1_mu, sd = y1_sigma), geom = 'area', fill = '#3182bd', alpha = 0.4) +
+    stat_function(fun = dt.scaled, n = n, args = list(df = y1_nu, mean = y1_mu, sd = y1_sigma), geom = 'area', fill = '#3182bd', alpha = 0.4) +
     y2_plot +
     theme_minimal() +
     labs(title = "Comparison plot", x = "Value", y = "") +
@@ -194,12 +196,12 @@ setMethod(f = "comparison_plot", signature(object = "ttest_results"), definition
 difference_print <- function(object) {
   # draw from samples for first group
   n <- 100000
-  y1 <- rnorm(n, mean(object@y1_samples$mu), mean(object@y1_samples$sigma))
+  y1 <- rt.scaled(n, df = mean(object@y1_samples$nu), mean = mean(object@y1_samples$mu), sd = mean(object@y1_samples$sigma))
 
   # generate data for second group
   y2 <- NULL
   if (!is.null(object@y2_samples))
-    y2 <- rnorm(n, mean(object@y2_samples$mu), mean(object@y2_samples$sigma))
+    y2 <- rt.scaled(n, df = mean(object@y2_samples$nu), mean = mean(object@y2_samples$mu), sd = mean(object@y2_samples$sigma))
   else if (!is.null(object@mu)) {
     if (is.null(object@sigma))
       object@sigma = 0;

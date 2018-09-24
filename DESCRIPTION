@@ -14,6 +14,7 @@ Depends:
     R (>= 3.4.0),
     Rcpp (>= 0.12.16),
     ggplot2 (>= 2.2.1),
+    metRology (>= 0.9.28),
     methods
 Imports:
     rstan (>= 2.17.3),
