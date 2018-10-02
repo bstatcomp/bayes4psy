@@ -5,9 +5,7 @@
 #'
 ttest_fit <- function(y) {
   yMu <- mean(y)
-  ySd <- sd(y) * 1000
-  uL <- sd(y) / 1000
-  uH <- sd(y) * 1000
+  ySd <- sd(y)
 
   stan_data <- list(
     n = length(y),
