@@ -26,8 +26,10 @@ ttest_bayes <- function(y1,
   }
 
   # cast rope interval to a list with 2 elements
-  if (length(rope) == 1)
+  if (length(rope) == 1) {
     rope[2] <- rope[1]
+    rope[1] <- -rope[1]
+  }
 
   # order ascending
   rope <- sort(rope)

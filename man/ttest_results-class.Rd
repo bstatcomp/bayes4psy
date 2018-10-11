@@ -23,9 +23,18 @@ An S4 class for storing results of Bayesian t-test results.
 }}
 
 \examples{
-ttest_results: prints difference/equality of two tested groups.
+ttest_results: prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 
 summary(ttest_results): prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 
-difference_plot(ttest_results): a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+plot_difference(ttest_results): a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+
+plot_comparison(ttest_results): plots histogram for the first group and the histogram of the second group, or a mean value in case second group is defined as a normal distribution or as a constant.
+
+compare_distributions(ttest_results): draws samples from distribution of the first group and compares them against samples from the second group, against a mean value, or against samples from a normal distribution with a defined mean value and variance.
+
+plot_distributions(ttest_results): a visualization of the distribution for the first group and the distribution or a constant value for the second group.
+
+plot_distributions_difference(ttest_results): a visualization of the difference between the distribution of the first group and the distribution or a constant value for the second group.
+
 }

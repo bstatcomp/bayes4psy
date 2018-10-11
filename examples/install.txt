@@ -1,6 +1,7 @@
 library(devtools)
 library(roxygen2)
+options(devtools.install.args = "--no-multiarch")
+
 roxygen2::roxygenise(clean=TRUE)
 devtools::document()
-options(devtools.install.args = "--no-multiarch")
 devtools::install(local = TRUE)

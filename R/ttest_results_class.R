@@ -25,11 +25,20 @@ setClassUnion("list_or_null", c("list", "NULL"))
 #' @slot sigma Optional variable: variance for comparison with first group, used in combination with `mu` parameter.
 #' @slot rope Optional variable: region of practical equivalence.
 #' @examples
-#' ttest_results: prints difference/equality of two tested groups.
+#' ttest_results: prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 #'
 #' summary(ttest_results): prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 #'
-#' difference_plot(ttest_results): a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#' plot_difference(ttest_results): a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#'
+#' plot_comparison(ttest_results): plots histogram for the first group and the histogram of the second group, or a mean value in case second group is defined as a normal distribution or as a constant.
+#'
+#' compare_distributions(ttest_results): draws samples from distribution of the first group and compares them against samples from the second group, against a mean value, or against samples from a normal distribution with a defined mean value and variance.
+#'
+#' plot_distributions(ttest_results): a visualization of the distribution for the first group and the distribution or a constant value for the second group.
+#'
+#' plot_distributions_difference(ttest_results): a visualization of the difference between the distribution of the first group and the distribution or a constant value for the second group.
+#'
 #' @exportClass ttest_results
 ttest_results <- setClass(
   "ttest_results",
@@ -54,25 +63,267 @@ setMethod(f = "summary", signature(object = "ttest_results"), definition = funct
   difference_print(object)
 })
 
+#' @rdname ttest_results-plot_difference
+#' @exportMethod plot_difference
+setGeneric(name = "plot_difference", function(object) standardGeneric("plot_difference"))
 
-#' @rdname ttest_results-difference_plot
-#' @exportMethod difference_plot
-setGeneric(name = "difference_plot", function(object) standardGeneric("difference_plot"))
+#' @title plot_difference
+#' @description \code{plot_difference} visualizes difference/equality of two tested groups.
+#' @rdname ttest_results-plot_difference
+#' @aliases plot_difference,ANY-method
+setMethod(f = "plot_difference", signature(object = "ttest_results"), definition = function(object) {
+  # draw from samples for first group
+  mu1 <- object@y1_samples$mu
 
-#' @title difference_plot
-#' @description \code{difference_plot} visualizes difference/equality of two tested groups.
-#' @rdname ttest_results-difference_plot
-#' @aliases difference_plot,ANY-method
-setMethod(f = "difference_plot", signature(object = "ttest_results"), definition = function(object) {
+  # generate data for second group
+  mu2 <- NULL
+  if (!is.null(object@y2_samples)) {
+    mu2 <- object@y2_samples$mu
+  } else if (!is.null(object@mu)) {
+    mu2 <- object@mu
+  }
+
+  # difference
+  diff <- data.frame(value = mu1 - mu2)
+
+  # get 95% hdi
+  hdi <- mcmc_hdi(diff$value)
+
+  # mean difference
+  mean_diff <- mean(diff$value)
+
+  # get x range
+  x_min <- min(diff)
+  x_max <- max(diff)
+  if (!is.null(object@rope)) {
+    x_min <- min(x_min, object@rope[1])
+    x_max <- max(x_max, object@rope[2])
+  }
+
+  # basic histogram chart
+  graph <- ggplot() +
+    geom_histogram(data = diff, aes(x = value), fill = "#3182bd", alpha = 0.5, bins = 30) +
+    xlim(x_min, x_max)
+
+  # add mean
+  y_max <- max(ggplot_build(graph)$data[[1]]$count)
+  graph <- graph +
+    geom_segment(aes(x = mean_diff, xend = mean_diff, y = 0, yend = y_max * 1.05), size = 1.5, color = "#3182bd") +
+    geom_text(aes(label = sprintf("%.2f", mean_diff), x = mean_diff, y = y_max * 1.08), size = 4)
+
+  # add CI
+  graph <- graph +
+    geom_segment(aes(x = hdi[1], xend = hdi[2], y = -(y_max * 0.01), yend = -(y_max * 0.01)), size = 3, color = "black") +
+    geom_text(aes(label = sprintf("%.2f", hdi[1]), x = hdi[1], y = -(y_max * 0.04)), size = 4) +
+    geom_text(aes(label = sprintf("%.2f", hdi[2]), x = hdi[2], y = -(y_max * 0.04)), size = 4)
+
+  # add ROPE interval?
+  if (!is.null(object@rope)) {
+    graph <- graph +
+      geom_segment(aes(x = object@rope[1], xend = object@rope[2], y = y_max * 0.01, yend = y_max * 0.01), size = 3, color = "grey50")
+  }
+
+  # style and labels
+  graph <- graph +
+    theme_minimal() +
+    labs(title = "Difference plot", x = "Value", y = "") +
+    theme(plot.title = element_text(hjust = 0.5))
+
+  suppressWarnings(print(graph))
+})
+
+
+#' @rdname ttest_results-plot_comparison
+#' @exportMethod plot_comparison
+setGeneric(name = "plot_comparison", function(object) standardGeneric("plot_comparison"))
+
+#' @title plot_comparison
+#' @description \code{plot_comparison} visualizes both tested groups.
+#' @rdname ttest_results-plot_comparison
+#' @aliases plot_comparison,ANY-method
+setMethod(f = "plot_comparison", signature(object = "ttest_results"), definition = function(object) {
+  # draw from samples for first group
+  mu1 <- object@y1_samples$mu
+  df1 <- data.frame(value = mu1)
+
+  # get x range
+  mu1_sd <- sd(mu1)
+  mu1_mean <- mean(mu1)
+  x_min <- mu1_mean - 4 * mu1_sd
+  x_max <- mu1_mean + 4 * mu1_sd
+
+  mu2 <- NULL
+  # is second group calculated by stan fit?
+  if (!is.null(object@y2_samples)) {
+    mu2 <- object@y2_samples$mu
+
+    mu2_sd <- sd(mu2)
+    mu2_mean <- mean(mu2)
+    x_min <- min(x_min, mu2_mean - 4 * mu2_sd)
+    x_max <- max(x_max, mu2_mean + 4 * mu2_sd)
+
+    df2 <- data.frame(value = mu2)
+  # second group is given as a normal distribution or a constant
+  } else if (!is.null(object@mu)) {
+    mu2 <- object@mu
+
+    x_min <- min(x_min, mu2)
+    x_max <- max(x_max, mu2)
+  }
+
+  # plot
+  graph <- ggplot() +
+    geom_histogram(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.5, bins = 30) +
+    theme_minimal() +
+    labs(title = "Comparison plot", x = "Value", y = "") +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    xlim(x_min, x_max)
+
+
+  if (is.null(object@mu)) {
+    graph <- graph +
+      geom_histogram(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.5, bins = 30)
+  } else {
+    y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+
+    graph <- graph +
+      geom_segment(aes(x = mu2, xend = mu2, y = 0, yend = y_max[2] * 1.05), size = 1.5, color = "#ff4e3f", alpha = 0.4) +
+      geom_text(aes(label = sprintf("%.2f", mu2), x = mu2, y = y_max[2] * 1.08), size = 4)
+  }
+
+  suppressWarnings(print(graph))
+})
+
+
+#' @rdname ttest_results-compare_distributions
+#' @exportMethod compare_distributions
+setGeneric(name = "compare_distributions", function(object) standardGeneric("compare_distributions"))
+
+#' @title compare_distributions
+#' @description \code{compare_distributions} prints difference/equality of samples drawn from fitted distributions.
+#' @rdname ttest_results-compare_distributions
+#' @aliases compare_distributions,ANY-method
+setMethod(f = "compare_distributions", signature(object = "ttest_results"), definition = function(object) {
   # draw from samples for first group
   n <- 100000
   y1 <- rt.scaled(n, df = mean(object@y1_samples$nu), mean = mean(object@y1_samples$mu), sd = mean(object@y1_samples$sigma))
 
   # generate data for second group
   y2 <- NULL
-  if (!is.null(object@y2_samples))
+  if (!is.null(object@y2_samples)) {
     y2 <- rt.scaled(n, df = mean(object@y2_samples$nu), mean = mean(object@y2_samples$mu), sd = mean(object@y2_samples$sigma))
-  else if (!is.null(object@mu)) {
+  } else if (!is.null(object@mu)) {
+    if (is.null(object@sigma))
+      object@sigma = 0;
+
+    y2 <- rnorm(n, object@mu, object@sigma)
+  }
+
+  # 1 > 2
+  y1_greater <- sum((y1 - y2) > object@rope) / n
+  cat("Probabilities:\n  - Group 1 > Group 2: ", y1_greater)
+
+  # 2 > 1
+  y2_greater <- sum((y2 - y1) > object@rope) / n
+  cat("\n  - Group 2 > Group 1: ", y2_greater)
+
+  # equal
+  if (is.null(object@rope)) {
+    cat("\n  - Equal: NA")
+  } else {
+    equal <- sum(abs(y1 - y2) <= object@rope) / n
+    cat("\n  - Equal: ", equal, "\n")
+  }
+})
+
+
+#' @rdname ttest_results-plot_distributions
+#' @exportMethod plot_distributions
+setGeneric(name = "plot_distributions", function(object) standardGeneric("plot_distributions"))
+
+#' @title plot_distributions
+#' @description \code{plot_distributions} visualizes distributions underlying tested groups.
+#' @rdname ttest_results-plot_distributions
+#' @aliases plot_distributions,ANY-method
+setMethod(f = "plot_distributions", signature(object = "ttest_results"), definition = function(object) {
+  # draw from samples for first group
+  n <- 10000
+  y1_nu <- mean(object@y1_samples$nu)
+  y1_mu <- mean(object@y1_samples$mu)
+  y1_sigma <- mean(object@y1_samples$sigma)
+
+  # get x range
+  x_min <- y1_mu - 4 * y1_sigma
+  x_max <- y1_mu + 4 * y1_sigma
+
+  y2_plot <- NULL
+  # is second group calculated by stan fit?
+  if (!is.null(object@y2_samples)) {
+    y2_nu <- mean(object@y1_samples$nu)
+    y2_mu <- mean(object@y2_samples$mu)
+    y2_sigma <- mean(object@y2_samples$sigma)
+
+    x_min <- min(x_min, y2_mu - 4 * y2_sigma)
+    x_max <- max(x_max, y2_mu + 4 * y2_sigma)
+
+    y2_plot <- stat_function(fun = dt.scaled, n = n, args = list(df = y2_nu, mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
+  # second group is given as a normal distribution
+  } else if (!is.null(object@mu) && !is.null(object@sigma)) {
+    y2_mu <- object@mu
+    y2_sigma <- object@sigma
+
+    x_min <- min(x_min, y2_mu - 4 * y2_sigma)
+    x_max <- max(x_max, y2_mu + 4 * y2_sigma)
+
+    y2_plot <- stat_function(fun = dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
+  # second group is just a constant number, part 1 (because we need max y for vertical line)
+  } else if (!is.null(object@mu)) {
+    y2_mu <- object@mu
+
+    x_min <- min(x_min, y2_mu)
+    x_max <- max(x_max, y2_mu)
+  }
+
+  # plot
+  x_range <- data.frame(value = c(x_min, x_max))
+
+  graph <- ggplot(data = x_range, aes(x = value)) +
+    stat_function(fun = dt.scaled, n = n, args = list(df = y1_nu, mean = y1_mu, sd = y1_sigma), geom = 'area', fill = '#3182bd', alpha = 0.4) +
+    y2_plot +
+    theme_minimal() +
+    labs(title = "Comparison plot", x = "Value", y = "") +
+    theme(plot.title = element_text(hjust = 0.5))
+
+  if (!is.null(object@mu) && is.null(object@sigma)) {
+    y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+
+    graph <- graph +
+      geom_segment(aes(x = y2_mu, xend = y2_mu, y = 0, yend = y_max[2] * 1.05), size = 1.5, color = "#ff4e3f", alpha = 0.4) +
+      geom_text(aes(label = sprintf("%.2f", y2_mu), x = y2_mu, y = y_max[2] * 1.08), size = 4)
+  }
+
+  graph
+})
+
+
+#' @rdname ttest_results-plot_distributions_difference
+#' @exportMethod plot_distributions_difference
+setGeneric(name = "plot_distributions_difference", function(object) standardGeneric("plot_distributions_difference"))
+
+#' @title plot_distributions_difference
+#' @description \code{plot_distributions_difference} visualizes difference/equality of distributions underlying the data.
+#' @rdname ttest_results-plot_distributions_difference
+#' @aliases plot_distributions_difference,ANY-method
+setMethod(f = "plot_distributions_difference", signature(object = "ttest_results"), definition = function(object) {
+  # draw from samples for first group
+  n <- 100000
+  y1 <- rt.scaled(n, df = mean(object@y1_samples$nu), mean = mean(object@y1_samples$mu), sd = mean(object@y1_samples$sigma))
+
+  # generate data for second group
+  y2 <- NULL
+  if (!is.null(object@y2_samples)) {
+    y2 <- rt.scaled(n, df = mean(object@y2_samples$nu), mean = mean(object@y2_samples$mu), sd = mean(object@y2_samples$sigma))
+  } else if (!is.null(object@mu)) {
     if (is.null(object@sigma))
       object@sigma = 0;
 
@@ -107,121 +358,46 @@ setMethod(f = "difference_plot", signature(object = "ttest_results"), definition
   # add ROPE interval?
   if (!is.null(object@rope)) {
     graph <- graph +
-      geom_segment(aes(x = -object@rope, xend = object@rope, y = y_max * 0.01, yend = y_max * 0.01), size = 3, color = "grey50")
+      geom_segment(aes(x = object@rope[1], xend = object@rope[2], y = y_max * 0.01, yend = y_max * 0.01), size = 3, color = "grey50")
   }
 
   # style and labels
   graph <- graph +
     theme_minimal() +
-    labs(title = "Difference plot", x = "Value", y = "") +
+    labs(title = "Distributions difference plot", x = "Value", y = "") +
     theme(plot.title = element_text(hjust = 0.5))
 
   graph
 })
-
-
-#' @rdname ttest_results-comparison_plot
-#' @exportMethod comparison_plot
-setGeneric(name = "comparison_plot", function(object) standardGeneric("comparison_plot"))
-
-#' @title comparison_plot
-#' @description \code{comparison_plot} visualizes both tested groups.
-#' @rdname ttest_results-comparison_plot
-#' @aliases comparison_plot,ANY-method
-setMethod(f = "comparison_plot", signature(object = "ttest_results"), definition = function(object) {
-  # draw from samples for first group
-  n <- 10000
-  y1_nu <- mean(object@y1_samples$nu)
-  y1_mu <- mean(object@y1_samples$mu)
-  y1_sigma <- mean(object@y1_samples$sigma)
-
-  # get x range
-  x_min <- y1_mu - 4 * y1_sigma
-  x_max <- y1_mu + 4 * y1_sigma
-
-  y2_plot <- NULL
-  # is second group calculated by stan fit?
-  if (!is.null(object@y2_samples)) {
-    y2_nu <- mean(object@y1_samples$nu)
-    y2_mu <- mean(object@y2_samples$mu)
-    y2_sigma <- mean(object@y2_samples$sigma)
-
-    x_min <- min(x_min, y2_mu - 4 * y2_sigma)
-    x_max <- max(x_max, y2_mu + 4 * y2_sigma)
-
-    y2_plot <- stat_function(fun = dt.scaled, n = n, args = list(df = y2_nu, mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
-  }
-  # second group is given as a normal distribution
-  else if (!is.null(object@mu) && !is.null(object@sigma)) {
-    y2_mu <- object@mu
-    y2_sigma <- object@sigma
-
-    x_min <- min(x_min, y2_mu - 4 * y2_sigma)
-    x_max <- max(x_max, y2_mu + 4 * y2_sigma)
-
-    y2_plot <- stat_function(fun = dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
-  }
-  # second group is just a constant number, part 1 (because we need max y for vertical line)
-  else if (!is.null(object@mu)) {
-    y2_mu <- object@mu
-
-    x_min <- min(x_min, y2_mu - (y2_mu * 0.05))
-    x_max <- max(x_max, y2_mu + (y2_mu * 0.05))
-  }
-
-  # plot
-  x_range <- data.frame(value = c(x_min, x_max))
-
-  graph <- ggplot(data = x_range, aes(x = value)) +
-    stat_function(fun = dt.scaled, n = n, args = list(df = y1_nu, mean = y1_mu, sd = y1_sigma), geom = 'area', fill = '#3182bd', alpha = 0.4) +
-    y2_plot +
-    theme_minimal() +
-    labs(title = "Comparison plot", x = "Value", y = "") +
-    theme(plot.title = element_text(hjust = 0.5))
-
-  if (!is.null(object@mu) && is.null(object@sigma)) {
-    y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
-
-    graph <- graph +
-      geom_segment(aes(x = y2_mu, xend = y2_mu, y = 0, yend = y_max[2] * 1.05), size = 1.5, color = "#ff4e3f", alpha = 0.4) +
-      geom_text(aes(label = sprintf("%.2f", y2_mu), x = y2_mu, y = y_max[2] * 1.08), size = 4)
-  }
-
-  graph
-})
-
 
 ### Helper functions
 # print difference between the first group and the second object (a group, a mean value or a normal distribution)
 difference_print <- function(object) {
-  # draw from samples for first group
-  n <- 100000
-  y1 <- rt.scaled(n, df = mean(object@y1_samples$nu), mean = mean(object@y1_samples$mu), sd = mean(object@y1_samples$sigma))
+  # samples for first group
+  mu1 <- object@y1_samples$mu
+  n <- length(mu1)
 
   # generate data for second group
-  y2 <- NULL
-  if (!is.null(object@y2_samples))
-    y2 <- rt.scaled(n, df = mean(object@y2_samples$nu), mean = mean(object@y2_samples$mu), sd = mean(object@y2_samples$sigma))
-  else if (!is.null(object@mu)) {
-    if (is.null(object@sigma))
-      object@sigma = 0;
-
-    y2 <- rnorm(n, mean(object@mu), mean(object@sigma))
+  mu2 <- NULL
+  if (!is.null(object@y2_samples)) {
+    mu2 <- object@y2_samples$mu
+  } else if (!is.null(object@mu)) {
+    mu2 <- rep(object@mu, n)
   }
 
   # 1 > 2
-  y1_greater <- sum((y1 - y2) > object@rope) / n
-  cat("Probabilities:\n  - Group 1 > Group 2: ", y1_greater)
+  mu1_greater <- sum((mu1 - mu2) > object@rope) / n
+  cat("Probabilities:\n  - Group 1 > Group 2: ", mu1_greater)
 
   # 2 > 1
-  y2_greater <- sum((y2 - y1) > object@rope) / n
-  cat("\n  - Group 2 > Group 1: ", y2_greater)
+  mu2_greater <- sum((mu2 - mu1) > object@rope) / n
+  cat("\n  - Group 2 > Group 1: ", mu2_greater)
 
   # equal
   if (is.null(object@rope)) {
     cat("\n  - Equal: NA")
   } else {
-    equal <- sum(abs(y1 - y2) <= object@rope) / n
+    equal <- sum(abs(mu1 - mu2) <= object@rope) / n
     cat("\n  - Equal: ", equal, "\n")
   }
 }

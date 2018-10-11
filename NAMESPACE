@@ -2,8 +2,11 @@
 
 export(ttest_bayes)
 exportClasses(ttest_results)
-exportMethods(comparison_plot)
-exportMethods(difference_plot)
+exportMethods(compare_distributions)
+exportMethods(plot_comparison)
+exportMethods(plot_difference)
+exportMethods(plot_distributions)
+exportMethods(plot_distributions_difference)
 exportMethods(show)
 exportMethods(summary)
 import(Rcpp)
