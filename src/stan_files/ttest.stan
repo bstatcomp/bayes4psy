@@ -1,5 +1,7 @@
 data {
-	int<lower=1> n;
+	int<lower=1, upper=2> g; // number of groups
+	int<lower=1> n; // number of samples
+	int<lower=0> g_id[n]; // group mask
 	real y[n];
 	real yMu;
 	real<lower=0> ySd;
@@ -18,8 +20,8 @@ transformed data {
 
 parameters {
 	real<lower=0> nuMinusOne;
-	real mu;
-	real<lower=0> sigma;
+	real mu[g];
+	real<lower=0> sigma[g];
 }
 
 transformed parameters {
@@ -31,5 +33,7 @@ model {
 	sigma ~ uniform(uLo, uHi);
 	mu ~ normal(yMu, nSigma);
 	nuMinusOne ~ exponential(eLambda);
-	y ~ student_t(nu, mu, sigma);
+
+	for (i in 1:n)
+		y[i] ~ student_t(nu, mu[g_id[i]], sigma[g_id[i]]);
 }

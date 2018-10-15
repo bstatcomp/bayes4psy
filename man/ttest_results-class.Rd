@@ -11,21 +11,21 @@ An S4 class for storing results of Bayesian t-test results.
 \section{Slots}{
 
 \describe{
-\item{\code{y1_samples}}{samples for the first group.}
-
-\item{\code{y2_samples}}{Optional variable: samples for the second group.}
+\item{\code{extract}}{Extractf from Stan fit.}
 
 \item{\code{mu}}{Optional variable: mean value for comparison with first group.}
 
-\item{\code{sigma}}{Optional variable: variance for comparison with first group, used in combination with `mu` parameter.}
+\item{\code{sigma}}{Optional variable: standard deviation for comparison with first group, used in combination with `mu` parameter.}
 
-\item{\code{rope}}{Optional variable: region of practical equivalence.}
+\item{\code{rope}}{Optional variable: rope interval used in comparisons.}
 }}
 
 \examples{
 ttest_results: prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 
 summary(ttest_results): prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+
+compare_groups(ttest_results): prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 
 plot_difference(ttest_results): a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 

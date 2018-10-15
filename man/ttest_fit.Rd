@@ -4,10 +4,12 @@
 \alias{ttest_fit}
 \title{Bayesian Student's t-test model fitting.}
 \usage{
-ttest_fit(y)
+ttest_fit(y1, y2 = NULL)
 }
 \arguments{
-\item{y}{Numeric vector of values.}
+\item{y1}{Numeric vector of values for the first group.}
+
+\item{y2}{Optional parameter for values for the second group.}
 }
 \value{
 An object of class `stanfit` returned by `rstan::sampling`.

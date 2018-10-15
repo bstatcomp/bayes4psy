@@ -13,7 +13,7 @@ ttest_bayes(y1, y2 = NULL, mu = NULL, sigma = NULL, rope = NULL)
 
 \item{mu}{Optional parameter for comparison of first group against a mean value.}
 
-\item{sigma}{Optional parameter for comparison of first group against a mean value and a variance.}
+\item{sigma}{Optional parameter for comparison of first group against a distribution N(mu, sigma).}
 
 \item{rope}{Optional parameter for region of practical equivalence, default = NULL}
 }
