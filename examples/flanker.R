@@ -1,145 +1,115 @@
-library(ggplot2)
-library(rstan)
-library(reshape2)
-library(mcmcse)
-library(emg)
-library(plyr)
-
-# stan
-rstan_options(auto_write = TRUE)
-options(mc.cores = parallel::detectCores())
+# libs
+library(EasyBayes)
 
 # load data --------------------------------------------------------------------
-full_dat <- read.table("./examples/data/flanker.txt", sep = "\t", h = T)
-full_dat <- full_dat[,c(1,2,3,4,5,7)]
-full_dat$subject <- as.numeric(as.factor(full_dat$subject))
+df <- read.table("./examples/data/flanker.csv", sep = "\t")
 
-# build or load model ----------------------------------------------------------
-model_rt <- stan_model(file = "./src/stan_files/flanker_rt.stan")
-model_s <- stan_model(file = "./src/stan_files/flanker_s.stan")
+# map correct/incorrect/timeout to 1/0
+df$result_numeric <- 0
+df[df$result == "correct", ]$result_numeric <- 1
 
-# function for fitting data to model -------------------------------------------
-fit_to_model <- function(data) {
-  X <- dcast(tmp, subject ~ num, value.var = "rt", fun.aggregate = mean)[,-1]
-  stan_data <- list(n = nrow(X), m = ncol(X), T = X)
+# test vs control rection times (correct and no timeout only)
+df_correct <- df[df$result == "correct", ]
 
-  output <- sampling(model_rt,
-                     data = stan_data,
-                     iter = 1000,
-                     warmup = 500,
-                     chains = 1,
-                     control = list(adapt_delta = 0.99),
-                     seed = 0)
+# countrol group
+df_control <- df_correct[df_correct$group == "control", ]
 
-  return(output)
-}
+# subject indexes range on 22..45 cast to 1..23
+df_control$subject <- df_control$subject - 21
 
+n <- nrow(df_control)
+m <- length(unique(df_control$subject))
+rt <- df_control$rt
+r <- df_control$result_numeric
+s <- df_control$subject
 
-# function for comparing fit with subject data ---------------------------------
-compare_subjects_emg <- function(dat, smp) {
-  tmp <- NULL
-  subjects <- unique(dat$subject)
-  n <- length(subjects)
+rt_control <- b_reaction_times(n = n, m = m, rt = rt, r = r, s = s)
 
-  for (i in 1:n) {
-    df <- data.frame(x = seq(0, 2, 0.01),
-                     subject = subjects[i],
-                     variable = "posterior mean",
-                     y = demg(seq(0, 2, 0.01),
-                              mu = mean(smp[,i]),
-                              lambda = mean(smp[,2 * n + i]),
-                              sigma = mean(smp[,n + i])))
+#summary
+summary(rt_control)
 
-    tmp <- rbind(tmp, df)
-  }
+# check fits
+plot_fit(rt_control)
 
-  # density per subject
-  p <- ggplot(dat, aes(x = rt, colour = variable)) +
-    geom_density() +
-    facet_wrap(~ subject, ncol = 6) +
-    geom_line(data = tmp, aes(x = x, y = y))
+# test group
+df_test <- df_correct[df_correct$group == "test", ]
 
-  return(p)
-}
+n <- nrow(df_test)
+m <- length(unique(df_test$subject))
+rt <- df_test$rt
+r <- df_test$result_numeric
+s <- df_test$subject
+
+rt_test <- b_reaction_times(n = n, m = m, rt = rt, r = r, s = s)
+
+#summary
+summary(rt_test)
+
+# check fits
+plot_fit(rt_test)
+
+# difference summary
 
 
-# function for comparing two emg fits ------------------------------------------
-compare_emgs <- function(samples1, samples2) {
-  x <- seq(0, 2, 0.01)
-  y1 <- demg(x,
-             mu = mean(samples1$mu_m),
-             sigma = mean(sqrt(samples1$ss_m)),
-             lambda = mean(samples1$mu_l))
-  y2 <- demg(x,
-             mu = mean(samples2$mu_m),
-             sigma = mean(sqrt(samples2$ss_m)),
-             lambda = mean(samples2$mu_l))
-
-  df <- data.frame(x = x, left = y1, right = y2)
-  df <- melt(df, id=c("x"))
-
-  p <- ggplot(df, aes(x = x, y = value, colour = variable)) +
-    geom_line(size = 2) +
-    theme_minimal() +
-    scale_colour_brewer(type = "qual")
-
-  return(p)
-}
-
-# Analysis #1 - left vs right control ------------------------------------------
-dat <- full_dat[full_dat$group == "CON",]
-
-# left
-dat_left <- dat[dat$direction == "left", c(1,6)]
-# remove subjects with no session 2 results
-dat_left <- ddply(dat_left, "subject", function(x) {if (nrow(x) == 96) x else NULL})
-dat_left$num <- 1:96
-output_left <- fit_to_model(dat_left)
-extract_left <- extract(output_left, permuted = F)
-smp_left <- data.frame(extract_left[,1,])
-
-# right
-dat_right <- dat[dat$direction == "right", c(1,6)]
-# remove subjects with no session 2 results
-dat_right <- ddply(dat_right, "subject", function(x) {if (nrow(x) == 96) x else NULL})
-dat_right$num <- 1:96
-output_right <- fit_to_model(dat_right)
-extract_right <- extract(output_right, permuted = F)
-smp_right <- data.frame(extract_right[,1,])
+# difference plot
+temp <- plot_difference(rt_control)
+temp <- plot_difference(rt_control, df)
+plot_difference(rt_control, rt_test)
 
 
-# visual inspection & comparison -----------------------------------------------
-
-# diagnostics
-traceplot(output_left, pars = c("mu_m", "ss_m", "mu_l", "ss_l"))
-
-# compare left vs right means
-p1 <- compare_emgs(smp_left, smp_right)
-plot(p1)
-
-# per subject plot
-dat_left$variable = "left"
-p2 <- compare_subjects_emg(dat_left, smp_left)
-plot(p2)
 
 
-# sample means vs estimated mu vs estimated mu + 1/lambda
-act <- tapply(tmpX$rt, tmpX$subject, mean)
-mus <- colMeans(smp_X[(1:n)])
-lls <- colMeans(smp_X[2*n + (1:n)])
-plot(act, mus, xlim = c(0, 1), ylim = c(0, 1))
-segments(0,0,100,100)
-plot(act, mus + 1/lls, xlim = c(0, 1), ylim = c(0, 1))
-segments(0,0,100,100)
 
+object1 <- rt_control
+object2 <- rt_test
+
+# compare two fits
+x <- seq(0, 2, 0.01)
+df1 <- data.frame(x = x, y = demg(x,
+                                  mu = mean(object1@extract$mu_m),
+                                  sigma = mean(object1@extract$mu_s),
+                                  lambda = mean(object1@extract$mu_l)))
+
+df2 <- data.frame(x = x, y = demg(x,
+                                  mu = mean(object2@extract$mu_m),
+                                  sigma = mean(object2@extract$mu_s),
+                                  lambda = mean(object2@extract$mu_l)))
+
+graph <- ggplot() +
+  geom_area(data = df1, aes(x = x, y = y), fill = "#3182bd", alpha = 0.3, color = NA) +
+  geom_area(data = df2, aes(x = x, y = y), fill = "#ff4e3f", alpha = 0.3, color = NA) +
+  theme_minimal() +
+  xlab("Reaction time")
+
+graph
+
+
+# TODO:
 # Hypothesis: group A mean < group B mean
-x <- smp_A$mu_m < smp_B$mu_m
-mcse(x)
+diff <- (object1@extract$mu_m + 1/object1@extract$mu_l) - (object2@extract$mu_m + 1/object2@extract$mu_l)
 
-x <- smp_A$mu_m + 1/smp_A$mu_l < smp_B$mu_m + 1/smp_B$mu_l
-mcse(x)
+# 1 > 2
+group1_smaller <- sum(diff > 0) / length(diff);
+cat(sprintf("Probabilities for reaction time comaprison:\n  - Group 1 < Group 2: %.2f", group1_smaller))
 
-# t-test
-z <- tapply(dat$rt, list(dat$subject, dat$congruency), mean)
-print(z)
-print(t.test(z[,2] - z[,1], alt = "greater"))
+# 2 > 1
+group1_greater <- sum(diff < 0) / length(diff);
+cat(sprintf("\n  - Group 1 > Group 2: %.2f", group1_greater))
+
+diff_l <- quantile(diff12, 0.025)
+diff_h <- quantile(diff12, 0.975)
+cat(sprintf("\n95%% CI for reaction times:\n  - Group 1 - Group 2: [%.2f, %.2f]", diff_l, diff_h))
+
+p <- sum(diff > 0) / length(diff);
+diff_l <- quantile(diff, 0.025)
+diff_h <- quantile(diff, 0.975)
+cat(sprintf("p(Group 1 < Group 2): %.2f\n95%% CI: %.2f - %.2f\n", p, diff_l, diff_h))
+
+
+e1 <- object1@extract$a / (object1@extract$a + object1@extract$b)
+e2 <- object2@extract$a / (object2@extract$a + object2@extract$b)
+
+
+# TODO: PER SUBJECT COMPARISON
+
+

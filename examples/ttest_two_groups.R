@@ -11,15 +11,12 @@ y_brazil <- rnorm(n, 155.7, 6.6)
 y_cameroon <- rnorm(n, 160.4, 6.3)
 
 # ttest, rope interval 1 cm
-ttest_results <- ttest_bayes(y1 = y_brazil, y2 = y_cameroon, rope = 1)
+ttest_results <- b_ttest(y1 = y_brazil, y2 = y_cameroon, rope = 1)
 
 # you can later change value of the rope interval
 ttest_results@rope <- 2
 
 # print summary
-ttest_results
-
-# summary is the same as just witing down the object - one could just write ttest_results
 summary(ttest_results)
 
 # difference plot
