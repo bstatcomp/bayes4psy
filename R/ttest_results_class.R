@@ -20,6 +20,7 @@ setClassUnion("list_or_null", c("list", "NULL"))
 
 #' An S4 class for storing results of Bayesian t-test results.
 #' @slot extract Extract from Stan fit.
+#' @slot fit Stan fit.
 #' @slot mu Optional variable: mean value for comparison with first group.
 #' @slot sigma Optional variable: standard deviation for comparison with first group, used in combination with `mu` parameter.
 #' @slot rope Optional variable: rope interval used in comparisons.
@@ -43,6 +44,7 @@ ttest_results <- setClass(
   "ttest_results",
   slots = c(
     extract  = "list",
+    fit = "stanfit",
     mu = "numeric_or_null",
     sigma = "numeric_or_null",
     rope = "numeric_or_null"

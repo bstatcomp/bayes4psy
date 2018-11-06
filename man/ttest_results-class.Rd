@@ -13,6 +13,8 @@ An S4 class for storing results of Bayesian t-test results.
 \describe{
 \item{\code{extract}}{Extract from Stan fit.}
 
+\item{\code{fit}}{Stan fit.}
+
 \item{\code{mu}}{Optional variable: mean value for comparison with first group.}
 
 \item{\code{sigma}}{Optional variable: standard deviation for comparison with first group, used in combination with `mu` parameter.}

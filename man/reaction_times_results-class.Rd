@@ -13,6 +13,8 @@ An S4 class for storing results of reaction time Bayesian model.
 \describe{
 \item{\code{extract}}{Extract from Stan fit.}
 
+\item{\code{fit}}{Stan fit.}
+
 \item{\code{data}}{Data on which the fit is based.}
 }}
 

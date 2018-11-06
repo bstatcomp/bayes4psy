@@ -1,5 +1,6 @@
 #' An S4 class for storing results of reaction time Bayesian model.
 #' @slot extract Extract from Stan fit.
+#' @slot fit Stan fit.
 #' @slot data Data on which the fit is based.
 #' @examples
 #' summary(`reaction_times_results`): prints summary od the fit.
@@ -14,6 +15,7 @@ reaction_times_results <- setClass(
   #contains = "b_results",
   slots = c(
     extract = "list",
+    fit = "stanfit",
     data = "list"
   ),
   contains = "b_results"

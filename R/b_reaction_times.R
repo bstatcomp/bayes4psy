@@ -23,15 +23,15 @@ b_reaction_times <- function(n,
 
   fit <- rstan::sampling(stanmodels$reaction_times,
                           data = stan_data,
-                          iter = 1000,
-                          warmup = 800,
+                          iter = 400,
+                          warmup = 200,
                           chains = 1,
                           control = list(adapt_delta = 0.99, max_treedepth = 15))
 
   extract <- rstan::extract(fit)
 
   # create output class
-  out <- reaction_times_results(extract = extract, data = stan_data)
+  out <- reaction_times_results(extract = extract, data = stan_data, fit = fit)
 
   # return
   return(out)
