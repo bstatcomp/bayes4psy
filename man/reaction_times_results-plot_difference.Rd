@@ -6,8 +6,9 @@
 \alias{plot_difference,ANY-method}
 \title{plot_difference}
 \usage{
-\S4method{plot_difference}{reaction_times_results}(object, ...)
+\S4method{plot_difference}{reaction_times_results}(object, ...,
+  bins = 30)
 }
 \description{
-\code{plot_difference} visualizes difference/equality of two tested groups.
+\code{plot_difference} a visualization of the difference between two groups.
 }

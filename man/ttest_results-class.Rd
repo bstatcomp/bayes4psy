@@ -20,21 +20,29 @@ An S4 class for storing results of Bayesian t-test results.
 \item{\code{sigma}}{Optional variable: standard deviation for comparison with first group, used in combination with `mu` parameter.}
 
 \item{\code{rope}}{Optional variable: rope interval used in comparisons.}
+
+\item{\code{data1}}{Raw data for the first tested group.}
+
+\item{\code{data2}}{Optional variable: raw data for the second tested group.}
 }}
 
 \examples{
 summary(`ttest_results`): prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 
-compare_groups(`ttest_results`): prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+compare(`ttest_results`): prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 
 plot_difference(`ttest_results`): a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 
-plot_comparison(`ttest_results`): plots histogram for the first group and the histogram of the second group, or a mean value in case second group is defined as a normal distribution or as a constant.
+plot_comparison(`ttest_results`): plots density for the first group and density for the second group, or a mean value in case second group is defined as a normal distribution or as a constant.
 
-compare_distributions(`ttest_results`): draws samples from distribution of the first group and compares them against samples from the second group, against a mean value, or against samples from a normal distribution with a defined mean value and variance.
+compare_distributions(`ttest_results`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group, against a mean value, or against samples from a normal distribution with a defined mean value and variance.
 
 plot_distributions(`ttest_results`): a visualization of the distribution for the first group and the distribution or a constant value for the second group.
 
 plot_distributions_difference(`ttest_results`): a visualization of the difference between the distribution of the first group and the distribution or a constant value for the second group.
+
+plot_fit(`ttest_results`): plots fitted model against the data. Use this function to explore the quality of your fit.
+
+traceplot(`ttest_results`): traceplot for main fitted model parameters.
 
 }

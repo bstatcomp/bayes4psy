@@ -36,7 +36,7 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_reaction_times");
-    reader.add_event(40, 38, "end", "model_reaction_times");
+    reader.add_event(32, 30, "end", "model_reaction_times");
     return reader;
 }
 
@@ -46,7 +46,6 @@ private:
     int n;
     int m;
     vector_d rt;
-    vector<int> r;
     vector<int> s;
 public:
     model_reaction_times(stan::io::var_context& context__,
@@ -108,17 +107,6 @@ public:
                 rt[i_vec__] = vals_r__[pos__++];
             }
             current_statement_begin__ = 5;
-            validate_non_negative_index("r", "n", n);
-            context__.validate_dims("data initialization", "r", "int", context__.to_vec(n));
-            validate_non_negative_index("r", "n", n);
-            r = std::vector<int>(n,int(0));
-            vals_i__ = context__.vals_i("r");
-            pos__ = 0;
-            size_t r_limit_0__ = n;
-            for (size_t i_0__ = 0; i_0__ < r_limit_0__; ++i_0__) {
-                r[i_0__] = vals_i__[pos__++];
-            }
-            current_statement_begin__ = 6;
             validate_non_negative_index("s", "n", n);
             context__.validate_dims("data initialization", "s", "int", context__.to_vec(n));
             validate_non_negative_index("s", "n", n);
@@ -139,11 +127,6 @@ public:
             check_greater_or_equal(function__,"rt",rt,0);
             current_statement_begin__ = 5;
             for (int k0__ = 0; k0__ < n; ++k0__) {
-                check_greater_or_equal(function__,"r[k0__]",r[k0__],0);
-                check_less_or_equal(function__,"r[k0__]",r[k0__],1);
-            }
-            current_statement_begin__ = 6;
-            for (int k0__ = 0; k0__ < n; ++k0__) {
                 check_greater_or_equal(function__,"s[k0__]",s[k0__],0);
             }
             // initialize data variables
@@ -154,15 +137,17 @@ public:
             // validate, set parameter ranges
             num_params_r__ = 0U;
             param_ranges_i__.clear();
-            current_statement_begin__ = 11;
+            current_statement_begin__ = 10;
             validate_non_negative_index("mu", "m", m);
             num_params_r__ += m;
-            current_statement_begin__ = 12;
+            current_statement_begin__ = 11;
             validate_non_negative_index("sigma", "m", m);
             num_params_r__ += m;
-            current_statement_begin__ = 13;
+            current_statement_begin__ = 12;
             validate_non_negative_index("lambda", "m", m);
             num_params_r__ += m;
+            current_statement_begin__ = 13;
+            ++num_params_r__;
             current_statement_begin__ = 14;
             ++num_params_r__;
             current_statement_begin__ = 15;
@@ -172,15 +157,6 @@ public:
             current_statement_begin__ = 17;
             ++num_params_r__;
             current_statement_begin__ = 18;
-            ++num_params_r__;
-            current_statement_begin__ = 19;
-            ++num_params_r__;
-            current_statement_begin__ = 22;
-            validate_non_negative_index("p", "m", m);
-            num_params_r__ += m;
-            current_statement_begin__ = 23;
-            ++num_params_r__;
-            current_statement_begin__ = 24;
             ++num_params_r__;
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
@@ -325,47 +301,6 @@ public:
             throw std::runtime_error(std::string("Error transforming variable ss_s: ") + e.what());
         }
 
-        if (!(context__.contains_r("p")))
-            throw std::runtime_error("variable p missing");
-        vals_r__ = context__.vals_r("p");
-        pos__ = 0U;
-        validate_non_negative_index("p", "m", m);
-        context__.validate_dims("initialization", "p", "vector_d", context__.to_vec(m));
-        vector_d p(static_cast<Eigen::VectorXd::Index>(m));
-        for (int j1__ = 0U; j1__ < m; ++j1__)
-            p(j1__) = vals_r__[pos__++];
-        try {
-            writer__.vector_lub_unconstrain(0,1,p);
-        } catch (const std::exception& e) { 
-            throw std::runtime_error(std::string("Error transforming variable p: ") + e.what());
-        }
-
-        if (!(context__.contains_r("a")))
-            throw std::runtime_error("variable a missing");
-        vals_r__ = context__.vals_r("a");
-        pos__ = 0U;
-        context__.validate_dims("initialization", "a", "double", context__.to_vec());
-        double a(0);
-        a = vals_r__[pos__++];
-        try {
-            writer__.scalar_lb_unconstrain(0,a);
-        } catch (const std::exception& e) { 
-            throw std::runtime_error(std::string("Error transforming variable a: ") + e.what());
-        }
-
-        if (!(context__.contains_r("b")))
-            throw std::runtime_error("variable b missing");
-        vals_r__ = context__.vals_r("b");
-        pos__ = 0U;
-        context__.validate_dims("initialization", "b", "double", context__.to_vec());
-        double b(0);
-        b = vals_r__[pos__++];
-        try {
-            writer__.scalar_lb_unconstrain(0,b);
-        } catch (const std::exception& e) { 
-            throw std::runtime_error(std::string("Error transforming variable b: ") + e.what());
-        }
-
         params_r__ = writer__.data_r();
         params_i__ = writer__.data_i();
     }
@@ -462,27 +397,6 @@ public:
             else
                 ss_s = in__.scalar_lb_constrain(0);
 
-            Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1>  p;
-            (void) p;  // dummy to suppress unused var warning
-            if (jacobian__)
-                p = in__.vector_lub_constrain(0,1,m,lp__);
-            else
-                p = in__.vector_lub_constrain(0,1,m);
-
-            local_scalar_t__ a;
-            (void) a;  // dummy to suppress unused var warning
-            if (jacobian__)
-                a = in__.scalar_lb_constrain(0,lp__);
-            else
-                a = in__.scalar_lb_constrain(0);
-
-            local_scalar_t__ b;
-            (void) b;  // dummy to suppress unused var warning
-            if (jacobian__)
-                b = in__.scalar_lb_constrain(0,lp__);
-            else
-                b = in__.scalar_lb_constrain(0);
-
 
             // transformed parameters
 
@@ -495,21 +409,17 @@ public:
 
             // model body
 
-            current_statement_begin__ = 28;
+            current_statement_begin__ = 22;
             lp_accum__.add(normal_log<propto__>(mu, mu_m, ss_m));
-            current_statement_begin__ = 29;
+            current_statement_begin__ = 23;
             lp_accum__.add(normal_log<propto__>(sigma, mu_s, ss_s));
-            current_statement_begin__ = 30;
+            current_statement_begin__ = 24;
             lp_accum__.add(normal_log<propto__>(lambda, mu_l, ss_l));
-            current_statement_begin__ = 31;
-            lp_accum__.add(beta_log<propto__>(p, a, b));
-            current_statement_begin__ = 34;
+            current_statement_begin__ = 27;
             for (int i = 1; i <= n; ++i) {
 
-                current_statement_begin__ = 35;
+                current_statement_begin__ = 28;
                 lp_accum__.add(exp_mod_normal_log<propto__>(get_base1(rt,i,"rt",1), get_base1(mu,get_base1(s,i,"s",1),"mu",1), get_base1(sigma,get_base1(s,i,"s",1),"sigma",1), get_base1(lambda,get_base1(s,i,"s",1),"lambda",1)));
-                current_statement_begin__ = 36;
-                lp_accum__.add(bernoulli_log<propto__>(get_base1(r,i,"r",1), get_base1(p,get_base1(s,i,"s",1),"p",1)));
             }
 
         } catch (const std::exception& e) {
@@ -546,9 +456,6 @@ public:
         names__.push_back("ss_m");
         names__.push_back("ss_l");
         names__.push_back("ss_s");
-        names__.push_back("p");
-        names__.push_back("a");
-        names__.push_back("b");
     }
 
 
@@ -571,13 +478,6 @@ public:
         dims__.resize(0);
         dimss__.push_back(dims__);
         dims__.resize(0);
-        dimss__.push_back(dims__);
-        dims__.resize(0);
-        dimss__.push_back(dims__);
-        dims__.resize(0);
-        dimss__.push_back(dims__);
-        dims__.resize(0);
-        dims__.push_back(m);
         dimss__.push_back(dims__);
         dims__.resize(0);
         dimss__.push_back(dims__);
@@ -609,9 +509,6 @@ public:
         double ss_m = in__.scalar_lb_constrain(0);
         double ss_l = in__.scalar_lb_constrain(0);
         double ss_s = in__.scalar_lb_constrain(0);
-        vector_d p = in__.vector_lub_constrain(0,1,m);
-        double a = in__.scalar_lb_constrain(0);
-        double b = in__.scalar_lb_constrain(0);
             for (int k_0__ = 0; k_0__ < m; ++k_0__) {
             vars__.push_back(mu[k_0__]);
             }
@@ -627,11 +524,6 @@ public:
         vars__.push_back(ss_m);
         vars__.push_back(ss_l);
         vars__.push_back(ss_s);
-            for (int k_0__ = 0; k_0__ < m; ++k_0__) {
-            vars__.push_back(p[k_0__]);
-            }
-        vars__.push_back(a);
-        vars__.push_back(b);
 
         // declare and define transformed parameters
         double lp__ = 0.0;
@@ -725,17 +617,6 @@ public:
         param_name_stream__.str(std::string());
         param_name_stream__ << "ss_s";
         param_names__.push_back(param_name_stream__.str());
-        for (int k_0__ = 1; k_0__ <= m; ++k_0__) {
-            param_name_stream__.str(std::string());
-            param_name_stream__ << "p" << '.' << k_0__;
-            param_names__.push_back(param_name_stream__.str());
-        }
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "a";
-        param_names__.push_back(param_name_stream__.str());
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "b";
-        param_names__.push_back(param_name_stream__.str());
 
         if (!include_gqs__ && !include_tparams__) return;
 
@@ -783,17 +664,6 @@ public:
         param_names__.push_back(param_name_stream__.str());
         param_name_stream__.str(std::string());
         param_name_stream__ << "ss_s";
-        param_names__.push_back(param_name_stream__.str());
-        for (int k_0__ = 1; k_0__ <= m; ++k_0__) {
-            param_name_stream__.str(std::string());
-            param_name_stream__ << "p" << '.' << k_0__;
-            param_names__.push_back(param_name_stream__.str());
-        }
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "a";
-        param_names__.push_back(param_name_stream__.str());
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "b";
         param_names__.push_back(param_name_stream__.str());
 
         if (!include_gqs__ && !include_tparams__) return;

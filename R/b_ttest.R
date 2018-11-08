@@ -54,7 +54,7 @@ b_ttest <- function(y1,
   extract <- rstan::extract(fit)
 
   # create output class
-  out <- ttest_results(extract = extract, fit = fit, mu = mu, sigma = sigma, rope = rope)
+  out <- ttest_results(extract = extract, fit = fit, mu = mu, sigma = sigma, rope = rope, data1 = y1, data2 = y2)
 
   # return
   return(out)

@@ -4,7 +4,7 @@
 \alias{b_reaction_times}
 \title{Bayesian model for comparing reaction times and test success rate.}
 \usage{
-b_reaction_times(n, m, rt, r, s)
+b_reaction_times(n, m, rt, s)
 }
 \arguments{
 \item{n}{total number of measurements.}
@@ -13,9 +13,9 @@ b_reaction_times(n, m, rt, r, s)
 
 \item{rt}{a vector containing reaction times for each measurement.}
 
-\item{r}{a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).}
-
 \item{s}{a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).}
+
+\item{r}{a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).}
 }
 \value{
 An object of class `rt_results_class`.

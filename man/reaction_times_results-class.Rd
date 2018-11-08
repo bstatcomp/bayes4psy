@@ -21,8 +21,20 @@ An S4 class for storing results of reaction time Bayesian model.
 \examples{
 summary(`reaction_times_results`): prints summary od the fit.
 
-plot_fit(`reaction_times_results`): plots fitted model against the data. Use this function to explore the quality of your fit.
+compare(`reaction_times_results`, `reaction_times_results`): prints difference in reaction times between two groups.
 
 plot_difference(`reaction_times_results`, `reaction_times_results`): a visualization of the difference between two groups.
+
+plot_comparison(`reaction_times_results`, `reaction_times_results`): plots density for the first and the second group.
+
+compare_distributions(`reaction_times_results`, `reaction_times_results`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+
+plot_distributions(`reaction_times_results`, `reaction_times_results`): a visualization of the distribution for the first group and the second group.
+
+plot_distributions_difference(`reaction_times_results`, `reaction_times_results`): a visualization of the difference between the distribution of the first group and the second group.
+
+plot_fit(`reaction_times_results`): plots fitted model against the data. Use this function to explore the quality of your fit.
+
+traceplot(`reaction_times_results`): traceplot for main fitted model parameters.
 
 }

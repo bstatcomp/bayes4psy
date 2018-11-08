@@ -4,7 +4,7 @@
 \alias{shared_plot_difference}
 \title{Shared plots used in several models.}
 \usage{
-shared_plot_difference(y1, y2, rope = NULL)
+shared_plot_difference(y1, y2, rope = NULL, bins = 30)
 }
 \arguments{
 \item{y1}{Numeric vector of values for the first group.}

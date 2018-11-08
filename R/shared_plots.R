@@ -4,8 +4,7 @@
 #' @param y2 Numeric vector of values for the second group.
 #' @param rope Optional parameter for the rope interval.
 #' @return `ggplot` visualization of the difference.
-#'
-shared_plot_difference <- function(y1, y2, rope = NULL) {
+shared_plot_difference <- function(y1, y2, rope = NULL, bins = 30) {
   # difference
   diff <- data.frame(value = y1 - y2)
 
@@ -25,7 +24,7 @@ shared_plot_difference <- function(y1, y2, rope = NULL) {
 
   # basic histogram chart
   graph <- ggplot() +
-    geom_histogram(data = diff, aes(x = value), fill = "#3182bd", alpha = 0.3, bins = 30) +
+    geom_histogram(data = diff, aes(x = value), fill = "#3182bd", alpha = 0.4, bins = bins) +
     xlim(x_min, x_max)
 
   # add mean
@@ -49,8 +48,8 @@ shared_plot_difference <- function(y1, y2, rope = NULL) {
   # style and labels
   graph <- graph +
     theme_minimal() +
-    labs(title = "Difference plot", x = "Value", y = "") +
-    theme(plot.title = element_text(hjust = 0.5))
+    xlab("Value")
 
   suppressWarnings(print(graph))
 }
+

@@ -11,14 +11,11 @@
 b_reaction_times <- function(n,
                     m,
                     rt,
-                    r,
                     s) {
-
 
   stan_data <- list(n = n,
                     m = m,
                     rt = rt,
-                    r = r,
                     s = s)
 
   fit <- rstan::sampling(stanmodels$reaction_times,

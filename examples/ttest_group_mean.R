@@ -16,7 +16,13 @@ ttest_results <- b_ttest(y1 = y_brazil, mu = mu, rope = 1)
 # you can later change value of the rope interval
 ttest_results@rope <- 2
 
-# print summary
+# visualize fit quality
+plot_fit(ttest_results)
+
+# traceplot
+traceplot(ttest_results)
+
+# print summary, summary is equal to compare(ttest_results)
 summary(ttest_results)
 
 # difference plot
