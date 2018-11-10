@@ -24,7 +24,6 @@
 #' @exportClass reaction_times_results
 reaction_times_results <- setClass(
   "reaction_times_results",
-  #contains = "b_results",
   slots = c(
     extract = "list",
     fit = "stanfit",
@@ -36,9 +35,9 @@ reaction_times_results <- setClass(
 #' @exportMethod summary
 setMethod(f = "summary", signature(object = "reaction_times_results"), definition = function(object) {
   # get means
-  mu <- mean(object@extract$mu)
-  sigma <- mean(object@extract$sigma)
-  lambda <- mean(object@extract$lambda)
+  mu <- mean(object@extract$mu_m)
+  sigma <- mean(object@extract$mu_s)
+  lambda <- mean(object@extract$mu_l)
 
   # print
   cat(sprintf("mu: %.2f\n", mu))

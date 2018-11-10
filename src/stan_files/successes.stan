@@ -8,12 +8,10 @@ data {
 parameters {
   // success probability
   vector<lower=0,upper=1>[m] p;
-  real<lower=0> a;
-  real<lower=0> b;
 }
 
 model {
-  p ~ beta(a, b);
+  p ~ beta(1, 1);
 
   // iterate over all measurements
   for (i in 1:n) {
