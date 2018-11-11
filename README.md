@@ -6,3 +6,6 @@ Implementation of Bayesian t-test.
 
 # v 1.0.1
 Implementation of reaction times model.
+
+# v 1.0.2
+Implementation of the success rate model.
