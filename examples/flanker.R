@@ -122,3 +122,9 @@ plot_difference(s_congruent, s_incongruent)
 
 plot_comparison(s_congruent, s_incongruent)
 
+compare_distributions(s_congruent, s_incongruent)
+
+plot_distributions(s_congruent, s_incongruent)
+
+plot_distributions_difference(s_congruent, s_incongruent)
+
