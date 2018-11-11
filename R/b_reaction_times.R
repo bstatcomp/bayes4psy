@@ -4,9 +4,8 @@
 #' @param n total number of measurements.
 #' @param m number of participating subjects.
 #' @param rt a vector containing reaction times for each measurement.
-#' @param r a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).
 #' @param s a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).
-#' @return An object of class `rt_results_class`.
+#' @return An object of class `reaction_times_class`.
 #'
 b_reaction_times <- function(n,
                     m,
@@ -19,11 +18,11 @@ b_reaction_times <- function(n,
                     s = s)
 
   fit <- rstan::sampling(stanmodels$reaction_times,
-                          data = stan_data,
-                          iter = 400,
-                          warmup = 200,
-                          chains = 1,
-                          control = list(adapt_delta = 0.99, max_treedepth = 15))
+                        data = stan_data,
+                        iter = 400,
+                        warmup = 200,
+                        chains = 1,
+                        control = list(adapt_delta = 0.99, max_treedepth = 15))
 
   extract <- rstan::extract(fit)
 

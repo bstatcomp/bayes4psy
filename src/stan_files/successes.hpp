@@ -36,7 +36,7 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_successes");
-    reader.add_event(24, 22, "end", "model_successes");
+    reader.add_event(22, 20, "end", "model_successes");
     return reader;
 }
 
@@ -143,10 +143,6 @@ public:
             current_statement_begin__ = 10;
             validate_non_negative_index("p", "m", m);
             num_params_r__ += m;
-            current_statement_begin__ = 11;
-            ++num_params_r__;
-            current_statement_begin__ = 12;
-            ++num_params_r__;
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
             // Next line prevents compiler griping about no return
@@ -180,32 +176,6 @@ public:
             writer__.vector_lub_unconstrain(0,1,p);
         } catch (const std::exception& e) { 
             throw std::runtime_error(std::string("Error transforming variable p: ") + e.what());
-        }
-
-        if (!(context__.contains_r("a")))
-            throw std::runtime_error("variable a missing");
-        vals_r__ = context__.vals_r("a");
-        pos__ = 0U;
-        context__.validate_dims("initialization", "a", "double", context__.to_vec());
-        double a(0);
-        a = vals_r__[pos__++];
-        try {
-            writer__.scalar_lb_unconstrain(0,a);
-        } catch (const std::exception& e) { 
-            throw std::runtime_error(std::string("Error transforming variable a: ") + e.what());
-        }
-
-        if (!(context__.contains_r("b")))
-            throw std::runtime_error("variable b missing");
-        vals_r__ = context__.vals_r("b");
-        pos__ = 0U;
-        context__.validate_dims("initialization", "b", "double", context__.to_vec());
-        double b(0);
-        b = vals_r__[pos__++];
-        try {
-            writer__.scalar_lb_unconstrain(0,b);
-        } catch (const std::exception& e) { 
-            throw std::runtime_error(std::string("Error transforming variable b: ") + e.what());
         }
 
         params_r__ = writer__.data_r();
@@ -248,20 +218,6 @@ public:
             else
                 p = in__.vector_lub_constrain(0,1,m);
 
-            local_scalar_t__ a;
-            (void) a;  // dummy to suppress unused var warning
-            if (jacobian__)
-                a = in__.scalar_lb_constrain(0,lp__);
-            else
-                a = in__.scalar_lb_constrain(0);
-
-            local_scalar_t__ b;
-            (void) b;  // dummy to suppress unused var warning
-            if (jacobian__)
-                b = in__.scalar_lb_constrain(0,lp__);
-            else
-                b = in__.scalar_lb_constrain(0);
-
 
             // transformed parameters
 
@@ -274,12 +230,12 @@ public:
 
             // model body
 
-            current_statement_begin__ = 16;
-            lp_accum__.add(beta_log<propto__>(p, a, b));
-            current_statement_begin__ = 19;
+            current_statement_begin__ = 14;
+            lp_accum__.add(beta_log<propto__>(p, 1, 1));
+            current_statement_begin__ = 17;
             for (int i = 1; i <= n; ++i) {
 
-                current_statement_begin__ = 20;
+                current_statement_begin__ = 18;
                 lp_accum__.add(bernoulli_log<propto__>(get_base1(r,i,"r",1), get_base1(p,get_base1(s,i,"s",1),"p",1)));
             }
 
@@ -309,8 +265,6 @@ public:
     void get_param_names(std::vector<std::string>& names__) const {
         names__.resize(0);
         names__.push_back("p");
-        names__.push_back("a");
-        names__.push_back("b");
     }
 
 
@@ -319,10 +273,6 @@ public:
         std::vector<size_t> dims__;
         dims__.resize(0);
         dims__.push_back(m);
-        dimss__.push_back(dims__);
-        dims__.resize(0);
-        dimss__.push_back(dims__);
-        dims__.resize(0);
         dimss__.push_back(dims__);
     }
 
@@ -342,13 +292,9 @@ public:
         (void) function__;  // dummy to suppress unused var warning
         // read-transform, write parameters
         vector_d p = in__.vector_lub_constrain(0,1,m);
-        double a = in__.scalar_lb_constrain(0);
-        double b = in__.scalar_lb_constrain(0);
             for (int k_0__ = 0; k_0__ < m; ++k_0__) {
             vars__.push_back(p[k_0__]);
             }
-        vars__.push_back(a);
-        vars__.push_back(b);
 
         // declare and define transformed parameters
         double lp__ = 0.0;
@@ -414,12 +360,6 @@ public:
             param_name_stream__ << "p" << '.' << k_0__;
             param_names__.push_back(param_name_stream__.str());
         }
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "a";
-        param_names__.push_back(param_name_stream__.str());
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "b";
-        param_names__.push_back(param_name_stream__.str());
 
         if (!include_gqs__ && !include_tparams__) return;
 
@@ -440,12 +380,6 @@ public:
             param_name_stream__ << "p" << '.' << k_0__;
             param_names__.push_back(param_name_stream__.str());
         }
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "a";
-        param_names__.push_back(param_name_stream__.str());
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "b";
-        param_names__.push_back(param_name_stream__.str());
 
         if (!include_gqs__ && !include_tparams__) return;
 

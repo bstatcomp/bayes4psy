@@ -1,19 +1,19 @@
 # libs
 library(EasyBayes)
 
-# load data --------------------------------------------------------------------
+# load data
 df <- read.table("./examples/data/flanker.csv", sep = "\t")
 
 # map correct/incorrect/timeout to 1/0
 df$result_numeric <- 0
 df[df$result == "correct", ]$result_numeric <- 1
 
-### REACTION TIMES
+### REACTION TIMES - test vs control group -------------------------------
 # test vs control (correct and no timeout only)
 df_correct <- df[df$result == "correct", ]
 
 
-## control group
+## control group fit -----------------------------------------------------
 df_control <- df_correct[df_correct$group == "control", ]
 
 # subject indexes range on 22..45 cast to 1..23
@@ -26,7 +26,7 @@ s <- df_control$subject
 
 rt_control <- b_reaction_times(n = n, m = m, rt = rt, s = s)
 
-#summary
+# summary
 summary(rt_control)
 
 # check fits
@@ -36,7 +36,7 @@ plot_fit(rt_control)
 traceplot(rt_control)
 
 
-## test group
+## test group fit --------------------------------------------------------
 df_test <- df_correct[df_correct$group == "test", ]
 
 n <- nrow(df_test)
@@ -46,7 +46,7 @@ s <- df_test$subject
 
 rt_test <- b_reaction_times(n = n, m = m, rt = rt, s = s)
 
-#summary
+# summary
 summary(rt_test)
 
 # check fits
@@ -56,7 +56,7 @@ plot_fit(rt_test)
 traceplot(rt_test)
 
 
-## compare two groups
+## compare two groups  ---------------------------------------------------
 # difference summary
 compare(rt_control, rt_test)
 
@@ -75,8 +75,56 @@ plot_distributions(rt_control, rt_test)
 # plot distributions difference
 plot_distributions_difference(rt_control, rt_test)
 
+### SUCCESS - test group congruent vs incongruent  -----------------------
+df_congruent <- df[df$group == "test" & df$congruency == "congruent", ]
 
-# TODO: PER SUBJECT COMPARISON
-# TODO: SUCCESSES
-#e1 <- object1@extract$a / (object1@extract$a + object1@extract$b)
-#e2 <- object2@extract$a / (object2@extract$a + object2@extract$b)
+df_incongruent <- df[df$group == "test" & df$congruency == "incongruent", ]
+
+## congruent fit ---------------------------------------------------------
+n <- nrow(df_congruent)
+m <- length(unique(df_congruent$subject))
+r <- df_congruent$result_numeric
+s <- df_congruent$subject
+
+s_congruent <- b_successes(n = n, m = m, r = r, s = s)
+
+# summary
+summary(s_congruent)
+
+# check fits
+plot_fit(s_congruent)
+
+# traceplot
+traceplot(s_congruent)
+
+
+## incongruent fit -------------------------------------------------------
+n <- nrow(df_incongruent)
+m <- length(unique(df_incongruent$subject))
+r <- df_incongruent$result_numeric
+s <- df_incongruent$subject
+
+s_incongruent <- b_successes(n = n, m = m, r = r, s = s)
+
+# summary
+summary(s_incongruent)
+
+# check fits
+plot_fit(s_incongruent)
+
+# traceplot
+traceplot(s_incongruent)
+
+## comparison
+compare(s_congruent, s_incongruent)
+
+plot_difference(s_congruent, s_incongruent)
+
+plot_comparison(s_congruent, s_incongruent)
+
+compare_distributions(s_congruent, s_incongruent)
+
+plot_distributions(s_congruent, s_incongruent)
+
+plot_distributions_difference(s_congruent, s_incongruent)
+
