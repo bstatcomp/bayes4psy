@@ -133,19 +133,24 @@ setMethod(f = "compare_distributions", signature(object = "successes_results"), 
     n <- 100000
 
     # first group data
-    mu_m1 <- object@extract$mu_m
-    mu_s1 <- object@extract$mu_s
-    mu_l1 <- object@extract$mu_l
-    y1 <- remg(n, mu = mu_m1, sigma = mu_s1, lambda = mu_l1)
+    p1 <- mean(object@extract$p)
+    y1 <- rbinom(n, 1, p1)
 
     # second group data
     object2 <- list(...)[[1]]
-    mu_m2 <- object2@extract$mu_m
-    mu_s2 <- object2@extract$mu_s
-    mu_l2 <- object2@extract$mu_l
-    y2 <- remg(n, mu = mu_m2, sigma = mu_s2, lambda = mu_l2)
+    p2 <- mean(object2@extract$p)
+    y2 <- rbinom(n, 1, p2)
 
-    shared_difference(y1, y2)
+    # calculate
+    y1_smaller <- round(sum(y1 < y2) / n, 2)
+    y1_greater <- round(sum(y1 > y2) / n, 2)
+    equal <- 1 - y1_smaller - y1_greater
+
+    # print
+    cat(sprintf("Probabilities:\n  - Group 1 < Group 2: %.2f", y1_smaller))
+    cat(sprintf("\n  - Group 1 > Group 2: %.2f", y1_greater))
+    cat(sprintf("\n  - Equal: %.2f\n", equal))
+
   } else {
     warning("Wrong parameters provided for the plot_difference function, plot_difference(successes_results, successes_results) is required!")
   }
@@ -159,31 +164,32 @@ setMethod(f = "compare_distributions", signature(object = "successes_results"), 
 setMethod(f = "plot_distributions", signature(object = "successes_results"), definition = function(object, ...) {
   # check if correct amount of parameters and if they are of appropriate type
   if (length(list(...)) == 1 && class(list(...)[[1]])[1] == "successes_results") {
-    object2 <- list(...)[[1]]
+    n <- nrow(object@extract$p)
+    m <- 10000
 
     # first group data
-    mu_m1 <- mean(object@extract$mu_m)
-    mu_s1 <- mean(object@extract$mu_s)
-    mu_l1 <- mean(object@extract$mu_l)
+    p1 <- mean(object@extract$p)
+    y1 <- rbinom(m, n, p1) / n
+    mu1 <- mean(y1)
+    sd1 <- sd(y1)
 
     # second group data
     object2 <- list(...)[[1]]
-    mu_m2 <- mean(object2@extract$mu_m)
-    mu_s2 <- mean(object2@extract$mu_s)
-    mu_l2 <- mean(object2@extract$mu_l)
-
-    x_min <- min(mu_m1 - 4 * mu_s1, mu_m2 - 4 * mu_s2)
-    x_max <- max(mu_m1 + 1/mu_l1 + 4 * mu_s1, mu_m2 + 1/mu_l2 + 4 * mu_s2)
-
-    x_max <- ceiling(max(object@data$rt, object2@data$rt))
-    df_x <- data.frame(value = c(0, x_max))
+    p2 <- mean(object2@extract$p)
+    y2 <- rbinom(m, n, p2) / n
+    df2 <- data.frame(value = y2)
+    mu2 <- mean(y2)
+    sd2 <- sd(y2)
 
     # plot
+    df_x <- data.frame(value = c(0, 1))
+
     graph <- ggplot(data = df_x, aes(x = value)) +
-      stat_function(fun = demg, n = n, args = list(mu = mu_m1, sigma = mu_s1, lambda = mu_l1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
-      stat_function(fun = demg, n = n, args = list(mu = mu_m2, sigma = mu_s2, lambda = mu_l2), geom = 'area', fill = '#ff4e3f', alpha = 0.4) +
+      stat_function(fun = dnorm, n = m, args = list(mean = mu1, sd = sd1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
+      stat_function(fun = dnorm, n = m, args = list(mean = mu2, sd = sd2), geom = 'area', fill = '#ff4e3f', alpha = 0.4) +
       theme_minimal() +
-      xlab("Value")
+      xlab("Probability") +
+      ylab("Density")
 
     return(graph)
   } else {
@@ -202,19 +208,36 @@ setMethod(f = "plot_distributions_difference", signature(object = "successes_res
     n <- 100000
 
     # first group data
-    mu_m1 <- object@extract$mu_m
-    mu_s1 <- object@extract$mu_s
-    mu_l1 <- object@extract$mu_l
-    y1 <- remg(n, mu = mu_m1, sigma = mu_s1, lambda = mu_l1)
+    p1 <- mean(object@extract$p)
+    y1 <- rbinom(n, 1, p1)
 
     # second group data
     object2 <- list(...)[[1]]
-    mu_m2 <- object2@extract$mu_m
-    mu_s2 <- object2@extract$mu_s
-    mu_l2 <- object2@extract$mu_l
-    y2 <- remg(n, mu = mu_m2, sigma = mu_s2, lambda = mu_l2)
+    p2 <- mean(object2@extract$p)
+    y2 <- rbinom(n, 1, p2)
 
-    shared_plot_difference(y1, y2)
+    # calculate
+    y1_smaller <- round(sum(y1 < y2) / n, 2)
+    y1_greater <- round(sum(y1 > y2) / n, 2)
+    equal <- 1 - y1_smaler - y1_greater
+
+    levels <- c("Group 1 > Group 2", "Equal", "Group 1 < Group 2")
+    df <- data.frame(x = c(1, 1, 1),
+                     variable = factor(levels, levels = levels),
+                     value = c(y1_greater, equal, y1_smaller))
+
+    # plot
+    graph <- ggplot(data = df, aes(x = x, y = value, fill = variable)) +
+      geom_bar(stat = "identity") +
+      scale_fill_manual(values = c("#3182bd", "grey80", "#ff4e3f")) +
+      theme_minimal() +
+      theme(legend.title=element_blank()) +
+      theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+      ylab("Probability") +
+      xlim(0.3, 1.7)
+
+    return(graph)
+
   } else {
     warning("Wrong parameters provided for the plot_difference function, plot_difference(successes_results, successes_results) is required!")
   }

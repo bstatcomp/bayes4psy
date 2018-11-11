@@ -137,16 +137,16 @@ setMethod(f = "compare_distributions", signature(object = "reaction_times_result
     n <- 100000
 
     # first group data
-    mu_m1 <- object@extract$mu_m
-    mu_s1 <- object@extract$mu_s
-    mu_l1 <- object@extract$mu_l
+    mu_m1 <- mean(object@extract$mu_m)
+    mu_s1 <- mean(object@extract$mu_s)
+    mu_l1 <- mean(object@extract$mu_l)
     y1 <- remg(n, mu = mu_m1, sigma = mu_s1, lambda = mu_l1)
 
     # second group data
     object2 <- list(...)[[1]]
-    mu_m2 <- object2@extract$mu_m
-    mu_s2 <- object2@extract$mu_s
-    mu_l2 <- object2@extract$mu_l
+    mu_m2 <- mean(object2@extract$mu_m)
+    mu_s2 <- mean(object2@extract$mu_s)
+    mu_l2 <- mean(object2@extract$mu_l)
     y2 <- remg(n, mu = mu_m2, sigma = mu_s2, lambda = mu_l2)
 
     shared_difference(y1, y2)
@@ -163,8 +163,6 @@ setMethod(f = "compare_distributions", signature(object = "reaction_times_result
 setMethod(f = "plot_distributions", signature(object = "reaction_times_results"), definition = function(object, ...) {
   # check if correct amount of parameters and if they are of appropriate type
   if (length(list(...)) == 1 && class(list(...)[[1]])[1] == "reaction_times_results") {
-    object2 <- list(...)[[1]]
-
     # first group data
     mu_m1 <- mean(object@extract$mu_m)
     mu_s1 <- mean(object@extract$mu_s)
@@ -206,16 +204,16 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
     n <- 100000
 
     # first group data
-    mu_m1 <- object@extract$mu_m
-    mu_s1 <- object@extract$mu_s
-    mu_l1 <- object@extract$mu_l
+    mu_m1 <- mean(object@extract$mu_m)
+    mu_s1 <- mean(object@extract$mu_s)
+    mu_l1 <- mean(object@extract$mu_l)
     y1 <- remg(n, mu = mu_m1, sigma = mu_s1, lambda = mu_l1)
 
     # second group data
     object2 <- list(...)[[1]]
-    mu_m2 <- object2@extract$mu_m
-    mu_s2 <- object2@extract$mu_s
-    mu_l2 <- object2@extract$mu_l
+    mu_m2 <- mean(object2@extract$mu_m)
+    mu_s2 <- mean(object2@extract$mu_s)
+    mu_l2 <- mean(object2@extract$mu_l)
     y2 <- remg(n, mu = mu_m2, sigma = mu_s2, lambda = mu_l2)
 
     shared_plot_difference(y1, y2)
