@@ -51,6 +51,9 @@ compare(object = ttest_results, mu = mu, sigma = sigma)
 # difference between two fitted objects
 plot_difference(object = ttest_results, object2 = ttest_results2)
 
+# you can also provide the rope and bins parameters
+plot_difference(object = ttest_results, object2 = ttest_results2, rope = 2, bins = 10)
+
 # difference between a fitted object and a mean value
 plot_difference(object = ttest_results, mu = mu)
 
@@ -90,6 +93,9 @@ plot_distributions(object = ttest_results, mu = mu, sigma = sigma)
 ## plot disributions difference ------------------------------------------
 # plot distribution difference between two fitted objects
 plot_distributions_difference(object = ttest_results, object2 = ttest_results2)
+
+# you can also provide the rope and bins parameters
+plot_distributions_difference(object = ttest_results, object2 = ttest_results2, rope = 2, bins = 10)
 
 # plot distribution difference between a fitted object and a constant value
 plot_distributions_difference(object = ttest_results, mu = mu)

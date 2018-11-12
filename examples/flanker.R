@@ -24,7 +24,7 @@ m <- length(unique(df_control$subject))
 rt <- df_control$rt
 s <- df_control$subject
 
-rt_control <- b_reaction_times(n = n, m = m, rt = rt, s = s)
+rt_control <- b_reaction_time(n = n, m = m, rt = rt, s = s)
 
 # summary
 summary(rt_control)
@@ -44,7 +44,7 @@ m <- length(unique(df_test$subject))
 rt <- df_test$rt
 s <- df_test$subject
 
-rt_test <- b_reaction_times(n = n, m = m, rt = rt, s = s)
+rt_test <- b_reaction_time(n = n, m = m, rt = rt, s = s)
 
 # summary
 summary(rt_test)

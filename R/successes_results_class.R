@@ -113,7 +113,7 @@ setMethod(f = "plot_comparison", signature(object = "successes_results"), defini
       geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
       geom_density(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA) +
       theme_minimal() +
-      xlab("Value") +
+      xlab("value") +
       xlim(x_min, x_max)
 
     return(graph)

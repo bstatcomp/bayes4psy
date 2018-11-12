@@ -2,7 +2,7 @@
 #'
 #' @export
 #' @param y Numeric vector of values on which the fit will be based.
-#' @return An object of class `ttest_results_class`.
+#' @return An object of class `ttest_class`.
 #'
 b_ttest <- function(y) {
 
@@ -29,7 +29,7 @@ b_ttest <- function(y) {
   extract <- rstan::extract(fit)
 
   # create output class
-  out <- ttest_results(extract = extract, fit = fit, data = y)
+  out <- ttest_class(extract = extract, fit = fit, data = y)
 
   # return
   return(out)

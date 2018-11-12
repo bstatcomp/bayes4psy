@@ -10,7 +10,7 @@ b_ttest(y)
 \item{y}{Numeric vector of values on which the fit will be based.}
 }
 \value{
-An object of class `ttest_results_class`.
+An object of class `ttest_class`.
 }
 \description{
 Bayesian t-test.

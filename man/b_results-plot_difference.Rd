@@ -4,7 +4,7 @@
 \alias{plot_difference}
 \title{plot_difference}
 \usage{
-plot_difference(object, ..., bins)
+plot_difference(object, ...)
 }
 \description{
 plot_difference
