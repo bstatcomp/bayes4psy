@@ -20,7 +20,7 @@
 
 #include <stan/model/model_header.hpp>
 
-namespace model_ttest_namespace {
+namespace model_successes_namespace {
 
 using std::istream;
 using std::string;
@@ -35,30 +35,26 @@ static int current_statement_begin__;
 
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
-    reader.add_event(0, 0, "start", "model_ttest");
-    reader.add_event(39, 37, "end", "model_ttest");
+    reader.add_event(0, 0, "start", "model_successes");
+    reader.add_event(22, 20, "end", "model_successes");
     return reader;
 }
 
 #include <meta_header.hpp>
- class model_ttest : public prob_grad {
+ class model_successes : public prob_grad {
 private:
     int n;
-    vector<double> y;
-    double yMu;
-    double ySd;
-    double uLo;
-    double uHi;
-    double nSigma;
-    double eLambda;
+    int m;
+    vector<int> r;
+    vector<int> s;
 public:
-    model_ttest(stan::io::var_context& context__,
+    model_successes(stan::io::var_context& context__,
         std::ostream* pstream__ = 0)
         : prob_grad(0) {
         ctor_body(context__, 0, pstream__);
     }
 
-    model_ttest(stan::io::var_context& context__,
+    model_successes(stan::io::var_context& context__,
         unsigned int random_seed__,
         std::ostream* pstream__ = 0)
         : prob_grad(0) {
@@ -76,7 +72,7 @@ public:
 
         current_statement_begin__ = -1;
 
-        static const char* function__ = "model_ttest_namespace::model_ttest";
+        static const char* function__ = "model_successes_namespace::model_successes";
         (void) function__;  // dummy to suppress unused var warning
         size_t pos__;
         (void) pos__;  // dummy to suppress unused var warning
@@ -94,74 +90,59 @@ public:
             pos__ = 0;
             n = vals_i__[pos__++];
             current_statement_begin__ = 3;
-            validate_non_negative_index("y", "n", n);
-            context__.validate_dims("data initialization", "y", "double", context__.to_vec(n));
-            validate_non_negative_index("y", "n", n);
-            y = std::vector<double>(n,double(0));
-            vals_r__ = context__.vals_r("y");
+            context__.validate_dims("data initialization", "m", "int", context__.to_vec());
+            m = int(0);
+            vals_i__ = context__.vals_i("m");
             pos__ = 0;
-            size_t y_limit_0__ = n;
-            for (size_t i_0__ = 0; i_0__ < y_limit_0__; ++i_0__) {
-                y[i_0__] = vals_r__[pos__++];
-            }
+            m = vals_i__[pos__++];
             current_statement_begin__ = 4;
-            context__.validate_dims("data initialization", "yMu", "double", context__.to_vec());
-            yMu = double(0);
-            vals_r__ = context__.vals_r("yMu");
+            validate_non_negative_index("r", "n", n);
+            context__.validate_dims("data initialization", "r", "int", context__.to_vec(n));
+            validate_non_negative_index("r", "n", n);
+            r = std::vector<int>(n,int(0));
+            vals_i__ = context__.vals_i("r");
             pos__ = 0;
-            yMu = vals_r__[pos__++];
+            size_t r_limit_0__ = n;
+            for (size_t i_0__ = 0; i_0__ < r_limit_0__; ++i_0__) {
+                r[i_0__] = vals_i__[pos__++];
+            }
             current_statement_begin__ = 5;
-            context__.validate_dims("data initialization", "ySd", "double", context__.to_vec());
-            ySd = double(0);
-            vals_r__ = context__.vals_r("ySd");
+            validate_non_negative_index("s", "n", n);
+            context__.validate_dims("data initialization", "s", "int", context__.to_vec(n));
+            validate_non_negative_index("s", "n", n);
+            s = std::vector<int>(n,int(0));
+            vals_i__ = context__.vals_i("s");
             pos__ = 0;
-            ySd = vals_r__[pos__++];
+            size_t s_limit_0__ = n;
+            for (size_t i_0__ = 0; i_0__ < s_limit_0__; ++i_0__) {
+                s[i_0__] = vals_i__[pos__++];
+            }
 
             // validate, data variables
             current_statement_begin__ = 2;
-            check_greater_or_equal(function__,"n",n,1);
+            check_greater_or_equal(function__,"n",n,0);
             current_statement_begin__ = 3;
+            check_greater_or_equal(function__,"m",m,0);
             current_statement_begin__ = 4;
+            for (int k0__ = 0; k0__ < n; ++k0__) {
+                check_greater_or_equal(function__,"r[k0__]",r[k0__],0);
+                check_less_or_equal(function__,"r[k0__]",r[k0__],1);
+            }
             current_statement_begin__ = 5;
-            check_greater_or_equal(function__,"ySd",ySd,0);
+            for (int k0__ = 0; k0__ < n; ++k0__) {
+                check_greater_or_equal(function__,"s[k0__]",s[k0__],0);
+            }
             // initialize data variables
-            current_statement_begin__ = 9;
-            uLo = double(0);
-            stan::math::fill(uLo,DUMMY_VAR__);
-            current_statement_begin__ = 10;
-            uHi = double(0);
-            stan::math::fill(uHi,DUMMY_VAR__);
-            current_statement_begin__ = 11;
-            nSigma = double(0);
-            stan::math::fill(nSigma,DUMMY_VAR__);
-            current_statement_begin__ = 12;
-            eLambda = double(0);
-            stan::math::fill(eLambda,DUMMY_VAR__);
 
-            current_statement_begin__ = 13;
-            stan::math::assign(uLo, (ySd / 1000));
-            current_statement_begin__ = 14;
-            stan::math::assign(uHi, (ySd * 1000));
-            current_statement_begin__ = 15;
-            stan::math::assign(nSigma, (ySd * 100));
-            current_statement_begin__ = 16;
-            stan::math::assign(eLambda, (1 / 29.0));
 
             // validate transformed data
-            current_statement_begin__ = 9;
-            current_statement_begin__ = 10;
-            current_statement_begin__ = 11;
-            current_statement_begin__ = 12;
 
             // validate, set parameter ranges
             num_params_r__ = 0U;
             param_ranges_i__.clear();
-            current_statement_begin__ = 20;
-            ++num_params_r__;
-            current_statement_begin__ = 21;
-            ++num_params_r__;
-            current_statement_begin__ = 22;
-            ++num_params_r__;
+            current_statement_begin__ = 10;
+            validate_non_negative_index("p", "m", m);
+            num_params_r__ += m;
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
             // Next line prevents compiler griping about no return
@@ -169,7 +150,7 @@ public:
         }
     }
 
-    ~model_ttest() { }
+    ~model_successes() { }
 
 
     void transform_inits(const stan::io::var_context& context__,
@@ -182,43 +163,19 @@ public:
         std::vector<double> vals_r__;
         std::vector<int> vals_i__;
 
-        if (!(context__.contains_r("nuMinusOne")))
-            throw std::runtime_error("variable nuMinusOne missing");
-        vals_r__ = context__.vals_r("nuMinusOne");
+        if (!(context__.contains_r("p")))
+            throw std::runtime_error("variable p missing");
+        vals_r__ = context__.vals_r("p");
         pos__ = 0U;
-        context__.validate_dims("initialization", "nuMinusOne", "double", context__.to_vec());
-        double nuMinusOne(0);
-        nuMinusOne = vals_r__[pos__++];
+        validate_non_negative_index("p", "m", m);
+        context__.validate_dims("initialization", "p", "vector_d", context__.to_vec(m));
+        vector_d p(static_cast<Eigen::VectorXd::Index>(m));
+        for (int j1__ = 0U; j1__ < m; ++j1__)
+            p(j1__) = vals_r__[pos__++];
         try {
-            writer__.scalar_lb_unconstrain(0,nuMinusOne);
+            writer__.vector_lub_unconstrain(0,1,p);
         } catch (const std::exception& e) { 
-            throw std::runtime_error(std::string("Error transforming variable nuMinusOne: ") + e.what());
-        }
-
-        if (!(context__.contains_r("mu")))
-            throw std::runtime_error("variable mu missing");
-        vals_r__ = context__.vals_r("mu");
-        pos__ = 0U;
-        context__.validate_dims("initialization", "mu", "double", context__.to_vec());
-        double mu(0);
-        mu = vals_r__[pos__++];
-        try {
-            writer__.scalar_unconstrain(mu);
-        } catch (const std::exception& e) { 
-            throw std::runtime_error(std::string("Error transforming variable mu: ") + e.what());
-        }
-
-        if (!(context__.contains_r("sigma")))
-            throw std::runtime_error("variable sigma missing");
-        vals_r__ = context__.vals_r("sigma");
-        pos__ = 0U;
-        context__.validate_dims("initialization", "sigma", "double", context__.to_vec());
-        double sigma(0);
-        sigma = vals_r__[pos__++];
-        try {
-            writer__.scalar_lb_unconstrain(0,sigma);
-        } catch (const std::exception& e) { 
-            throw std::runtime_error(std::string("Error transforming variable sigma: ") + e.what());
+            throw std::runtime_error(std::string("Error transforming variable p: ") + e.what());
         }
 
         params_r__ = writer__.data_r();
@@ -254,64 +211,32 @@ public:
             // model parameters
             stan::io::reader<local_scalar_t__> in__(params_r__,params_i__);
 
-            local_scalar_t__ nuMinusOne;
-            (void) nuMinusOne;  // dummy to suppress unused var warning
+            Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1>  p;
+            (void) p;  // dummy to suppress unused var warning
             if (jacobian__)
-                nuMinusOne = in__.scalar_lb_constrain(0,lp__);
+                p = in__.vector_lub_constrain(0,1,m,lp__);
             else
-                nuMinusOne = in__.scalar_lb_constrain(0);
-
-            local_scalar_t__ mu;
-            (void) mu;  // dummy to suppress unused var warning
-            if (jacobian__)
-                mu = in__.scalar_constrain(lp__);
-            else
-                mu = in__.scalar_constrain();
-
-            local_scalar_t__ sigma;
-            (void) sigma;  // dummy to suppress unused var warning
-            if (jacobian__)
-                sigma = in__.scalar_lb_constrain(0,lp__);
-            else
-                sigma = in__.scalar_lb_constrain(0);
+                p = in__.vector_lub_constrain(0,1,m);
 
 
             // transformed parameters
-            current_statement_begin__ = 26;
-            local_scalar_t__ nu;
-            (void) nu;  // dummy to suppress unused var warning
-
-            stan::math::initialize(nu, DUMMY_VAR__);
-            stan::math::fill(nu,DUMMY_VAR__);
 
 
-            current_statement_begin__ = 27;
-            stan::math::assign(nu, (nuMinusOne + 1));
 
             // validate transformed parameters
-            if (stan::math::is_uninitialized(nu)) {
-                std::stringstream msg__;
-                msg__ << "Undefined transformed parameter: nu";
-                throw std::runtime_error(msg__.str());
-            }
 
             const char* function__ = "validate transformed params";
             (void) function__;  // dummy to suppress unused var warning
-            current_statement_begin__ = 26;
-            check_greater_or_equal(function__,"nu",nu,0);
 
             // model body
 
-            current_statement_begin__ = 31;
-            lp_accum__.add(uniform_log<propto__>(sigma, uLo, uHi));
-            current_statement_begin__ = 32;
-            lp_accum__.add(normal_log<propto__>(mu, yMu, nSigma));
-            current_statement_begin__ = 33;
-            lp_accum__.add(exponential_log<propto__>(nuMinusOne, eLambda));
-            current_statement_begin__ = 35;
+            current_statement_begin__ = 14;
+            lp_accum__.add(beta_log<propto__>(p, 1, 1));
+            current_statement_begin__ = 17;
             for (int i = 1; i <= n; ++i) {
-                current_statement_begin__ = 36;
-                lp_accum__.add(student_t_log<propto__>(get_base1(y,i,"y",1), nu, mu, sigma));
+
+                current_statement_begin__ = 18;
+                lp_accum__.add(bernoulli_log<propto__>(get_base1(r,i,"r",1), get_base1(p,get_base1(s,i,"s",1),"p",1)));
             }
 
         } catch (const std::exception& e) {
@@ -339,10 +264,7 @@ public:
 
     void get_param_names(std::vector<std::string>& names__) const {
         names__.resize(0);
-        names__.push_back("nuMinusOne");
-        names__.push_back("mu");
-        names__.push_back("sigma");
-        names__.push_back("nu");
+        names__.push_back("p");
     }
 
 
@@ -350,12 +272,7 @@ public:
         dimss__.resize(0);
         std::vector<size_t> dims__;
         dims__.resize(0);
-        dimss__.push_back(dims__);
-        dims__.resize(0);
-        dimss__.push_back(dims__);
-        dims__.resize(0);
-        dimss__.push_back(dims__);
-        dims__.resize(0);
+        dims__.push_back(m);
         dimss__.push_back(dims__);
     }
 
@@ -371,15 +288,13 @@ public:
 
         vars__.resize(0);
         stan::io::reader<local_scalar_t__> in__(params_r__,params_i__);
-        static const char* function__ = "model_ttest_namespace::write_array";
+        static const char* function__ = "model_successes_namespace::write_array";
         (void) function__;  // dummy to suppress unused var warning
         // read-transform, write parameters
-        double nuMinusOne = in__.scalar_lb_constrain(0);
-        double mu = in__.scalar_constrain();
-        double sigma = in__.scalar_lb_constrain(0);
-        vars__.push_back(nuMinusOne);
-        vars__.push_back(mu);
-        vars__.push_back(sigma);
+        vector_d p = in__.vector_lub_constrain(0,1,m);
+            for (int k_0__ = 0; k_0__ < m; ++k_0__) {
+            vars__.push_back(p[k_0__]);
+            }
 
         // declare and define transformed parameters
         double lp__ = 0.0;
@@ -390,24 +305,13 @@ public:
         (void) DUMMY_VAR__;  // suppress unused var warning
 
         try {
-            current_statement_begin__ = 26;
-            local_scalar_t__ nu;
-            (void) nu;  // dummy to suppress unused var warning
-
-            stan::math::initialize(nu, DUMMY_VAR__);
-            stan::math::fill(nu,DUMMY_VAR__);
 
 
-            current_statement_begin__ = 27;
-            stan::math::assign(nu, (nuMinusOne + 1));
 
             // validate transformed parameters
-            current_statement_begin__ = 26;
-            check_greater_or_equal(function__,"nu",nu,0);
 
             // write transformed parameters
             if (include_tparams__) {
-        vars__.push_back(nu);
             }
             if (!include_gqs__) return;
             // declare and define generated quantities
@@ -443,7 +347,7 @@ public:
     }
 
     static std::string model_name() {
-        return "model_ttest";
+        return "model_successes";
     }
 
 
@@ -451,22 +355,15 @@ public:
                                  bool include_tparams__ = true,
                                  bool include_gqs__ = true) const {
         std::stringstream param_name_stream__;
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "nuMinusOne";
-        param_names__.push_back(param_name_stream__.str());
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "mu";
-        param_names__.push_back(param_name_stream__.str());
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "sigma";
-        param_names__.push_back(param_name_stream__.str());
+        for (int k_0__ = 1; k_0__ <= m; ++k_0__) {
+            param_name_stream__.str(std::string());
+            param_name_stream__ << "p" << '.' << k_0__;
+            param_names__.push_back(param_name_stream__.str());
+        }
 
         if (!include_gqs__ && !include_tparams__) return;
 
         if (include_tparams__) {
-            param_name_stream__.str(std::string());
-            param_name_stream__ << "nu";
-            param_names__.push_back(param_name_stream__.str());
         }
 
 
@@ -478,22 +375,15 @@ public:
                                    bool include_tparams__ = true,
                                    bool include_gqs__ = true) const {
         std::stringstream param_name_stream__;
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "nuMinusOne";
-        param_names__.push_back(param_name_stream__.str());
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "mu";
-        param_names__.push_back(param_name_stream__.str());
-        param_name_stream__.str(std::string());
-        param_name_stream__ << "sigma";
-        param_names__.push_back(param_name_stream__.str());
+        for (int k_0__ = 1; k_0__ <= m; ++k_0__) {
+            param_name_stream__.str(std::string());
+            param_name_stream__ << "p" << '.' << k_0__;
+            param_names__.push_back(param_name_stream__.str());
+        }
 
         if (!include_gqs__ && !include_tparams__) return;
 
         if (include_tparams__) {
-            param_name_stream__.str(std::string());
-            param_name_stream__ << "nu";
-            param_names__.push_back(param_name_stream__.str());
         }
 
 
@@ -504,7 +394,7 @@ public:
 
 }
 
-typedef model_ttest_namespace::model_ttest stan_model;
+typedef model_successes_namespace::model_successes stan_model;
 
 
 #endif

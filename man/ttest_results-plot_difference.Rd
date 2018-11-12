@@ -6,7 +6,7 @@
 \alias{plot_difference,ANY-method}
 \title{plot_difference}
 \usage{
-\S4method{plot_difference}{ttest_results}(object, ..., bins = 30)
+\S4method{plot_difference}{ttest_results}(object, ..., bins)
 }
 \description{
 \code{plot_difference} a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.

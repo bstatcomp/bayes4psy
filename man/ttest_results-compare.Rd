@@ -6,7 +6,7 @@
 \alias{compare,ANY-method}
 \title{compare}
 \usage{
-\S4method{compare}{ttest_results}(object)
+\S4method{compare}{ttest_results}(object, ...)
 }
 \description{
 \code{compare} prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.

@@ -6,7 +6,7 @@
 \alias{plot_comparison,ANY-method}
 \title{plot_comparison}
 \usage{
-\S4method{plot_comparison}{ttest_results}(object)
+\S4method{plot_comparison}{ttest_results}(object, ...)
 }
 \description{
 \code{plot_comparison} plots density for the first group and density for the second group, or a mean value in case second group is defined as a normal distribution or as a constant.

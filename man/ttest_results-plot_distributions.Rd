@@ -6,7 +6,7 @@
 \alias{plot_distributions,ANY-method}
 \title{plot_distributions}
 \usage{
-\S4method{plot_distributions}{ttest_results}(object)
+\S4method{plot_distributions}{ttest_results}(object, ...)
 }
 \description{
 \code{plot_distributions} visualizes distributions underlying tested groups.

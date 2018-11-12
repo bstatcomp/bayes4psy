@@ -1,45 +1,41 @@
-# validity check for this class
-ttest_results_check <- function(object) {
-  errors <- character()
-
-  # rope as a single number < 0
-  if (length(object@rope) > 2) {
-    msg <- "You provided more than two values for the ROPE interval!"
-  }
-  else if (!is.null(object@rope) && object@rope[1] == object@rope[2] && object@rope[1] < 0) {
-    msg <- "When a single number is provided for the ROPE interval it should be positive!"
-    errors <- c(errors, msg)
-  }
-
-  if (length(errors) == 0) TRUE else errors
-}
-
-# set class unions to allow NULL values
-setClassUnion("numeric_or_null", c("numeric", "NULL"))
-setClassUnion("list_or_null", c("list", "NULL"))
-
 #' An S4 class for storing results of Bayesian t-test results.
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
-#' @slot mu Optional variable: mean value for comparison with first group.
-#' @slot sigma Optional variable: standard deviation for comparison with first group, used in combination with `mu` parameter.
-#' @slot rope Optional variable: rope interval used in comparisons.
-#' @slot data1 Raw data for the first tested group.
-#' @slot data2 Optional variable: raw data for the second tested group.
+#' @slot data Raw data for the tested group.
 #' @examples
-#' summary(`ttest_results`): prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#' summary(object = `ttest_results`): prints summary of the fit.
 #'
-#' compare(`ttest_results`): prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#' compare(object = `ttest_results`, object2 = `ttest_results`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
 #'
-#' plot_difference(`ttest_results`): a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#' compare(object = `ttest_results`, mu = `numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
 #'
-#' plot_comparison(`ttest_results`): plots density for the first group and density for the second group, or a mean value in case second group is defined as a normal distribution or as a constant.
+#' compare(object = `ttest_results`, mu = `numeric`, sigma = `numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohens d calculation. You can also provide the rope parameter.
 #'
-#' compare_distributions(`ttest_results`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group, against a mean value, or against samples from a normal distribution with a defined mean value and variance.
+#' plot_difference(object = `ttest_results`, object2 = `ttest_results`): a visualization of the difference between the first group and the second group.
 #'
-#' plot_distributions(`ttest_results`): a visualization of the distribution for the first group and the distribution or a constant value for the second group.
+#' plot_difference(object = `ttest_results`, mu = `numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu.
 #'
-#' plot_distributions_difference(`ttest_results`): a visualization of the difference between the distribution of the first group and the distribution or a constant value for the second group.
+#' plot_comparison(object = `ttest_results`, object2 = `ttest_results`): plots density for the first and the second group.
+#'
+#' plot_comparison(object = `ttest_results`, mu = `numeric`): plots density for the first group and a mean value in case second group is defined as a normal distribution or as a constant.
+#'
+#' compare_distributions(object = `ttest_results`, object2 = `ttest_results`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+#'
+#' compare_distributions(object = `ttest_results`, mu = `numeric`): draws samples from distribution of the first group and compares them against a mean value.
+#'
+#' compare_distributions(object = `ttest_results`, mu = `numeric`, sigma = `numeric`): draws samples from distribution of the first group and compares them against samples from a normal distribution with a defined mean value and variance.
+#'
+#' plot_distributions(object = `ttest_results`, object2 = `ttest_results`): a visualization of the distribution for the first group and the distribution for the second group.
+#'
+#' plot_distributions(object = `ttest_results`, mu = `numeric`): a visualization of the distribution for the first group and a constant value.
+#'
+#' plot_distributions(object = `ttest_results`, mu = `numeric`, sigma = `numeric`): a visualization of the distribution for the first group and the normal distribution defined with a mean value and standard deviation.
+#'
+#' plot_distributions_difference(object = `ttest_results`, object2 = `ttest_results`): a visualization of the difference between the distribution of the first group and the distribution of the second group.
+#'
+#' plot_distributions_difference(object = `ttest_results`, mu = `numeric`): a visualization of the difference between the distribution of the first group and a constant value.
+#'
+#' plot_distributions_difference(object = `ttest_results`, mu = `numeric`, sigma = `numeric`): a visualization of the difference between the distribution of the first group and the normal distribution defined with a mean value and standard deviation.
 #'
 #' plot_fit(`ttest_results`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
@@ -51,20 +47,23 @@ ttest_results <- setClass(
   slots = c(
     extract  = "list",
     fit = "stanfit",
-    mu = "numeric_or_null",
-    sigma = "numeric_or_null",
-    rope = "numeric_or_null",
-    data1 = "numeric",
-    data2 = "numeric_or_null"
+    data = "numeric"
   ),
-  validity = ttest_results_check,
   contains = "b_results"
 )
 
 
 #' @exportMethod summary
 setMethod(f = "summary", signature(object = "ttest_results"), definition = function(object) {
-  compare_groups(object)
+  # get means
+  mu <- mean(object@extract$mu)
+  sigma <- mean(object@extract$sigma)
+  nu <- mean(object@extract$nu)
+
+  # print
+  cat(sprintf("mu: %.2f\n", mu))
+  cat(sprintf("sigma: %.2f\n", sigma))
+  cat(sprintf("nu: %.2f\n", nu))
 })
 
 
@@ -72,8 +71,54 @@ setMethod(f = "summary", signature(object = "ttest_results"), definition = funct
 #' @description \code{compare} prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 #' @rdname ttest_results-compare
 #' @aliases compare,ANY-method
-setMethod(f = "compare", signature(object = "ttest_results"), definition = function(object) {
-  compare_groups(object)
+setMethod(f = "compare", signature(object = "ttest_results"), definition = function(object, ...) {
+  arguments <- list(...)
+
+  wrong_arguments <- "Provided invalid arguments for the compare function, compare(object = ttest_results, object2 = ttest_results), compare(object2 = ttest_results, mu = numeric), or compare(object2 = ttest_results, mu = numeric, sigma = numeric) is required! You can also pass the rope parameter, e.g. compare(object = ttest_results, object2 = ttest_results, rope = numeric)."
+
+  if (is.null(arguments)) {
+    warning(wrong_arguments)
+    return()
+  }
+
+  # prepare rope
+  rope <- NULL
+  if (!is.null(arguments$rope)) {
+    rope = arguments$rope
+  }
+  rope <- prepare_rope(rope)
+
+  # first group data
+  mu1 <- object@extract$mu
+  sigma1 <- mean(object@extract$sigma)
+  n <- length(mu1)
+
+  # second group data
+  mu2 <- NULL
+  sigma2 <- 0
+  if (!is.null(arguments$object2)) {
+    # provided another fit
+    object2 <- arguments$object2
+    mu2 <- object2@extract$mu
+    sigma2 <- mean(object2@extract$sigma)
+  } else if (!is.null(arguments$mu)) {
+    # provided mu and sigma
+    mu2 <- arguments$mu;
+
+    if (!is.null(arguments$sigma)) {
+      sigma2 <- arguments$sigma
+    }
+  } else {
+    warning(wrong_arguments)
+    return()
+  }
+
+  shared_difference(mu1, mu2, rope)
+
+  diff <- mean(mu1) - mean(mu2)
+
+  cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
+  cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
 })
 
 
@@ -81,19 +126,38 @@ setMethod(f = "compare", signature(object = "ttest_results"), definition = funct
 #' @description \code{plot_difference} a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 #' @rdname ttest_results-plot_difference
 #' @aliases plot_difference,ANY-method
-setMethod(f = "plot_difference", signature(object = "ttest_results"), definition = function(object, ..., bins = 30) {
+setMethod(f = "plot_difference", signature(object = "ttest_results"), definition = function(object, ...) {
+  arguments <- list(...)
+
+  wrong_arguments <- "Provided invalid arguments for the plot_difference function, plot_difference(ttest_results, ttest_results) or plot_difference(ttest_results, numeric) is required!"
+
+  if (is.null(arguments)) {
+    warning(wrong_arguments)
+    return()
+  }
+
   # prepare rope
-  rope <- prepare_rope(object@rope)
+  rope <- NULL
+  if (!is.null(arguments$rope)) {
+    rope = arguments$rope
+  }
+  rope <- prepare_rope(rope)
 
   # first group data
-  mu1 <- object@extract$mu[, 1]
+  mu1 <- object@extract$mu
 
   # second group data
   mu2 <- NULL
-  if (ncol(object@extract$mu) == 2) {
-    mu2 <- object@extract$mu[, 2]
-  } else if (!is.null(object@mu)) {
-    mu2 <- object@mu
+  if (!is.null(arguments$object2)) {
+    # provided another fit
+    object2 <- arguments$object2
+    mu2 <- object2@extract$mu
+  } else if (!is.null(arguments$mu)) {
+    # provided mu and sigma
+    mu2 <- arguments$mu;
+  } else {
+    warning(wrong_arguments)
+    return()
   }
 
   # call plot difference shared function from shared plots
@@ -105,28 +169,42 @@ setMethod(f = "plot_difference", signature(object = "ttest_results"), definition
 #' @description \code{plot_comparison} plots density for the first group and density for the second group, or a mean value in case second group is defined as a normal distribution or as a constant.
 #' @rdname ttest_results-plot_comparison
 #' @aliases plot_comparison,ANY-method
-setMethod(f = "plot_comparison", signature(object = "ttest_results"), definition = function(object) {
-  # get samples
-  mu1 <- object@extract$mu[, 1]
+setMethod(f = "plot_comparison", signature(object = "ttest_results"), definition = function(object, ...) {
+  arguments <- list(...)
+
+  wrong_arguments <- "Provided invalid arguments for the plot_difference function, plot_difference(ttest_results, ttest_results) or plot_difference(ttest_results, numeric) is required!"
+
+  if (is.null(arguments)) {
+    warning(wrong_arguments)
+    return()
+  }
+
+  # first group data
+  mu1 <- object@extract$mu
   df1 <- data.frame(value = mu1)
 
-  mu2 <- NULL
-  # is second group calculated by stan fit?
-  if (ncol(object@extract$mu) == 2) {
-    mu2 <- object@extract$mu[, 2]
+  # second group data
+  df2 <- NULL
+  if (!is.null(arguments$object2)) {
+    # provided another fit
+    object2 <- arguments$object2
+    mu2 <- object2@extract$mu
     df2 <- data.frame(value = mu2)
-  # second group is given as a normal distribution or a constant
+  } else if (!is.null(arguments$mu)) {
+    # provided mu and sigma
+    mu2 <- arguments$mu;
   } else {
-    mu2 <- object@mu
+    warning(wrong_arguments)
+    return()
   }
 
   # plot
   graph <- ggplot() +
     geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
     theme_minimal() +
-    xlab("Value")
+    xlab("value")
 
-  if (is.null(object@mu)) {
+  if (!is.null(df2)) {
     graph <- graph +
       geom_density(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA)
   } else {
@@ -154,27 +232,54 @@ setMethod(f = "plot_comparison", signature(object = "ttest_results"), definition
 #' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group, against a mean value, or against samples from a normal distribution with a defined mean value and variance.
 #' @rdname ttest_results-compare_distributions
 #' @aliases compare_distributions,ANY-method
-setMethod(f = "compare_distributions", signature(object = "ttest_results"), definition = function(object) {
+setMethod(f = "compare_distributions", signature(object = "ttest_results"), definition = function(object, ...) {
+  arguments <- list(...)
+
+  wrong_arguments <- "Provided invalid arguments for the plot_difference function, plot_difference(ttest_results, ttest_results) or plot_difference(ttest_results, numeric) is required!"
+
+  if (is.null(arguments)) {
+    warning(wrong_arguments)
+    return()
+  }
+
   # prepare rope
-  rope <- prepare_rope(object@rope)
+  rope <- NULL
+  if (!is.null(arguments$rope)) {
+    rope = arguments$rope
+  }
+  rope <- prepare_rope(rope)
 
   # first group data
   n <- 100000
   nu <- mean(object@extract$nu)
-  y1 <- rt.scaled(n, df = nu, mean = mean(object@extract$mu[, 1]), sd = mean(object@extract$sigma[, 1]))
+  y1 <- rt.scaled(n, df = nu, mean = mean(object@extract$mu), sd = mean(object@extract$sigma))
 
   # second group data
   y2 <- NULL
-  if (ncol(object@extract$mu) == 2) {
-    y2 <- rt.scaled(n, df = nu, mean = mean(object@extract$mu[, 2]), sd = mean(object@extract$sigma[, 2]))
-  } else if (!is.null(object@mu)) {
-    if (is.null(object@sigma))
-      object@sigma = 0;
+  sigma2 <- 0
+  if (!is.null(arguments$object2)) {
+    # provided another fit
+    object2 <- arguments$object2
+    y2 <- rt.scaled(n, df = nu, mean = mean(object2@extract$mu), sd = mean(object2@extract$sigma))
+  } else if (!is.null(arguments$mu)) {
+    # provided mu and sigma
+    mu2 <- arguments$mu;
 
-    y2 <- rnorm(n, object@mu, object@sigma)
+    if (!is.null(arguments$sigma))
+      sigma2 <- arguments$sigma;
+
+    y2 <- rnorm(n, mu2, sigma2)
+  } else {
+    warning(wrong_arguments)
+    return()
   }
 
   shared_difference(y1, y2, rope)
+
+  diff <- mean(y1) - mean(y2)
+
+  cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
+  cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
 })
 
 
@@ -182,42 +287,64 @@ setMethod(f = "compare_distributions", signature(object = "ttest_results"), defi
 #' @description \code{plot_distributions} visualizes distributions underlying tested groups.
 #' @rdname ttest_results-plot_distributions
 #' @aliases plot_distributions,ANY-method
-setMethod(f = "plot_distributions", signature(object = "ttest_results"), definition = function(object) {
+setMethod(f = "plot_distributions", signature(object = "ttest_results"), definition = function(object, ...) {
+  arguments <- list(...)
+
+  wrong_arguments <- "Provided invalid arguments for the plot_difference function, plot_difference(ttest_results, ttest_results) or plot_difference(ttest_results, numeric) is required!"
+
+  if (is.null(arguments)) {
+    warning(wrong_arguments)
+    return()
+  }
+
+  # prepare rope
+  rope <- NULL
+  if (!is.null(arguments$rope)) {
+    rope = arguments$rope
+  }
+  rope <- prepare_rope(rope)
+
   # first group data
   n <- 10000
   nu <- mean(object@extract$nu)
-  y1_mu <- mean(object@extract$mu[, 1])
-  y1_sigma <- mean(object@extract$sigma[, 1])
+  y1_mu <- mean(object@extract$mu)
+  y1_sigma <- mean(object@extract$sigma)
 
   # get x range
   x_min <- y1_mu - 4 * y1_sigma
   x_max <- y1_mu + 4 * y1_sigma
 
+  # second group data
   y2_plot <- NULL
-  # is second group calculated by stan fit?
-  if (ncol(object@extract$mu) == 2) {
-    y2_mu <- mean(object@extract$mu[, 2])
-    y2_sigma <- mean(object@extract$sigma[, 2])
+  if (!is.null(arguments$object2)) {
+    # provided another fit
+    object2 <- arguments$object2
+    y2_mu <- mean(object2@extract$mu)
+    y2_sigma <- mean(object2@extract$sigma)
 
     x_min <- min(x_min, y2_mu - 4 * y2_sigma)
     x_max <- max(x_max, y2_mu + 4 * y2_sigma)
 
     y2_plot <- stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
-  # second group is given as a normal distribution
-  } else if (!is.null(object@mu) && !is.null(object@sigma)) {
-    y2_mu <- object@mu
-    y2_sigma <- object@sigma
+  } else if (!is.null(arguments$mu)) {
+    # provided mu and sigma
+    y2_mu <- arguments$mu;
 
-    x_min <- min(x_min, y2_mu - 4 * y2_sigma)
-    x_max <- max(x_max, y2_mu + 4 * y2_sigma)
+    if (!is.null(arguments$sigma)) {
+      y2_sigma <- arguments$sigma;
 
-    y2_plot <- stat_function(fun = dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
-  # second group is just a constant number, part 1 (because we need max y for vertical line)
-  } else if (!is.null(object@mu)) {
-    y2_mu <- object@mu
+      x_min <- min(x_min, y2_mu - 4 * y2_sigma)
+      x_max <- max(x_max, y2_mu + 4 * y2_sigma)
 
-    x_min <- min(x_min, y2_mu)
-    x_max <- max(x_max, y2_mu)
+      y2_plot <- stat_function(fun = dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
+    } else {
+      x_min <- min(x_min, y2_mu)
+      x_max <- max(x_max, y2_mu)
+    }
+
+  } else {
+    warning(wrong_arguments)
+    return()
   }
 
   # plot
@@ -227,9 +354,10 @@ setMethod(f = "plot_distributions", signature(object = "ttest_results"), definit
     stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = y1_mu, sd = y1_sigma), geom = 'area', fill = '#3182bd', alpha = 0.4) +
     y2_plot +
     theme_minimal() +
-    xlab("Value")
+    xlab("value") +
+    ylab("density")
 
-  if (!is.null(object@mu) && is.null(object@sigma)) {
+  if (is.null(y2_plot)) {
     y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
     graph <- graph +
@@ -245,24 +373,47 @@ setMethod(f = "plot_distributions", signature(object = "ttest_results"), definit
 #' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the distribution or a constant value for the second group.
 #' @rdname ttest_results-plot_distributions_difference
 #' @aliases plot_distributions_difference,ANY-method
-setMethod(f = "plot_distributions_difference", signature(object = "ttest_results"), definition = function(object) {
+setMethod(f = "plot_distributions_difference", signature(object = "ttest_results"), definition = function(object, ...) {
+  arguments <- list(...)
+
+  wrong_arguments <- "Provided invalid arguments for the plot_difference function, plot_difference(ttest_results, ttest_results) or plot_difference(ttest_results, numeric) is required!"
+
+  if (is.null(arguments)) {
+    warning(wrong_arguments)
+    return()
+  }
+
   # prepare rope
-  rope <- prepare_rope(object@rope)
+  rope <- NULL
+  if (!is.null(arguments$rope)) {
+    rope = arguments$rope
+  }
+  rope <- prepare_rope(rope)
 
   # first group data
   n <- 100000
   nu <- mean(object@extract$nu)
-  y1 <- rt.scaled(n, df = nu, mean = mean(object@extract$mu[, 1]), sd = mean(object@extract$sigma[, 1]))
+  y1 <- rt.scaled(n, df = nu, mean = mean(object@extract$mu), sd = mean(object@extract$sigma))
 
   # second group data
   y2 <- NULL
-  if (ncol(object@extract$mu) == 2) {
-    y2 <- rt.scaled(n, df = nu, mean = mean(object@extract$mu[, 2]), sd = mean(object@extract$sigma[, 2]))
-  } else if (!is.null(object@mu)) {
-    if (is.null(object@sigma))
-      object@sigma = 0;
+  if (!is.null(arguments$object2)) {
+    # provided another fit
+    object2 <- arguments$object2
+    y2 <- rt.scaled(n, df = nu, mean = mean(object2@extract$mu), sd = mean(object2@extract$sigma))
+  } else if (!is.null(arguments$mu)) {
+    # provided mu and sigma
+    mu2 <- arguments$mu;
+    sigma2 <- 0
 
-    y2 <- rnorm(n, mean(object@mu), mean(object@sigma))
+    if (!is.null(arguments$sigma)) {
+      sigma2 <- arguments$sigma
+    }
+
+    y2 <- rnorm(n, mu2, sigma2)
+  } else {
+    warning(wrong_arguments)
+    return()
   }
 
   shared_plot_difference(y1, y2, rope)
@@ -275,38 +426,22 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_results
 #' @aliases plot_fit,ANY-method
 setMethod(f = "plot_fit", signature(object = "ttest_results"), definition = function(object) {
   n <- 10000
-  df_data1 <- data.frame(value = object@data1)
+  df_data <- data.frame(value = object@data)
 
   nu <- mean(object@extract$nu)
-  y1_mu <- mean(object@extract$mu[, 1])
-  y1_sigma <- mean(object@extract$sigma[, 1])
+  mu <- mean(object@extract$mu)
+  sigma <- mean(object@extract$sigma)
 
   # get x range
-  x_min <- y1_mu - 4 * y1_sigma
-  x_max <- y1_mu + 4 * y1_sigma
-
-  density2 <- NULL
-  function2 <- NULL
-  if (!is.null(object@data2)) {
-    df_data2 <- data.frame(value = object@data2)
-    y2_mu <- mean(object@extract$mu[, 2])
-    y2_sigma <- mean(object@extract$sigma[, 2])
-
-    x_min <- min(x_min, y2_mu - 4 * y2_sigma)
-    x_max <- max(x_max, y2_mu + 4 * y2_sigma)
-
-    density2 <- geom_density(data = df_data2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA)
-    function2 <- stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = y2_mu, sd = y2_sigma), colour = "#ff4e3f", size = 1)
-  }
+  x_min <- mu - 4 * sigma
+  x_max <- mu + 4 * sigma
 
   df_x <- data.frame(x = c(x_min, x_max))
 
   graph <- ggplot(data = df_x) +
-    geom_density(data = df_data1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
-    stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = y1_mu, sd = y1_sigma), colour = "#3182bd", size = 1) +
-    density2 +
-    function2 +
-    xlab("Value") +
+    geom_density(data = df_data, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
+    stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = mu, sd = sigma), colour = "#3182bd", size = 1) +
+    xlab("value") +
     theme_minimal() +
     xlim(x_min, x_max)
 
@@ -324,34 +459,6 @@ setMethod(f = "traceplot", signature(object = "ttest_results"), definition = fun
 
 
 ### Helper functions
-# comparison function
-compare_groups <- function(object) {
-  # prepare rope
-  rope <- prepare_rope(object@rope)
-
-  # first group data
-  mu1 <- object@extract$mu[, 1]
-  sigma1 <- mean(object@extract$sigma[, 1])
-  n <- length(mu1)
-
-  # second group data
-  mu2 <- NULL
-  if (ncol(object@extract$mu) == 2) {
-    mu2 <- object@extract$mu[, 2]
-    sigma2 <- mean(object@extract$sigma[, 2])
-  } else if (!is.null(object@mu)) {
-    mu2 <- rep(object@mu, n)
-    sigma2 <- 0
-  }
-
-  shared_difference(mu1, mu2, rope)
-
-  diff <- mean(mu1) - mean(mu2)
-
-  cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
-  cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
-}
-
 # prepare rope
 prepare_rope <- function(rope) {
   # rope is NULL
