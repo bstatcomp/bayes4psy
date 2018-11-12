@@ -3,39 +3,39 @@
 #' @slot fit Stan fit.
 #' @slot data Raw data for the tested group.
 #' @examples
-#' summary(object = `ttest_class`): prints summary of the fit.
+#' summary(`ttest_class`): prints summary of the fit.
 #'
-#' compare(object = `ttest_class`, object2 = `ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
+#' compare(`ttest_class`, fit2 = `ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
 #'
-#' compare(object = `ttest_class`, mu = `numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
+#' compare(`ttest_class`, mu = `numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
 #'
-#' compare(object = `ttest_class`, mu = `numeric`, sigma = `numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohens d calculation. You can also provide the rope parameter.
+#' compare(`ttest_class`, mu = `numeric`, sigma = `numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohens d calculation. You can also provide the rope parameter.
 #'
-#' plot_difference(object = `ttest_class`, object2 = `ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_difference(`ttest_class`, fit2 = `ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_difference(object = `ttest_class`, mu = `numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_difference(`ttest_class`, mu = `numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_comparison(object = `ttest_class`, object2 = `ttest_class`): plots density for the first and the second group.
+#' plot_comparison(`ttest_class`, fit2 = `ttest_class`): plots density for the first and the second group.
 #'
-#' plot_comparison(object = `ttest_class`, mu = `numeric`): plots density for the first group and a mean value in case second group is defined as a normal distribution or as a constant.
+#' plot_comparison(`ttest_class`, mu = `numeric`): plots density for the first group and a mean value in case second group is defined as a normal distribution or as a constant.
 #'
-#' compare_distributions(object = `ttest_class`, object2 = `ttest_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
+#' compare_distributions(`ttest_class`, fit2 = `ttest_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
-#' compare_distributions(object = `ttest_class`, mu = `numeric`): draws samples from distribution of the first group and compares them against a mean value. You can also provide the rope parameter.
+#' compare_distributions(`ttest_class`, mu = `numeric`): draws samples from distribution of the first group and compares them against a mean value. You can also provide the rope parameter.
 #'
-#' compare_distributions(object = `ttest_class`, mu = `numeric`, sigma = `numeric`): draws samples from distribution of the first group and compares them against samples from a normal distribution with a defined mean value and variance. You can also provide the rope parameter.
+#' compare_distributions(`ttest_class`, mu = `numeric`, sigma = `numeric`): draws samples from distribution of the first group and compares them against samples from a normal distribution with a defined mean value and variance. You can also provide the rope parameter.
 #'
-#' plot_distributions(object = `ttest_class`, object2 = `ttest_class`): a visualization of the distribution for the first group and the distribution for the second group.
+#' plot_distributions(`ttest_class`, fit2 = `ttest_class`): a visualization of the distribution for the first group and the distribution for the second group.
 #'
-#' plot_distributions(object = `ttest_class`, mu = `numeric`): a visualization of the distribution for the first group and a constant value.
+#' plot_distributions(`ttest_class`, mu = `numeric`): a visualization of the distribution for the first group and a constant value.
 #'
-#' plot_distributions(object = `ttest_class`, mu = `numeric`, sigma = `numeric`): a visualization of the distribution for the first group and the normal distribution defined with a mean value and standard deviation.
+#' plot_distributions(`ttest_class`, mu = `numeric`, sigma = `numeric`): a visualization of the distribution for the first group and the normal distribution defined with a mean value and standard deviation.
 #'
-#' plot_distributions_difference(object = `ttest_class`, object2 = `ttest_class`): a visualization of the difference between the distribution of the first group and the distribution of the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_distributions_difference(`ttest_class`, fit2 = `ttest_class`): a visualization of the difference between the distribution of the first group and the distribution of the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_distributions_difference(object = `ttest_class`, mu = `numeric`): a visualization of the difference between the distribution of the first group and a constant value. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_distributions_difference(`ttest_class`, mu = `numeric`): a visualization of the difference between the distribution of the first group and a constant value. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_distributions_difference(object = `ttest_class`, mu = `numeric`, sigma = `numeric`): a visualization of the difference between the distribution of the first group and the normal distribution defined with a mean value and standard deviation. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_distributions_difference(`ttest_class`, mu = `numeric`, sigma = `numeric`): a visualization of the difference between the distribution of the first group and the normal distribution defined with a mean value and standard deviation. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_fit(`ttest_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
@@ -74,7 +74,7 @@ setMethod(f = "summary", signature(object = "ttest_class"), definition = functio
 setMethod(f = "compare", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(object = ttest_class, object2 = ttest_class), compare(object2 = ttest_class, mu = numeric), or compare(object2 = ttest_class, mu = numeric, sigma = numeric) is required! You can also pass the rope parameter, e.g. compare(object = ttest_class, object2 = ttest_class, rope = numeric)."
+  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(ttest_class, fit2 = ttest_class), compare(fit2 = ttest_class, mu = numeric), or compare(fit2 = ttest_class, mu = numeric, sigma = numeric) is required! You can also pass the rope parameter, e.g. compare(ttest_class, fit2 = ttest_class, rope = numeric)."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -96,11 +96,11 @@ setMethod(f = "compare", signature(object = "ttest_class"), definition = functio
   # second group data
   mu2 <- NULL
   sigma2 <- 0
-  if (!is.null(arguments$object2)) {
+  if (!is.null(arguments$fit2)) {
     # provided another fit
-    object2 <- arguments$object2
-    mu2 <- object2@extract$mu
-    sigma2 <- mean(object2@extract$sigma)
+    fit2 <- arguments$fit2
+    mu2 <- fit2@extract$mu
+    sigma2 <- mean(fit2@extract$sigma)
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
     mu2 <- arguments$mu;
@@ -129,7 +129,7 @@ setMethod(f = "compare", signature(object = "ttest_class"), definition = functio
 setMethod(f = "plot_difference", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(ttest_class, ttest_class) or plot_difference(ttest_class, numeric) is required! You can also pass the rope and the bins (number of bins in the histogram) parameters, e.g. plot_difference(object = ttest_class, object2 = ttest_class, rope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(ttest_class, ttest_class) or plot_difference(ttest_class, numeric) is required! You can also pass the rope and the bins (number of bins in the histogram) parameters, e.g. plot_difference(ttest_class, fit2 = ttest_class, rope = numeric, bins = numeric)."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -148,10 +148,10 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
 
   # second group data
   mu2 <- NULL
-  if (!is.null(arguments$object2)) {
+  if (!is.null(arguments$fit2)) {
     # provided another fit
-    object2 <- arguments$object2
-    mu2 <- object2@extract$mu
+    fit2 <- arguments$fit2
+    mu2 <- fit2@extract$mu
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
     mu2 <- arguments$mu;
@@ -191,10 +191,10 @@ setMethod(f = "plot_comparison", signature(object = "ttest_class"), definition =
 
   # second group data
   df2 <- NULL
-  if (!is.null(arguments$object2)) {
+  if (!is.null(arguments$fit2)) {
     # provided another fit
-    object2 <- arguments$object2
-    mu2 <- object2@extract$mu
+    fit2 <- arguments$fit2
+    mu2 <- fit2@extract$mu
     df2 <- data.frame(value = mu2)
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
@@ -241,7 +241,7 @@ setMethod(f = "plot_comparison", signature(object = "ttest_class"), definition =
 setMethod(f = "compare_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(object = ttest_class, object2 = ttest_class), compare_distributions(object2 = ttest_class, mu = numeric), or compare_distributions(object2 = ttest_class, mu = numeric, sigma = numeric) is required! You can also pass the rope parameter, e.g. compare_distributions(object = ttest_class, object2 = ttest_class, rope = numeric)."
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(ttest_class, fit2 = ttest_class), compare_distributions(ttest_class, mu = numeric), or compare_distributions(ttest_class, mu = numeric, sigma = numeric) is required! You can also pass the rope parameter, e.g. compare_distributions(ttest_class, fit2 = ttest_class, rope = numeric)."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -265,11 +265,11 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
   # second group data
   y2 <- NULL
   sigma2 <- 0
-  if (!is.null(arguments$object2)) {
+  if (!is.null(arguments$fit2)) {
     # provided another fit
-    object2 <- arguments$object2
-    mu2 <- mean(object2@extract$mu)
-    sigma2 <- mean(object2@extract$sigma)
+    fit2 <- arguments$fit2
+    mu2 <- mean(fit2@extract$mu)
+    sigma2 <- mean(fit2@extract$sigma)
 
     y2 <- rt.scaled(n, df = nu, mean = mu2, sd = sigma2)
   } else if (!is.null(arguments$mu)) {
@@ -301,7 +301,7 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
 setMethod(f = "plot_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_distributions function are invalid, plot_distributions(object = ttest_class, object2 = ttest_class), plot_distributions(object2 = ttest_class, mu = numeric), or plot_distributions(object2 = ttest_class, mu = numeric, sigma = numeric) is required!"
+  wrong_arguments <- "The provided arguments for the plot_distributions function are invalid, plot_distributions(ttest_class, fit2 = ttest_class), plot_distributions(ttest_class, mu = numeric), or plot_distributions(ttest_class, mu = numeric, sigma = numeric) is required!"
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -320,11 +320,11 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
 
   # second group data
   y2_plot <- NULL
-  if (!is.null(arguments$object2)) {
+  if (!is.null(arguments$fit2)) {
     # provided another fit
-    object2 <- arguments$object2
-    y2_mu <- mean(object2@extract$mu)
-    y2_sigma <- mean(object2@extract$sigma)
+    fit2 <- arguments$fit2
+    y2_mu <- mean(fit2@extract$mu)
+    y2_sigma <- mean(fit2@extract$sigma)
 
     x_min <- min(x_min, y2_mu - 4 * y2_sigma)
     x_max <- max(x_max, y2_mu + 4 * y2_sigma)
@@ -380,7 +380,7 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
 setMethod(f = "plot_distributions_difference", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(object = ttest_class, object2 = ttest_class), plot_distributions_difference(object2 = ttest_class, mu = numeric), or plot_distributions_difference(object2 = ttest_class, mu = numeric, sigma = numeric) is required! You can also pass the rope and the bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(object = ttest_class, object2 = ttest_class, rope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(ttest_class, fit2 = ttest_class), plot_distributions_difference(ttest_class, mu = numeric), or plot_distributions_difference(ttest_class, mu = numeric, sigma = numeric) is required! You can also pass the rope and the bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(ttest_class, fit2 = ttest_class, rope = numeric, bins = numeric)."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -401,10 +401,10 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_class")
 
   # second group data
   y2 <- NULL
-  if (!is.null(arguments$object2)) {
+  if (!is.null(arguments$fit2)) {
     # provided another fit
-    object2 <- arguments$object2
-    y2 <- rt.scaled(n, df = nu, mean = mean(object2@extract$mu), sd = mean(object2@extract$sigma))
+    fit2 <- arguments$fit2
+    y2 <- rt.scaled(n, df = nu, mean = mean(fit2@extract$mu), sd = mean(fit2@extract$sigma))
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
     mu2 <- arguments$mu;
