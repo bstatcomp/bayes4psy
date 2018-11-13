@@ -96,9 +96,13 @@ setMethod(f = "compare", signature(object = "ttest_class"), definition = functio
   # second group data
   mu2 <- NULL
   sigma2 <- 0
-  if (!is.null(arguments$fit2)) {
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
     # provided another fit
-    fit2 <- arguments$fit2
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
     mu2 <- fit2@extract$mu
     sigma2 <- mean(fit2@extract$sigma)
   } else if (!is.null(arguments$mu)) {
@@ -113,7 +117,7 @@ setMethod(f = "compare", signature(object = "ttest_class"), definition = functio
     return()
   }
 
-  shared_difference(mu1, mu2, rope)
+  shared_difference(y1 = mu1, y2 = mu2, rope = rope)
 
   diff <- mean(mu1) - mean(mu2)
 
@@ -148,9 +152,13 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
 
   # second group data
   mu2 <- NULL
-  if (!is.null(arguments$fit2)) {
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
     # provided another fit
-    fit2 <- arguments$fit2
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
     mu2 <- fit2@extract$mu
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
@@ -167,7 +175,7 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
   }
 
   # call plot difference shared function from shared plots
-  shared_plot_difference(mu1, mu2, rope, bins)
+  shared_plot_difference(y1 = mu1, y2 = mu2, rope = rope, bins = bins)
 })
 
 
@@ -191,9 +199,13 @@ setMethod(f = "plot_comparison", signature(object = "ttest_class"), definition =
 
   # second group data
   df2 <- NULL
-  if (!is.null(arguments$fit2)) {
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
     # provided another fit
-    fit2 <- arguments$fit2
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
     mu2 <- fit2@extract$mu
     df2 <- data.frame(value = mu2)
   } else if (!is.null(arguments$mu)) {
@@ -265,9 +277,13 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
   # second group data
   y2 <- NULL
   sigma2 <- 0
-  if (!is.null(arguments$fit2)) {
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
     # provided another fit
-    fit2 <- arguments$fit2
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
     mu2 <- mean(fit2@extract$mu)
     sigma2 <- mean(fit2@extract$sigma)
 
@@ -285,7 +301,7 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
     return()
   }
 
-  shared_difference(y1, y2, rope)
+  shared_difference(y1 = y1, y2 = y2, rope = rope)
 
   diff <- mean(y1) - mean(y2)
 
@@ -320,9 +336,13 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
 
   # second group data
   y2_plot <- NULL
-  if (!is.null(arguments$fit2)) {
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
     # provided another fit
-    fit2 <- arguments$fit2
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
     y2_mu <- mean(fit2@extract$mu)
     y2_sigma <- mean(fit2@extract$sigma)
 
@@ -401,9 +421,13 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_class")
 
   # second group data
   y2 <- NULL
-  if (!is.null(arguments$fit2)) {
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
     # provided another fit
-    fit2 <- arguments$fit2
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
     y2 <- rt.scaled(n, df = nu, mean = mean(fit2@extract$mu), sd = mean(fit2@extract$sigma))
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
@@ -427,7 +451,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_class")
   }
 
   # call plot difference shared function from shared plots
-  shared_plot_difference(y1, y2, rope, bins)
+  shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
 })
 
 

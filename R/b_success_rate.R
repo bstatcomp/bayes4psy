@@ -5,9 +5,9 @@
 #' @param m number of participating subjects.
 #' @param r a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).
 #' @param s a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).
-#' @return An object of class `successes_results_class`.
+#' @return An object of class `success_rate_class`.
 #'
-b_successes <- function(n,
+b_success_rate <- function(n,
                     m,
                     r,
                     s) {
@@ -27,7 +27,7 @@ b_successes <- function(n,
   extract <- rstan::extract(fit)
 
   # create output class
-  out <- successes_results(extract = extract, data = stan_data, fit = fit)
+  out <- success_rate_class(extract = extract, data = stan_data, fit = fit)
 
   # return
   return(out)

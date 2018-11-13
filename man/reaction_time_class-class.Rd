@@ -21,17 +21,17 @@ An S4 class for storing results of reaction time Bayesian model.
 \examples{
 summary(`reaction_time_class`): prints summary od the fit.
 
-compare(`reaction_time_class`, `reaction_time_class`): prints difference in reaction times between two groups.
+compare(`reaction_time_class`, fit2 = `reaction_time_class`): prints difference in reaction times between two groups.
 
-plot_difference(`reaction_time_class`, `reaction_time_class`): a visualization of the difference between two groups.
+plot_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between two groups.
 
-plot_comparison(`reaction_time_class`, `reaction_time_class`): plots density for the first and the second group.
+plot_comparison(`reaction_time_class`, fit2 = `reaction_time_class`): plots density for the first and the second group.
 
-compare_distributions(`reaction_time_class`, `reaction_time_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+compare_distributions(`reaction_time_class`, fit2 = `reaction_time_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 
-plot_distributions(`reaction_time_class`, `reaction_time_class`): a visualization of the distribution for the first group and the second group.
+plot_distributions(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the distribution for the first group and the second group.
 
-plot_distributions_difference(`reaction_time_class`, `reaction_time_class`): a visualization of the difference between the distribution of the first group and the second group.
+plot_distributions_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between the distribution of the first group and the second group.
 
 plot_fit(`reaction_time_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 

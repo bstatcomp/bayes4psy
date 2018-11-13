@@ -58,24 +58,31 @@ traceplot(rt_test)
 
 ## compare two groups  ---------------------------------------------------
 # difference summary
-compare(rt_control, rt_test)
+compare(rt_control, fit2 = rt_test)
 
 # difference plot
-plot_difference(rt_control, rt_test)
+plot_difference(rt_control, fit2 = rt_test)
+
+# difference plot with custom bins
+plot_difference(rt_control, fit2 = rt_test, bins = 10)
 
 # comparison plot
-plot_comparison(rt_control, rt_test)
+plot_comparison(rt_control, fit2 = rt_test)
 
 # compare distributions
-compare_distributions(rt_control, rt_test)
+compare_distributions(rt_control, fit2 = rt_test)
 
 # plot distributions
-plot_distributions(rt_control, rt_test)
+plot_distributions(rt_control, fit2 = rt_test)
 
 # plot distributions difference
-plot_distributions_difference(rt_control, rt_test)
+plot_distributions_difference(rt_control, fit2 = rt_test)
 
-### SUCCESS - test group congruent vs incongruent  -----------------------
+# plot distributions difference with custom bins
+plot_distributions_difference(rt_control, fit2 = rt_test, bins = 10)
+
+
+### SUCCESS RATE - test group congruent vs incongruent  ------------------
 df_congruent <- df[df$group == "test" & df$congruency == "congruent", ]
 
 df_incongruent <- df[df$group == "test" & df$congruency == "incongruent", ]
@@ -86,7 +93,7 @@ m <- length(unique(df_congruent$subject))
 r <- df_congruent$result_numeric
 s <- df_congruent$subject
 
-s_congruent <- b_successes(n = n, m = m, r = r, s = s)
+s_congruent <- b_success_rate(n = n, m = m, r = r, s = s)
 
 # summary
 summary(s_congruent)
@@ -104,7 +111,7 @@ m <- length(unique(df_incongruent$subject))
 r <- df_incongruent$result_numeric
 s <- df_incongruent$subject
 
-s_incongruent <- b_successes(n = n, m = m, r = r, s = s)
+s_incongruent <- b_success_rate(n = n, m = m, r = r, s = s)
 
 # summary
 summary(s_incongruent)
@@ -116,15 +123,15 @@ plot_fit(s_incongruent)
 traceplot(s_incongruent)
 
 ## comparison
-compare(s_congruent, s_incongruent)
+compare(s_congruent, fit2 = s_incongruent)
 
-plot_difference(s_congruent, s_incongruent)
+plot_difference(s_congruent, fit2 = s_incongruent)
 
-plot_comparison(s_congruent, s_incongruent)
+plot_comparison(s_congruent, fit2 = s_incongruent)
 
-compare_distributions(s_congruent, s_incongruent)
+compare_distributions(s_congruent, fit2 = s_incongruent)
 
-plot_distributions(s_congruent, s_incongruent)
+plot_distributions(s_congruent, fit2 = s_incongruent)
 
-plot_distributions_difference(s_congruent, s_incongruent)
+plot_distributions_difference(s_congruent, fit2 = s_incongruent)
 

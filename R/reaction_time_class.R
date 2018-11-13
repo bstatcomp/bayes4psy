@@ -5,17 +5,17 @@
 #' @examples
 #' summary(`reaction_time_class`): prints summary od the fit.
 #'
-#' compare(`reaction_time_class`, `reaction_time_class`): prints difference in reaction times between two groups.
+#' compare(`reaction_time_class`, fit2 = `reaction_time_class`): prints difference in reaction times between two groups.
 #'
-#' plot_difference(`reaction_time_class`, `reaction_time_class`): a visualization of the difference between two groups.
+#' plot_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between two groups.
 #'
-#' plot_comparison(`reaction_time_class`, `reaction_time_class`): plots density for the first and the second group.
+#' plot_comparison(`reaction_time_class`, fit2 = `reaction_time_class`): plots density for the first and the second group.
 #'
-#' compare_distributions(`reaction_time_class`, `reaction_time_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+#' compare_distributions(`reaction_time_class`, fit2 = `reaction_time_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #'
-#' plot_distributions(`reaction_time_class`, `reaction_time_class`): a visualization of the distribution for the first group and the second group.
+#' plot_distributions(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the distribution for the first group and the second group.
 #'
-#' plot_distributions_difference(`reaction_time_class`, `reaction_time_class`): a visualization of the difference between the distribution of the first group and the second group.
+#' plot_distributions_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between the distribution of the first group and the second group.
 #'
 #' plot_fit(`reaction_time_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
@@ -53,7 +53,7 @@ setMethod(f = "summary", signature(object = "reaction_time_class"), definition =
 setMethod(f = "compare", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(object = reaction_time_class, object2 = reaction_time_class) is required!"
+  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(reaction_time_class, fit2 = reaction_time_class) is required!"
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -64,15 +64,20 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
   y1 <- object@extract$mu_m + 1/object@extract$mu_l
 
   # second group data
-  if (!is.null(arguments$object2)) {
-    object2 <- list(...)[[1]]
-    y2 <- object2@extract$mu_m + 1/object2@extract$mu_l
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
+    # provided another fit
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+    y2 <- fit2@extract$mu_m + 1/fit2@extract$mu_l
+
+    shared_difference(y1 = y1, y2 = y2)
   } else {
     warning(wrong_arguments)
     return()
   }
-
-  shared_difference(y1, y2)
 })
 
 
@@ -83,7 +88,7 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
 setMethod(f = "plot_difference", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, plot_difference(object = reaction_time_class, object2 = reaction_time_class) is required! You can also pass the bins (number of bins in the histogram) parameter, e.g. plot_difference(object = reaction_time_class, object2 = reaction_time_class, rope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(reaction_time_class, fit2 = reaction_time_class) is required! You can also pass the bins (number of bins in the histogram) parameter, e.g. plot_difference(reaction_time_class, fit2 = reaction_time_class, bins = numeric)."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -94,22 +99,27 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
   y1 <- object@extract$mu_m + 1/object@extract$mu_l
 
   # second group data
-  if (!is.null(arguments$object2)) {
-    object2 <- arguments$object2
-    y2 <- object2@extract$mu_m + 1/object2@extract$mu_l
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
+    # provided another fit
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+    y2 <- fit2@extract$mu_m + 1/fit2@extract$mu_l
+
+    # bins in the histogram
+    bins <- 30
+    if (!is.null(arguments$bins)) {
+      bins <- arguments$bins
+    }
+
+    # call plot difference from shared plots
+    shared_plot_difference(y1 = y1, y2 = y2, bins = bins)
   } else {
     warning(wrong_arguments)
     return()
   }
-
-  # bins in the histogram
-  bins <- 30
-  if (!is.null(arguments$bins)) {
-    bins <- arguments$bins
-  }
-
-  # call plot difference shared function from shared plots
-  shared_plot_difference(y1, y2, bins)
 })
 
 
@@ -120,7 +130,7 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
 setMethod(f = "plot_comparison", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, plot_comparison(object = reaction_time_class, object2 = reaction_time_class) is required!"
+  wrong_arguments <- "The provided arguments for the plot_comparison function are invalid, plot_comparison(reaction_time_class, fit2 = reaction_time_class) is required!"
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -131,32 +141,37 @@ setMethod(f = "plot_comparison", signature(object = "reaction_time_class"), defi
   df1 <- data.frame(value = object@extract$mu_m + 1/object@extract$mu_l)
 
   # second group data
-  if (!is.null(arguments$object2)) {
-    object2 <- arguments$object2
-    df2 <- data.frame(value = object2@extract$mu_m + 1/object2@extract$mu_l)
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
+    # provided another fit
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+    df2 <- data.frame(value = fit2@extract$mu_m + 1/fit2@extract$mu_l)
+
+    # limits
+    x_min <- min(df1$value, df2$value)
+    x_max <- max(df1$value, df2$value)
+
+    diff <- x_max - x_min
+
+    x_min <- x_min - (0.1 * diff)
+    x_max <- x_max + (0.1 * diff)
+
+    # plot
+    graph <- ggplot() +
+      geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
+      geom_density(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA) +
+      theme_minimal() +
+      xlab("value") +
+      xlim(x_min, x_max)
+
+    return(graph)
   } else {
     warning(wrong_arguments)
     return()
   }
-
-  # limits
-  x_min <- min(df1$value, df2$value)
-  x_max <- max(df1$value, df2$value)
-
-  diff <- x_max - x_min
-
-  x_min <- x_min - (0.1 * diff)
-  x_max <- x_max + (0.1 * diff)
-
-  # plot
-  graph <- ggplot() +
-    geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
-    geom_density(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA) +
-    theme_minimal() +
-    xlab("value") +
-    xlim(x_min, x_max)
-
-  return(graph)
 })
 
 
@@ -167,7 +182,7 @@ setMethod(f = "plot_comparison", signature(object = "reaction_time_class"), defi
 setMethod(f = "compare_distributions", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare_distributions(object = reaction_time_class, object2 = reaction_time_class) is required!"
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(reaction_time_class, fit2 = reaction_time_class) is required!"
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -183,18 +198,23 @@ setMethod(f = "compare_distributions", signature(object = "reaction_time_class")
   y1 <- remg(n, mu = mu_m1, sigma = mu_s1, lambda = mu_l1)
 
   # second group data
-  if (!is.null(arguments$object2)) {
-    object2 <- arguments$object2
-    mu_m2 <- mean(object2@extract$mu_m)
-    mu_s2 <- mean(object2@extract$mu_s)
-    mu_l2 <- mean(object2@extract$mu_l)
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
+    # provided another fit
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+    mu_m2 <- mean(fit2@extract$mu_m)
+    mu_s2 <- mean(fit2@extract$mu_s)
+    mu_l2 <- mean(fit2@extract$mu_l)
     y2 <- remg(n, mu = mu_m2, sigma = mu_s2, lambda = mu_l2)
+
+    shared_difference(y1 = y1, y2 = y2)
   } else {
     warning(wrong_arguments)
     return()
   }
-
-  shared_difference(y1, y2)
 })
 
 
@@ -205,7 +225,7 @@ setMethod(f = "compare_distributions", signature(object = "reaction_time_class")
 setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, plot_distributions(object = reaction_time_class, object2 = reaction_time_class) is required!"
+  wrong_arguments <- "The provided arguments for the plot_distributions function are invalid, plot_distributions(reaction_time_class, fit2 = reaction_time_class) is required!"
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -220,30 +240,35 @@ setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), d
   mu_l1 <- mean(object@extract$mu_l)
 
   # second group data
-  if (!is.null(arguments$object2)) {
-    object2 <- arguments$object2
-    mu_m2 <- mean(object2@extract$mu_m)
-    mu_s2 <- mean(object2@extract$mu_s)
-    mu_l2 <- mean(object2@extract$mu_l)
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
+    # provided another fit
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+    mu_m2 <- mean(fit2@extract$mu_m)
+    mu_s2 <- mean(fit2@extract$mu_s)
+    mu_l2 <- mean(fit2@extract$mu_l)
+
+    x_min <- min(mu_m1 - 4 * mu_s1, mu_m2 - 4 * mu_s2)
+    x_max <- max(mu_m1 + 1/mu_l1 + 4 * mu_s1, mu_m2 + 1/mu_l2 + 4 * mu_s2)
+
+    x_max <- ceiling(max(object@data$rt, fit2@data$rt))
+    df_x <- data.frame(value = c(0, x_max))
+
+    # plot
+    graph <- ggplot(data = df_x, aes(x = value)) +
+      stat_function(fun = demg, n = n, args = list(mu = mu_m1, sigma = mu_s1, lambda = mu_l1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
+      stat_function(fun = demg, n = n, args = list(mu = mu_m2, sigma = mu_s2, lambda = mu_l2), geom = 'area', fill = '#ff4e3f', alpha = 0.4) +
+      theme_minimal() +
+      xlab("value")
+
+    return(graph)
   } else {
     warning(wrong_arguments)
     return()
   }
-
-  x_min <- min(mu_m1 - 4 * mu_s1, mu_m2 - 4 * mu_s2)
-  x_max <- max(mu_m1 + 1/mu_l1 + 4 * mu_s1, mu_m2 + 1/mu_l2 + 4 * mu_s2)
-
-  x_max <- ceiling(max(object@data$rt, object2@data$rt))
-  df_x <- data.frame(value = c(0, x_max))
-
-  # plot
-  graph <- ggplot(data = df_x, aes(x = value)) +
-    stat_function(fun = demg, n = n, args = list(mu = mu_m1, sigma = mu_s1, lambda = mu_l1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
-    stat_function(fun = demg, n = n, args = list(mu = mu_m2, sigma = mu_s2, lambda = mu_l2), geom = 'area', fill = '#ff4e3f', alpha = 0.4) +
-    theme_minimal() +
-    xlab("value")
-
-  return(graph)
 })
 
 
@@ -254,7 +279,7 @@ setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), d
 setMethod(f = "plot_distributions_difference", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, plot_distributions_difference(object = reaction_time_class, object2 = reaction_time_class) is required! You can also pass the bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(object = reaction_time_class, object2 = reaction_time_class, rope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(reaction_time_class, fit2 = reaction_time_class) is required! You can also pass the bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(reaction_time_class, fit2 = reaction_time_class, bins = numeric)."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -270,24 +295,30 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
   y1 <- remg(n, mu = mu_m1, sigma = mu_s1, lambda = mu_l1)
 
   # second group data
-  if (!is.null(arguments$object2)) {
-    object2 <- arguments$object2
-    mu_m2 <- mean(object2@extract$mu_m)
-    mu_s2 <- mean(object2@extract$mu_s)
-    mu_l2 <- mean(object2@extract$mu_l)
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
+    # provided another fit
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+    mu_m2 <- mean(fit2@extract$mu_m)
+    mu_s2 <- mean(fit2@extract$mu_s)
+    mu_l2 <- mean(fit2@extract$mu_l)
     y2 <- remg(n, mu = mu_m2, sigma = mu_s2, lambda = mu_l2)
+
+    # bins in the histogram
+    bins <- 30
+    if (!is.null(arguments$bins)) {
+      bins <- arguments$bins
+    }
+
+    # call plot difference from shared plots
+    shared_plot_difference(y1 = y1, y2 = y2, bins = bins)
   } else {
     warning(wrong_arguments)
     return()
   }
-
-  # bins in the histogram
-  bins <- 30
-  if (!is.null(arguments$bins)) {
-    bins <- arguments$bins
-  }
-
-  shared_plot_difference(y1, y2, bins)
 })
 
 
@@ -322,7 +353,7 @@ setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition 
     geom_density(fill = "#3182bd", alpha = 0.4, color = NA) +
     geom_line(data = df_fit, aes(x = x, y = y)) +
     facet_wrap(~ s, ncol = n_col) +
-    xlab("Reaction time") +
+    xlab("reaction time") +
     theme_minimal()
 
   return(graph)
