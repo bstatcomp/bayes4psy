@@ -4,21 +4,13 @@
 \alias{b_ttest}
 \title{Bayesian t-test.}
 \usage{
-b_ttest(y1, y2 = NULL, mu = NULL, sigma = NULL, rope = NULL)
+b_ttest(y)
 }
 \arguments{
-\item{y1}{Numeric vector of values for the first group.}
-
-\item{y2}{Optional parameter for values for the second group.}
-
-\item{mu}{Optional parameter for comparison of first group against a mean value.}
-
-\item{sigma}{Optional parameter for comparison of first group against a distribution N(mu, sigma).}
-
-\item{rope}{Optional parameter for region of practical equivalence, default = NULL}
+\item{y}{Numeric vector of values on which the fit will be based.}
 }
 \value{
-An object of class `ttest_results_class`.
+An object of class `ttest_class`.
 }
 \description{
 Bayesian t-test.

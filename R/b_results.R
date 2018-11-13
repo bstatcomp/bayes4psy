@@ -12,7 +12,7 @@ setGeneric(name = "compare", function(object, ...) standardGeneric("compare"))
 #' @title plot_difference
 #' @rdname b_results-plot_difference
 #' @exportMethod plot_difference
-setGeneric(name = "plot_difference", function(object, ..., bins) standardGeneric("plot_difference"))
+setGeneric(name = "plot_difference", function(object, ...) standardGeneric("plot_difference"))
 
 
 #' @title plot_comparison
