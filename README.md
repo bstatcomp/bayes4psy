@@ -9,3 +9,6 @@ Implementation of reaction times model.
 
 # v 1.0.2
 Implementation of the success rate model.
+
+# v 1.0.3
+Expanded documentation of functions and classes. Consolidate functions and parameter passing between all models.
