@@ -1,12 +1,15 @@
 # libs
 library(EasyBayes)
 
+## data wrangling --------------------------------------------------------
 # load data
 df <- read.table("./examples/data/flanker.csv", sep = "\t")
 
 # map correct/incorrect/timeout to 1/0
 df$result_numeric <- 0
 df[df$result == "correct", ]$result_numeric <- 1
+
+
 
 ### REACTION TIMES - test vs control group -------------------------------
 # test vs control (correct and no timeout only)
@@ -82,6 +85,7 @@ plot_distributions_difference(rt_control, fit2 = rt_test)
 plot_distributions_difference(rt_control, fit2 = rt_test, bins = 10)
 
 
+
 ### SUCCESS RATE - test group congruent vs incongruent  ------------------
 df_congruent <- df[df$group == "test" & df$congruency == "congruent", ]
 
@@ -122,16 +126,27 @@ plot_fit(s_incongruent)
 # traceplot
 traceplot(s_incongruent)
 
-## comparison
+
+## comparison ------------------------------------------------------------
 compare(s_congruent, fit2 = s_incongruent)
 
+# difference plot
 plot_difference(s_congruent, fit2 = s_incongruent)
 
+# difference plot with custom bins
+plot_difference(s_congruent, fit2 = s_incongruent, bins = 10)
+
+# comparison plot
 plot_comparison(s_congruent, fit2 = s_incongruent)
 
+# compare distributions
 compare_distributions(s_congruent, fit2 = s_incongruent)
 
+# distributions plost
 plot_distributions(s_congruent, fit2 = s_incongruent)
 
+# plot distributions difference
 plot_distributions_difference(s_congruent, fit2 = s_incongruent)
 
+# plot distributions difference with custom bins
+plot_distributions_difference(s_congruent, fit2 = s_incongruent, bins = 10)
