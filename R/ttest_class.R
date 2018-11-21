@@ -229,16 +229,16 @@ setMethod(f = "plot_comparison", signature(object = "ttest_class"), definition =
     y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
     graph <- graph +
-      geom_segment(aes(x = mu2, xend = mu2, y = 0, yend = y_max[2] * 1.05), size = 1.5, color = "#ff4e3f", alpha = 0.4) +
-      geom_text(aes(label = sprintf("%.2f", mu2), x = mu2, y = y_max[2] * 1.08), size = 4)
+      geom_segment(aes(x = mu2, xend = mu2, y = 0, yend = y_max[2]*1.05), size = 1.5, color = "#ff4e3f", alpha = 0.4) +
+      geom_text(aes(label = sprintf("%.2f", mu2), x = mu2, y = y_max[2]*1.08), size = 4)
   }
 
   x_min <- min(mu1, mu2)
   x_max <- max(mu1, mu2)
   diff <- x_max - x_min
 
-  x_min <- x_min - (0.1 * diff)
-  x_max <- x_max + (0.1 * diff)
+  x_min <- x_min - 0.1*diff
+  x_max <- x_max + 0.1*diff
 
   graph <- graph + xlim(x_min, x_max)
 
@@ -331,8 +331,8 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
   y1_sigma <- mean(object@extract$sigma)
 
   # get x range
-  x_min <- y1_mu - 4 * y1_sigma
-  x_max <- y1_mu + 4 * y1_sigma
+  x_min <- y1_mu - 4*y1_sigma
+  x_max <- y1_mu + 4*y1_sigma
 
   # second group data
   y2_plot <- NULL
@@ -346,8 +346,8 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
     y2_mu <- mean(fit2@extract$mu)
     y2_sigma <- mean(fit2@extract$sigma)
 
-    x_min <- min(x_min, y2_mu - 4 * y2_sigma)
-    x_max <- max(x_max, y2_mu + 4 * y2_sigma)
+    x_min <- min(x_min, y2_mu - 4*y2_sigma)
+    x_max <- max(x_max, y2_mu + 4*y2_sigma)
 
     y2_plot <- stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
   } else if (!is.null(arguments$mu)) {
@@ -357,8 +357,8 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
     if (!is.null(arguments$sigma)) {
       y2_sigma <- arguments$sigma;
 
-      x_min <- min(x_min, y2_mu - 4 * y2_sigma)
-      x_max <- max(x_max, y2_mu + 4 * y2_sigma)
+      x_min <- min(x_min, y2_mu - 4*y2_sigma)
+      x_max <- max(x_max, y2_mu + 4*y2_sigma)
 
       y2_plot <- stat_function(fun = dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
     } else {
@@ -385,8 +385,8 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
     y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
     graph <- graph +
-      geom_segment(aes(x = y2_mu, xend = y2_mu, y = 0, yend = y_max[2] * 1.05), size = 1.5, color = "#ff4e3f", alpha = 0.4) +
-      geom_text(aes(label = sprintf("%.2f", y2_mu), x = y2_mu, y = y_max[2] * 1.08), size = 4)
+      geom_segment(aes(x = y2_mu, xend = y2_mu, y = 0, yend = y_max[2]*1.05), size = 1.5, color = "#ff4e3f", alpha = 0.4) +
+      geom_text(aes(label = sprintf("%.2f", y2_mu), x = y2_mu, y = y_max[2]*1.08), size = 4)
   }
 
   return(graph)
@@ -468,8 +468,8 @@ setMethod(f = "plot_fit", signature(object = "ttest_class"), definition = functi
   sigma <- mean(object@extract$sigma)
 
   # get x range
-  x_min <- mu - 4 * sigma
-  x_max <- mu + 4 * sigma
+  x_min <- mu - 4*sigma
+  x_max <- mu + 4*sigma
 
   df_x <- data.frame(x = c(x_min, x_max))
 

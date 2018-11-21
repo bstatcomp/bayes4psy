@@ -152,8 +152,8 @@ setMethod(f = "plot_comparison", signature(object = "success_rate_class"), defin
 
     diff <- x_max - x_min
 
-    x_min <- x_min - (0.1 * diff)
-    x_max <- x_max + (0.1 * diff)
+    x_min <- x_min - 0.1*diff
+    x_max <- x_max + 0.1*diff
 
     # plot
     graph <- ggplot() +

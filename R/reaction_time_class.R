@@ -156,8 +156,8 @@ setMethod(f = "plot_comparison", signature(object = "reaction_time_class"), defi
 
     diff <- x_max - x_min
 
-    x_min <- x_min - (0.1 * diff)
-    x_max <- x_max + (0.1 * diff)
+    x_min <- x_min - 0.1*diff
+    x_max <- x_max + 0.1*diff
 
     # plot
     graph <- ggplot() +
@@ -251,8 +251,8 @@ setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), d
     mu_s2 <- mean(fit2@extract$mu_s)
     mu_l2 <- mean(fit2@extract$mu_l)
 
-    x_min <- min(mu_m1 - 4 * mu_s1, mu_m2 - 4 * mu_s2)
-    x_max <- max(mu_m1 + 1/mu_l1 + 4 * mu_s1, mu_m2 + 1/mu_l2 + 4 * mu_s2)
+    x_min <- min(mu_m1 - 4*mu_s1, mu_m2 - 4*mu_s2)
+    x_max <- max(mu_m1 + 1/mu_l1 + 4*mu_s1, mu_m2 + 1/mu_l2 + 4*mu_s2)
 
     x_max <- ceiling(max(object@data$rt, fit2@data$rt))
     df_x <- data.frame(value = c(0, x_max))
@@ -332,10 +332,11 @@ setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition 
   df_fit <- NULL
   n <- length(unique(object@data$s))
 
+  x_min <- floor(min(object@data$rt))
   x_max <- ceiling(max(object@data$rt))
 
   for (i in 1:n) {
-    df <- data.frame(x = seq(0, x_max, 0.01),
+    df <- data.frame(x = seq(x_min, x_max, 0.01),
                      s = i,
                      y = demg(seq(0, x_max, 0.01),
                               mu = mean(object@extract$mu[,i]),
