@@ -68,7 +68,24 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
   rope <- prepare_rope(rope)
 
   # first group data
-  y1 <- object@extract$mu_m + 1/object@extract$mu_l
+  par <- NULL
+  if (!is.null(arguments$par)) {
+    par <- arguments$par
+
+    if (par != "mu" || par != "lambda") {
+      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu and lambda! Using the default setting for comparison.", par)
+      warning(w)
+      par <- NULL
+    }
+  }
+
+  if (is.null(par)) {
+    y1 <- object@extract$mu_m + 1/object@extract$mu_l
+  } else if (par == "mu") {
+    y1 <- object@extract$mu_m
+  } else if (par == "lambda") {
+    y1 <- object@extract$mu_l
+  }
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
@@ -78,7 +95,14 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
     } else {
       fit2 <- arguments[[1]]
     }
-    y2 <- fit2@extract$mu_m + 1/fit2@extract$mu_l
+
+    if (is.null(par)) {
+      y2 <- fit2@extract$mu_m + 1/fit2@extract$mu_l
+    } else if (par == "mu") {
+      y2 <- fit2@extract$mu_m
+    } else if (par == "lambda") {
+      y2 <- fit2@extract$mu_l
+    }
 
     shared_difference(y1 = y1, y2 = y2, rope = rope)
   } else {
