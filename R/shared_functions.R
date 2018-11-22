@@ -3,7 +3,7 @@
 #' @param y1 Numeric vector of values for the first group.
 #' @param y2 Numeric vector of values for the second group.
 #' @param rope Optional parameter for the rope interval.
-#' @return Prints the difference and 95% confidence interval into the console.
+#' @return Prints the difference and 95% HDI into the console.
 #'
 shared_difference <- function(y1, y2, rope = NULL) {
   y_diff <- y1 - y2
@@ -30,9 +30,10 @@ shared_difference <- function(y1, y2, rope = NULL) {
     cat(sprintf("\n  - Equal: %.2f\n", equal))
   }
 
-  y_diff_l <- quantile(y_diff, 0.025)
-  y_diff_h <- quantile(y_diff, 0.975)
-  cat(sprintf("\n95%% CI:\n  - Group 1 - Group 2: [%.2f, %.2f]\n", y_diff_l, y_diff_h))
+  hdi <- mcmc_hdi(y_diff)
+  y_diff_l <- quantile(hdi[1], 0.025)
+  y_diff_h <- quantile(hdi[2], 0.975)
+  cat(sprintf("\n95%% HDI:\n  - Group 1 - Group 2: [%.2f, %.2f]\n", y_diff_l, y_diff_h))
 }
 
 #' @param rope Rope interval parameter (single number, or an interval).
