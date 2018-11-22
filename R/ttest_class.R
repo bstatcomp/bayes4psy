@@ -74,7 +74,7 @@ setMethod(f = "summary", signature(object = "ttest_class"), definition = functio
 setMethod(f = "compare", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(ttest_class, fit2 = ttest_class), compare(fit2 = ttest_class, mu = numeric), or compare(fit2 = ttest_class, mu = numeric, sigma = numeric) is required! You can also pass the rope parameter, e.g. compare(ttest_class, fit2 = ttest_class, rope = numeric)."
+  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(ttest_class, fit2 = ttest_class), compare(fit2 = ttest_class, mu = numeric), or compare(fit2 = ttest_class, mu = numeric, sigma = numeric) is required! You can also provide the rope parameter, e.g. compare(ttest_class, fit2 = ttest_class, rope = numeric)."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -89,12 +89,12 @@ setMethod(f = "compare", signature(object = "ttest_class"), definition = functio
   rope <- prepare_rope(rope)
 
   # first group data
-  mu1 <- object@extract$mu
+  y1 <- object@extract$mu
   sigma1 <- mean(object@extract$sigma)
-  n <- length(mu1)
+  n <- length(y1)
 
   # second group data
-  mu2 <- NULL
+  y2 <- NULL
   sigma2 <- 0
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
     # provided another fit
@@ -103,11 +103,11 @@ setMethod(f = "compare", signature(object = "ttest_class"), definition = functio
     } else {
       fit2 <- arguments[[1]]
     }
-    mu2 <- fit2@extract$mu
+    y2 <- fit2@extract$mu
     sigma2 <- mean(fit2@extract$sigma)
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
-    mu2 <- arguments$mu;
+    y2 <- arguments$mu;
 
     if (!is.null(arguments$sigma)) {
       sigma2 <- arguments$sigma
@@ -117,9 +117,9 @@ setMethod(f = "compare", signature(object = "ttest_class"), definition = functio
     return()
   }
 
-  shared_difference(y1 = mu1, y2 = mu2, rope = rope)
+  shared_difference(y1 = y1, y2 = y2, rope = rope)
 
-  diff <- mean(mu1) - mean(mu2)
+  diff <- mean(y1) - mean(y2)
 
   cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
   cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
@@ -133,7 +133,7 @@ setMethod(f = "compare", signature(object = "ttest_class"), definition = functio
 setMethod(f = "plot_difference", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(ttest_class, ttest_class) or plot_difference(ttest_class, numeric) is required! You can also pass the rope and the bins (number of bins in the histogram) parameters, e.g. plot_difference(ttest_class, fit2 = ttest_class, rope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(ttest_class, ttest_class) or plot_difference(ttest_class, numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(ttest_class, fit2 = ttest_class, rope = numeric, bins = numeric)."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -148,10 +148,10 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
   rope <- prepare_rope(rope)
 
   # first group data
-  mu1 <- object@extract$mu
+  y1 <- object@extract$mu
 
   # second group data
-  mu2 <- NULL
+  y2 <- NULL
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
     # provided another fit
     if (!is.null(arguments$fit2)) {
@@ -159,10 +159,10 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
     } else {
       fit2 <- arguments[[1]]
     }
-    mu2 <- fit2@extract$mu
+    y2 <- fit2@extract$mu
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
-    mu2 <- arguments$mu;
+    y2 <- arguments$mu;
   } else {
     warning(wrong_arguments)
     return()
@@ -175,7 +175,7 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
   }
 
   # call plot difference shared function from shared plots
-  shared_plot_difference(y1 = mu1, y2 = mu2, rope = rope, bins = bins)
+  shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
 })
 
 
@@ -253,7 +253,7 @@ setMethod(f = "plot_comparison", signature(object = "ttest_class"), definition =
 setMethod(f = "compare_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(ttest_class, fit2 = ttest_class), compare_distributions(ttest_class, mu = numeric), or compare_distributions(ttest_class, mu = numeric, sigma = numeric) is required! You can also pass the rope parameter, e.g. compare_distributions(ttest_class, fit2 = ttest_class, rope = numeric)."
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(ttest_class, fit2 = ttest_class), compare_distributions(ttest_class, mu = numeric), or compare_distributions(ttest_class, mu = numeric, sigma = numeric) is required! You can also provide the rope parameter, e.g. compare_distributions(ttest_class, fit2 = ttest_class, rope = numeric)."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -400,7 +400,7 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
 setMethod(f = "plot_distributions_difference", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(ttest_class, fit2 = ttest_class), plot_distributions_difference(ttest_class, mu = numeric), or plot_distributions_difference(ttest_class, mu = numeric, sigma = numeric) is required! You can also pass the rope and the bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(ttest_class, fit2 = ttest_class, rope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(ttest_class, fit2 = ttest_class), plot_distributions_difference(ttest_class, mu = numeric), or plot_distributions_difference(ttest_class, mu = numeric, sigma = numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(ttest_class, fit2 = ttest_class, rope = numeric, bins = numeric)."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -491,35 +491,3 @@ setMethod(f = "plot_fit", signature(object = "ttest_class"), definition = functi
 setMethod(f = "traceplot", signature(object = "ttest_class"), definition = function(object) {
   rstan::traceplot(object@fit, pars = c("mu", "sigma", "nu"), inc_warmup = TRUE)
 })
-
-
-### Helper functions
-# prepare rope
-prepare_rope <- function(rope) {
-  # rope is NULL
-  if (is.null(rope)) {
-    return(NULL)
-  }
-
-  # validity check for rope
-  if (length(rope) > 2) {
-    warning("You provided more than two values for the ROPE interval! Rope value was thus set to 0.")
-    return(NULL)
-  }
-  else if (!is.null(rope) && length(rope) == 1 && rope < 0) {
-    warning("When a single number is provided for the ROPE interval it should be positive or 0! Rope value was thus set to 0.")
-    return(NULL)
-  }
-
-  # if rope as as single number cast it to a list with 2 elements
-  if (length(rope) == 1) {
-    rope[2] <- rope[1]
-    rope[1] <- -rope[1]
-  }
-
-  # order ascending
-  rope <- sort(rope)
-
-  # return
-  return(rope)
-}

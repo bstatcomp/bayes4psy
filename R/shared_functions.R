@@ -34,3 +34,34 @@ shared_difference <- function(y1, y2, rope = NULL) {
   y_diff_h <- quantile(y_diff, 0.975)
   cat(sprintf("\n95%% CI:\n  - Group 1 - Group 2: [%.2f, %.2f]\n", y_diff_l, y_diff_h))
 }
+
+#' @param rope Rope interval parameter (single number, or an interval).
+#' @return Rope as an interval.
+prepare_rope <- function(rope) {
+  # rope is NULL
+  if (is.null(rope)) {
+    return(NULL)
+  }
+
+  # validity check for rope
+  if (length(rope) > 2) {
+    warning("You provided more than two values for the ROPE interval! Rope value was thus set to 0.")
+    return(NULL)
+  }
+  else if (!is.null(rope) && length(rope) == 1 && rope < 0) {
+    warning("When a single number is provided for the ROPE interval it should be positive or 0! Rope value was thus set to 0.")
+    return(NULL)
+  }
+
+  # if rope as as single number cast it to a list with 2 elements
+  if (length(rope) == 1) {
+    rope[2] <- rope[1]
+    rope[1] <- -rope[1]
+  }
+
+  # order ascending
+  rope <- sort(rope)
+
+  # return
+  return(rope)
+}

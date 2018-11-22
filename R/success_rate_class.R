@@ -5,9 +5,9 @@
 #' @examples
 #' summary(`success_rate_class`): prints summary od the fit.
 #'
-#' compare(`success_rate_class`, fit2 = `success_rate_class`): prints difference in successfulness of two groups.
+#' compare(`success_rate_class`, fit2 = `success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
 #'
-#' plot_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between two groups.
+#' plot_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
 #'
 #' plot_comparison(`success_rate_class`, fit2 = `success_rate_class`): plots density for the first and the second group.
 #'
@@ -15,7 +15,7 @@
 #'
 #' plot_distributions(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the distribution for the first group and the second group.
 #'
-#' plot_distributions_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between the distribution of the first group and the second group.
+#' plot_distributions_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope parameter.
 #'
 #' plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
@@ -49,12 +49,19 @@ setMethod(f = "summary", signature(object = "success_rate_class"), definition = 
 setMethod(f = "compare", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(success_rate_class, fit2 = success_rate_class) is required!"
+  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(success_rate_class, fit2 = success_rate_class) is required! You can also provide the rope parameter, e.g. compare(success_rate_class, fit2 = success_rate_class, rope = numeric)."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
     return()
   }
+
+  # prepare rope
+  rope <- NULL
+  if (!is.null(arguments$rope)) {
+    rope = arguments$rope
+  }
+  rope <- prepare_rope(rope)
 
   # first group data
   y1 <- rowMeans(object@extract$p)
@@ -69,7 +76,7 @@ setMethod(f = "compare", signature(object = "success_rate_class"), definition = 
     }
     y2 <- rowMeans(fit2@extract$p)
 
-    shared_difference(y1 = y1, y2 = y2)
+    shared_difference(y1 = y1, y2 = y2, rope = rope)
   } else {
     warning(wrong_arguments)
     return()
@@ -84,12 +91,19 @@ setMethod(f = "compare", signature(object = "success_rate_class"), definition = 
 setMethod(f = "plot_difference", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(success_rate_class, fit2 = success_rate_class) is required! You can also pass the bins (number of bins in the histogram) parameter, e.g. plot_difference(success_rate_class, fit2 = success_rate_class, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(success_rate_class, fit2 = success_rate_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(success_rate_class, fit2 = success_rate_class, rope = numeric, bins = numeric)."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
     return()
   }
+
+  # prepare rope
+  rope <- NULL
+  if (!is.null(arguments$rope)) {
+    rope = arguments$rope
+  }
+  rope <- prepare_rope(rope)
 
   # first group data
   y1 <- rowMeans(object@extract$p)
@@ -111,7 +125,7 @@ setMethod(f = "plot_difference", signature(object = "success_rate_class"), defin
     }
 
     # call plot difference from shared plots
-    shared_plot_difference(y1 = y1, y2 = y2, bins = bins)
+    shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
   } else {
     warning(wrong_arguments)
     return()
@@ -178,7 +192,7 @@ setMethod(f = "plot_comparison", signature(object = "success_rate_class"), defin
 setMethod(f = "compare_distributions", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(success_rate_class, fit2 = success_rate_class) is required!"
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(success_rate_class, fit2 = success_rate_class) is required! You can also provide the rope parameter, e.g. compare_distributions(success_rate_class, fit2 = success_rate_class."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
