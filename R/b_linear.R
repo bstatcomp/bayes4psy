@@ -9,11 +9,11 @@
 #' @return An object of class `linear_class`.
 b_linear <- function(n, m, x, y, s) {
 
-  stan_data <- list(n = nrow(df_1b),
+  stan_data <- list(n = n,
                     m = m,
-                    x = df_1b$sequence,
-                    y = df_1b$response,
-                    s = df_1b$subject)
+                    x = x,
+                    y = y,
+                    s = s)
 
   fit <- rstan::sampling(stanmodels$linear,
                          data = stan_data,

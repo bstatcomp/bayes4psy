@@ -35,6 +35,21 @@ plot_fit(al_1b)
 traceplot(al_1b)
 
 
-# before - 1st part
+# after - 2nd part
 df_1a <- df_1[df_1$part == 2, ]
 
+# prep data and fit
+al_1a <- b_linear(n = nrow(df_1a),
+                  m = m,
+                  x = df_1a$sequence,
+                  y = df_1a$response,
+                  s = df_1a$subject)
+
+# summary
+summary(al_1a)
+
+# check fits
+plot_fit(al_1a)
+
+# traceplot
+traceplot(al_1a)
