@@ -19,5 +19,5 @@ b_reaction_time(n, m, rt, s)
 An object of class `reaction_time_class`.
 }
 \description{
-Bayesian model for comparing reaction times and test success rate.
+Bayesian model for comparing reaction times.
 }

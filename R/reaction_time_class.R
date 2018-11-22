@@ -40,10 +40,15 @@ setMethod(f = "summary", signature(object = "reaction_time_class"), definition =
   sigma <- mean(object@extract$mu_s)
   lambda <- mean(object@extract$mu_l)
 
+  # hdi
+  mu_hdi <- mcmc_hdi(object@extract$mu_m)
+  sigma_hdi <- mcmc_hdi(object@extract$mu_s)
+  lambda_hdi <- mcmc_hdi(object@extract$mu_l)
+
   # print
-  cat(sprintf("mu: %.2f\n", mu))
-  cat(sprintf("sigma: %.2f\n", sigma))
-  cat(sprintf("lambda: %.2f\n", lambda))
+  cat(sprintf("mu: %.2f, 95%% HDI: [%.2f, %.2f]\n", mu, mu_hdi[1], mu_hdi[2]))
+  cat(sprintf("sigma: %.2f, 95%% HDI: [%.2f, %.2f]\n", sigma, sigma_hdi[1], sigma_hdi[2]))
+  cat(sprintf("lambda: %.2f, 95%% HDI: [%.2f, %.2f]\n", lambda, lambda_hdi[1], lambda_hdi[2]))
 })
 
 
@@ -452,7 +457,7 @@ setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition 
   for (i in 1:n) {
     df <- data.frame(x = seq(x_min, x_max, 0.01),
                      s = i,
-                     y = demg(seq(0, x_max, 0.01),
+                     y = demg(seq(x_min, x_max, 0.01),
                               mu = mean(object@extract$mu[,i]),
                               sigma = mean(object@extract$sigma[,i]),
                               lambda = mean(object@extract$lambda[,i])))

@@ -38,8 +38,11 @@ setMethod(f = "summary", signature(object = "success_rate_class"), definition = 
   # get means
   p <- mean(object@extract$p)
 
+  # hdi
+  p_hdi <- mcmc_hdi(object@extract$p)
+
   # print
-  cat(sprintf("Success rate: %.2f\n", p))
+  cat(sprintf("Success rate: %.2f, 95%% HDI: [%.2f, %.2f]\n", p, p_hdi[1], p_hdi[2]))
 })
 
 

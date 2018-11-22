@@ -19,5 +19,5 @@ b_success_rate(n, m, r, s)
 An object of class `success_rate_class`.
 }
 \description{
-Bayesian model for comparing reaction times and test success rate.
+Bayesian model for comparing test success rate.
 }

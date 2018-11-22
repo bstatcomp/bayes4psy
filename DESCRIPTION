@@ -17,6 +17,7 @@ Depends:
     metRology (>= 0.9.28),
     emg (>= 1.0.7),
     plyr (>= 1.8.4),
+    dplyr (>= 0.7.6),
     reshape (>= 0.8.7),
     methods
 Imports:
