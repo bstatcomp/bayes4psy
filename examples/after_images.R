@@ -5,7 +5,7 @@ library(rstan)
 
 ## data wrangling --------------------------------------------------------
 # load data
-df <- read.table("./examples/data/after_images.csv", sep = "\t")
+df <- read.table("./examples/data/after_images.csv", sep="\t", header = TRUE)
 
 # stimuli to indexes
 stimuli_names <- unique(df$stimuli)

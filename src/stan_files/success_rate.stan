@@ -2,7 +2,7 @@ data {
   int<lower=0> n; // total number of measurements
   int<lower=0> m; // number of subjects
   int<lower=0,upper=1> r[n]; // results - success or fail
-  int<lower=0> s[n]; // id of the subject
+  int<lower=0> s[n]; // subject ids
 }
 
 parameters {

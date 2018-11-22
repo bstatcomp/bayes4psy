@@ -33,20 +33,20 @@ parameters {
 model {
 	// priors
 	// rgb
-	mu_r ~ normal(127.5, 50);
-	ss_r ~ normal(50, 25);
-	mu_g ~ normal(127.5, 50);
-	ss_g ~ normal(50, 25);
-	mu_b ~ normal(127.5, 50);
-	ss_b ~ normal(50, 25);
+	mu_r ~ normal(127.5, 100);
+	ss_r ~ normal(100, 50);
+	mu_g ~ normal(127.5, 100);
+	ss_g ~ normal(100, 50);
+	mu_b ~ normal(127.5, 100);
+	ss_b ~ normal(100, 50);
 
 	// hsv
-	mu_h ~ von_mises(pi(), 0.1);
+	mu_h ~ von_mises(pi(), 1);
 	kappa_h ~ normal(50, 25);
-	mu_s ~ normal(0.5, 0.2);
-	ss_s ~ normal(0.2, 0.1);
-	mu_v ~ normal(0.5, 0.2);
-	ss_v ~ normal(0.2, 0.1);
+	mu_s ~ normal(0.5, 0.5);
+	ss_s ~ normal(0.5, 0.2);
+	mu_v ~ normal(0.5, 0.5);
+	ss_v ~ normal(0.5, 0.2);
 
 	for (i in 1:n) {
 		// rgb

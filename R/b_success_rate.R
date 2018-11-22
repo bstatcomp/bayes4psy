@@ -17,7 +17,7 @@ b_success_rate <- function(n,
                     r = r,
                     s = s)
 
-  fit <- rstan::sampling(stanmodels$successes,
+  fit <- rstan::sampling(stanmodels$success_rate,
                          data = stan_data,
                          iter = 400,
                          warmup = 200,
