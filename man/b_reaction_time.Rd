@@ -2,7 +2,7 @@
 % Please edit documentation in R/b_reaction_time.R
 \name{b_reaction_time}
 \alias{b_reaction_time}
-\title{Bayesian model for comparing reaction times and test success rate.}
+\title{b_reaction_time}
 \usage{
 b_reaction_time(n, m, rt, s)
 }

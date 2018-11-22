@@ -1,9 +1,8 @@
-#' Bayesian t-test.
-#'
+#' @title b_ttest
+#' @description Bayesian t-test.
 #' @export
 #' @param y Numeric vector of values on which the fit will be based.
 #' @return An object of class `ttest_class`.
-#'
 b_ttest <- function(y) {
 
   # prepare data
@@ -23,8 +22,8 @@ b_ttest <- function(y) {
   fit <- rstan::sampling(stanmodels$ttest,
                          data = stan_data,
                          chains = 1,
-                         warmup = 12000,
-                         iter = 15000)
+                         warmup = 9000,
+                         iter = 10000)
 
   extract <- rstan::extract(fit)
 

@@ -1,6 +1,7 @@
 # libs
 library(EasyBayes)
 
+
 ## data wrangling --------------------------------------------------------
 # load data
 df <- read.table("./examples/data/flanker.csv", sep = "\t", header = TRUE)
@@ -62,16 +63,28 @@ traceplot(rt_test)
 # difference summary
 compare(rt_control, fit2 = rt_test)
 
+# difference summary, compare only mu parameter (or lambda)
+compare(rt_control, fit2 = rt_test, par = "mu")
+
+# difference summary with rope
+compare(rt_control, fit2 = rt_test, rope = 0.1)
+
 # difference plot
 plot_difference(rt_control, fit2 = rt_test)
 
-# difference plot with custom bins
-plot_difference(rt_control, fit2 = rt_test, bins = 10)
+# difference plot with rope, custom bins of mu parameter
+plot_difference(rt_control, fit2 = rt_test, rope = 0.1, bins = 10, par = "mu")
 
 # comparison plot
 plot_comparison(rt_control, fit2 = rt_test)
 
+# plot comparsion only for lambda prameter (or mu)
+plot_comparison(rt_control, fit2 = rt_test, par = "lambda")
+
 # compare distributions
+compare_distributions(rt_control, fit2 = rt_test, rope = 0.1)
+
+# compare distributions with rope
 compare_distributions(rt_control, fit2 = rt_test)
 
 # plot distributions
@@ -80,8 +93,11 @@ plot_distributions(rt_control, fit2 = rt_test)
 # plot distributions difference
 plot_distributions_difference(rt_control, fit2 = rt_test)
 
-# plot distributions difference with custom bins
-plot_distributions_difference(rt_control, fit2 = rt_test, bins = 10)
+# plot distributions difference
+plot_distributions_difference(rt_control, fit2 = rt_test, par = "mu")
+
+# plot distributions difference with rope and custom bins
+plot_distributions_difference(rt_control, fit2 = rt_test, rope = 0.1, bins = 10)
 
 
 
@@ -127,13 +143,17 @@ traceplot(s_incongruent)
 
 
 ## comparison ------------------------------------------------------------
+# compare
 compare(s_congruent, fit2 = s_incongruent)
+
+# compare with rope
+compare(s_congruent, fit2 = s_incongruent, rope = 0.05)
 
 # difference plot
 plot_difference(s_congruent, fit2 = s_incongruent)
 
-# difference plot with custom bins
-plot_difference(s_congruent, fit2 = s_incongruent, bins = 10)
+# difference plot with rope and custom bins
+plot_difference(s_congruent, fit2 = s_incongruent, rope = 0.05, bins = 10)
 
 # comparison plot
 plot_comparison(s_congruent, fit2 = s_incongruent)

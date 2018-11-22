@@ -1,4 +1,5 @@
-#' An S4 class for storing results of successes (true/false) Bayesian model.
+#' @title success_rate_class
+#' @description An S4 class for storing results of successes (true/false) Bayesian model.
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Data on which the fit is based.

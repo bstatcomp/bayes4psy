@@ -1,5 +1,5 @@
-#' Shared plots used in several models.
-#'
+#' @title shared_plot_difference
+#' @description A shared function for all classes for ploting difference between two vectors of values.
 #' @param y1 Numeric vector of values for the first group.
 #' @param y2 Numeric vector of values for the second group.
 #' @param rope Optional parameter for the rope interval.

@@ -1,15 +1,16 @@
-#' An S4 class for storing results of reaction time Bayesian model.
+#' @title reaction_time_class
+#' @description An S4 class for storing results of reaction time Bayesian model.
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Data on which the fit is based.
 #' @examples
 #' summary(`reaction_time_class`): prints summary od the fit.
 #'
-#' compare(`reaction_time_class`, fit2 = `reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter.
+#' compare(`reaction_time_class`, fit2 = `reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter (mu or lambda).
 #'
-#' plot_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
+#' plot_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope parameter or visualize the comparison only through a chosen parameter (mu or lambda).
 #'
-#' plot_comparison(`reaction_time_class`, fit2 = `reaction_time_class`): plots density for the first and the second group.
+#' plot_comparison(`reaction_time_class`, fit2 = `reaction_time_class`): plots density for the first and the second group. You can also visualize the denisty only for a chosen parameter (mu or lambda).
 #'
 #' compare_distributions(`reaction_time_class`, fit2 = `reaction_time_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
@@ -53,7 +54,7 @@ setMethod(f = "summary", signature(object = "reaction_time_class"), definition =
 setMethod(f = "compare", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(reaction_time_class, fit2 = reaction_time_class) is required! You can also provide the rope parameter, e.g. compare(reaction_time_class, fit2 = reaction_time_class, rope = numeric)."
+  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(reaction_time_class, fit2 = reaction_time_class) is required! You can optionallly provide the rope parameter, e.g. compare(reaction_time_class, fit2 = reaction_time_class, rope = numeric). You can also execute the comparison through only the mu or the lamdba parameter, e.g. compare(reaction_time_class, fit2 = reaction_time_class, par = \"mu\")."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -67,18 +68,21 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
   }
   rope <- prepare_rope(rope)
 
-  # first group data
+  # compare only through one parameter
   par <- NULL
   if (!is.null(arguments$par)) {
     par <- arguments$par
 
-    if (par != "mu" || par != "lambda") {
+    if (!(par == "mu" || par == "lambda")) {
       w <- sprintf("Parameter %s not recognized, parameters used in this model are mu and lambda! Using the default setting for comparison.", par)
       warning(w)
       par <- NULL
+    } else {
+      cat(sprintf("Comparing through %s parameter.\n", par))
     }
   }
 
+  # first group data
   if (is.null(par)) {
     y1 <- object@extract$mu_m + 1/object@extract$mu_l
   } else if (par == "mu") {
@@ -119,7 +123,7 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
 setMethod(f = "plot_difference", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(reaction_time_class, fit2 = reaction_time_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(reaction_time_class, fit2 = reaction_time_class, rope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(reaction_time_class, fit2 = reaction_time_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(reaction_time_class, fit2 = reaction_time_class, rope = numeric, bins = numeric). You can also visualize the difference through only the mu or the lamdba parameter, e.g. plot_difference(reaction_time_class, fit2 = reaction_time_class, par = \"mu\")."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
@@ -133,6 +137,29 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
   }
   rope <- prepare_rope(rope)
 
+  # compare only through one parameter
+  par <- NULL
+  if (!is.null(arguments$par)) {
+    par <- arguments$par
+
+    if (!(par == "mu" || par == "lambda")) {
+      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu and lambda! Using the default setting for comparison.", par)
+      warning(w)
+      par <- NULL
+    } else {
+      cat(sprintf("Comparing through %s parameter.\n", par))
+    }
+  }
+
+  # first group data
+  if (is.null(par)) {
+    y1 <- object@extract$mu_m + 1/object@extract$mu_l
+  } else if (par == "mu") {
+    y1 <- object@extract$mu_m
+  } else if (par == "lambda") {
+    y1 <- object@extract$mu_l
+  }
+
   # first group data
   y1 <- object@extract$mu_m + 1/object@extract$mu_l
 
@@ -144,7 +171,14 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
     } else {
       fit2 <- arguments[[1]]
     }
-    y2 <- fit2@extract$mu_m + 1/fit2@extract$mu_l
+
+    if (is.null(par)) {
+      y2 <- fit2@extract$mu_m + 1/fit2@extract$mu_l
+    } else if (par == "mu") {
+      y2 <- fit2@extract$mu_m
+    } else if (par == "lambda") {
+      y2 <- fit2@extract$mu_l
+    }
 
     # bins in the histogram
     bins <- 30
@@ -168,15 +202,35 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
 setMethod(f = "plot_comparison", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_comparison function are invalid, plot_comparison(reaction_time_class, fit2 = reaction_time_class) is required!"
+  wrong_arguments <- "The provided arguments for the plot_comparison function are invalid, plot_comparison(reaction_time_class, fit2 = reaction_time_class) is required! You can also visualize the density through only the mu or the lamdba parameter, e.g. plot_comparison(reaction_time_class, fit2 = reaction_time_class, par = \"mu\")."
 
   if (is.null(arguments)) {
     warning(wrong_arguments)
     return()
   }
 
+  # compare only through one parameter
+  par <- NULL
+  if (!is.null(arguments$par)) {
+    par <- arguments$par
+
+    if (!(par == "mu" || par == "lambda")) {
+      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu and lambda! Using the default setting for comparison.", par)
+      warning(w)
+      par <- NULL
+    } else {
+      cat(sprintf("Comparing through %s parameter.\n", par))
+    }
+  }
+
   # first group data
-  df1 <- data.frame(value = object@extract$mu_m + 1/object@extract$mu_l)
+  if (is.null(par)) {
+    df1 <- data.frame(value = object@extract$mu_m + 1/object@extract$mu_l)
+  } else if (par == "mu") {
+    df1 <- data.frame(value = object@extract$mu_m)
+  } else if (par == "lambda") {
+    df1 <- data.frame(value = object@extract$mu_l)
+  }
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
@@ -186,7 +240,15 @@ setMethod(f = "plot_comparison", signature(object = "reaction_time_class"), defi
     } else {
       fit2 <- arguments[[1]]
     }
-    df2 <- data.frame(value = fit2@extract$mu_m + 1/fit2@extract$mu_l)
+
+    if (is.null(par)) {
+      df2 <- data.frame(value = fit2@extract$mu_m + 1/fit2@extract$mu_l)
+    } else if (par == "mu") {
+      df2 <- data.frame(value = fit2@extract$mu_m)
+    } else if (par == "lambda") {
+      df2 <- data.frame(value = fit2@extract$mu_l)
+    }
+
 
     # limits
     x_min <- min(df1$value, df2$value)

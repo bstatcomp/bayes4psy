@@ -4,7 +4,7 @@
 \name{ttest_class-class}
 \alias{ttest_class-class}
 \alias{ttest_class}
-\title{An S4 class for storing results of Bayesian t-test results.}
+\title{ttest_class}
 \description{
 An S4 class for storing results of Bayesian t-test results.
 }

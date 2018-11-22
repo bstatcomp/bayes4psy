@@ -1,4 +1,5 @@
-#' An S4 class for declaring shared generic functions.
+#' @title b_results
+#' @description Parent S4 class for declaring shared function generics.
 
 setClass("b_results")
 

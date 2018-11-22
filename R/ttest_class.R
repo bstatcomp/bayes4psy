@@ -1,4 +1,5 @@
-#' An S4 class for storing results of Bayesian t-test results.
+#' @title ttest_class
+#' @description An S4 class for storing results of Bayesian t-test results.
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Raw data for the tested group.
