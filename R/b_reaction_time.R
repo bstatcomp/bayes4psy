@@ -17,7 +17,7 @@ b_reaction_time <- function(n,
                     rt = rt,
                     s = s)
 
-  fit <- rstan::sampling(stanmodels$reaction_times,
+  fit <- rstan::sampling(stanmodels$reaction_time,
                         data = stan_data,
                         iter = 400,
                         warmup = 200,

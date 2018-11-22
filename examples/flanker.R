@@ -3,12 +3,11 @@ library(EasyBayes)
 
 ## data wrangling --------------------------------------------------------
 # load data
-df <- read.table("./examples/data/flanker.csv", sep = "\t")
+df <- read.table("./examples/data/flanker.csv", sep = "\t", header = TRUE)
 
 # map correct/incorrect/timeout to 1/0
 df$result_numeric <- 0
 df[df$result == "correct", ]$result_numeric <- 1
-
 
 
 ### REACTION TIMES - test vs control group -------------------------------
