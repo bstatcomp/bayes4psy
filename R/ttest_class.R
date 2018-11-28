@@ -16,9 +16,11 @@
 #'
 #' plot_difference(`ttest_class`, mu = `numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_comparison(`ttest_class`, fit2 = `ttest_class`): plots density for the first and the second group.
+#' plot_samples(`ttest_class`): plots density for the first group samples.
 #'
-#' plot_comparison(`ttest_class`, mu = `numeric`): plots density for the first group and a mean value in case second group is defined as a normal distribution or as a constant.
+#' plot_samples(`ttest_class`, fit2 = `ttest_class`): plots density for the first and the second group samples.
+#'
+#' plot_samples(`ttest_class`, mu = `numeric`): plots density for the first group samples and a mean value in case second group is defined as a normal distribution or as a constant.
 #'
 #' compare_distributions(`ttest_class`, fit2 = `ttest_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
@@ -185,41 +187,33 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
 })
 
 
-#' @title plot_comparison
-#' @description \code{plot_comparison} plots density for the first group and density for the second group, or a mean value in case second group is defined as a normal distribution or as a constant.
-#' @rdname ttest_class-plot_comparison
-#' @aliases plot_comparison,ANY-method
-setMethod(f = "plot_comparison", signature(object = "ttest_class"), definition = function(object, ...) {
-  arguments <- list(...)
-
-  wrong_arguments <- "The provided arguments for the plot_comparison function are invalid, plot_comparison(ttest_class, ttest_class) or plot_comparison(ttest_class, numeric) is required!"
-
-  if (is.null(arguments)) {
-    warning(wrong_arguments)
-    return()
-  }
-
+#' @title plot_samples
+#' @description \code{plot_samples} plots density for the first group, the first and the second group, or a mean value in case second group is defined as a normal distribution or as a constant.
+#' @rdname ttest_class-plot_samples
+#' @aliases plot_samples,ANY-method
+setMethod(f = "plot_samples", signature(object = "ttest_class"), definition = function(object, ...) {
   # first group data
   mu1 <- object@extract$mu
   df1 <- data.frame(value = mu1)
 
   # second group data
   df2 <- NULL
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
-    # provided another fit
-    if (!is.null(arguments$fit2)) {
-      fit2 <- arguments$fit2
-    } else {
-      fit2 <- arguments[[1]]
+  mu2 <- NULL
+  arguments <- list(...)
+  if (length(arguments) > 0) {
+    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
+      # provided another fit
+      if (!is.null(arguments$fit2)) {
+        fit2 <- arguments$fit2
+      } else {
+        fit2 <- arguments[[1]]
+      }
+      mu2 <- fit2@extract$mu
+      df2 <- data.frame(value = mu2)
+    } else if (!is.null(arguments$mu)) {
+      # provided mu and sigma
+      mu2 <- arguments$mu;
     }
-    mu2 <- fit2@extract$mu
-    df2 <- data.frame(value = mu2)
-  } else if (!is.null(arguments$mu)) {
-    # provided mu and sigma
-    mu2 <- arguments$mu;
-  } else {
-    warning(wrong_arguments)
-    return()
   }
 
   # plot
@@ -231,7 +225,7 @@ setMethod(f = "plot_comparison", signature(object = "ttest_class"), definition =
   if (!is.null(df2)) {
     graph <- graph +
       geom_density(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA)
-  } else {
+  } else if (!is.null(mu2)) {
     y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
     graph <- graph +
@@ -239,6 +233,7 @@ setMethod(f = "plot_comparison", signature(object = "ttest_class"), definition =
       geom_text(aes(label = sprintf("%.2f", mu2), x = mu2, y = y_max[2]*1.08), size = 4)
   }
 
+  # limits
   x_min <- min(mu1, mu2)
   x_max <- max(mu1, mu2)
   diff <- x_max - x_min

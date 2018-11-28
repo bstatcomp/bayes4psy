@@ -10,7 +10,9 @@
 #'
 #' plot_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
 #'
-#' plot_comparison(`success_rate_class`, fit2 = `success_rate_class`): plots density for the first and the second group.
+#' plot_samples(`success_rate_class`): plots density for the first samples.
+#'
+#' plot_samples(`success_rate_class`, fit2 = `success_rate_class`): plots density for the first and the second group samples.
 #'
 #' compare_distributions(`success_rate_class`, fit2 = `success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #'
@@ -137,55 +139,57 @@ setMethod(f = "plot_difference", signature(object = "success_rate_class"), defin
 })
 
 
-#' @title plot_comparison
-#' @description \code{plot_comparison} plots density for the first and the second group.
-#' @rdname success_rate_class-plot_comparison
-#' @aliases plot_comparison,ANY-method
-setMethod(f = "plot_comparison", signature(object = "success_rate_class"), definition = function(object, ...) {
-  arguments <- list(...)
-
-  wrong_arguments <- "The provided arguments for the plot_comparison function are invalid, plot_comparison(success_rate_class, fit2 = success_rate_class) is required!"
-
-  if (is.null(arguments)) {
-    warning(wrong_arguments)
-    return()
-  }
-
+#' @title plot_samples
+#' @description \code{plot_samples} plots density for the first, or the first and the second group.
+#' @rdname success_rate_class-plot_samples
+#' @aliases plot_samples,ANY-method
+setMethod(f = "plot_samples", signature(object = "success_rate_class"), definition = function(object, ...) {
   # first group data
   df1 <- data.frame(value = rowMeans(object@extract$p))
 
+  # limits
+  x_min <- min(df1$value)
+  x_max <- max(df1$value)
+
+  # plot
+  graph <- ggplot() +
+    geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA)
+
   # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
-    # provided another fit
-    if (!is.null(arguments$fit2)) {
-      fit2 <- arguments$fit2
-    } else {
-      fit2 <- arguments[[1]]
+  df2 <- NULL
+  arguments <- list(...)
+  if (length(arguments) > 0) {
+    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
+      # provided another fit
+      if (!is.null(arguments$fit2)) {
+        fit2 <- arguments$fit2
+      } else {
+        fit2 <- arguments[[1]]
+      }
+      df2 <- data.frame(value = rowMeans(fit2@extract$p))
+
+      # limits
+      x_min <- min(x_min, df2$value)
+      x_max <- max(x_max, df2$value)
+
+      # plot
+      graph <- graph +
+        geom_density(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA)
     }
-    df2 <- data.frame(value = rowMeans(fit2@extract$p))
-
-    # limits
-    x_min <- min(df1$value, df2$value)
-    x_max <- max(df1$value, df2$value)
-
-    diff <- x_max - x_min
-
-    x_min <- x_min - 0.1*diff
-    x_max <- x_max + 0.1*diff
-
-    # plot
-    graph <- ggplot() +
-      geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
-      geom_density(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA) +
-      theme_minimal() +
-      xlab("value") +
-      xlim(x_min, x_max)
-
-    return(graph)
-  } else {
-    warning(wrong_arguments)
-    return()
   }
+
+  # limits
+  diff <- x_max - x_min
+  x_min <- x_min - 0.1*diff
+  x_max <- x_max + 0.1*diff
+
+  # plot
+  graph <- graph +
+    theme_minimal() +
+    xlab("value") +
+    xlim(x_min, x_max)
+
+  return(graph)
 })
 
 

@@ -32,6 +32,9 @@ plot_fit(ttest_results)
 # traceplot
 traceplot(ttest_results)
 
+# samples for single fit
+plot_samples(ttest_results)
+
 
 ## compare ---------------------------------------------------------------
 # compare both fitted objects
@@ -58,12 +61,12 @@ plot_difference(ttest_results, fit2 = ttest_results2, rope = 2, bins = 10)
 plot_difference(ttest_results, mu = mu)
 
 
-## plot comparison -------------------------------------------------------
+## plot samples ----------------------------------------------------------
 # comparison between two fitted objects
-plot_comparison(ttest_results, fit2 = ttest_results2)
+plot_samples(ttest_results, fit2 = ttest_results2)
 
 # comparison between a fit and a mean value (or the mean of a normal distribution)
-plot_comparison(ttest_results, mu = mu)
+plot_samples(ttest_results, mu = mu)
 
 
 ## compare distributions -------------------------------------------------------

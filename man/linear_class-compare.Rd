@@ -9,17 +9,17 @@
 \S4method{plot_fit}{linear_class}(object)
 }
 \description{
-\code{compare} prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+\code{compare} TODO
 
-\code{plot_difference} a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+\code{plot_difference} TODO
 
-\code{plot_comparison} plots density for the first group and density for the second group, or a mean value in case second group is defined as a normal distribution or as a constant.
+\code{plot_samples} TODO
 
-\code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group, against a mean value, or against samples from a normal distribution with a defined mean value and variance.
+\code{compare_distributions} TODO
 
-\code{plot_distributions} visualizes distributions underlying tested groups.
+\code{plot_distributions} TODO
 
-\code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the distribution or a constant value for the second group.
+\code{plot_distributions_difference} TODO
 
 \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
 }

@@ -10,7 +10,9 @@
 #'
 #' plot_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
 #'
-#' plot_comparison(`linear_class`, fit2 = `linear_class`): plots density for the first and the second group.
+#' plot_samples(`linear_class`): plots density for the first group samples.
+#'
+#' plot_samples(`linear_class`, fit2 = `linear_class`): plots density for the first and the second group samples.
 #'
 #' compare_distributions(`linear_class`, fit2 = `linear_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #'
@@ -54,7 +56,7 @@ setMethod(f = "summary", signature(object = "linear_class"), definition = functi
 
 
 #' @title compare
-#' @description \code{compare} prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#' @description \code{compare} TODO
 #' @rdname linear_class-compare
 #' @aliases compare,ANY-method
 # setMethod(f = "compare", signature(object = "linear_class"), definition = function(object, ...) {
@@ -63,7 +65,7 @@ setMethod(f = "summary", signature(object = "linear_class"), definition = functi
 
 
 #' @title plot_difference
-#' @description \code{plot_difference} a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#' @description \code{plot_difference} TODO
 #' @rdname linear_class-plot_difference
 #' @aliases plot_difference,ANY-method
 # setMethod(f = "plot_difference", signature(object = "linear_class"), definition = function(object, ...) {
@@ -71,17 +73,17 @@ setMethod(f = "summary", signature(object = "linear_class"), definition = functi
 # })
 
 
-#' @title plot_comparison
-#' @description \code{plot_comparison} plots density for the first group and density for the second group, or a mean value in case second group is defined as a normal distribution or as a constant.
-#' @rdname linear_class-plot_comparison
-#' @aliases plot_comparison,ANY-method
-# setMethod(f = "plot_comparison", signature(object = "linear_class"), definition = function(object, ...) {
+#' @title plot_samples
+#' @description \code{plot_samples} TODO
+#' @rdname linear_class-plot_samples
+#' @aliases plot_samples,ANY-method
+# setMethod(f = "plot_samples", signature(object = "linear_class"), definition = function(object, ...) {
 #
 # })
 
 
 #' @title compare_distributions
-#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group, against a mean value, or against samples from a normal distribution with a defined mean value and variance.
+#' @description \code{compare_distributions} TODO
 #' @rdname linear_class-compare_distributions
 #' @aliases compare_distributions,ANY-method
 # setMethod(f = "compare_distributions", signature(object = "linear_class"), definition = function(object, ...) {
@@ -90,7 +92,7 @@ setMethod(f = "summary", signature(object = "linear_class"), definition = functi
 
 
 #' @title plot_distributions
-#' @description \code{plot_distributions} visualizes distributions underlying tested groups.
+#' @description \code{plot_distributions} TODO
 #' @rdname linear_class-plot_distributions
 #' @aliases plot_distributions,ANY-method
 # setMethod(f = "plot_distributions", signature(object = "linear_class"), definition = function(object, ...) {
@@ -99,7 +101,7 @@ setMethod(f = "summary", signature(object = "linear_class"), definition = functi
 
 
 #' @title plot_distributions_difference
-#' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the distribution or a constant value for the second group.
+#' @description \code{plot_distributions_difference} TODO
 #' @rdname linear_class-plot_distributions_difference
 #' @aliases plot_distributions_difference,ANY-method
 # setMethod(f = "plot_distributions_difference", signature(object = "linear_class"), definition = function(object, ...) {

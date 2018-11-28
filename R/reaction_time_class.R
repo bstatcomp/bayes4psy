@@ -10,7 +10,9 @@
 #'
 #' plot_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope parameter or visualize the comparison only through a chosen parameter (mu or lambda).
 #'
-#' plot_comparison(`reaction_time_class`, fit2 = `reaction_time_class`): plots density for the first and the second group. You can also visualize the denisty only for a chosen parameter (mu or lambda).
+#' plot_samples(`reaction_time_class`): plots density for the first group samples. You can also visualize the denisty only for a chosen parameter (mu or lambda).
+#'
+#' plot_samples(`reaction_time_class`, fit2 = `reaction_time_class`): plots density for the first and the second group samples. You can also visualize the denisty only for a chosen parameter (mu or lambda).
 #'
 #' compare_distributions(`reaction_time_class`, fit2 = `reaction_time_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
@@ -83,7 +85,7 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
       warning(w)
       par <- NULL
     } else {
-      cat(sprintf("Comparing through %s parameter.\n", par))
+      cat(sprintf("Using only the %s parameter.\n", par))
     }
   }
 
@@ -152,7 +154,7 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
       warning(w)
       par <- NULL
     } else {
-      cat(sprintf("Comparing through %s parameter.\n", par))
+      cat(sprintf("Using only the %s parameter.\n", par))
     }
   }
 
@@ -200,19 +202,13 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
 })
 
 
-#' @title plot_comparison
-#' @description \code{plot_comparison} plots density for the first and the second group.
-#' @rdname reaction_time_class-plot_comparison
-#' @aliases plot_comparison,ANY-method
-setMethod(f = "plot_comparison", signature(object = "reaction_time_class"), definition = function(object, ...) {
+#' @title plot_samples
+#' @description \code{plot_samples} plots density for the first, or the first and the second group.
+#' @rdname reaction_time_class-plot_samples
+#' @aliases plot_samples,ANY-method
+setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definition = function(object, ...) {
+  # extract arguments
   arguments <- list(...)
-
-  wrong_arguments <- "The provided arguments for the plot_comparison function are invalid, plot_comparison(reaction_time_class, fit2 = reaction_time_class) is required! You can also visualize the density through only the mu or the lamdba parameter, e.g. plot_comparison(reaction_time_class, fit2 = reaction_time_class, par = \"mu\")."
-
-  if (is.null(arguments)) {
-    warning(wrong_arguments)
-    return()
-  }
 
   # compare only through one parameter
   par <- NULL
@@ -224,7 +220,7 @@ setMethod(f = "plot_comparison", signature(object = "reaction_time_class"), defi
       warning(w)
       par <- NULL
     } else {
-      cat(sprintf("Comparing through %s parameter.\n", par))
+      cat(sprintf("Using only the %s parameter.\n", par))
     }
   }
 
@@ -237,46 +233,56 @@ setMethod(f = "plot_comparison", signature(object = "reaction_time_class"), defi
     df1 <- data.frame(value = object@extract$mu_l)
   }
 
+  # limits
+  x_min <- min(df1$value)
+  x_max <- max(df1$value)
+
+  # plot
+  graph <- ggplot() +
+    geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA)
+
   # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
-    # provided another fit
-    if (!is.null(arguments$fit2)) {
-      fit2 <- arguments$fit2
-    } else {
-      fit2 <- arguments[[1]]
+  df2 <- NULL
+  if (length(arguments) > 0) {
+    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
+      # provided another fit
+      if (!is.null(arguments$fit2)) {
+        fit2 <- arguments$fit2
+      } else {
+        fit2 <- arguments[[1]]
+      }
+
+      if (is.null(par)) {
+        df2 <- data.frame(value = fit2@extract$mu_m + 1/fit2@extract$mu_l)
+      } else if (par == "mu") {
+        df2 <- data.frame(value = fit2@extract$mu_m)
+      } else if (par == "lambda") {
+        df2 <- data.frame(value = fit2@extract$mu_l)
+      }
+
+      # limits
+      x_min <- min(x_min, df2$value)
+      x_max <- max(x_max, df2$value)
+
+      # plot
+      graph <- graph +
+        geom_density(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA)
     }
-
-    if (is.null(par)) {
-      df2 <- data.frame(value = fit2@extract$mu_m + 1/fit2@extract$mu_l)
-    } else if (par == "mu") {
-      df2 <- data.frame(value = fit2@extract$mu_m)
-    } else if (par == "lambda") {
-      df2 <- data.frame(value = fit2@extract$mu_l)
-    }
-
-
-    # limits
-    x_min <- min(df1$value, df2$value)
-    x_max <- max(df1$value, df2$value)
-
-    diff <- x_max - x_min
-
-    x_min <- x_min - 0.1*diff
-    x_max <- x_max + 0.1*diff
-
-    # plot
-    graph <- ggplot() +
-      geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
-      geom_density(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA) +
-      theme_minimal() +
-      xlab("value") +
-      xlim(x_min, x_max)
-
-    return(graph)
-  } else {
-    warning(wrong_arguments)
-    return()
   }
+
+  # limits
+  diff <- x_max - x_min
+
+  x_min <- x_min - 0.1*diff
+  x_max <- x_max + 0.1*diff
+
+  # plot
+  graph <- graph +
+    theme_minimal() +
+    xlab("value") +
+    xlim(x_min, x_max)
+
+  return(graph)
 })
 
 

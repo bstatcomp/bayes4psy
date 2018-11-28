@@ -31,9 +31,11 @@ plot_difference(`ttest_class`, fit2 = `ttest_class`): a visualization of the dif
 
 plot_difference(`ttest_class`, mu = `numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
-plot_comparison(`ttest_class`, fit2 = `ttest_class`): plots density for the first and the second group.
+plot_samples(`ttest_class`): plots density for the first group samples.
 
-plot_comparison(`ttest_class`, mu = `numeric`): plots density for the first group and a mean value in case second group is defined as a normal distribution or as a constant.
+plot_samples(`ttest_class`, fit2 = `ttest_class`): plots density for the first and the second group samples.
+
+plot_samples(`ttest_class`, mu = `numeric`): plots density for the first group samples and a mean value in case second group is defined as a normal distribution or as a constant.
 
 compare_distributions(`ttest_class`, fit2 = `ttest_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 

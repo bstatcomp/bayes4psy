@@ -38,6 +38,9 @@ plot_fit(rt_control)
 # traceplot
 traceplot(rt_control)
 
+# plot samples
+plot_samples(rt_control)
+
 
 ## test group fit --------------------------------------------------------
 df_test <- df_correct[df_correct$group == "test", ]
@@ -58,6 +61,9 @@ plot_fit(rt_test)
 # traceplot
 traceplot(rt_test)
 
+# plot samples
+plot_samples(rt_test)
+
 
 ## compare two groups  ---------------------------------------------------
 # difference summary
@@ -75,11 +81,11 @@ plot_difference(rt_control, fit2 = rt_test)
 # difference plot with rope, custom bins of mu parameter
 plot_difference(rt_control, fit2 = rt_test, rope = 0.1, bins = 10, par = "mu")
 
-# comparison plot
-plot_comparison(rt_control, fit2 = rt_test)
+# samples plot
+plot_samples(rt_control, fit2 = rt_test)
 
-# plot comparsion only for lambda prameter (or mu)
-plot_comparison(rt_control, fit2 = rt_test, par = "lambda")
+# plot samples only for lambda prameter (or mu)
+plot_samples(rt_control, fit2 = rt_test, par = "lambda")
 
 # compare distributions
 compare_distributions(rt_control, fit2 = rt_test, rope = 0.1)
@@ -123,6 +129,9 @@ plot_fit(s_congruent)
 # traceplot
 traceplot(s_congruent)
 
+# plot samples
+plot_samples(s_congruent)
+
 
 ## incongruent fit -------------------------------------------------------
 n <- nrow(df_incongruent)
@@ -141,6 +150,9 @@ plot_fit(s_incongruent)
 # traceplot
 traceplot(s_incongruent)
 
+# plot samples
+plot_samples(s_incongruent)
+
 
 ## comparison ------------------------------------------------------------
 # compare
@@ -155,8 +167,8 @@ plot_difference(s_congruent, fit2 = s_incongruent)
 # difference plot with rope and custom bins
 plot_difference(s_congruent, fit2 = s_incongruent, rope = 0.05, bins = 10)
 
-# comparison plot
-plot_comparison(s_congruent, fit2 = s_incongruent)
+# plot samples for both groups
+plot_samples(s_congruent, fit2 = s_incongruent)
 
 # compare distributions
 compare_distributions(s_congruent, fit2 = s_incongruent)

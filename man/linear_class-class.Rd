@@ -25,7 +25,9 @@ compare(`linear_class`, fit2 = `linear_class`): prints difference in slope and i
 
 plot_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
 
-plot_comparison(`linear_class`, fit2 = `linear_class`): plots density for the first and the second group.
+plot_samples(`linear_class`): plots density for the first group samples.
+
+plot_samples(`linear_class`, fit2 = `linear_class`): plots density for the first and the second group samples.
 
 compare_distributions(`linear_class`, fit2 = `linear_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 
