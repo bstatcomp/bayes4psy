@@ -86,7 +86,7 @@ setMethod(f = "compare", signature(object = "ttest_class"), definition = functio
 
   wrong_arguments <- "The provided arguments for the compare function are invalid, compare(ttest_class, fit2 = ttest_class), compare(fit2 = ttest_class, mu = numeric), or compare(fit2 = ttest_class, mu = numeric, sigma = numeric) is required! You can also provide the rope parameter, e.g. compare(ttest_class, fit2 = ttest_class, rope = numeric)."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -145,7 +145,7 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
 
   wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(ttest_class, ttest_class) or plot_difference(ttest_class, numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(ttest_class, fit2 = ttest_class, rope = numeric, bins = numeric)."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -185,7 +185,8 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
   }
 
   # call plot difference shared function from shared plots
-  shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+  graph <- shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+  return(graph)
 })
 
 
@@ -258,7 +259,7 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
 
   wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(ttest_class, fit2 = ttest_class), compare_distributions(ttest_class, mu = numeric), or compare_distributions(ttest_class, mu = numeric, sigma = numeric) is required! You can also provide the rope parameter, e.g. compare_distributions(ttest_class, fit2 = ttest_class, rope = numeric)."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -395,7 +396,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_class")
 
   wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(ttest_class, fit2 = ttest_class), plot_distributions_difference(ttest_class, mu = numeric), or plot_distributions_difference(ttest_class, mu = numeric, sigma = numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(ttest_class, fit2 = ttest_class, rope = numeric, bins = numeric)."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -444,7 +445,8 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_class")
   }
 
   # call plot difference shared function from shared plots
-  shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+  graph <- shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+  return(graph)
 })
 
 

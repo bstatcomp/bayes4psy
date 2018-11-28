@@ -4,7 +4,7 @@ library(EasyBayes)
 
 ## generate data ---------------------------------------------------------
 # number of measurements
-n <- 25
+n <- 15
 
 # height of females from brazil
 y_brazil <- rnorm(n, 155.7, 6.6)

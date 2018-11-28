@@ -65,7 +65,7 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
 
   wrong_arguments <- "The provided arguments for the compare function are invalid, compare(reaction_time_class, fit2 = reaction_time_class) is required! You can optionallly provide the rope parameter, e.g. compare(reaction_time_class, fit2 = reaction_time_class, rope = numeric). You can also execute the comparison through only the mu or the lamdba parameter, e.g. compare(reaction_time_class, fit2 = reaction_time_class, par = \"mu\")."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -134,7 +134,7 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
 
   wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(reaction_time_class, fit2 = reaction_time_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(reaction_time_class, fit2 = reaction_time_class, rope = numeric, bins = numeric). You can also visualize the difference through only the mu or the lamdba parameter, e.g. plot_difference(reaction_time_class, fit2 = reaction_time_class, par = \"mu\")."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -196,7 +196,8 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
     }
 
     # call plot difference from shared plots
-    shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+    graph <- shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+    return(graph)
   } else {
     warning(wrong_arguments)
     return()
@@ -297,7 +298,7 @@ setMethod(f = "compare_distributions", signature(object = "reaction_time_class")
 
   wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(reaction_time_class, fit2 = reaction_time_class) is required! You can also provide the rope parameter, e.g. compare_distributions(reaction_time_class, fit2 = reaction_time_class, rope = numeric)."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -397,7 +398,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
 
   wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(reaction_time_class, fit2 = reaction_time_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(reaction_time_class, fit2 = reaction_time_class, rope = numeric, bins = numeric)."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -437,7 +438,8 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
     }
 
     # call plot difference from shared plots
-    shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+    graph <- shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+    return(graph)
   } else {
     warning(wrong_arguments)
     return()

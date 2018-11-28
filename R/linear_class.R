@@ -66,7 +66,7 @@ setMethod(f = "compare", signature(object = "linear_class"), definition = functi
 
   wrong_arguments <- "The provided arguments for the compare function are invalid, compare(linear_class, fit2 = linear_class) is required! You can also provide the rope parameters, e.g. compare(linear_class, fit2 = linear_class, rope_intercept = numeric, rope_slope = numeric)."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -85,8 +85,8 @@ setMethod(f = "compare", signature(object = "linear_class"), definition = functi
   rope_slope <- prepare_rope(rope_slope)
 
   # first group data
-  intercept1 <-
-  slope1 <-
+  intercept1 <- object@extract$mu_a
+  slope1 <- object@extract$mu_b
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
@@ -96,9 +96,14 @@ setMethod(f = "compare", signature(object = "linear_class"), definition = functi
     } else {
       fit2 <- arguments[[1]]
     }
-    y2 <- rowMeans(fit2@extract$p)
+    intercept2 <- fit2@extract$mu_a
+    slope2 <- fit2@extract$mu_b
 
-    shared_difference(y1 = y1, y2 = y2, rope = rope)
+    cat("---------- Intercept ----------\n")
+    shared_difference(y1 = intercept1, y2 = intercept2, rope = rope_intercept)
+
+    cat("\n---------- Slope ----------\n")
+    shared_difference(y1 = slope1, y2 = slope2, rope = rope_slope)
   } else {
     warning(wrong_arguments)
     return()
@@ -110,9 +115,68 @@ setMethod(f = "compare", signature(object = "linear_class"), definition = functi
 #' @description \code{plot_difference} TODO
 #' @rdname linear_class-plot_difference
 #' @aliases plot_difference,ANY-method
-# setMethod(f = "plot_difference", signature(object = "linear_class"), definition = function(object, ...) {
-#
-# })
+setMethod(f = "plot_difference", signature(object = "linear_class"), definition = function(object, ...) {
+  arguments <- list(...)
+
+  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(linear_class, fit2 = linear_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(linear_class, fit2 = linear_class, rope = numeric, bins = numeric)."
+
+  if (length(arguments) == 0) {
+    warning(wrong_arguments)
+    return()
+  }
+
+  # prepare rope
+  rope_intercept <- NULL
+  if (!is.null(arguments$rope_intercept)) {
+    rope_intercept = arguments$rope_intercept
+  }
+  rope_intercept <- prepare_rope(rope_intercept)
+
+  rope_slope <- NULL
+  if (!is.null(arguments$rope_slope)) {
+    rope_slope = arguments$rope_slope
+  }
+  rope_slope <- prepare_rope(rope_slope)
+
+  # first group data
+  intercept1 <- object@extract$mu_a
+  slope1 <- object@extract$mu_b
+
+  # second group data
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
+    # provided another fit
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+    intercept2 <- fit2@extract$mu_a
+    slope2 <- fit2@extract$mu_b
+
+    # bins in the histogram
+    bins <- 30
+    if (!is.null(arguments$bins)) {
+      bins <- arguments$bins
+    }
+
+    # call plot difference from shared plots
+    graph_intercept <- shared_plot_difference(y1 = intercept1, y2 = intercept2, rope = rope_intercept, bins = bins)
+    graph_intercept <- graph_intercept +
+      ggtitle("Intercept") +
+      theme(plot.title = element_text(hjust = 0.5))
+
+    graph_slope <- shared_plot_difference(y1 = slope1, y2 = slope2, rope = rope_slope, bins = bins)
+    graph_slope <- graph_slope +
+      ggtitle("Slope") +
+      theme(plot.title = element_text(hjust = 0.5))
+
+    graph <- plot_grid(graph_intercept, graph_slope, ncol = 2, nrow = 1, scale = 0.9)
+    return(graph)
+  } else {
+    warning(wrong_arguments)
+    return()
+  }
+})
 
 
 #' @title plot_samples
@@ -189,12 +253,69 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
 
 
 #' @title compare_distributions
-#' @description \code{compare_distributions} TODO
+#' @description \code{compare_distributions}draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #' @rdname linear_class-compare_distributions
 #' @aliases compare_distributions,ANY-method
-# setMethod(f = "compare_distributions", signature(object = "linear_class"), definition = function(object, ...) {
-#
-# })
+setMethod(f = "compare_distributions", signature(object = "linear_class"), definition = function(object, ...) {
+  arguments <- list(...)
+
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(linear_class, fit2 = linear_class) is required! You can also provide the rope parameter, e.g. compare_distributions(linear_class, fit2 = linear_class, rope = numeric)."
+
+  if (length(arguments) == 0) {
+    warning(wrong_arguments)
+    return()
+  }
+
+  # prepare rope
+  rope_intercept <- NULL
+  if (!is.null(arguments$rope_intercept)) {
+    rope_intercept = arguments$rope_intercept
+  }
+  rope_intercept <- prepare_rope(rope_intercept)
+
+  rope_slope <- NULL
+  if (!is.null(arguments$rope_slope)) {
+    rope_slope = arguments$rope_slope
+  }
+  rope_slope <- prepare_rope(rope_slope)
+
+  n <- 100000
+
+  # first group data
+  mu_intercept1 <- mean(object@extract$mu_a)
+  sigma_intercept1 <- sqrt(mean(object@extract$ss_a))
+  intercept1 <- rnorm(n, mean = mu_intercept1, sd = sigma_intercept1)
+
+  mu_slope1 <- mean(object@extract$mu_b)
+  sigma_slope1 <- sqrt(mean(object@extract$ss_b))
+  slope1 <- rnorm(n, mean = mu_slope1, sd = sigma_slope1)
+
+  # second group data
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
+    # provided another fit
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+    mu_intercept2 <- mean(fit2@extract$mu_a)
+    sigma_intercept2 <- sqrt(mean(fit2@extract$ss_a))
+    intercept2 <- rnorm(n, mean = mu_intercept2, sd = sigma_intercept2)
+
+    mu_slope2 <- mean(fit2@extract$mu_b)
+    sigma_slope2 <- sqrt(mean(fit2@extract$ss_b))
+    slope2 <- rnorm(n, mean = mu_slope2, sd = sigma_slope2)
+
+    cat("---------- Intercept ----------\n")
+    shared_difference(y1 = intercept1, y2 = intercept2, rope = rope_intercept)
+
+    cat("\n---------- Slope ----------\n")
+    shared_difference(y1 = slope1, y2 = slope2, rope = rope_slope)
+  } else {
+    warning(wrong_arguments)
+    return()
+  }
+})
 
 
 #' @title plot_distributions
@@ -210,9 +331,80 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
 #' @description \code{plot_distributions_difference} TODO
 #' @rdname linear_class-plot_distributions_difference
 #' @aliases plot_distributions_difference,ANY-method
-# setMethod(f = "plot_distributions_difference", signature(object = "linear_class"), definition = function(object, ...) {
-#
-# })
+setMethod(f = "plot_distributions_difference", signature(object = "linear_class"), definition = function(object, ...) {
+  arguments <- list(...)
+
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(linear_class, fit2 = linear_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(linear_class, fit2 = linear_class, rope = numeric, bins = numeric)."
+
+  if (length(arguments) == 0) {
+    warning(wrong_arguments)
+    return()
+  }
+
+  # prepare rope
+  rope_intercept <- NULL
+  if (!is.null(arguments$rope_intercept)) {
+    rope_intercept = arguments$rope_intercept
+  }
+  rope_intercept <- prepare_rope(rope_intercept)
+
+  rope_slope <- NULL
+  if (!is.null(arguments$rope_slope)) {
+    rope_slope = arguments$rope_slope
+  }
+  rope_slope <- prepare_rope(rope_slope)
+
+  n <- 100000
+
+  # first group data
+  mu_intercept1 <- mean(object@extract$mu_a)
+  sigma_intercept1 <- sqrt(mean(object@extract$ss_a))
+  intercept1 <- rnorm(n, mean = mu_intercept1, sd = sigma_intercept1)
+
+  mu_slope1 <- mean(object@extract$mu_b)
+  sigma_slope1 <- sqrt(mean(object@extract$ss_b))
+  slope1 <- rnorm(n, mean = mu_slope1, sd = sigma_slope1)
+
+  # second group data
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
+    # provided another fit
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+    mu_intercept2 <- mean(fit2@extract$mu_a)
+    sigma_intercept2 <- sqrt(mean(fit2@extract$ss_a))
+    intercept2 <- rnorm(n, mean = mu_intercept2, sd = sigma_intercept2)
+
+    mu_slope2 <- mean(fit2@extract$mu_b)
+    sigma_slope2 <- sqrt(mean(fit2@extract$ss_b))
+    slope2 <- rnorm(n, mean = mu_slope2, sd = sigma_slope2)
+
+    # bins in the histogram
+    bins <- 30
+    if (!is.null(arguments$bins)) {
+      bins <- arguments$bins
+    }
+
+    # call plot difference from shared plots
+    graph_intercept <- shared_plot_difference(y1 = intercept1, y2 = intercept2, rope = rope_intercept, bins = bins)
+    graph_intercept <- graph_intercept +
+      ggtitle("Intercept") +
+      theme(plot.title = element_text(hjust = 0.5))
+
+    graph_slope <- shared_plot_difference(y1 = slope1, y2 = slope2, rope = rope_slope, bins = bins)
+    graph_slope <- graph_slope +
+      ggtitle("Slope") +
+      theme(plot.title = element_text(hjust = 0.5))
+
+    graph <- plot_grid(graph_intercept, graph_slope, ncol = 2, nrow = 1, scale = 0.9)
+    return(graph)
+  } else {
+    warning(wrong_arguments)
+    return()
+  }
+})
 
 
 #' @title plot_fit

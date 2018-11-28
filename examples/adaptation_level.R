@@ -26,6 +26,7 @@ al_1b <- b_linear(n = nrow(df_1b),
                  y = df_1b$response,
                  s = df_1b$subject)
 
+# diagnostics
 # summary
 summary(al_1b)
 
@@ -49,21 +50,43 @@ al_1a <- b_linear(n = nrow(df_1a),
                   y = df_1a$response,
                   s = df_1a$subject)
 
-# summary
-summary(al_1a)
-
-# check fits
-plot_fit(al_1a)
-
-# traceplot
-traceplot(al_1a)
-
-# plot samples
-plot_samples(al_1a)
-
 
 ## group 2 ---------------------------------------------------------------
 df_2 <- df[df$group == 2, ]
 
+# before - 1st part
+df_2b <- df_2[df_2$part == 1, ]
+
+# prep data and fit
+al_2b <- b_linear(n = nrow(df_2b),
+                  m = m,
+                  x = df_2b$sequence,
+                  y = df_2b$response,
+                  s = df_2b$subject)
+
+# after - 2nd part
+df_2a <- df_2[df_2$part == 2, ]
+
+# prep data and fit
+al_2a <- b_linear(n = nrow(df_2a),
+                  m = m,
+                  x = df_2a$sequence,
+                  y = df_2a$response,
+                  s = df_2a$subject)
+
+
 ## compare ---------------------------------------------------------------
+# compare (optional rope parameter)
+compare(al_1b, fit2 = al_1a)
+
+# difference (optional rope parameter)
+plot_difference(al_1b, fit2 = al_1a)
+
+# visually compare samples
 plot_samples(al_1b, fit2 = al_1a)
+
+# compare distributions (optional rope parameter)
+compare_distributions(al_1b, fit2 = al_1a)
+
+# plot difference between distributions
+plot_distributions_difference(al_1b, fit2 = al_1a)

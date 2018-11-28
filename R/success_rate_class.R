@@ -59,7 +59,7 @@ setMethod(f = "compare", signature(object = "success_rate_class"), definition = 
 
   wrong_arguments <- "The provided arguments for the compare function are invalid, compare(success_rate_class, fit2 = success_rate_class) is required! You can also provide the rope parameter, e.g. compare(success_rate_class, fit2 = success_rate_class, rope = numeric)."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -101,7 +101,7 @@ setMethod(f = "plot_difference", signature(object = "success_rate_class"), defin
 
   wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(success_rate_class, fit2 = success_rate_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(success_rate_class, fit2 = success_rate_class, rope = numeric, bins = numeric)."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -133,7 +133,8 @@ setMethod(f = "plot_difference", signature(object = "success_rate_class"), defin
     }
 
     # call plot difference from shared plots
-    shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+    graph <- shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+    return(graph)
   } else {
     warning(wrong_arguments)
     return()
@@ -204,7 +205,7 @@ setMethod(f = "compare_distributions", signature(object = "success_rate_class"),
 
   wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(success_rate_class, fit2 = success_rate_class) is required! You can also provide the rope parameter, e.g. compare_distributions(success_rate_class, fit2 = success_rate_class."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -299,7 +300,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
 
   wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(reaction_time_class, fit2 = reaction_time_class) is required!"
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
