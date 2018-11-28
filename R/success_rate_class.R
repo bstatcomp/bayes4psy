@@ -16,6 +16,8 @@
 #'
 #' compare_distributions(`success_rate_class`, fit2 = `success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #'
+#' plot_distributions(`success_rate_class`): a visualization of the distribution for the first group.
+#'
 #' plot_distributions(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the distribution for the first group and the second group.
 #'
 #' plot_distributions_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope parameter.
@@ -140,7 +142,7 @@ setMethod(f = "plot_difference", signature(object = "success_rate_class"), defin
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots density for the first, or the first and the second group.
+#' @description \code{plot_samples} plots density for the first group samples, or the first and the second group samples.
 #' @rdname success_rate_class-plot_samples
 #' @aliases plot_samples,ANY-method
 setMethod(f = "plot_samples", signature(object = "success_rate_class"), definition = function(object, ...) {
@@ -241,18 +243,10 @@ setMethod(f = "compare_distributions", signature(object = "success_rate_class"),
 
 
 #' @title plot_distributions
-#' @description \code{plot_distributions} a visualization of the distribution for the first group and the second group.
+#' @description \code{plot_distributions} a visualization of the distribution for the first group, or the first group and the second group.
 #' @rdname success_rate_class-plot_distributions
 #' @aliases plot_distributions,ANY-method
 setMethod(f = "plot_distributions", signature(object = "success_rate_class"), definition = function(object, ...) {
-  arguments <- list(...)
-
-  wrong_arguments <- "The provided arguments for the plot_distributions function are invalid, plot_distributions(success_rate_class, fit2 = success_rate_class) is required!"
-
-  if (is.null(arguments)) {
-    warning(wrong_arguments)
-    return()
-  }
   n <- nrow(object@extract$p)
   m <- 100000
 
@@ -263,33 +257,36 @@ setMethod(f = "plot_distributions", signature(object = "success_rate_class"), de
   sd1 <- sd(y1)
 
   # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
-    # provided another fit
-    if (!is.null(arguments$fit2)) {
-      fit2 <- arguments$fit2
-    } else {
-      fit2 <- arguments[[1]]
+  group2_plot <- NULL
+  arguments <- list(...)
+  if (length(arguments) > 0) {
+    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
+      # provided another fit
+      if (!is.null(arguments$fit2)) {
+        fit2 <- arguments$fit2
+      } else {
+        fit2 <- arguments[[1]]
+      }
+      p2 <- mean(fit2@extract$p)
+      y2 <- rbinom(m, n, p2) / n
+      mu2 <- mean(y2)
+      sd2 <- sd(y2)
+
+      group2_plot <- stat_function(fun = dnorm, n = m, args = list(mean = mu2, sd = sd2), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
     }
-    p2 <- mean(fit2@extract$p)
-    y2 <- rbinom(m, n, p2) / n
-    mu2 <- mean(y2)
-    sd2 <- sd(y2)
-
-    # plot
-    df_x <- data.frame(value = c(0, 1))
-
-    graph <- ggplot(data = df_x, aes(x = value)) +
-      stat_function(fun = dnorm, n = m, args = list(mean = mu1, sd = sd1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
-      stat_function(fun = dnorm, n = m, args = list(mean = mu2, sd = sd2), geom = 'area', fill = '#ff4e3f', alpha = 0.4) +
-      theme_minimal() +
-      xlab("probability") +
-      ylab("density")
-
-    return(graph)
-  } else {
-    warning(wrong_arguments)
-    return()
   }
+
+  # plot
+  df_x <- data.frame(value = c(0, 1))
+
+  graph <- ggplot(data = df_x, aes(x = value)) +
+    stat_function(fun = dnorm, n = m, args = list(mean = mu1, sd = sd1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
+    group2_plot +
+    theme_minimal() +
+    xlab("probability") +
+    ylab("density")
+
+  return(graph)
 })
 
 

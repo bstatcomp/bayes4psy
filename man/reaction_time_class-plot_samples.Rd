@@ -9,5 +9,5 @@
 \S4method{plot_samples}{reaction_time_class}(object, ...)
 }
 \description{
-\code{plot_samples} plots density for the first, or the first and the second group.
+\code{plot_samples} plots density for the first group samples, or the first and the second group samples.
 }

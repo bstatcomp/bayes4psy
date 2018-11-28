@@ -28,6 +28,8 @@
 #'
 #' compare_distributions(`ttest_class`, mu = `numeric`, sigma = `numeric`): draws samples from distribution of the first group and compares them against samples from a normal distribution with a defined mean value and variance. You can also provide the rope parameter.
 #'
+#' plot_distributions(`ttest_class`): a visualization of the distribution for the first group.
+#'
 #' plot_distributions(`ttest_class`, fit2 = `ttest_class`): a visualization of the distribution for the first group and the distribution for the second group.
 #'
 #' plot_distributions(`ttest_class`, mu = `numeric`): a visualization of the distribution for the first group and a constant value.
@@ -188,13 +190,19 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots density for the first group, the first and the second group, or a mean value in case second group is defined as a normal distribution or as a constant.
+#' @description \code{plot_samples} plots density for the first group samples, the first and the second group samples, or a mean value in case second group is defined as a normal distribution or as a constant.
 #' @rdname ttest_class-plot_samples
 #' @aliases plot_samples,ANY-method
 setMethod(f = "plot_samples", signature(object = "ttest_class"), definition = function(object, ...) {
   # first group data
   mu1 <- object@extract$mu
   df1 <- data.frame(value = mu1)
+
+  # plot
+  graph <- ggplot() +
+    geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
+    theme_minimal() +
+    xlab("value")
 
   # second group data
   df2 <- NULL
@@ -215,12 +223,6 @@ setMethod(f = "plot_samples", signature(object = "ttest_class"), definition = fu
       mu2 <- arguments$mu;
     }
   }
-
-  # plot
-  graph <- ggplot() +
-    geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
-    theme_minimal() +
-    xlab("value")
 
   if (!is.null(df2)) {
     graph <- graph +
@@ -316,15 +318,6 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
 #' @rdname ttest_class-plot_distributions
 #' @aliases plot_distributions,ANY-method
 setMethod(f = "plot_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
-  arguments <- list(...)
-
-  wrong_arguments <- "The provided arguments for the plot_distributions function are invalid, plot_distributions(ttest_class, fit2 = ttest_class), plot_distributions(ttest_class, mu = numeric), or plot_distributions(ttest_class, mu = numeric, sigma = numeric) is required!"
-
-  if (is.null(arguments)) {
-    warning(wrong_arguments)
-    return()
-  }
-
   # first group data
   n <- 10000
   nu <- mean(object@extract$nu)
@@ -336,40 +329,39 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
   x_max <- y1_mu + 4*y1_sigma
 
   # second group data
-  y2_plot <- NULL
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
-    # provided another fit
-    if (!is.null(arguments$fit2)) {
-      fit2 <- arguments$fit2
-    } else {
-      fit2 <- arguments[[1]]
-    }
-    y2_mu <- mean(fit2@extract$mu)
-    y2_sigma <- mean(fit2@extract$sigma)
-
-    x_min <- min(x_min, y2_mu - 4*y2_sigma)
-    x_max <- max(x_max, y2_mu + 4*y2_sigma)
-
-    y2_plot <- stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
-  } else if (!is.null(arguments$mu)) {
-    # provided mu and sigma
-    y2_mu <- arguments$mu;
-
-    if (!is.null(arguments$sigma)) {
-      y2_sigma <- arguments$sigma;
+  group2_plot <- NULL
+  arguments <- list(...)
+  if (length(arguments) > 0) {
+    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
+      # provided another fit
+      if (!is.null(arguments$fit2)) {
+        fit2 <- arguments$fit2
+      } else {
+        fit2 <- arguments[[1]]
+      }
+      y2_mu <- mean(fit2@extract$mu)
+      y2_sigma <- mean(fit2@extract$sigma)
 
       x_min <- min(x_min, y2_mu - 4*y2_sigma)
       x_max <- max(x_max, y2_mu + 4*y2_sigma)
 
-      y2_plot <- stat_function(fun = dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
-    } else {
-      x_min <- min(x_min, y2_mu)
-      x_max <- max(x_max, y2_mu)
-    }
+      group2_plot <- stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
+    } else if (!is.null(arguments$mu)) {
+      # provided mu and sigma
+      y2_mu <- arguments$mu;
 
-  } else {
-    warning(wrong_arguments)
-    return()
+      if (!is.null(arguments$sigma)) {
+        y2_sigma <- arguments$sigma;
+
+        x_min <- min(x_min, y2_mu - 4*y2_sigma)
+        x_max <- max(x_max, y2_mu + 4*y2_sigma)
+
+        group2_plot <- stat_function(fun = dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
+      } else {
+        x_min <- min(x_min, y2_mu)
+        x_max <- max(x_max, y2_mu)
+      }
+    }
   }
 
   # plot
@@ -377,12 +369,12 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
 
   graph <- ggplot(data = df_x, aes(x = value)) +
     stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = y1_mu, sd = y1_sigma), geom = 'area', fill = '#3182bd', alpha = 0.4) +
-    y2_plot +
+    group2_plot +
     theme_minimal() +
     xlab("value") +
     ylab("density")
 
-  if (is.null(y2_plot)) {
+  if (!is.null(arguments$mu) && is.null(arguments$sigma)) {
     y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
     graph <- graph +

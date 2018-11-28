@@ -156,7 +156,7 @@ public:
             validate_non_negative_index("beta", "m", m);
             num_params_r__ += m;
             current_statement_begin__ = 13;
-            validate_non_negative_index("sigma", "m", m);
+            validate_non_negative_index("ss", "m", m);
             num_params_r__ += m;
             current_statement_begin__ = 16;
             ++num_params_r__;
@@ -220,19 +220,19 @@ public:
             throw std::runtime_error(std::string("Error transforming variable beta: ") + e.what());
         }
 
-        if (!(context__.contains_r("sigma")))
-            throw std::runtime_error("variable sigma missing");
-        vals_r__ = context__.vals_r("sigma");
+        if (!(context__.contains_r("ss")))
+            throw std::runtime_error("variable ss missing");
+        vals_r__ = context__.vals_r("ss");
         pos__ = 0U;
-        validate_non_negative_index("sigma", "m", m);
-        context__.validate_dims("initialization", "sigma", "vector_d", context__.to_vec(m));
-        vector_d sigma(static_cast<Eigen::VectorXd::Index>(m));
+        validate_non_negative_index("ss", "m", m);
+        context__.validate_dims("initialization", "ss", "vector_d", context__.to_vec(m));
+        vector_d ss(static_cast<Eigen::VectorXd::Index>(m));
         for (int j1__ = 0U; j1__ < m; ++j1__)
-            sigma(j1__) = vals_r__[pos__++];
+            ss(j1__) = vals_r__[pos__++];
         try {
-            writer__.vector_lb_unconstrain(0,sigma);
+            writer__.vector_lb_unconstrain(0,ss);
         } catch (const std::exception& e) { 
-            throw std::runtime_error(std::string("Error transforming variable sigma: ") + e.what());
+            throw std::runtime_error(std::string("Error transforming variable ss: ") + e.what());
         }
 
         if (!(context__.contains_r("mu_a")))
@@ -360,12 +360,12 @@ public:
             else
                 beta = in__.vector_constrain(m);
 
-            Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1>  sigma;
-            (void) sigma;  // dummy to suppress unused var warning
+            Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1>  ss;
+            (void) ss;  // dummy to suppress unused var warning
             if (jacobian__)
-                sigma = in__.vector_lb_constrain(0,m,lp__);
+                ss = in__.vector_lb_constrain(0,m,lp__);
             else
-                sigma = in__.vector_lb_constrain(0,m);
+                ss = in__.vector_lb_constrain(0,m);
 
             local_scalar_t__ mu_a;
             (void) mu_a;  // dummy to suppress unused var warning
@@ -426,11 +426,11 @@ public:
             current_statement_begin__ = 26;
             lp_accum__.add(normal_log<propto__>(beta, mu_b, ss_b));
             current_statement_begin__ = 27;
-            lp_accum__.add(normal_log<propto__>(sigma, mu_s, ss_s));
+            lp_accum__.add(normal_log<propto__>(ss, mu_s, ss_s));
             current_statement_begin__ = 29;
             for (int i = 1; i <= n; ++i) {
                 current_statement_begin__ = 30;
-                lp_accum__.add(normal_log<propto__>(get_base1(y,i,"y",1), (get_base1(alpha,get_base1(s,i,"s",1),"alpha",1) + (get_base1(beta,get_base1(s,i,"s",1),"beta",1) * get_base1(x,i,"x",1))), get_base1(sigma,get_base1(s,i,"s",1),"sigma",1)));
+                lp_accum__.add(normal_log<propto__>(get_base1(y,i,"y",1), (get_base1(alpha,get_base1(s,i,"s",1),"alpha",1) + (get_base1(beta,get_base1(s,i,"s",1),"beta",1) * get_base1(x,i,"x",1))), get_base1(ss,get_base1(s,i,"s",1),"ss",1)));
             }
 
         } catch (const std::exception& e) {
@@ -460,7 +460,7 @@ public:
         names__.resize(0);
         names__.push_back("alpha");
         names__.push_back("beta");
-        names__.push_back("sigma");
+        names__.push_back("ss");
         names__.push_back("mu_a");
         names__.push_back("mu_b");
         names__.push_back("mu_s");
@@ -513,7 +513,7 @@ public:
         // read-transform, write parameters
         vector_d alpha = in__.vector_constrain(m);
         vector_d beta = in__.vector_constrain(m);
-        vector_d sigma = in__.vector_lb_constrain(0,m);
+        vector_d ss = in__.vector_lb_constrain(0,m);
         double mu_a = in__.scalar_constrain();
         double mu_b = in__.scalar_constrain();
         double mu_s = in__.scalar_constrain();
@@ -527,7 +527,7 @@ public:
             vars__.push_back(beta[k_0__]);
             }
             for (int k_0__ = 0; k_0__ < m; ++k_0__) {
-            vars__.push_back(sigma[k_0__]);
+            vars__.push_back(ss[k_0__]);
             }
         vars__.push_back(mu_a);
         vars__.push_back(mu_b);
@@ -607,7 +607,7 @@ public:
         }
         for (int k_0__ = 1; k_0__ <= m; ++k_0__) {
             param_name_stream__.str(std::string());
-            param_name_stream__ << "sigma" << '.' << k_0__;
+            param_name_stream__ << "ss" << '.' << k_0__;
             param_names__.push_back(param_name_stream__.str());
         }
         param_name_stream__.str(std::string());
@@ -655,7 +655,7 @@ public:
         }
         for (int k_0__ = 1; k_0__ <= m; ++k_0__) {
             param_name_stream__.str(std::string());
-            param_name_stream__ << "sigma" << '.' << k_0__;
+            param_name_stream__ << "ss" << '.' << k_0__;
             param_names__.push_back(param_name_stream__.str());
         }
         param_name_stream__.str(std::string());

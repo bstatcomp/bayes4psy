@@ -43,6 +43,8 @@ compare_distributions(`ttest_class`, mu = `numeric`): draws samples from distrib
 
 compare_distributions(`ttest_class`, mu = `numeric`, sigma = `numeric`): draws samples from distribution of the first group and compares them against samples from a normal distribution with a defined mean value and variance. You can also provide the rope parameter.
 
+plot_distributions(`ttest_class`): a visualization of the distribution for the first group.
+
 plot_distributions(`ttest_class`, fit2 = `ttest_class`): a visualization of the distribution for the first group and the distribution for the second group.
 
 plot_distributions(`ttest_class`, mu = `numeric`): a visualization of the distribution for the first group and a constant value.

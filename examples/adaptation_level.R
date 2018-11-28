@@ -6,6 +6,7 @@ library(EasyBayes)
 # load data
 df <- read.table("./examples/data/adaptation_level.csv", sep="\t", header=TRUE)
 
+
 ## group 1 ---------------------------------------------------------------
 df_1 <- df[df$group == 1, ]
 
@@ -34,6 +35,9 @@ plot_fit(al_1b)
 # traceplot
 traceplot(al_1b)
 
+# plot samples
+plot_samples(al_1b)
+
 
 # after - 2nd part
 df_1a <- df_1[df_1$part == 2, ]
@@ -53,3 +57,13 @@ plot_fit(al_1a)
 
 # traceplot
 traceplot(al_1a)
+
+# plot samples
+plot_samples(al_1a)
+
+
+## group 2 ---------------------------------------------------------------
+df_2 <- df[df$group == 2, ]
+
+## compare ---------------------------------------------------------------
+plot_samples(al_1b, fit2 = al_1a)

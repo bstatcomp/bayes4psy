@@ -31,6 +31,8 @@ plot_samples(`success_rate_class`, fit2 = `success_rate_class`): plots density f
 
 compare_distributions(`success_rate_class`, fit2 = `success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 
+plot_distributions(`success_rate_class`): a visualization of the distribution for the first group.
+
 plot_distributions(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the distribution for the first group and the second group.
 
 plot_distributions_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope parameter.

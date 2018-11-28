@@ -35,6 +35,9 @@ traceplot(ttest_results)
 # samples for single fit
 plot_samples(ttest_results)
 
+# distribution for single fit
+plot_distributions(ttest_results)
+
 
 ## compare ---------------------------------------------------------------
 # compare both fitted objects

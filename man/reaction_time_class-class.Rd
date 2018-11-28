@@ -31,6 +31,8 @@ plot_samples(`reaction_time_class`, fit2 = `reaction_time_class`): plots density
 
 compare_distributions(`reaction_time_class`, fit2 = `reaction_time_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 
+plot_distributions(`reaction_time_class`): a visualization of the distribution for the first group.
+
 plot_distributions(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the distribution for the first group and the second group.
 
 plot_distributions_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope parameter.

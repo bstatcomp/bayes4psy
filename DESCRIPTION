@@ -19,6 +19,7 @@ Depends:
     plyr (>= 1.8.4),
     dplyr (>= 0.7.6),
     reshape (>= 0.8.7),
+    cowplot (>= 0.9.3), 
     methods
 Imports:
     rstan (>= 2.17.3),

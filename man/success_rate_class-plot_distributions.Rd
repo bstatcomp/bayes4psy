@@ -9,5 +9,5 @@
 \S4method{plot_distributions}{success_rate_class}(object, ...)
 }
 \description{
-\code{plot_distributions} a visualization of the distribution for the first group and the second group.
+\code{plot_distributions} a visualization of the distribution for the first group, or the first group and the second group.
 }

@@ -10,7 +10,7 @@ parameters {
   // per subject parameters  
   vector[m] alpha;
   vector[m] beta;
-  vector<lower=0>[m] sigma;
+  vector<lower=0>[m] ss;
 
   // global parameters
   real mu_a;
@@ -24,8 +24,8 @@ parameters {
 model {
   alpha ~ normal(mu_a, ss_a);
   beta ~ normal(mu_b, ss_b);
-  sigma ~ normal(mu_s, ss_s);
+  ss ~ normal(mu_s, ss_s);
 
   for (i in 1:n)
-    y[i] ~ normal(alpha[s[i]] + beta[s[i]] * x[i], sigma[s[i]]);
+    y[i] ~ normal(alpha[s[i]] + beta[s[i]] * x[i], ss[s[i]]);
 }

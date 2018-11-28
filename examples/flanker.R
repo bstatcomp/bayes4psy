@@ -41,6 +41,9 @@ traceplot(rt_control)
 # plot samples
 plot_samples(rt_control)
 
+# plot distribution
+plot_distributions(rt_control)
+
 
 ## test group fit --------------------------------------------------------
 df_test <- df_correct[df_correct$group == "test", ]
@@ -63,6 +66,9 @@ traceplot(rt_test)
 
 # plot samples
 plot_samples(rt_test)
+
+# plot distribution
+plot_distributions(rt_test)
 
 
 ## compare two groups  ---------------------------------------------------
@@ -132,6 +138,9 @@ traceplot(s_congruent)
 # plot samples
 plot_samples(s_congruent)
 
+# plot distribution
+plot_distributions(s_congruent)
+
 
 ## incongruent fit -------------------------------------------------------
 n <- nrow(df_incongruent)
@@ -152,6 +161,9 @@ traceplot(s_incongruent)
 
 # plot samples
 plot_samples(s_incongruent)
+
+# plot distribution
+plot_distributions(s_incongruent)
 
 
 ## comparison ------------------------------------------------------------

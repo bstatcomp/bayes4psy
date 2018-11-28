@@ -9,5 +9,5 @@
 \S4method{plot_samples}{ttest_class}(object, ...)
 }
 \description{
-\code{plot_samples} plots density for the first group, the first and the second group, or a mean value in case second group is defined as a normal distribution or as a constant.
+\code{plot_samples} plots density for the first group samples, the first and the second group samples, or a mean value in case second group is defined as a normal distribution or as a constant.
 }
