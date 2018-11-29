@@ -3,7 +3,7 @@
 \docType{class}
 \name{b_results-class}
 \alias{b_results-class}
-\title{An S4 class for declaring shared generic functions.}
+\title{b_results}
 \description{
-An S4 class for declaring shared generic functions.
+Parent S4 class for declaring shared function generics.
 }

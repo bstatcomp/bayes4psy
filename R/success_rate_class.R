@@ -1,21 +1,26 @@
-#' An S4 class for storing results of successes (true/false) Bayesian model.
+#' @title success_rate_class
+#' @description An S4 class for storing results of successes (true/false) Bayesian model.
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Data on which the fit is based.
 #' @examples
 #' summary(`success_rate_class`): prints summary od the fit.
 #'
-#' compare(`success_rate_class`, fit2 = `success_rate_class`): prints difference in successfulness of two groups.
+#' compare(`success_rate_class`, fit2 = `success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
 #'
-#' plot_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between two groups.
+#' plot_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
 #'
-#' plot_comparison(`success_rate_class`, fit2 = `success_rate_class`): plots density for the first and the second group.
+#' plot_samples(`success_rate_class`): plots density for the first samples.
+#'
+#' plot_samples(`success_rate_class`, fit2 = `success_rate_class`): plots density for the first and the second group samples.
 #'
 #' compare_distributions(`success_rate_class`, fit2 = `success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #'
+#' plot_distributions(`success_rate_class`): a visualization of the distribution for the first group.
+#'
 #' plot_distributions(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the distribution for the first group and the second group.
 #'
-#' plot_distributions_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between the distribution of the first group and the second group.
+#' plot_distributions_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope parameter.
 #'
 #' plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
@@ -37,8 +42,11 @@ setMethod(f = "summary", signature(object = "success_rate_class"), definition = 
   # get means
   p <- mean(object@extract$p)
 
+  # hdi
+  p_hdi <- mcmc_hdi(object@extract$p)
+
   # print
-  cat(sprintf("Success rate: %.2f\n", p))
+  cat(sprintf("Success rate: %.2f, 95%% HDI: [%.2f, %.2f]\n", p, p_hdi[1], p_hdi[2]))
 })
 
 
@@ -49,12 +57,19 @@ setMethod(f = "summary", signature(object = "success_rate_class"), definition = 
 setMethod(f = "compare", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(success_rate_class, fit2 = success_rate_class) is required!"
+  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(success_rate_class, fit2 = success_rate_class) is required! You can also provide the rope parameter, e.g. compare(success_rate_class, fit2 = success_rate_class, rope = numeric)."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
+
+  # prepare rope
+  rope <- NULL
+  if (!is.null(arguments$rope)) {
+    rope = arguments$rope
+  }
+  rope <- prepare_rope(rope)
 
   # first group data
   y1 <- rowMeans(object@extract$p)
@@ -69,7 +84,7 @@ setMethod(f = "compare", signature(object = "success_rate_class"), definition = 
     }
     y2 <- rowMeans(fit2@extract$p)
 
-    shared_difference(y1 = y1, y2 = y2)
+    shared_difference(y1 = y1, y2 = y2, rope = rope)
   } else {
     warning(wrong_arguments)
     return()
@@ -84,12 +99,19 @@ setMethod(f = "compare", signature(object = "success_rate_class"), definition = 
 setMethod(f = "plot_difference", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(success_rate_class, fit2 = success_rate_class) is required! You can also pass the bins (number of bins in the histogram) parameter, e.g. plot_difference(success_rate_class, fit2 = success_rate_class, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(success_rate_class, fit2 = success_rate_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(success_rate_class, fit2 = success_rate_class, rope = numeric, bins = numeric)."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
+
+  # prepare rope
+  rope <- NULL
+  if (!is.null(arguments$rope)) {
+    rope = arguments$rope
+  }
+  rope <- prepare_rope(rope)
 
   # first group data
   y1 <- rowMeans(object@extract$p)
@@ -111,7 +133,8 @@ setMethod(f = "plot_difference", signature(object = "success_rate_class"), defin
     }
 
     # call plot difference from shared plots
-    shared_plot_difference(y1 = y1, y2 = y2, bins = bins)
+    graph <- shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+    return(graph)
   } else {
     warning(wrong_arguments)
     return()
@@ -119,55 +142,57 @@ setMethod(f = "plot_difference", signature(object = "success_rate_class"), defin
 })
 
 
-#' @title plot_comparison
-#' @description \code{plot_comparison} plots density for the first and the second group.
-#' @rdname success_rate_class-plot_comparison
-#' @aliases plot_comparison,ANY-method
-setMethod(f = "plot_comparison", signature(object = "success_rate_class"), definition = function(object, ...) {
-  arguments <- list(...)
-
-  wrong_arguments <- "The provided arguments for the plot_comparison function are invalid, plot_comparison(success_rate_class, fit2 = success_rate_class) is required!"
-
-  if (is.null(arguments)) {
-    warning(wrong_arguments)
-    return()
-  }
-
+#' @title plot_samples
+#' @description \code{plot_samples} plots density for the first group samples, or the first and the second group samples.
+#' @rdname success_rate_class-plot_samples
+#' @aliases plot_samples,ANY-method
+setMethod(f = "plot_samples", signature(object = "success_rate_class"), definition = function(object, ...) {
   # first group data
   df1 <- data.frame(value = rowMeans(object@extract$p))
 
+  # limits
+  x_min <- min(df1$value)
+  x_max <- max(df1$value)
+
+  # plot
+  graph <- ggplot() +
+    geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA)
+
   # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
-    # provided another fit
-    if (!is.null(arguments$fit2)) {
-      fit2 <- arguments$fit2
-    } else {
-      fit2 <- arguments[[1]]
+  df2 <- NULL
+  arguments <- list(...)
+  if (length(arguments) > 0) {
+    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
+      # provided another fit
+      if (!is.null(arguments$fit2)) {
+        fit2 <- arguments$fit2
+      } else {
+        fit2 <- arguments[[1]]
+      }
+      df2 <- data.frame(value = rowMeans(fit2@extract$p))
+
+      # limits
+      x_min <- min(x_min, df2$value)
+      x_max <- max(x_max, df2$value)
+
+      # plot
+      graph <- graph +
+        geom_density(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA)
     }
-    df2 <- data.frame(value = rowMeans(fit2@extract$p))
-
-    # limits
-    x_min <- min(df1$value, df2$value)
-    x_max <- max(df1$value, df2$value)
-
-    diff <- x_max - x_min
-
-    x_min <- x_min - (0.1 * diff)
-    x_max <- x_max + (0.1 * diff)
-
-    # plot
-    graph <- ggplot() +
-      geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
-      geom_density(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA) +
-      theme_minimal() +
-      xlab("value") +
-      xlim(x_min, x_max)
-
-    return(graph)
-  } else {
-    warning(wrong_arguments)
-    return()
   }
+
+  # limits
+  diff <- x_max - x_min
+  x_min <- x_min - 0.1*diff
+  x_max <- x_max + 0.1*diff
+
+  # plot
+  graph <- graph +
+    theme_minimal() +
+    xlab("value") +
+    xlim(x_min, x_max)
+
+  return(graph)
 })
 
 
@@ -178,9 +203,9 @@ setMethod(f = "plot_comparison", signature(object = "success_rate_class"), defin
 setMethod(f = "compare_distributions", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(success_rate_class, fit2 = success_rate_class) is required!"
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(success_rate_class, fit2 = success_rate_class) is required! You can also provide the rope parameter, e.g. compare_distributions(success_rate_class, fit2 = success_rate_class."
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
@@ -219,18 +244,10 @@ setMethod(f = "compare_distributions", signature(object = "success_rate_class"),
 
 
 #' @title plot_distributions
-#' @description \code{plot_distributions} a visualization of the distribution for the first group and the second group.
+#' @description \code{plot_distributions} a visualization of the distribution for the first group, or the first group and the second group.
 #' @rdname success_rate_class-plot_distributions
 #' @aliases plot_distributions,ANY-method
 setMethod(f = "plot_distributions", signature(object = "success_rate_class"), definition = function(object, ...) {
-  arguments <- list(...)
-
-  wrong_arguments <- "The provided arguments for the plot_distributions function are invalid, plot_distributions(success_rate_class, fit2 = success_rate_class) is required!"
-
-  if (is.null(arguments)) {
-    warning(wrong_arguments)
-    return()
-  }
   n <- nrow(object@extract$p)
   m <- 100000
 
@@ -241,33 +258,36 @@ setMethod(f = "plot_distributions", signature(object = "success_rate_class"), de
   sd1 <- sd(y1)
 
   # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
-    # provided another fit
-    if (!is.null(arguments$fit2)) {
-      fit2 <- arguments$fit2
-    } else {
-      fit2 <- arguments[[1]]
+  group2_plot <- NULL
+  arguments <- list(...)
+  if (length(arguments) > 0) {
+    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
+      # provided another fit
+      if (!is.null(arguments$fit2)) {
+        fit2 <- arguments$fit2
+      } else {
+        fit2 <- arguments[[1]]
+      }
+      p2 <- mean(fit2@extract$p)
+      y2 <- rbinom(m, n, p2) / n
+      mu2 <- mean(y2)
+      sd2 <- sd(y2)
+
+      group2_plot <- stat_function(fun = dnorm, n = m, args = list(mean = mu2, sd = sd2), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
     }
-    p2 <- mean(fit2@extract$p)
-    y2 <- rbinom(m, n, p2) / n
-    mu2 <- mean(y2)
-    sd2 <- sd(y2)
-
-    # plot
-    df_x <- data.frame(value = c(0, 1))
-
-    graph <- ggplot(data = df_x, aes(x = value)) +
-      stat_function(fun = dnorm, n = m, args = list(mean = mu1, sd = sd1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
-      stat_function(fun = dnorm, n = m, args = list(mean = mu2, sd = sd2), geom = 'area', fill = '#ff4e3f', alpha = 0.4) +
-      theme_minimal() +
-      xlab("probability") +
-      ylab("density")
-
-    return(graph)
-  } else {
-    warning(wrong_arguments)
-    return()
   }
+
+  # plot
+  df_x <- data.frame(value = c(0, 1))
+
+  graph <- ggplot(data = df_x, aes(x = value)) +
+    stat_function(fun = dnorm, n = m, args = list(mean = mu1, sd = sd1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
+    group2_plot +
+    theme_minimal() +
+    xlab("probability") +
+    ylab("density")
+
+  return(graph)
 })
 
 
@@ -280,7 +300,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
 
   wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(reaction_time_class, fit2 = reaction_time_class) is required!"
 
-  if (is.null(arguments)) {
+  if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }

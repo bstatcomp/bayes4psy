@@ -2,7 +2,7 @@
 % Please edit documentation in R/shared_plots.R
 \name{shared_plot_difference}
 \alias{shared_plot_difference}
-\title{Shared plots used in several models.}
+\title{shared_plot_difference}
 \usage{
 shared_plot_difference(y1, y2, rope = NULL, bins = 30)
 }
@@ -17,5 +17,5 @@ shared_plot_difference(y1, y2, rope = NULL, bins = 30)
 `ggplot` visualization of the difference.
 }
 \description{
-Shared plots used in several models.
+A shared function for all classes for ploting difference between two vectors of values.
 }

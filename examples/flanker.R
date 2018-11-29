@@ -1,12 +1,15 @@
 # libs
 library(EasyBayes)
 
+
+## data wrangling --------------------------------------------------------
 # load data
-df <- read.table("./examples/data/flanker.csv", sep = "\t")
+df <- read.table("./examples/data/flanker.csv", sep = "\t", header = TRUE)
 
 # map correct/incorrect/timeout to 1/0
 df$result_numeric <- 0
 df[df$result == "correct", ]$result_numeric <- 1
+
 
 ### REACTION TIMES - test vs control group -------------------------------
 # test vs control (correct and no timeout only)
@@ -35,6 +38,12 @@ plot_fit(rt_control)
 # traceplot
 traceplot(rt_control)
 
+# plot samples
+plot_samples(rt_control)
+
+# plot distribution
+plot_distributions(rt_control)
+
 
 ## test group fit --------------------------------------------------------
 df_test <- df_correct[df_correct$group == "test", ]
@@ -55,21 +64,39 @@ plot_fit(rt_test)
 # traceplot
 traceplot(rt_test)
 
+# plot samples
+plot_samples(rt_test)
+
+# plot distribution
+plot_distributions(rt_test)
+
 
 ## compare two groups  ---------------------------------------------------
 # difference summary
 compare(rt_control, fit2 = rt_test)
 
+# difference summary, compare only mu parameter (or lambda)
+compare(rt_control, fit2 = rt_test, par = "mu")
+
+# difference summary with rope
+compare(rt_control, fit2 = rt_test, rope = 0.1)
+
 # difference plot
 plot_difference(rt_control, fit2 = rt_test)
 
-# difference plot with custom bins
-plot_difference(rt_control, fit2 = rt_test, bins = 10)
+# difference plot with rope, custom bins of mu parameter
+plot_difference(rt_control, fit2 = rt_test, rope = 0.1, bins = 10, par = "mu")
 
-# comparison plot
-plot_comparison(rt_control, fit2 = rt_test)
+# samples plot
+plot_samples(rt_control, fit2 = rt_test)
+
+# plot samples only for lambda prameter (or mu)
+plot_samples(rt_control, fit2 = rt_test, par = "lambda")
 
 # compare distributions
+compare_distributions(rt_control, fit2 = rt_test, rope = 0.1)
+
+# compare distributions with rope
 compare_distributions(rt_control, fit2 = rt_test)
 
 # plot distributions
@@ -78,8 +105,12 @@ plot_distributions(rt_control, fit2 = rt_test)
 # plot distributions difference
 plot_distributions_difference(rt_control, fit2 = rt_test)
 
-# plot distributions difference with custom bins
-plot_distributions_difference(rt_control, fit2 = rt_test, bins = 10)
+# plot distributions difference
+plot_distributions_difference(rt_control, fit2 = rt_test, par = "mu")
+
+# plot distributions difference with rope and custom bins
+plot_distributions_difference(rt_control, fit2 = rt_test, rope = 0.1, bins = 10)
+
 
 
 ### SUCCESS RATE - test group congruent vs incongruent  ------------------
@@ -104,6 +135,12 @@ plot_fit(s_congruent)
 # traceplot
 traceplot(s_congruent)
 
+# plot samples
+plot_samples(s_congruent)
+
+# plot distribution
+plot_distributions(s_congruent)
+
 
 ## incongruent fit -------------------------------------------------------
 n <- nrow(df_incongruent)
@@ -122,16 +159,37 @@ plot_fit(s_incongruent)
 # traceplot
 traceplot(s_incongruent)
 
-## comparison
+# plot samples
+plot_samples(s_incongruent)
+
+# plot distribution
+plot_distributions(s_incongruent)
+
+
+## comparison ------------------------------------------------------------
+# compare
 compare(s_congruent, fit2 = s_incongruent)
 
+# compare with rope
+compare(s_congruent, fit2 = s_incongruent, rope = 0.05)
+
+# difference plot
 plot_difference(s_congruent, fit2 = s_incongruent)
 
-plot_comparison(s_congruent, fit2 = s_incongruent)
+# difference plot with rope and custom bins
+plot_difference(s_congruent, fit2 = s_incongruent, rope = 0.05, bins = 10)
 
+# plot samples for both groups
+plot_samples(s_congruent, fit2 = s_incongruent)
+
+# compare distributions
 compare_distributions(s_congruent, fit2 = s_incongruent)
 
+# distributions plost
 plot_distributions(s_congruent, fit2 = s_incongruent)
 
+# plot distributions difference
 plot_distributions_difference(s_congruent, fit2 = s_incongruent)
 
+# plot distributions difference with custom bins
+plot_distributions_difference(s_congruent, fit2 = s_incongruent, bins = 10)

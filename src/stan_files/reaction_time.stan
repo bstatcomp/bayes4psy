@@ -2,14 +2,16 @@ data {
   int<lower=0> n; // total number of measurements
   int<lower=0> m; // number of subjects
   vector<lower=0>[n] rt; // reaction times
-  int<lower=0> s[n]; // id of the subject
+  int<lower=0> s[n]; // subject ids
 }
 
 parameters {
-  // reaction times
+  // per subject parameters
   vector<lower=0>[m] mu;
   vector<lower=0>[m] sigma;
   vector<lower=0>[m] lambda;
+
+  // global parameters
   real mu_m;
   real mu_l;
   real mu_s;

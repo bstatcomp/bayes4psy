@@ -20,7 +20,7 @@
 
 #include <stan/model/model_header.hpp>
 
-namespace model_successes_namespace {
+namespace model_success_rate_namespace {
 
 using std::istream;
 using std::string;
@@ -35,26 +35,26 @@ static int current_statement_begin__;
 
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
-    reader.add_event(0, 0, "start", "model_successes");
-    reader.add_event(22, 20, "end", "model_successes");
+    reader.add_event(0, 0, "start", "model_success_rate");
+    reader.add_event(22, 20, "end", "model_success_rate");
     return reader;
 }
 
 #include <meta_header.hpp>
- class model_successes : public prob_grad {
+ class model_success_rate : public prob_grad {
 private:
     int n;
     int m;
     vector<int> r;
     vector<int> s;
 public:
-    model_successes(stan::io::var_context& context__,
+    model_success_rate(stan::io::var_context& context__,
         std::ostream* pstream__ = 0)
         : prob_grad(0) {
         ctor_body(context__, 0, pstream__);
     }
 
-    model_successes(stan::io::var_context& context__,
+    model_success_rate(stan::io::var_context& context__,
         unsigned int random_seed__,
         std::ostream* pstream__ = 0)
         : prob_grad(0) {
@@ -72,7 +72,7 @@ public:
 
         current_statement_begin__ = -1;
 
-        static const char* function__ = "model_successes_namespace::model_successes";
+        static const char* function__ = "model_success_rate_namespace::model_success_rate";
         (void) function__;  // dummy to suppress unused var warning
         size_t pos__;
         (void) pos__;  // dummy to suppress unused var warning
@@ -150,7 +150,7 @@ public:
         }
     }
 
-    ~model_successes() { }
+    ~model_success_rate() { }
 
 
     void transform_inits(const stan::io::var_context& context__,
@@ -288,7 +288,7 @@ public:
 
         vars__.resize(0);
         stan::io::reader<local_scalar_t__> in__(params_r__,params_i__);
-        static const char* function__ = "model_successes_namespace::write_array";
+        static const char* function__ = "model_success_rate_namespace::write_array";
         (void) function__;  // dummy to suppress unused var warning
         // read-transform, write parameters
         vector_d p = in__.vector_lub_constrain(0,1,m);
@@ -347,7 +347,7 @@ public:
     }
 
     static std::string model_name() {
-        return "model_successes";
+        return "model_success_rate";
     }
 
 
@@ -394,7 +394,7 @@ public:
 
 }
 
-typedef model_successes_namespace::model_successes stan_model;
+typedef model_success_rate_namespace::model_success_rate stan_model;
 
 
 #endif

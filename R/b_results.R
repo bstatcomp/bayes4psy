@@ -1,4 +1,5 @@
-#' An S4 class for declaring shared generic functions.
+#' @title b_results
+#' @description Parent S4 class for declaring shared function generics.
 
 setClass("b_results")
 
@@ -15,10 +16,10 @@ setGeneric(name = "compare", function(object, ...) standardGeneric("compare"))
 setGeneric(name = "plot_difference", function(object, ...) standardGeneric("plot_difference"))
 
 
-#' @title plot_comparison
-#' @rdname b_results-plot_comparison
-#' @exportMethod plot_comparison
-setGeneric(name = "plot_comparison", function(object, ...) standardGeneric("plot_comparison"))
+#' @title plot_samples
+#' @rdname b_results-plot_samples
+#' @exportMethod plot_samples
+setGeneric(name = "plot_samples", function(object, ...) standardGeneric("plot_samples"))
 
 
 #' @title compare_distributions

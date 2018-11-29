@@ -2,7 +2,7 @@
 % Please edit documentation in R/b_ttest.R
 \name{b_ttest}
 \alias{b_ttest}
-\title{Bayesian t-test.}
+\title{b_ttest}
 \usage{
 b_ttest(y)
 }

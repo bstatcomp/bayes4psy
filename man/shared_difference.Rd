@@ -2,7 +2,7 @@
 % Please edit documentation in R/shared_functions.R
 \name{shared_difference}
 \alias{shared_difference}
-\title{Shared helper functions used in several models.}
+\title{shared_difference}
 \usage{
 shared_difference(y1, y2, rope = NULL)
 }
@@ -14,8 +14,8 @@ shared_difference(y1, y2, rope = NULL)
 \item{rope}{Optional parameter for the rope interval.}
 }
 \value{
-Prints the difference and 95% confidence interval into the console.
+Prints the difference and 95% HDI into the console.
 }
 \description{
-Shared helper functions used in several models.
+A shared function for all classes for printing difference between two vectors of values.
 }

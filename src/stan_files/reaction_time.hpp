@@ -20,7 +20,7 @@
 
 #include <stan/model/model_header.hpp>
 
-namespace model_reaction_times_namespace {
+namespace model_reaction_time_namespace {
 
 using std::istream;
 using std::string;
@@ -35,26 +35,26 @@ static int current_statement_begin__;
 
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
-    reader.add_event(0, 0, "start", "model_reaction_times");
-    reader.add_event(32, 30, "end", "model_reaction_times");
+    reader.add_event(0, 0, "start", "model_reaction_time");
+    reader.add_event(34, 32, "end", "model_reaction_time");
     return reader;
 }
 
 #include <meta_header.hpp>
- class model_reaction_times : public prob_grad {
+ class model_reaction_time : public prob_grad {
 private:
     int n;
     int m;
     vector_d rt;
     vector<int> s;
 public:
-    model_reaction_times(stan::io::var_context& context__,
+    model_reaction_time(stan::io::var_context& context__,
         std::ostream* pstream__ = 0)
         : prob_grad(0) {
         ctor_body(context__, 0, pstream__);
     }
 
-    model_reaction_times(stan::io::var_context& context__,
+    model_reaction_time(stan::io::var_context& context__,
         unsigned int random_seed__,
         std::ostream* pstream__ = 0)
         : prob_grad(0) {
@@ -72,7 +72,7 @@ public:
 
         current_statement_begin__ = -1;
 
-        static const char* function__ = "model_reaction_times_namespace::model_reaction_times";
+        static const char* function__ = "model_reaction_time_namespace::model_reaction_time";
         (void) function__;  // dummy to suppress unused var warning
         size_t pos__;
         (void) pos__;  // dummy to suppress unused var warning
@@ -146,10 +146,6 @@ public:
             current_statement_begin__ = 12;
             validate_non_negative_index("lambda", "m", m);
             num_params_r__ += m;
-            current_statement_begin__ = 13;
-            ++num_params_r__;
-            current_statement_begin__ = 14;
-            ++num_params_r__;
             current_statement_begin__ = 15;
             ++num_params_r__;
             current_statement_begin__ = 16;
@@ -158,6 +154,10 @@ public:
             ++num_params_r__;
             current_statement_begin__ = 18;
             ++num_params_r__;
+            current_statement_begin__ = 19;
+            ++num_params_r__;
+            current_statement_begin__ = 20;
+            ++num_params_r__;
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
             // Next line prevents compiler griping about no return
@@ -165,7 +165,7 @@ public:
         }
     }
 
-    ~model_reaction_times() { }
+    ~model_reaction_time() { }
 
 
     void transform_inits(const stan::io::var_context& context__,
@@ -409,16 +409,16 @@ public:
 
             // model body
 
-            current_statement_begin__ = 22;
-            lp_accum__.add(normal_log<propto__>(mu, mu_m, ss_m));
-            current_statement_begin__ = 23;
-            lp_accum__.add(normal_log<propto__>(sigma, mu_s, ss_s));
             current_statement_begin__ = 24;
+            lp_accum__.add(normal_log<propto__>(mu, mu_m, ss_m));
+            current_statement_begin__ = 25;
+            lp_accum__.add(normal_log<propto__>(sigma, mu_s, ss_s));
+            current_statement_begin__ = 26;
             lp_accum__.add(normal_log<propto__>(lambda, mu_l, ss_l));
-            current_statement_begin__ = 27;
+            current_statement_begin__ = 29;
             for (int i = 1; i <= n; ++i) {
 
-                current_statement_begin__ = 28;
+                current_statement_begin__ = 30;
                 lp_accum__.add(exp_mod_normal_log<propto__>(get_base1(rt,i,"rt",1), get_base1(mu,get_base1(s,i,"s",1),"mu",1), get_base1(sigma,get_base1(s,i,"s",1),"sigma",1), get_base1(lambda,get_base1(s,i,"s",1),"lambda",1)));
             }
 
@@ -497,7 +497,7 @@ public:
 
         vars__.resize(0);
         stan::io::reader<local_scalar_t__> in__(params_r__,params_i__);
-        static const char* function__ = "model_reaction_times_namespace::write_array";
+        static const char* function__ = "model_reaction_time_namespace::write_array";
         (void) function__;  // dummy to suppress unused var warning
         // read-transform, write parameters
         vector_d mu = in__.vector_lb_constrain(0,m);
@@ -576,7 +576,7 @@ public:
     }
 
     static std::string model_name() {
-        return "model_reaction_times";
+        return "model_reaction_time";
     }
 
 
@@ -679,7 +679,7 @@ public:
 
 }
 
-typedef model_reaction_times_namespace::model_reaction_times stan_model;
+typedef model_reaction_time_namespace::model_reaction_time stan_model;
 
 
 #endif
