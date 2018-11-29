@@ -89,7 +89,7 @@ setMethod(f = "compare", signature(object = "linear_class"), definition = functi
   slope1 <- object@extract$mu_b
 
   # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
     # provided another fit
     if (!is.null(arguments$fit2)) {
       fit2 <- arguments$fit2
@@ -143,7 +143,7 @@ setMethod(f = "plot_difference", signature(object = "linear_class"), definition 
   slope1 <- object@extract$mu_b
 
   # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
     # provided another fit
     if (!is.null(arguments$fit2)) {
       fit2 <- arguments$fit2
@@ -204,7 +204,7 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
   df2 <- NULL
   arguments <- list(...)
   if (length(arguments) > 0) {
-    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
+    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
       # provided another fit
       if (!is.null(arguments$fit2)) {
         fit2 <- arguments$fit2
@@ -291,7 +291,7 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
   slope1 <- rnorm(n, mean = mu_slope1, sd = sigma_slope1)
 
   # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
     # provided another fit
     if (!is.null(arguments$fit2)) {
       fit2 <- arguments$fit2
@@ -322,9 +322,81 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
 #' @description \code{plot_distributions} TODO
 #' @rdname linear_class-plot_distributions
 #' @aliases plot_distributions,ANY-method
-# setMethod(f = "plot_distributions", signature(object = "linear_class"), definition = function(object, ...) {
-#
-# })
+setMethod(f = "plot_distributions", signature(object = "linear_class"), definition = function(object, ...) {
+  # precision
+  n = 1000
+
+  # first group data
+  intercept1 <- mean(object@extract$mu_a)
+  slope1 <- mean(object@extract$mu_b)
+  sigma1 <- sqrt(mean(object@extract$mu_s))
+
+  # limits
+  x_min <- min(object@data$x)
+  x_max <- max(object@data$x)
+  y_max <- NULL
+
+  # second group data
+  graph <- ggplot()
+  arguments <- list(...)
+  if (length(arguments) > 0) {
+    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
+      # provided another fit
+      if (!is.null(arguments$fit2)) {
+        fit2 <- arguments$fit2
+      } else {
+        fit2 <- arguments[[1]]
+      }
+      intercept2 <- mean(fit2@extract$mu_a)
+      slope2 <- mean(fit2@extract$mu_b)
+      sigma2 <- sqrt(mean(fit2@extract$mu_s))
+
+      # x limits
+      x_min <- min(x_min, fit2@data$x)
+      x_max <- max(x_max, fit2@data$x)
+
+      # pointe in time
+      step <- (x_max - x_min) / n
+      x <- seq(x_min, x_max, step)
+
+      # get values
+      y2 <- intercept2 + slope2*x
+      y2_min = y2 - 2*sigma2
+      y2_max = y2 + 2*sigma2
+      df2 <- data.frame(x = x, y = y2, y_min = y2_min, y_max = y2_max)
+
+      # y limit
+      y_max <- ceiling(max(df2$y + 2*sigma2))
+
+      graph <- graph +
+        geom_line(data = df2, aes(x = x, y = y), colour = '#ff4e3f', size = 1) +
+        geom_ribbon(data = df2, aes(x = x, ymin = y_min, ymax = y_max), fill = '#ff4e3f', alpha = 0.4)
+    }
+  }
+
+  # points in time
+  step <- (x_max - x_min) / n
+  x <- seq(x_min, x_max, step)
+
+  # get values
+  y1 <- intercept1 + slope1*x
+  y1_min = y1 - 2*sigma1
+  y1_max = y1 + 2*sigma1
+  df1 <- data.frame(x = x, y = y1, y_min = y1_min, y_max = y1_max)
+
+  # y limit
+  y_max <- ceiling(max(y_max, df1$y + 2*sigma1))
+
+  graph <- graph +
+    geom_line(data = df1, aes(x = x, y = y), colour = '#3182bd', size = 1) +
+    geom_ribbon(data = df1, aes(x = x, ymin = y_min, ymax = y_max), fill = '#3182bd', alpha = 0.4) +
+    ylim(0, y_max) +
+    theme_minimal() +
+    xlab("time") +
+    ylab("value")
+
+  return(graph)
+})
 
 
 #' @title plot_distributions_difference
@@ -366,7 +438,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
   slope1 <- rnorm(n, mean = mu_slope1, sd = sigma_slope1)
 
   # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
     # provided another fit
     if (!is.null(arguments$fit2)) {
       fit2 <- arguments$fit2

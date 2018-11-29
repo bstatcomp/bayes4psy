@@ -54,6 +54,12 @@ al_1a <- b_linear(n = nrow(df_1a),
 ## group 2 ---------------------------------------------------------------
 df_2 <- df[df$group == 2, ]
 
+# number of subjects
+m = length(unique(df_2$subject))
+
+# map subject to 1..m interval
+df_2$subject <- mapvalues(df_2$subject, from = unique(df_2$subject), to=1:m)
+
 # before - 1st part
 df_2b <- df_2[df_2$part == 1, ]
 
@@ -87,6 +93,11 @@ plot_samples(al_1b, fit2 = al_1a)
 
 # compare distributions (optional rope parameter)
 compare_distributions(al_1b, fit2 = al_1a)
+
+# plot_distribution
+graph_b <- plot_distributions(al_1b, al_2b)
+graph_a <- plot_distributions(al_1a, al_2a)
+plot_grid(graph_b, graph_a, ncol = 2, nrow = 1, scale = 0.9)
 
 # plot difference between distributions
 plot_distributions_difference(al_1b, fit2 = al_1a)
