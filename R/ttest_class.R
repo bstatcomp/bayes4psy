@@ -1,9 +1,5 @@
 #' @title ttest_class
 #' @description An S4 class for storing results of Bayesian t-test results.
-#' @slot extract Extract from Stan fit.
-#' @slot fit Stan fit.
-#' @slot data Raw data for the tested group.
-#' @examples
 #' summary(`ttest_class`): prints summary of the fit.
 #'
 #' compare(`ttest_class`, fit2 = `ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
@@ -46,6 +42,9 @@
 #'
 #' traceplot(`ttest_class`): traceplot for main fitted model parameters.
 #'
+#' @slot extract Extract from Stan fit.
+#' @slot fit Stan fit.
+#' @slot data Raw data for the tested group.
 #' @exportClass ttest_class
 ttest_class <- setClass(
   "ttest_class",

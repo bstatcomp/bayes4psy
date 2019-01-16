@@ -1,9 +1,5 @@
 #' @title success_rate_class
 #' @description An S4 class for storing results of successes (true/false) Bayesian model.
-#' @slot extract Extract from Stan fit.
-#' @slot fit Stan fit.
-#' @slot data Data on which the fit is based.
-#' @examples
 #' summary(`success_rate_class`): prints summary od the fit.
 #'
 #' compare(`success_rate_class`, fit2 = `success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
@@ -26,6 +22,9 @@
 #'
 #' traceplot(`success_rate_class`): traceplot for main fitted model parameters.
 #'
+#' @slot extract Extract from Stan fit.
+#' @slot fit Stan fit.
+#' @slot data Data on which the fit is based.
 #' @exportClass success_rate_class
 success_rate_class <- setClass(
   "success_rate_class",

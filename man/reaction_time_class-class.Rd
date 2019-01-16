@@ -7,18 +7,6 @@
 \title{reaction_time_class}
 \description{
 An S4 class for storing results of reaction time Bayesian model.
-}
-\section{Slots}{
-
-\describe{
-\item{\code{extract}}{Extract from Stan fit.}
-
-\item{\code{fit}}{Stan fit.}
-
-\item{\code{data}}{Data on which the fit is based.}
-}}
-
-\examples{
 summary(`reaction_time_class`): prints summary od the fit.
 
 compare(`reaction_time_class`, fit2 = `reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter (mu or lambda).
@@ -40,5 +28,14 @@ plot_distributions_difference(`reaction_time_class`, fit2 = `reaction_time_class
 plot_fit(`reaction_time_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 
 traceplot(`reaction_time_class`): traceplot for main fitted model parameters.
-
 }
+\section{Slots}{
+
+\describe{
+\item{\code{extract}}{Extract from Stan fit.}
+
+\item{\code{fit}}{Stan fit.}
+
+\item{\code{data}}{Data on which the fit is based.}
+}}
+

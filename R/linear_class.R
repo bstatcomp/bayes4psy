@@ -1,9 +1,5 @@
 #' @title linear_class
 #' @description An S4 class for storing results of normal linear model.
-#' @slot extract Extract from Stan fit.
-#' @slot fit Stan fit.
-#' @slot data Raw data for the tested group.
-#' @examples
 #' summary(`linear_class`): prints summary od the fit.
 #'
 #' compare(`linear_class`, fit2 = `linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
@@ -26,6 +22,9 @@
 #'
 #' traceplot(`linear_class`): traceplot for main fitted model parameters.
 #'
+#' @slot extract Extract from Stan fit.
+#' @slot fit Stan fit.
+#' @slot data Raw data for the tested group.
 #' @exportClass linear_class
 linear_class <- setClass(
   "linear_class",
