@@ -4,13 +4,9 @@
 \alias{b_linear}
 \title{b_linear}
 \usage{
-b_linear(n, m, x, y, s)
+b_linear(x, y, s)
 }
 \arguments{
-\item{n}{total number of measurements.}
-
-\item{m}{number of participating subjects.}
-
 \item{x}{a vector containting index of sequence (time).}
 
 \item{y}{a vector containting subjet's responses.}

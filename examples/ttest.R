@@ -29,8 +29,8 @@ summary(ttest_results)
 # visualize fit quality
 plot_fit(ttest_results)
 
-# traceplot
-traceplot(ttest_results)
+# plot trace
+plot_trace(ttest_results)
 
 # samples for single fit
 plot_samples(ttest_results)

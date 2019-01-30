@@ -33,8 +33,8 @@ summary(rt_control)
 # check fits
 plot_fit(rt_control)
 
-# traceplot
-traceplot(rt_control)
+# plot trace
+plot_trace(rt_control)
 
 # plot samples
 plot_samples(rt_control)
@@ -57,8 +57,8 @@ summary(rt_test)
 # check fits
 plot_fit(rt_test)
 
-# traceplot
-traceplot(rt_test)
+# plot trace
+plot_trace(rt_test)
 
 # plot samples
 plot_samples(rt_test)
@@ -126,8 +126,8 @@ summary(s_congruent)
 # check fits
 plot_fit(s_congruent)
 
-# traceplot
-traceplot(s_congruent)
+# plot trace
+plot_trace(s_congruent)
 
 # plot samples
 plot_samples(s_congruent)
@@ -148,8 +148,8 @@ summary(s_incongruent)
 # check fits
 plot_fit(s_incongruent)
 
-# traceplot
-traceplot(s_incongruent)
+# plot trace
+plot_trace(s_incongruent)
 
 # plot samples
 plot_samples(s_incongruent)

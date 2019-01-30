@@ -3,10 +3,15 @@
 \docType{methods}
 \name{plot_difference,success_rate_class-method}
 \alias{plot_difference,success_rate_class-method}
-\alias{plot_difference,ANY-method}
+\alias{plot_difference,success_rate_class-method,ANY-method}
 \title{plot_difference}
 \usage{
 \S4method{plot_difference}{success_rate_class}(object, ...)
+}
+\arguments{
+\item{object}{success_rate_class object.}
+
+\item{...}{fit2 - a second success_rate_class object, rope - region of practical equivalence, bins - number of bins in the histogram.}
 }
 \description{
 \code{plot_difference} a visualization of the difference between two groups.

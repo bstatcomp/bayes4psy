@@ -3,10 +3,13 @@
 \docType{methods}
 \name{plot_fit,ttest_class-method}
 \alias{plot_fit,ttest_class-method}
-\alias{plot_fit,ANY-method}
+\alias{plot_fit,ttest_class-method,ANY-method}
 \title{plot_fit}
 \usage{
 \S4method{plot_fit}{ttest_class}(object)
+}
+\arguments{
+\item{object}{ttest_class object.}
 }
 \description{
 \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.

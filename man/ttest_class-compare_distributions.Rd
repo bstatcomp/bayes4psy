@@ -3,10 +3,15 @@
 \docType{methods}
 \name{compare_distributions,ttest_class-method}
 \alias{compare_distributions,ttest_class-method}
-\alias{compare_distributions,ANY-method}
+\alias{compare_distributions,ttest_class-method,ANY-method}
 \title{compare_distributions}
 \usage{
 \S4method{compare_distributions}{ttest_class}(object, ...)
+}
+\arguments{
+\item{object}{ttest_class object.}
+
+\item{...}{fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.}
 }
 \description{
 \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group, against a mean value, or against samples from a normal distribution with a defined mean value and variance.

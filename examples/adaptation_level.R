@@ -1,7 +1,6 @@
 # libs
 library(EasyBayes)
 
-
 ## data wrangling --------------------------------------------------------
 # load data
 df <- read.table("./examples/data/adaptation_level.csv", sep="\t", header=TRUE)
@@ -31,8 +30,8 @@ summary(al_1b)
 # check fits
 plot_fit(al_1b)
 
-# traceplot
-traceplot(al_1b)
+# plot trace
+plot_trace(al_1b)
 
 # plot samples
 plot_samples(al_1b)
@@ -89,7 +88,7 @@ compare_distributions(al_1b, fit2 = al_1a)
 # plot_distribution
 graph_b <- plot_distributions(al_1b, al_2b)
 graph_a <- plot_distributions(al_1a, al_2a)
-plot_grid(graph_b, graph_a, ncol = 2, nrow = 1, scale = 0.9)
+cowplot::plot_grid(graph_b, graph_a, ncol = 2, nrow = 1, scale = 0.9)
 
 # plot difference between distributions
 plot_distributions_difference(al_1b, fit2 = al_1a)

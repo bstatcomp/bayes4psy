@@ -47,7 +47,7 @@ plot_distributions_difference(`ttest_class`, mu = `numeric`, sigma = `numeric`):
 
 plot_fit(`ttest_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 
-traceplot(`ttest_class`): traceplot for main fitted model parameters.
+plot_trace(`ttest_class`): traceplot for main fitted model parameters.
 }
 \section{Slots}{
 

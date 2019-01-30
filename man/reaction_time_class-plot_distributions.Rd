@@ -3,10 +3,15 @@
 \docType{methods}
 \name{plot_distributions,reaction_time_class-method}
 \alias{plot_distributions,reaction_time_class-method}
-\alias{plot_distributions,ANY-method}
+\alias{plot_distributions,reaction_time_class-method,ANY-method}
 \title{plot_distributions}
 \usage{
 \S4method{plot_distributions}{reaction_time_class}(object, ...)
+}
+\arguments{
+\item{object}{reaction_time_class object.}
+
+\item{...}{fit2 - a second linear_class object.}
 }
 \description{
 \code{plot_distributions} a visualization of the distribution for the first group, or the first group and the second group.

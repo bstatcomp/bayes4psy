@@ -3,10 +3,15 @@
 \docType{methods}
 \name{compare,success_rate_class-method}
 \alias{compare,success_rate_class-method}
-\alias{compare,ANY-method}
+\alias{compare,success_rate_class-method,ANY-method}
 \title{compare}
 \usage{
 \S4method{compare}{success_rate_class}(object, ...)
+}
+\arguments{
+\item{object}{success_rate_class object.}
+
+\item{...}{fit2 - a second success_rate_class object, rope - region of practical equivalence.}
 }
 \description{
 \code{compare} prints difference in successfulness between two groups.

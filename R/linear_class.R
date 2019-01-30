@@ -1,4 +1,5 @@
 #' @title linear_class
+#' @import stats dplyr ggplot2
 #' @description An S4 class for storing results of normal linear model.
 #' summary(`linear_class`): prints summary od the fit.
 #'
@@ -20,7 +21,7 @@
 #'
 #' plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
-#' traceplot(`linear_class`): traceplot for main fitted model parameters.
+#' plot_trace(`linear_class`): traceplot for main fitted model parameters.
 #'
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
@@ -37,6 +38,9 @@ linear_class <- setClass(
 )
 
 
+#' @title summary
+#' @description \code{summary} prints summary of the Bayesian linear model fit.
+#' @param object linear_class object.
 #' @exportMethod summary
 setMethod(f = "summary", signature(object = "linear_class"), definition = function(object) {
   # get means
@@ -58,8 +62,10 @@ setMethod(f = "summary", signature(object = "linear_class"), definition = functi
 
 #' @title compare
 #' @description \code{compare} prints difference in intercept and slope between two groups.
+#' @param object linear_class object.
+#' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
 #' @rdname linear_class-compare
-#' @aliases compare,ANY-method
+#' @aliases compare,linear_class-method,ANY-method
 setMethod(f = "compare", signature(object = "linear_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -111,13 +117,15 @@ setMethod(f = "compare", signature(object = "linear_class"), definition = functi
 
 
 #' @title plot_difference
-#' @description \code{plot_difference} TODO
+#' @description \code{plot_difference} plots difference between two groups.
+#' @param object linear_class object.
 #' @rdname linear_class-plot_difference
-#' @aliases plot_difference,ANY-method
+#' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
+#' @aliases plot_difference,linear_class-method,ANY-method
 setMethod(f = "plot_difference", signature(object = "linear_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(linear_class, fit2 = linear_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(linear_class, fit2 = linear_class, rope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(linear_class, fit2 = linear_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(linear_class, fit2 = linear_class, rope_intercept = numeric, rope_slope = numeric, bins = numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -169,7 +177,7 @@ setMethod(f = "plot_difference", signature(object = "linear_class"), definition 
       ggtitle("Slope") +
       theme(plot.title = element_text(hjust = 0.5))
 
-    graph <- plot_grid(graph_intercept, graph_slope, ncol = 2, nrow = 1, scale = 0.9)
+    graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol = 2, nrow = 1, scale = 0.9)
     return(graph)
   } else {
     warning(wrong_arguments)
@@ -180,8 +188,10 @@ setMethod(f = "plot_difference", signature(object = "linear_class"), definition 
 
 #' @title plot_samples
 #' @description \code{plot_samples} plots first group samples, or the first and the second group samples.
+#' @param object linear_class object.
+#' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_samples
-#' @aliases plot_samples,ANY-method
+#' @aliases plot_samples,linear_class-method,ANY-method
 setMethod(f = "plot_samples", signature(object = "linear_class"), definition = function(object, ...) {
   # first group data
   df1 <- data.frame(intercept = object@extract$mu_a, slope = object@extract$mu_b)
@@ -193,9 +203,9 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
   x_max_slope <- max(df1$slope)
 
   # plot
-  graph_intercept <- ggplot() +
+  graph_intercept <- ggplot2::ggplot() +
     geom_density(data = df1, aes(x = intercept), fill = "#3182bd", alpha = 0.4, color = NA)
-  graph_slope <- ggplot() +
+  graph_slope <- ggplot2::ggplot() +
     geom_density(data = df1, aes(x = slope), fill = "#3182bd", alpha = 0.4, color = NA)
 
 
@@ -237,28 +247,28 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
 
   # plot
   graph_intercept <- graph_intercept +
-    theme_minimal() +
     xlab("intercept") +
     xlim(x_min_intercept, x_max_intercept)
   graph_slope <- graph_slope +
-    theme_minimal() +
     xlab("slope") +
     xlim(x_min_slope, x_max_slope)
 
-  graph <- plot_grid(graph_intercept, graph_slope, ncol = 2, nrow = 1, scale = 0.9)
+  graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol = 2, nrow = 1, scale = 0.9)
 
   return(graph)
 })
 
 
 #' @title compare_distributions
-#' @description \code{compare_distributions}draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+#' @param object linear_class object.
+#' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
 #' @rdname linear_class-compare_distributions
-#' @aliases compare_distributions,ANY-method
+#' @aliases compare_distributions,linear_class-method,ANY-method
 setMethod(f = "compare_distributions", signature(object = "linear_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(linear_class, fit2 = linear_class) is required! You can also provide the rope parameter, e.g. compare_distributions(linear_class, fit2 = linear_class, rope = numeric)."
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(linear_class, fit2 = linear_class) is required! You can also provide the rope parameter, e.g. compare_distributions(linear_class, fit2 = linear_class, rope_intercept = numeric, rope_slope = numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -318,9 +328,11 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
 
 
 #' @title plot_distributions
-#' @description \code{plot_distributions} TODO
+#' @description \code{plot_distributions} plots distribution of the first group and optionally the distribution of the second group.
+#' @param object linear_class object.
+#' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_distributions
-#' @aliases plot_distributions,ANY-method
+#' @aliases plot_distributions,linear_class-method,ANY-method
 setMethod(f = "plot_distributions", signature(object = "linear_class"), definition = function(object, ...) {
   # precision
   n = 1000
@@ -336,7 +348,7 @@ setMethod(f = "plot_distributions", signature(object = "linear_class"), definiti
   y_max <- NULL
 
   # second group data
-  graph <- ggplot()
+  graph <- ggplot2::ggplot()
   arguments <- list(...)
   if (length(arguments) > 0) {
     if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
@@ -368,8 +380,8 @@ setMethod(f = "plot_distributions", signature(object = "linear_class"), definiti
       y_max <- ceiling(max(df2$y + 2*sigma2))
 
       graph <- graph +
-        geom_line(data = df2, aes(x = x, y = y), colour = '#ff4e3f', size = 1) +
-        geom_ribbon(data = df2, aes(x = x, ymin = y_min, ymax = y_max), fill = '#ff4e3f', alpha = 0.4)
+        geom_line(data = df2, aes(x = .data$x, y = .data$y), colour = '#ff4e3f', size = 1) +
+        geom_ribbon(data = df2, aes(x = x, ymin = .data$y_min, ymax = .data$y_max), fill = '#ff4e3f', alpha = 0.4)
     }
   }
 
@@ -387,10 +399,9 @@ setMethod(f = "plot_distributions", signature(object = "linear_class"), definiti
   y_max <- ceiling(max(y_max, df1$y + 2*sigma1))
 
   graph <- graph +
-    geom_line(data = df1, aes(x = x, y = y), colour = '#3182bd', size = 1) +
-    geom_ribbon(data = df1, aes(x = x, ymin = y_min, ymax = y_max), fill = '#3182bd', alpha = 0.4) +
+    geom_line(data = df1, aes(x = x, y = .data$y), colour = '#3182bd', size = 1) +
+    geom_ribbon(data = df1, aes(x = x, ymin = .data$y_min, ymax = y_max), fill = '#3182bd', alpha = 0.4) +
     ylim(0, y_max) +
-    theme_minimal() +
     xlab("time") +
     ylab("value")
 
@@ -399,13 +410,15 @@ setMethod(f = "plot_distributions", signature(object = "linear_class"), definiti
 
 
 #' @title plot_distributions_difference
-#' @description \code{plot_distributions_difference} TODO
+#' @description \code{plot_distributions_difference} visualizes the difference between two groups.
+#' @param object linear_class object.
+#' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
 #' @rdname linear_class-plot_distributions_difference
-#' @aliases plot_distributions_difference,ANY-method
+#' @aliases plot_distributions_difference,linear_class-method,ANY-method
 setMethod(f = "plot_distributions_difference", signature(object = "linear_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(linear_class, fit2 = linear_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(linear_class, fit2 = linear_class, rope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(linear_class, fit2 = linear_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(linear_class, fit2 = linear_class, rope_intercept = numeric, rope_slope = numeric, bins = numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -469,7 +482,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
       ggtitle("Slope") +
       theme(plot.title = element_text(hjust = 0.5))
 
-    graph <- plot_grid(graph_intercept, graph_slope, ncol = 2, nrow = 1, scale = 0.9)
+    graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol = 2, nrow = 1, scale = 0.9)
     return(graph)
   } else {
     warning(wrong_arguments)
@@ -480,8 +493,9 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
 
 #' @title plot_fit
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
+#' @param object linear_class object.
 #' @rdname linear_class-plot_fit
-#' @aliases plot_fit,ANY-method
+#' @aliases plot_fit,-method,ANY-method
 setMethod(f = "plot_fit", signature(object = "linear_class"), definition = function(object) {
   df_data <- data.frame(x = object@data$x, y = object@data$y, s = object@data$s)
 
@@ -510,20 +524,20 @@ setMethod(f = "plot_fit", signature(object = "linear_class"), definition = funct
   n_col <- ceiling(sqrt(n))
 
   # density per subject
-  graph <- ggplot() +
-    geom_point(data = df_data, aes(x = x, y = y), color = "#3182bd", alpha = 0.4) +
-    geom_line(data = df_fit, aes(x = x, y = y), color = "#3182bd") +
-    facet_wrap(~ s, ncol = n_col) +
-    theme_minimal()
+  graph <- ggplot2::ggplot() +
+    geom_point(data = df_data, aes(x = .data$x, y = .data$y), color = "#3182bd", alpha = 0.4) +
+    geom_line(data = df_fit, aes(x = .data$x, y = .data$y), color = "#3182bd") +
+    facet_wrap(~ .data$s, ncol = n_col)
 
   return(graph)
 })
 
 
-#' @title traceplot
-#' @description \code{traceplot} traceplot for main fitted model parameters.
-#' @rdname linear_class-traceplot
-#' @aliases traceplot,ANY-method
-setMethod(f = "traceplot", signature(object = "linear_class"), definition = function(object) {
+#' @title plot_trace
+#' @description \code{plot_trace} traceplot for main fitted model parameters.
+#' @param object linear_class object.
+#' @rdname linear_class-plot_trace
+#' @aliases plot_trace,linear_class-method,ANY-method
+setMethod(f = "plot_trace", signature(object = "linear_class"), definition = function(object) {
   rstan::traceplot(object@fit, pars = c("mu_a", "mu_b", "mu_s"), inc_warmup = TRUE)
 })

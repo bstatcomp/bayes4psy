@@ -3,10 +3,15 @@
 \docType{methods}
 \name{plot_samples,reaction_time_class-method}
 \alias{plot_samples,reaction_time_class-method}
-\alias{plot_samples,ANY-method}
+\alias{plot_samples,reaction_time_class-method,ANY-method}
 \title{plot_samples}
 \usage{
 \S4method{plot_samples}{reaction_time_class}(object, ...)
+}
+\arguments{
+\item{object}{reaction_time_class object.}
+
+\item{...}{fit2 - a second linear_class object, par - specific parameter of comparison - mu or lambda.}
 }
 \description{
 \code{plot_samples} plots density for the first group samples, or the first and the second group samples.

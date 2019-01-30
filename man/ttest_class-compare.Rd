@@ -3,10 +3,15 @@
 \docType{methods}
 \name{compare,ttest_class-method}
 \alias{compare,ttest_class-method}
-\alias{compare,ANY-method}
+\alias{compare,ttest_class-method,ANY-method}
 \title{compare}
 \usage{
 \S4method{compare}{ttest_class}(object, ...)
+}
+\arguments{
+\item{object}{ttest_class object.}
+
+\item{...}{fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.}
 }
 \description{
 \code{compare} prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.

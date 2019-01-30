@@ -3,10 +3,13 @@
 \docType{methods}
 \name{plot_fit,success_rate_class-method}
 \alias{plot_fit,success_rate_class-method}
-\alias{plot_fit,ANY-method}
+\alias{plot_fit,success_rate_class-method,ANY-method}
 \title{plot_fit}
 \usage{
 \S4method{plot_fit}{success_rate_class}(object)
+}
+\arguments{
+\item{object}{success_rate_class object.}
 }
 \description{
 \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.

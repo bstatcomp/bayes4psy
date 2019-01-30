@@ -3,10 +3,15 @@
 \docType{methods}
 \name{plot_difference,reaction_time_class-method}
 \alias{plot_difference,reaction_time_class-method}
-\alias{plot_difference,ANY-method}
+\alias{plot_difference,reaction_time_class-method,ANY-method}
 \title{plot_difference}
 \usage{
 \S4method{plot_difference}{reaction_time_class}(object, ...)
+}
+\arguments{
+\item{object}{reaction_time_class object.}
+
+\item{...}{fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.}
 }
 \description{
 \code{plot_difference} a visualization of the difference between two groups.

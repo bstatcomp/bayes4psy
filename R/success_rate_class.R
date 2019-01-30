@@ -1,4 +1,5 @@
 #' @title success_rate_class
+#' @import reshape dplyr ggplot2
 #' @description An S4 class for storing results of successes (true/false) Bayesian model.
 #' summary(`success_rate_class`): prints summary od the fit.
 #'
@@ -20,7 +21,7 @@
 #'
 #' plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
-#' traceplot(`success_rate_class`): traceplot for main fitted model parameters.
+#' plot_trace(`success_rate_class`): traceplot for main fitted model parameters.
 #'
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
@@ -36,6 +37,9 @@ success_rate_class <- setClass(
   contains = "b_results"
 )
 
+#' @title summary
+#' @description \code{summary} prints summary of the Bayesian success rate fit.
+#' @param object success_rate_class object.
 #' @exportMethod summary
 setMethod(f = "summary", signature(object = "success_rate_class"), definition = function(object) {
   # get means
@@ -51,8 +55,10 @@ setMethod(f = "summary", signature(object = "success_rate_class"), definition = 
 
 #' @title compare
 #' @description \code{compare} prints difference in successfulness between two groups.
+#' @param object success_rate_class object.
+#' @param ... fit2 - a second success_rate_class object, rope - region of practical equivalence.
 #' @rdname success_rate_class-compare
-#' @aliases compare,ANY-method
+#' @aliases compare,success_rate_class-method,ANY-method
 setMethod(f = "compare", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -93,8 +99,10 @@ setMethod(f = "compare", signature(object = "success_rate_class"), definition = 
 
 #' @title plot_difference
 #' @description \code{plot_difference} a visualization of the difference between two groups.
+#' @param object success_rate_class object.
+#' @param ... fit2 - a second success_rate_class object, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname success_rate_class-plot_difference
-#' @aliases plot_difference,ANY-method
+#' @aliases plot_difference,success_rate_class-method,ANY-method
 setMethod(f = "plot_difference", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -143,8 +151,10 @@ setMethod(f = "plot_difference", signature(object = "success_rate_class"), defin
 
 #' @title plot_samples
 #' @description \code{plot_samples} plots density for the first group samples, or the first and the second group samples.
+#' @param object success_rate_class object.
+#' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_samples
-#' @aliases plot_samples,ANY-method
+#' @aliases plot_samples,success_rate_class-method,ANY-method
 setMethod(f = "plot_samples", signature(object = "success_rate_class"), definition = function(object, ...) {
   # first group data
   df1 <- data.frame(value = rowMeans(object@extract$p))
@@ -187,7 +197,6 @@ setMethod(f = "plot_samples", signature(object = "success_rate_class"), definiti
 
   # plot
   graph <- graph +
-    theme_minimal() +
     xlab("value") +
     xlim(x_min, x_max)
 
@@ -197,12 +206,14 @@ setMethod(f = "plot_samples", signature(object = "success_rate_class"), definiti
 
 #' @title compare_distributions
 #' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+#' @param object success_rate_class object.
+#' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-compare_distributions
-#' @aliases compare_distributions,ANY-method
+#' @aliases compare_distributions,success_rate_class-method,ANY-method
 setMethod(f = "compare_distributions", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(success_rate_class, fit2 = success_rate_class) is required! You can also provide the rope parameter, e.g. compare_distributions(success_rate_class, fit2 = success_rate_class."
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(success_rate_class, fit2 = success_rate_class) is required!)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -244,8 +255,10 @@ setMethod(f = "compare_distributions", signature(object = "success_rate_class"),
 
 #' @title plot_distributions
 #' @description \code{plot_distributions} a visualization of the distribution for the first group, or the first group and the second group.
+#' @param object success_rate_class object.
+#' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_distributions
-#' @aliases plot_distributions,ANY-method
+#' @aliases plot_distributions,success_rate_class-method,ANY-method
 setMethod(f = "plot_distributions", signature(object = "success_rate_class"), definition = function(object, ...) {
   n <- nrow(object@extract$p)
   m <- 100000
@@ -279,10 +292,9 @@ setMethod(f = "plot_distributions", signature(object = "success_rate_class"), de
   # plot
   df_x <- data.frame(value = c(0, 1))
 
-  graph <- ggplot(data = df_x, aes(x = value)) +
+  graph <- ggplot(data = df_x, aes(x = .data$value)) +
     stat_function(fun = dnorm, n = m, args = list(mean = mu1, sd = sd1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
     group2_plot +
-    theme_minimal() +
     xlab("probability") +
     ylab("density")
 
@@ -292,8 +304,10 @@ setMethod(f = "plot_distributions", signature(object = "success_rate_class"), de
 
 #' @title plot_distributions_difference
 #' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group.
+#' @param object success_rate_class object.
+#' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_distributions_difference
-#' @aliases plot_distributions_difference,ANY-method
+#' @aliases plot_distributions_difference,success_rate_class-method,ANY-method
 setMethod(f = "plot_distributions_difference", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -332,10 +346,9 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
                      value = c(y1_greater, equal, y1_smaller))
 
     # plot
-    graph <- ggplot(data = df, aes(x = x, y = value, fill = variable)) +
+    graph <- ggplot(data = df, aes(x = .data$x, y = .data$value, fill = .data$variable)) +
       geom_bar(stat = "identity") +
       scale_fill_manual(values = c("#3182bd", "grey80", "#ff4e3f")) +
-      theme_minimal() +
       theme(legend.title=element_blank()) +
       theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
       ylab("Probability") +
@@ -351,12 +364,14 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
 
 #' @title plot_fit
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
+#' @param object success_rate_class object.
 #' @rdname success_rate_class-plot_fit
-#' @aliases plot_fit,ANY-method
+#' @aliases plot_fit,success_rate_class-method,ANY-method
 setMethod(f = "plot_fit", signature(object = "success_rate_class"), definition = function(object) {
   df_data <- data.frame(r = object@data$r, subject = object@data$s)
 
-  df_data <- ddply(df_data, ~ subject, summarise, data=mean(r))
+  df_data <- df_data %>% group_by(subject) %>% summarize(data=mean(r))
+  #ddply(df_data, ~ subject, summarise, data=mean(r))
 
   df_data$fit <- colMeans(object@extract$p)
 
@@ -372,17 +387,17 @@ setMethod(f = "plot_fit", signature(object = "success_rate_class"), definition =
     facet_wrap(~ subject, ncol = n_col) +
     scale_fill_manual(values = c("#3182bd", "#ff4e3f")) +
     ylim(0, 1) +
-    theme_minimal() +
     theme(legend.title=element_blank())
 
   return(graph)
 })
 
 
-#' @title traceplot
-#' @description \code{traceplot} traceplot for main fitted model parameters.
-#' @rdname success_rate_class-traceplot
-#' @aliases traceplot,ANY-method
-setMethod(f = "traceplot", signature(object = "success_rate_class"), definition = function(object) {
+#' @title plot_trace
+#' @description \code{plot_trace} traceplot for main fitted model parameters.
+#' @param object success_rate_class object.
+#' @rdname success_rate_class-plot_trace
+#' @aliases plot_trace,success_rate_class-method,ANY-method
+setMethod(f = "plot_trace", signature(object = "success_rate_class"), definition = function(object) {
   rstan::traceplot(object@fit, pars = c("p"), inc_warmup = TRUE)
 })

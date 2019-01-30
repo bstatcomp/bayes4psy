@@ -50,7 +50,7 @@ fit <- sampling(model,
 
 extract <- extract(fit)
 
-traceplot(fit, pars = c("mu_h"), inc_warmup = TRUE)
+plot_trace(fit, pars = c("mu_h"), inc_warmup = TRUE)
 
 
 ## plot fit --------------------------------------------------------------
@@ -95,7 +95,6 @@ for (i in 1:m) {
       #graph <-
       ggplot(data = df_x, aes(x = value)) +
         geom_density(data = data_plot, aes(x = value), fill = colours[j], alpha = 0.4, color = NA) +
-        theme_minimal() +
         xlab("value") +
         ylab("density") +
         xlim(0, x_max)
@@ -113,7 +112,6 @@ for (i in 1:m) {
       #graph <-
       ggplot(data = df_x, aes(x = value)) +
         geom_density(data = data_plot, aes(x = value), fill = colours[j], alpha = 0.4, color = NA) +
-        theme_minimal() +
         xlab("value") +
         ylab("density") +
         xlim(0, 2*pi)
@@ -128,7 +126,7 @@ for (i in 1:m) {
 
 
 
-plot_grid(plotlist = plotlist, ncol = 6, nrow = m, scale = 0.9)
+cowplot::plot_grid(plotlist = plotlist, ncol = 6, nrow = m, scale = 0.9)
 
 mu <- pi
 kappa <- 1

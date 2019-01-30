@@ -1,4 +1,5 @@
 #' @title ttest_class
+#' @import ggplot2 metRology rstan
 #' @description An S4 class for storing results of Bayesian t-test results.
 #' summary(`ttest_class`): prints summary of the fit.
 #'
@@ -40,7 +41,7 @@
 #'
 #' plot_fit(`ttest_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
-#' traceplot(`ttest_class`): traceplot for main fitted model parameters.
+#' plot_trace(`ttest_class`): traceplot for main fitted model parameters.
 #'
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
@@ -56,7 +57,9 @@ ttest_class <- setClass(
   contains = "b_results"
 )
 
-
+#' @title summary
+#' @description \code{summary} prints summary of the Bayesian ttest fit.
+#' @param object ttest_class object.
 #' @exportMethod summary
 setMethod(f = "summary", signature(object = "ttest_class"), definition = function(object) {
   # get means
@@ -78,8 +81,10 @@ setMethod(f = "summary", signature(object = "ttest_class"), definition = functio
 
 #' @title compare
 #' @description \code{compare} prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#' @param object ttest_class object.
+#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
 #' @rdname ttest_class-compare
-#' @aliases compare,ANY-method
+#' @aliases compare,ttest_class-method,ANY-method
 setMethod(f = "compare", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -137,12 +142,14 @@ setMethod(f = "compare", signature(object = "ttest_class"), definition = functio
 
 #' @title plot_difference
 #' @description \code{plot_difference} a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#' @param object ttest_class object.
+#' @param ... fit2 - a second ttest_class object, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname ttest_class-plot_difference
-#' @aliases plot_difference,ANY-method
+#' @aliases plot_difference,ttest_class-method,ANY-method
 setMethod(f = "plot_difference", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(ttest_class, ttest_class) or plot_difference(ttest_class, numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(ttest_class, fit2 = ttest_class, rope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(ttest_class, fit2 = ttest_class) or plot_difference(ttest_class, mu = numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(ttest_class, fit2 = ttest_class, rope = numeric, bins = numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -191,8 +198,10 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
 
 #' @title plot_samples
 #' @description \code{plot_samples} plots density for the first group samples, the first and the second group samples, or a mean value in case second group is defined as a normal distribution or as a constant.
+#' @param object ttest_class object.
+#' @param ... fit2 - a second ttest_class object, mu - mean value.
 #' @rdname ttest_class-plot_samples
-#' @aliases plot_samples,ANY-method
+#' @aliases plot_samples,ttest_class-method,ANY-method
 setMethod(f = "plot_samples", signature(object = "ttest_class"), definition = function(object, ...) {
   # first group data
   mu1 <- object@extract$mu
@@ -201,7 +210,6 @@ setMethod(f = "plot_samples", signature(object = "ttest_class"), definition = fu
   # plot
   graph <- ggplot() +
     geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
-    theme_minimal() +
     xlab("value")
 
   # second group data
@@ -251,8 +259,10 @@ setMethod(f = "plot_samples", signature(object = "ttest_class"), definition = fu
 
 #' @title compare_distributions
 #' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group, against a mean value, or against samples from a normal distribution with a defined mean value and variance.
+#' @param object ttest_class object.
+#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
 #' @rdname ttest_class-compare_distributions
-#' @aliases compare_distributions,ANY-method
+#' @aliases compare_distributions,ttest_class-method,ANY-method
 setMethod(f = "compare_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -315,8 +325,10 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
 
 #' @title plot_distributions
 #' @description \code{plot_distributions} visualizes distributions underlying tested groups.
+#' @param object ttest_class object.
+#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation.
 #' @rdname ttest_class-plot_distributions
-#' @aliases plot_distributions,ANY-method
+#' @aliases plot_distributions,ttest_class-method,ANY-method
 setMethod(f = "plot_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
   # first group data
   n <- 10000
@@ -367,10 +379,9 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
   # plot
   df_x <- data.frame(value = c(x_min, x_max))
 
-  graph <- ggplot(data = df_x, aes(x = value)) +
+  graph <- ggplot(data = df_x, aes(x = .data$value)) +
     stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = y1_mu, sd = y1_sigma), geom = 'area', fill = '#3182bd', alpha = 0.4) +
     group2_plot +
-    theme_minimal() +
     xlab("value") +
     ylab("density")
 
@@ -388,8 +399,10 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
 
 #' @title plot_distributions_difference
 #' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the distribution or a constant value for the second group.
+#' @param object ttest_class object.
+#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname ttest_class-plot_distributions_difference
-#' @aliases plot_distributions_difference,ANY-method
+#' @aliases plot_distributions_difference,ttest_class-method,ANY-method
 setMethod(f = "plot_distributions_difference", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -451,8 +464,9 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_class")
 
 #' @title plot_fit
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
+#' @param object ttest_class object.
 #' @rdname ttest_class-plot_fit
-#' @aliases plot_fit,ANY-method
+#' @aliases plot_fit,ttest_class-method,ANY-method
 setMethod(f = "plot_fit", signature(object = "ttest_class"), definition = function(object) {
   n <- 10000
   df_data <- data.frame(value = object@data)
@@ -471,17 +485,17 @@ setMethod(f = "plot_fit", signature(object = "ttest_class"), definition = functi
     geom_density(data = df_data, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
     stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = mu, sd = sigma), colour = "#3182bd", size = 1) +
     xlab("value") +
-    theme_minimal() +
     xlim(x_min, x_max)
 
   return(graph)
 })
 
 
-#' @title traceplot
-#' @description \code{traceplot} traceplot for main fitted model parameters.
-#' @rdname ttest_class-traceplot
-#' @aliases traceplot,ANY-method
-setMethod(f = "traceplot", signature(object = "ttest_class"), definition = function(object) {
-  rstan::traceplot(object@fit, pars = c("mu", "sigma", "nu"), inc_warmup = TRUE)
+#' @title plot_trace
+#' @description \code{plot_trace} traceplot for main fitted model parameters.
+#' @param object ttest_class object.
+#' @rdname ttest_class-plot_trace
+#' @aliases plot_trace,ttest_class-method,ANY-method
+setMethod(f = "plot_trace", signature(object = "ttest_class"), definition = function(object) {
+  traceplot(object@fit, pars = c("mu", "sigma"), inc_warmup = TRUE)
 })

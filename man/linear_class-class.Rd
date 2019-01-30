@@ -27,7 +27,7 @@ plot_distributions_difference(`linear_class`, fit2 = `linear_class`): a visualiz
 
 plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 
-traceplot(`linear_class`): traceplot for main fitted model parameters.
+plot_trace(`linear_class`): traceplot for main fitted model parameters.
 }
 \section{Slots}{
 

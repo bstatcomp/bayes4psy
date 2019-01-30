@@ -27,7 +27,7 @@ plot_distributions_difference(`success_rate_class`, fit2 = `success_rate_class`)
 
 plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 
-traceplot(`success_rate_class`): traceplot for main fitted model parameters.
+plot_trace(`success_rate_class`): traceplot for main fitted model parameters.
 }
 \section{Slots}{
 

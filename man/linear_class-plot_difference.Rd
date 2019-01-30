@@ -3,11 +3,16 @@
 \docType{methods}
 \name{plot_difference,linear_class-method}
 \alias{plot_difference,linear_class-method}
-\alias{plot_difference,ANY-method}
+\alias{plot_difference,linear_class-method,ANY-method}
 \title{plot_difference}
 \usage{
 \S4method{plot_difference}{linear_class}(object, ...)
 }
+\arguments{
+\item{object}{linear_class object.}
+
+\item{...}{fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.}
+}
 \description{
-\code{plot_difference} TODO
+\code{plot_difference} plots difference between two groups.
 }

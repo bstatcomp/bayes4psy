@@ -3,10 +3,15 @@
 \docType{methods}
 \name{plot_samples,ttest_class-method}
 \alias{plot_samples,ttest_class-method}
-\alias{plot_samples,ANY-method}
+\alias{plot_samples,ttest_class-method,ANY-method}
 \title{plot_samples}
 \usage{
 \S4method{plot_samples}{ttest_class}(object, ...)
+}
+\arguments{
+\item{object}{ttest_class object.}
+
+\item{...}{fit2 - a second ttest_class object, mu - mean value.}
 }
 \description{
 \code{plot_samples} plots density for the first group samples, the first and the second group samples, or a mean value in case second group is defined as a normal distribution or as a constant.

@@ -3,10 +3,15 @@
 \docType{methods}
 \name{plot_distributions,ttest_class-method}
 \alias{plot_distributions,ttest_class-method}
-\alias{plot_distributions,ANY-method}
+\alias{plot_distributions,ttest_class-method,ANY-method}
 \title{plot_distributions}
 \usage{
 \S4method{plot_distributions}{ttest_class}(object, ...)
+}
+\arguments{
+\item{object}{ttest_class object.}
+
+\item{...}{fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation.}
 }
 \description{
 \code{plot_distributions} visualizes distributions underlying tested groups.

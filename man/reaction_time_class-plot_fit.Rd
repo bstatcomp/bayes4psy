@@ -3,10 +3,13 @@
 \docType{methods}
 \name{plot_fit,reaction_time_class-method}
 \alias{plot_fit,reaction_time_class-method}
-\alias{plot_fit,ANY-method}
+\alias{plot_fit,reaction_time_class-method,ANY-method}
 \title{plot_fit}
 \usage{
 \S4method{plot_fit}{reaction_time_class}(object)
+}
+\arguments{
+\item{object}{reaction_time_class object.}
 }
 \description{
 \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.

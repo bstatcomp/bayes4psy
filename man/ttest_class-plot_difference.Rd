@@ -3,10 +3,15 @@
 \docType{methods}
 \name{plot_difference,ttest_class-method}
 \alias{plot_difference,ttest_class-method}
-\alias{plot_difference,ANY-method}
+\alias{plot_difference,ttest_class-method,ANY-method}
 \title{plot_difference}
 \usage{
 \S4method{plot_difference}{ttest_class}(object, ...)
+}
+\arguments{
+\item{object}{ttest_class object.}
+
+\item{...}{fit2 - a second ttest_class object, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram.}
 }
 \description{
 \code{plot_difference} a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.

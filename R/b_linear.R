@@ -1,5 +1,6 @@
 #' @title b_linear
 #' @description Bayesian model for fitting a linear normal model to data.
+#' @import rstan
 #' @export
 #' @param x a vector containting index of sequence (time).
 #' @param y a vector containting subjet's responses.
@@ -16,14 +17,14 @@ b_linear <- function(x, y, s) {
                     y = y,
                     s = s)
 
-  fit <- rstan::sampling(stanmodels$linear,
+  fit <- sampling(stanmodels$linear,
                          data = stan_data,
                          iter = 1200,
                          warmup = 200,
                          chains = 1,
                          control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-  extract <- rstan::extract(fit)
+  extract <- extract(fit)
 
   # create output class
   out <- linear_class(extract = extract, data = stan_data, fit = fit)
