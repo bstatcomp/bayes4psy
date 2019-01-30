@@ -3,7 +3,6 @@
 \docType{methods}
 \name{plot_fit,reaction_time_class-method}
 \alias{plot_fit,reaction_time_class-method}
-\alias{plot_fit,reaction_time_class-method,ANY-method}
 \title{plot_fit}
 \usage{
 \S4method{plot_fit}{reaction_time_class}(object)

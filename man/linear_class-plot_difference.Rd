@@ -3,7 +3,6 @@
 \docType{methods}
 \name{plot_difference,linear_class-method}
 \alias{plot_difference,linear_class-method}
-\alias{plot_difference,linear_class-method,ANY-method}
 \title{plot_difference}
 \usage{
 \S4method{plot_difference}{linear_class}(object, ...)

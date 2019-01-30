@@ -65,7 +65,6 @@ setMethod(f = "summary", signature(object = "linear_class"), definition = functi
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
 #' @rdname linear_class-compare
-#' @aliases compare,linear_class-method,ANY-method
 setMethod(f = "compare", signature(object = "linear_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -121,7 +120,6 @@ setMethod(f = "compare", signature(object = "linear_class"), definition = functi
 #' @param object linear_class object.
 #' @rdname linear_class-plot_difference
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
-#' @aliases plot_difference,linear_class-method,ANY-method
 setMethod(f = "plot_difference", signature(object = "linear_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -191,7 +189,6 @@ setMethod(f = "plot_difference", signature(object = "linear_class"), definition 
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_samples
-#' @aliases plot_samples,linear_class-method,ANY-method
 setMethod(f = "plot_samples", signature(object = "linear_class"), definition = function(object, ...) {
   # first group data
   df1 <- data.frame(intercept = object@extract$mu_a, slope = object@extract$mu_b)
@@ -264,7 +261,6 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
 #' @rdname linear_class-compare_distributions
-#' @aliases compare_distributions,linear_class-method,ANY-method
 setMethod(f = "compare_distributions", signature(object = "linear_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -332,7 +328,6 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_distributions
-#' @aliases plot_distributions,linear_class-method,ANY-method
 setMethod(f = "plot_distributions", signature(object = "linear_class"), definition = function(object, ...) {
   # precision
   n = 1000
@@ -414,7 +409,6 @@ setMethod(f = "plot_distributions", signature(object = "linear_class"), definiti
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
 #' @rdname linear_class-plot_distributions_difference
-#' @aliases plot_distributions_difference,linear_class-method,ANY-method
 setMethod(f = "plot_distributions_difference", signature(object = "linear_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -495,7 +489,6 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
 #' @param object linear_class object.
 #' @rdname linear_class-plot_fit
-#' @aliases plot_fit,-method,ANY-method
 setMethod(f = "plot_fit", signature(object = "linear_class"), definition = function(object) {
   df_data <- data.frame(x = object@data$x, y = object@data$y, s = object@data$s)
 
@@ -537,7 +530,6 @@ setMethod(f = "plot_fit", signature(object = "linear_class"), definition = funct
 #' @description \code{plot_trace} traceplot for main fitted model parameters.
 #' @param object linear_class object.
 #' @rdname linear_class-plot_trace
-#' @aliases plot_trace,linear_class-method,ANY-method
 setMethod(f = "plot_trace", signature(object = "linear_class"), definition = function(object) {
   rstan::traceplot(object@fit, pars = c("mu_a", "mu_b", "mu_s"), inc_warmup = TRUE)
 })

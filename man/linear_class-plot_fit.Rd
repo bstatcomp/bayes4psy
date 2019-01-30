@@ -3,7 +3,6 @@
 \docType{methods}
 \name{plot_fit,linear_class-method}
 \alias{plot_fit,linear_class-method}
-\alias{plot_fit,-method,ANY-method}
 \title{plot_fit}
 \usage{
 \S4method{plot_fit}{linear_class}(object)

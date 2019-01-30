@@ -3,7 +3,6 @@
 \docType{methods}
 \name{plot_distributions,linear_class-method}
 \alias{plot_distributions,linear_class-method}
-\alias{plot_distributions,linear_class-method,ANY-method}
 \title{plot_distributions}
 \usage{
 \S4method{plot_distributions}{linear_class}(object, ...)

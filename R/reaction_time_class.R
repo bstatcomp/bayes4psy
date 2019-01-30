@@ -64,7 +64,6 @@ setMethod(f = "summary", signature(object = "reaction_time_class"), definition =
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-compare
-#' @aliases compare,reaction_time_class-method,ANY-method
 setMethod(f = "compare", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -135,7 +134,6 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_difference
-#' @aliases plot_difference,reaction_time_class-method,ANY-method
 setMethod(f = "plot_difference", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -217,7 +215,6 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second linear_class object, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_samples
-#' @aliases plot_samples,reaction_time_class-method,ANY-method
 setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definition = function(object, ...) {
   # extract arguments
   arguments <- list(...)
@@ -302,7 +299,6 @@ setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definit
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second linear_class object, rope - region of practical equivalence.
 #' @rdname reaction_time_class-compare_distributions
-#' @aliases compare_distributions,reaction_time_class-method,ANY-method
 setMethod(f = "compare_distributions", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -354,7 +350,6 @@ setMethod(f = "compare_distributions", signature(object = "reaction_time_class")
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second linear_class object.
 #' @rdname reaction_time_class-plot_distributions
-#' @aliases plot_distributions,reaction_time_class-method,ANY-method
 setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), definition = function(object, ...) {
   n <- 100000
 
@@ -405,7 +400,6 @@ setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), d
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname reaction_time_class-plot_distributions_difference
-#' @aliases plot_distributions_difference,reaction_time_class-method,ANY-method
 setMethod(f = "plot_distributions_difference", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -464,7 +458,6 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
 #' @param object reaction_time_class object.
 #' @rdname reaction_time_class-plot_fit
-#' @aliases plot_fit,reaction_time_class-method,ANY-method
 setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition = function(object) {
   df_data <- data.frame(rt = object@data$rt, s = object@data$s)
 
@@ -503,7 +496,6 @@ setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition 
 #' @description \code{plot_trace} traceplot for main fitted model parameters.
 #' @param object reaction_time_class object.
 #' @rdname reaction_time_class-plot_trace
-#' @aliases plot_trace,reaction_time_class-method
 setMethod(f = "plot_trace", signature(object = "reaction_time_class"), definition = function(object) {
   rstan::traceplot(object@fit, pars = c("mu_m", "mu_s", "mu_l"), inc_warmup = TRUE)
 })

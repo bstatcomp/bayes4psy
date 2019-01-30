@@ -3,7 +3,6 @@
 \docType{methods}
 \name{plot_samples,linear_class-method}
 \alias{plot_samples,linear_class-method}
-\alias{plot_samples,linear_class-method,ANY-method}
 \title{plot_samples}
 \usage{
 \S4method{plot_samples}{linear_class}(object, ...)

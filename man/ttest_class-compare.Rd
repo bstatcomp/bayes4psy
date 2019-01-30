@@ -3,7 +3,6 @@
 \docType{methods}
 \name{compare,ttest_class-method}
 \alias{compare,ttest_class-method}
-\alias{compare,ttest_class-method,ANY-method}
 \title{compare}
 \usage{
 \S4method{compare}{ttest_class}(object, ...)

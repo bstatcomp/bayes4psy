@@ -3,7 +3,6 @@
 \docType{methods}
 \name{compare_distributions,linear_class-method}
 \alias{compare_distributions,linear_class-method}
-\alias{compare_distributions,linear_class-method,ANY-method}
 \title{compare_distributions}
 \usage{
 \S4method{compare_distributions}{linear_class}(object, ...)

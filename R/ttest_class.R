@@ -84,7 +84,6 @@ setMethod(f = "summary", signature(object = "ttest_class"), definition = functio
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
 #' @rdname ttest_class-compare
-#' @aliases compare,ttest_class-method,ANY-method
 setMethod(f = "compare", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -145,7 +144,6 @@ setMethod(f = "compare", signature(object = "ttest_class"), definition = functio
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname ttest_class-plot_difference
-#' @aliases plot_difference,ttest_class-method,ANY-method
 setMethod(f = "plot_difference", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -201,7 +199,6 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value.
 #' @rdname ttest_class-plot_samples
-#' @aliases plot_samples,ttest_class-method,ANY-method
 setMethod(f = "plot_samples", signature(object = "ttest_class"), definition = function(object, ...) {
   # first group data
   mu1 <- object@extract$mu
@@ -262,7 +259,6 @@ setMethod(f = "plot_samples", signature(object = "ttest_class"), definition = fu
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
 #' @rdname ttest_class-compare_distributions
-#' @aliases compare_distributions,ttest_class-method,ANY-method
 setMethod(f = "compare_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -328,7 +324,6 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation.
 #' @rdname ttest_class-plot_distributions
-#' @aliases plot_distributions,ttest_class-method,ANY-method
 setMethod(f = "plot_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
   # first group data
   n <- 10000
@@ -402,7 +397,6 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname ttest_class-plot_distributions_difference
-#' @aliases plot_distributions_difference,ttest_class-method,ANY-method
 setMethod(f = "plot_distributions_difference", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -466,7 +460,6 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_class")
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
 #' @param object ttest_class object.
 #' @rdname ttest_class-plot_fit
-#' @aliases plot_fit,ttest_class-method,ANY-method
 setMethod(f = "plot_fit", signature(object = "ttest_class"), definition = function(object) {
   n <- 10000
   df_data <- data.frame(value = object@data)
@@ -495,7 +488,6 @@ setMethod(f = "plot_fit", signature(object = "ttest_class"), definition = functi
 #' @description \code{plot_trace} traceplot for main fitted model parameters.
 #' @param object ttest_class object.
 #' @rdname ttest_class-plot_trace
-#' @aliases plot_trace,ttest_class-method,ANY-method
 setMethod(f = "plot_trace", signature(object = "ttest_class"), definition = function(object) {
   traceplot(object@fit, pars = c("mu", "sigma"), inc_warmup = TRUE)
 })

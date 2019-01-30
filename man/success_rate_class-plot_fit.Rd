@@ -3,7 +3,6 @@
 \docType{methods}
 \name{plot_fit,success_rate_class-method}
 \alias{plot_fit,success_rate_class-method}
-\alias{plot_fit,success_rate_class-method,ANY-method}
 \title{plot_fit}
 \usage{
 \S4method{plot_fit}{success_rate_class}(object)

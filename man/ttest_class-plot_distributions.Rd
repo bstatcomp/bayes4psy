@@ -3,7 +3,6 @@
 \docType{methods}
 \name{plot_distributions,ttest_class-method}
 \alias{plot_distributions,ttest_class-method}
-\alias{plot_distributions,ttest_class-method,ANY-method}
 \title{plot_distributions}
 \usage{
 \S4method{plot_distributions}{ttest_class}(object, ...)

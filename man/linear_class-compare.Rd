@@ -3,7 +3,6 @@
 \docType{methods}
 \name{compare,linear_class-method}
 \alias{compare,linear_class-method}
-\alias{compare,linear_class-method,ANY-method}
 \title{compare}
 \usage{
 \S4method{compare}{linear_class}(object, ...)

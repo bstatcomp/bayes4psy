@@ -3,7 +3,6 @@
 \docType{methods}
 \name{plot_samples,reaction_time_class-method}
 \alias{plot_samples,reaction_time_class-method}
-\alias{plot_samples,reaction_time_class-method,ANY-method}
 \title{plot_samples}
 \usage{
 \S4method{plot_samples}{reaction_time_class}(object, ...)
