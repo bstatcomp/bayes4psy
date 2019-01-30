@@ -1,13 +1,14 @@
 #' @title b_linear
 #' @description Bayesian model for fitting a linear normal model to data.
 #' @export
-#' @param n total number of measurements.
-#' @param m number of participating subjects.
 #' @param x a vector containting index of sequence (time).
 #' @param y a vector containting subjet's responses.
 #' @param s a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).
 #' @return An object of class `linear_class`.
-b_linear <- function(n, m, x, y, s) {
+b_linear <- function(x, y, s) {
+
+  n <- length(y)
+  m <- length(unique(s))
 
   stan_data <- list(n = n,
                     m = m,

@@ -1,12 +1,13 @@
 #' @title b_reaction_time
 #' @description Bayesian model for comparing reaction times.
 #' @export
-#' @param n total number of measurements.
-#' @param m number of participating subjects.
 #' @param rt a vector containing reaction times for each measurement.
 #' @param s a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).
 #' @return An object of class `reaction_time_class`.
-b_reaction_time <- function(n, m, rt, s) {
+b_reaction_time <- function(rt, s) {
+
+  n <- length(rt)
+  m <- length(unique(s))
 
   stan_data <- list(n = n,
                     m = m,

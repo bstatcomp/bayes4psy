@@ -22,12 +22,10 @@ df_control <- df_correct[df_correct$group == "control", ]
 # subject indexes range on 22..45 cast to 1..23
 df_control$subject <- df_control$subject - 21
 
-n <- nrow(df_control)
-m <- length(unique(df_control$subject))
 rt <- df_control$rt
 s <- df_control$subject
 
-rt_control <- b_reaction_time(n = n, m = m, rt = rt, s = s)
+rt_control <- b_reaction_time(rt = rt, s = s)
 
 # summary
 summary(rt_control)
@@ -48,12 +46,10 @@ plot_distributions(rt_control)
 ## test group fit --------------------------------------------------------
 df_test <- df_correct[df_correct$group == "test", ]
 
-n <- nrow(df_test)
-m <- length(unique(df_test$subject))
 rt <- df_test$rt
 s <- df_test$subject
 
-rt_test <- b_reaction_time(n = n, m = m, rt = rt, s = s)
+rt_test <- b_reaction_time(rt = rt, s = s)
 
 # summary
 summary(rt_test)
@@ -119,12 +115,10 @@ df_congruent <- df[df$group == "test" & df$congruency == "congruent", ]
 df_incongruent <- df[df$group == "test" & df$congruency == "incongruent", ]
 
 ## congruent fit ---------------------------------------------------------
-n <- nrow(df_congruent)
-m <- length(unique(df_congruent$subject))
 r <- df_congruent$result_numeric
 s <- df_congruent$subject
 
-s_congruent <- b_success_rate(n = n, m = m, r = r, s = s)
+s_congruent <- b_success_rate(r = r, s = s)
 
 # summary
 summary(s_congruent)
@@ -143,12 +137,10 @@ plot_distributions(s_congruent)
 
 
 ## incongruent fit -------------------------------------------------------
-n <- nrow(df_incongruent)
-m <- length(unique(df_incongruent$subject))
 r <- df_incongruent$result_numeric
 s <- df_incongruent$subject
 
-s_incongruent <- b_success_rate(n = n, m = m, r = r, s = s)
+s_incongruent <- b_success_rate(r = r, s = s)
 
 # summary
 summary(s_incongruent)

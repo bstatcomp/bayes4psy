@@ -1,12 +1,13 @@
 #' @title b_success_rate
 #' @description Bayesian model for comparing test success rate.
 #' @export
-#' @param n total number of measurements.
-#' @param m number of participating subjects.
 #' @param r a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).
 #' @param s a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).
 #' @return An object of class `success_rate_class`.
-b_success_rate <- function(n, m, r, s) {
+b_success_rate <- function( r, s) {
+
+  n <- length(r)
+  m <- length(unique(s))
 
   stan_data <- list(n = n,
                     m = m,
