@@ -1,18 +1,15 @@
 #' @title reaction_time_class
+#' @import emg ggplot2
 #' @description An S4 class for storing results of reaction time Bayesian model.
-#' @slot extract Extract from Stan fit.
-#' @slot fit Stan fit.
-#' @slot data Data on which the fit is based.
-#' @examples
 #' summary(`reaction_time_class`): prints summary od the fit.
 #'
-#' compare(`reaction_time_class`, fit2 = `reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter (mu or lambda).
+#' compare(`reaction_time_class`, fit2 = `reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
 #'
-#' plot_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope parameter or visualize the comparison only through a chosen parameter (mu or lambda).
+#' plot_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope parameter or visualize the comparison only through a chosen parameter - mu or lambda.
 #'
-#' plot_samples(`reaction_time_class`): plots density for the first group samples. You can also visualize the denisty only for a chosen parameter (mu or lambda).
+#' plot_samples(`reaction_time_class`): plots density for the first group samples. You can also visualize the denisty only for a chosen parameter - mu or lambda.
 #'
-#' plot_samples(`reaction_time_class`, fit2 = `reaction_time_class`): plots density for the first and the second group samples. You can also visualize the denisty only for a chosen parameter (mu or lambda).
+#' plot_samples(`reaction_time_class`, fit2 = `reaction_time_class`): plots density for the first and the second group samples. You can also visualize the denisty only for a chosen parameter - mu or lambda.
 #'
 #' compare_distributions(`reaction_time_class`, fit2 = `reaction_time_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
@@ -24,8 +21,11 @@
 #'
 #' plot_fit(`reaction_time_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
-#' traceplot(`reaction_time_class`): traceplot for main fitted model parameters.
+#' plot_trace(`reaction_time_class`): traceplot for main fitted model parameters.
 #'
+#' @slot extract Extract from Stan fit.
+#' @slot fit Stan fit.
+#' @slot data Data on which the fit is based.
 #' @exportClass reaction_time_class
 reaction_time_class <- setClass(
   "reaction_time_class",
@@ -37,6 +37,9 @@ reaction_time_class <- setClass(
   contains = "b_results"
 )
 
+#' @title summary
+#' @description \code{summary} prints summary of the Bayesian reaction time fit.
+#' @param object reaction_time_class object.
 #' @exportMethod summary
 setMethod(f = "summary", signature(object = "reaction_time_class"), definition = function(object) {
   # get means
@@ -58,8 +61,9 @@ setMethod(f = "summary", signature(object = "reaction_time_class"), definition =
 
 #' @title compare
 #' @description \code{compare} prints difference in reaction times between two groups.
+#' @param object reaction_time_class object.
+#' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-compare
-#' @aliases compare,ANY-method
 setMethod(f = "compare", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -127,8 +131,9 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
 
 #' @title plot_difference
 #' @description \code{plot_difference} a visualization of the difference between two groups.
+#' @param object reaction_time_class object.
+#' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_difference
-#' @aliases plot_difference,ANY-method
 setMethod(f = "plot_difference", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -207,8 +212,9 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
 
 #' @title plot_samples
 #' @description \code{plot_samples} plots density for the first group samples, or the first and the second group samples.
+#' @param object reaction_time_class object.
+#' @param ... fit2 - a second linear_class object, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_samples
-#' @aliases plot_samples,ANY-method
 setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definition = function(object, ...) {
   # extract arguments
   arguments <- list(...)
@@ -281,7 +287,6 @@ setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definit
 
   # plot
   graph <- graph +
-    theme_minimal() +
     xlab("value") +
     xlim(x_min, x_max)
 
@@ -291,8 +296,9 @@ setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definit
 
 #' @title compare_distributions
 #' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+#' @param object reaction_time_class object.
+#' @param ... fit2 - a second linear_class object, rope - region of practical equivalence.
 #' @rdname reaction_time_class-compare_distributions
-#' @aliases compare_distributions,ANY-method
 setMethod(f = "compare_distributions", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -341,8 +347,9 @@ setMethod(f = "compare_distributions", signature(object = "reaction_time_class")
 
 #' @title plot_distributions
 #' @description \code{plot_distributions} a visualization of the distribution for the first group, or the first group and the second group.
+#' @param object reaction_time_class object.
+#' @param ... fit2 - a second linear_class object.
 #' @rdname reaction_time_class-plot_distributions
-#' @aliases plot_distributions,ANY-method
 setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), definition = function(object, ...) {
   n <- 100000
 
@@ -379,10 +386,9 @@ setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), d
   df_x <- data.frame(value = c(0, x_max))
 
   # plot
-  graph <- ggplot(data = df_x, aes(x = value)) +
+  graph <- ggplot(data = df_x, aes(x = .data$value)) +
     stat_function(fun = demg, n = n, args = list(mu = mu_m1, sigma = mu_s1, lambda = mu_l1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
     group2_plot +
-    theme_minimal() +
     xlab("value")
 
   return(graph)
@@ -391,8 +397,9 @@ setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), d
 
 #' @title plot_distributions_difference
 #' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group.
+#' @param object reaction_time_class object.
+#' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname reaction_time_class-plot_distributions_difference
-#' @aliases plot_distributions_difference,ANY-method
 setMethod(f = "plot_distributions_difference", signature(object = "reaction_time_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -449,8 +456,8 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
 
 #' @title plot_fit
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
+#' @param object reaction_time_class object.
 #' @rdname reaction_time_class-plot_fit
-#' @aliases plot_fit,ANY-method
 setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition = function(object) {
   df_data <- data.frame(rt = object@data$rt, s = object@data$s)
 
@@ -477,19 +484,18 @@ setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition 
   # density per subject
   graph <- ggplot(df_data, aes(x = rt)) +
     geom_density(fill = "#3182bd", alpha = 0.4, color = NA) +
-    geom_line(data = df_fit, aes(x = x, y = y)) +
+    geom_line(data = df_fit, aes(x = .data$x, y = .data$y)) +
     facet_wrap(~ s, ncol = n_col) +
-    xlab("reaction time") +
-    theme_minimal()
+    xlab("reaction time")
 
   return(graph)
 })
 
 
-#' @title traceplot
-#' @description \code{traceplot} traceplot for main fitted model parameters.
-#' @rdname reaction_time_class-traceplot
-#' @aliases traceplot,ANY-method
-setMethod(f = "traceplot", signature(object = "reaction_time_class"), definition = function(object) {
+#' @title plot_trace
+#' @description \code{plot_trace} traceplot for main fitted model parameters.
+#' @param object reaction_time_class object.
+#' @rdname reaction_time_class-plot_trace
+setMethod(f = "plot_trace", signature(object = "reaction_time_class"), definition = function(object) {
   rstan::traceplot(object@fit, pars = c("mu_m", "mu_s", "mu_l"), inc_warmup = TRUE)
 })

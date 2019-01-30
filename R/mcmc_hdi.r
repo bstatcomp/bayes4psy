@@ -1,9 +1,4 @@
-#' @title mcmc_hdi
-#' @description Highest density interval from a sample of representative values, estimated as shortest credible interval.
-#' @author John Kruschke
-#' @param samples A vector of representative values from a probability distribution.
-#' @param cred_mass A scalar between 0 and 1, indicating the mass within the credible interval that is to be estimated.
-#' @return A vector containing the limits of the HDI.
+# author: John Kruschke
 mcmc_hdi <- function(samples, cred_mass = 0.95) {
   samples <- sort(samples)
   ci_ceil <- ceiling(cred_mass * length(samples))

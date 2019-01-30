@@ -6,6 +6,11 @@
 \usage{
 compare(object, ...)
 }
+\arguments{
+\item{object}{S4 class object from EasyBayes library.}
+
+\item{...}{see documentation for specific class for the description of available parameters.}
+}
 \description{
-compare
+\code{compare} prints difference between two groups.
 }

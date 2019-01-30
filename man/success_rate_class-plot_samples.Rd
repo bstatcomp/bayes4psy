@@ -3,10 +3,14 @@
 \docType{methods}
 \name{plot_samples,success_rate_class-method}
 \alias{plot_samples,success_rate_class-method}
-\alias{plot_samples,ANY-method}
 \title{plot_samples}
 \usage{
 \S4method{plot_samples}{success_rate_class}(object, ...)
+}
+\arguments{
+\item{object}{success_rate_class object.}
+
+\item{...}{fit2 - a second success_rate_class object.}
 }
 \description{
 \code{plot_samples} plots density for the first group samples, or the first and the second group samples.

@@ -3,10 +3,14 @@
 \docType{methods}
 \name{compare,linear_class-method}
 \alias{compare,linear_class-method}
-\alias{compare,ANY-method}
 \title{compare}
 \usage{
 \S4method{compare}{linear_class}(object, ...)
+}
+\arguments{
+\item{object}{linear_class object.}
+
+\item{...}{fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.}
 }
 \description{
 \code{compare} prints difference in intercept and slope between two groups.

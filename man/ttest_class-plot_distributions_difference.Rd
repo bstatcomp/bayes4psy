@@ -3,10 +3,14 @@
 \docType{methods}
 \name{plot_distributions_difference,ttest_class-method}
 \alias{plot_distributions_difference,ttest_class-method}
-\alias{plot_distributions_difference,ANY-method}
 \title{plot_distributions_difference}
 \usage{
 \S4method{plot_distributions_difference}{ttest_class}(object, ...)
+}
+\arguments{
+\item{object}{ttest_class object.}
+
+\item{...}{fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence, bins - number of bins in the histogram.}
 }
 \description{
 \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the distribution or a constant value for the second group.

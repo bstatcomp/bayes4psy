@@ -1,9 +1,5 @@
-#' @title shared_plot_difference
-#' @description A shared function for all classes for ploting difference between two vectors of values.
-#' @param y1 Numeric vector of values for the first group.
-#' @param y2 Numeric vector of values for the second group.
-#' @param rope Optional parameter for the rope interval.
-#' @return `ggplot` visualization of the difference.
+#' @import ggplot2
+
 shared_plot_difference <- function(y1, y2, rope = NULL, bins = 30) {
   # difference
   diff <- data.frame(value = y1 - y2)
@@ -24,7 +20,7 @@ shared_plot_difference <- function(y1, y2, rope = NULL, bins = 30) {
 
   # basic histogram chart
   graph <- ggplot() +
-    geom_histogram(data = diff, aes(x = value), fill = "#3182bd", alpha = 0.4, bins = bins, na.rm=T) +
+    geom_histogram(data = diff, aes(x = .data$value), fill = "#3182bd", alpha = 0.4, bins = bins, na.rm=T) +
     xlim(x_min, x_max)
 
   # add mean
@@ -47,7 +43,6 @@ shared_plot_difference <- function(y1, y2, rope = NULL, bins = 30) {
 
   # style and labels
   graph <- graph +
-    theme_minimal() +
     xlab("Value")
 
   return(graph)

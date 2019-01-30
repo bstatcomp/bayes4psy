@@ -3,11 +3,15 @@
 \docType{methods}
 \name{compare_distributions,linear_class-method}
 \alias{compare_distributions,linear_class-method}
-\alias{compare_distributions,ANY-method}
 \title{compare_distributions}
 \usage{
 \S4method{compare_distributions}{linear_class}(object, ...)
 }
+\arguments{
+\item{object}{linear_class object.}
+
+\item{...}{fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.}
+}
 \description{
-\code{compare_distributions}draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+\code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 }

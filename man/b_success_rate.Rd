@@ -4,13 +4,9 @@
 \alias{b_success_rate}
 \title{b_success_rate}
 \usage{
-b_success_rate(n, m, r, s)
+b_success_rate(r, s)
 }
 \arguments{
-\item{n}{total number of measurements.}
-
-\item{m}{number of participating subjects.}
-
 \item{r}{a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).}
 
 \item{s}{a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).}

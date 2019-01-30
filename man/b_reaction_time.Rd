@@ -4,13 +4,9 @@
 \alias{b_reaction_time}
 \title{b_reaction_time}
 \usage{
-b_reaction_time(n, m, rt, s)
+b_reaction_time(rt, s)
 }
 \arguments{
-\item{n}{total number of measurements.}
-
-\item{m}{number of participating subjects.}
-
 \item{rt}{a vector containing reaction times for each measurement.}
 
 \item{s}{a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).}

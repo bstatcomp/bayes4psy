@@ -6,6 +6,11 @@
 \usage{
 plot_difference(object, ...)
 }
+\arguments{
+\item{object}{S4 class object from EasyBayes library.}
+
+\item{...}{see documentation for specific class for the description of available parameters.}
+}
 \description{
-plot_difference
+\code{plot_difference} plots difference between two groups.
 }

@@ -3,10 +3,14 @@
 \docType{methods}
 \name{plot_samples,linear_class-method}
 \alias{plot_samples,linear_class-method}
-\alias{plot_samples,ANY-method}
 \title{plot_samples}
 \usage{
 \S4method{plot_samples}{linear_class}(object, ...)
+}
+\arguments{
+\item{object}{linear_class object.}
+
+\item{...}{fit2 - a second linear_class object.}
 }
 \description{
 \code{plot_samples} plots first group samples, or the first and the second group samples.

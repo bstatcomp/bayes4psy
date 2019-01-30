@@ -7,18 +7,6 @@
 \title{linear_class}
 \description{
 An S4 class for storing results of normal linear model.
-}
-\section{Slots}{
-
-\describe{
-\item{\code{extract}}{Extract from Stan fit.}
-
-\item{\code{fit}}{Stan fit.}
-
-\item{\code{data}}{Raw data for the tested group.}
-}}
-
-\examples{
 summary(`linear_class`): prints summary od the fit.
 
 compare(`linear_class`, fit2 = `linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
@@ -39,6 +27,15 @@ plot_distributions_difference(`linear_class`, fit2 = `linear_class`): a visualiz
 
 plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 
-traceplot(`linear_class`): traceplot for main fitted model parameters.
-
+plot_trace(`linear_class`): traceplot for main fitted model parameters.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{extract}}{Extract from Stan fit.}
+
+\item{\code{fit}}{Stan fit.}
+
+\item{\code{data}}{Raw data for the tested group.}
+}}
+

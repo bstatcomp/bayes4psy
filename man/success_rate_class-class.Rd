@@ -7,18 +7,6 @@
 \title{success_rate_class}
 \description{
 An S4 class for storing results of successes (true/false) Bayesian model.
-}
-\section{Slots}{
-
-\describe{
-\item{\code{extract}}{Extract from Stan fit.}
-
-\item{\code{fit}}{Stan fit.}
-
-\item{\code{data}}{Data on which the fit is based.}
-}}
-
-\examples{
 summary(`success_rate_class`): prints summary od the fit.
 
 compare(`success_rate_class`, fit2 = `success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
@@ -39,6 +27,15 @@ plot_distributions_difference(`success_rate_class`, fit2 = `success_rate_class`)
 
 plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 
-traceplot(`success_rate_class`): traceplot for main fitted model parameters.
-
+plot_trace(`success_rate_class`): traceplot for main fitted model parameters.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{extract}}{Extract from Stan fit.}
+
+\item{\code{fit}}{Stan fit.}
+
+\item{\code{data}}{Data on which the fit is based.}
+}}
+

@@ -3,11 +3,15 @@
 \docType{methods}
 \name{plot_distributions,linear_class-method}
 \alias{plot_distributions,linear_class-method}
-\alias{plot_distributions,ANY-method}
 \title{plot_distributions}
 \usage{
 \S4method{plot_distributions}{linear_class}(object, ...)
 }
+\arguments{
+\item{object}{linear_class object.}
+
+\item{...}{fit2 - a second linear_class object.}
+}
 \description{
-\code{plot_distributions} TODO
+\code{plot_distributions} plots distribution of the first group and optionally the distribution of the second group.
 }

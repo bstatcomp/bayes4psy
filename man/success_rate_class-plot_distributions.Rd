@@ -3,10 +3,14 @@
 \docType{methods}
 \name{plot_distributions,success_rate_class-method}
 \alias{plot_distributions,success_rate_class-method}
-\alias{plot_distributions,ANY-method}
 \title{plot_distributions}
 \usage{
 \S4method{plot_distributions}{success_rate_class}(object, ...)
+}
+\arguments{
+\item{object}{success_rate_class object.}
+
+\item{...}{fit2 - a second success_rate_class object.}
 }
 \description{
 \code{plot_distributions} a visualization of the distribution for the first group, or the first group and the second group.
