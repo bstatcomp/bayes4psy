@@ -1,5 +1,5 @@
 #' @title success_rate_class
-#' @import reshape dplyr ggplot2
+#' @import dplyr ggplot2
 #' @description An S4 class for storing results of successes (true/false) Bayesian model.
 #' summary(`success_rate_class`): prints summary od the fit.
 #'
@@ -220,7 +220,7 @@ setMethod(f = "compare_distributions", signature(object = "success_rate_class"),
 
   # first group data
   p1 <- mean(object@extract$p)
-  y1 <- rbinom(n, 1, p1)
+  y1 <- stats::rbinom(n, 1, p1)
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
@@ -231,7 +231,7 @@ setMethod(f = "compare_distributions", signature(object = "success_rate_class"),
       fit2 <- arguments[[1]]
     }
     p2 <- mean(fit2@extract$p)
-    y2 <- rbinom(n, 1, p2)
+    y2 <- stats::rbinom(n, 1, p2)
 
     # calculate
     y1_smaller <- round(sum(y1 < y2) / n, 2)
@@ -255,14 +255,17 @@ setMethod(f = "compare_distributions", signature(object = "success_rate_class"),
 #' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_distributions
 setMethod(f = "plot_distributions", signature(object = "success_rate_class"), definition = function(object, ...) {
+  # init local varibales for CRAN check
+  value=y=y_min=NULL
+
   n <- nrow(object@extract$p)
-  m <- 100000
+  m <- 10000
 
   # first group data
   p1 <- mean(object@extract$p)
-  y1 <- rbinom(m, n, p1) / n
+  y1 <- stats::rbinom(m, n, p1) / n
   mu1 <- mean(y1)
-  sd1 <- sd(y1)
+  sd1 <- stats::sd(y1)
 
   # second group data
   group2_plot <- NULL
@@ -276,19 +279,19 @@ setMethod(f = "plot_distributions", signature(object = "success_rate_class"), de
         fit2 <- arguments[[1]]
       }
       p2 <- mean(fit2@extract$p)
-      y2 <- rbinom(m, n, p2) / n
+      y2 <- stats::rbinom(m, n, p2) / n
       mu2 <- mean(y2)
-      sd2 <- sd(y2)
+      sd2 <- stats::sd(y2)
 
-      group2_plot <- stat_function(fun = dnorm, n = m, args = list(mean = mu2, sd = sd2), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
+      group2_plot <- stat_function(fun = stats::dnorm, n = m, args = list(mean = mu2, sd = sd2), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
     }
   }
 
   # plot
   df_x <- data.frame(value = c(0, 1))
 
-  graph <- ggplot(data = df_x, aes(x = .data$value)) +
-    stat_function(fun = dnorm, n = m, args = list(mean = mu1, sd = sd1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
+  graph <- ggplot(data = df_x, aes(x = value)) +
+    stat_function(fun = stats::dnorm, n = m, args = list(mean = mu1, sd = sd1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
     group2_plot +
     xlab("probability") +
     ylab("density")
@@ -316,7 +319,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
 
   # first group data
   p1 <- mean(object@extract$p)
-  y1 <- rbinom(n, 1, p1)
+  y1 <- stats::rbinom(n, 1, p1)
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
@@ -327,7 +330,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
       fit2 <- arguments[[1]]
     }
     p2 <- mean(fit2@extract$p)
-    y2 <- rbinom(n, 1, p2)
+    y2 <- stats::rbinom(n, 1, p2)
 
     # calculate
     y1_smaller <- round(sum(y1 < y2) / n, 2)
@@ -340,7 +343,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
                      value = c(y1_greater, equal, y1_smaller))
 
     # plot
-    graph <- ggplot(data = df, aes(x = .data$x, y = .data$value, fill = .data$variable)) +
+    graph <- ggplot(data = df, aes(x = x, y = value, fill = variable)) +
       geom_bar(stat = "identity") +
       scale_fill_manual(values = c("#3182bd", "grey80", "#ff4e3f")) +
       theme(legend.title=element_blank()) +
@@ -372,7 +375,7 @@ setMethod(f = "plot_fit", signature(object = "success_rate_class"), definition =
   n_col <- ceiling(sqrt(nrow(df_data)))
 
   # melt
-  df_data <- melt(df_data, id = "subject")
+  df_data <- reshape::melt(as.data.frame(df_data), id = "subject")
 
   # density per subject
   graph <- ggplot(df_data, aes(x = variable, y = value, fill = variable)) +

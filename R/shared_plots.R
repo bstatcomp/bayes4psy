@@ -1,6 +1,9 @@
 #' @import ggplot2
 
 shared_plot_difference <- function(y1, y2, rope = NULL, bins = 30) {
+  # init local varibales for CRAN check
+  value=NULL
+
   # difference
   diff <- data.frame(value = y1 - y2)
 
@@ -20,7 +23,7 @@ shared_plot_difference <- function(y1, y2, rope = NULL, bins = 30) {
 
   # basic histogram chart
   graph <- ggplot() +
-    geom_histogram(data = diff, aes(x = .data$value), fill = "#3182bd", alpha = 0.4, bins = bins, na.rm=T) +
+    geom_histogram(data = diff, aes(x = value), fill = "#3182bd", alpha = 0.4, bins = bins, na.rm=T) +
     xlim(x_min, x_max)
 
   # add mean

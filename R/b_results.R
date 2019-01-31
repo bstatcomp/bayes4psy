@@ -30,7 +30,6 @@ setGeneric(name = "plot_difference", function(object, ...) standardGeneric("plot
 #' @exportMethod plot_samples
 setGeneric(name = "plot_samples", function(object, ...) standardGeneric("plot_samples"))
 
-
 #' @title compare_distributions
 #' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group,
 #' @param object S4 class object from EasyBayes library.

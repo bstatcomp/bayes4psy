@@ -304,7 +304,7 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
     if (!is.null(arguments$sigma))
       sigma2 <- arguments$sigma;
 
-    y2 <- rnorm(n, mu2, sigma2)
+    y2 <- stats::rnorm(n, mu2, sigma2)
   } else {
     warning(wrong_arguments)
     return()
@@ -363,7 +363,7 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
         x_min <- min(x_min, y2_mu - 4*y2_sigma)
         x_max <- max(x_max, y2_mu + 4*y2_sigma)
 
-        group2_plot <- stat_function(fun = dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
+        group2_plot <- stat_function(fun = stats::dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
       } else {
         x_min <- min(x_min, y2_mu)
         x_max <- max(x_max, y2_mu)
@@ -374,7 +374,7 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
   # plot
   df_x <- data.frame(value = c(x_min, x_max))
 
-  graph <- ggplot(data = df_x, aes(x = .data$value)) +
+  graph <- ggplot(data = df_x, aes(x = value)) +
     stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = y1_mu, sd = y1_sigma), geom = 'area', fill = '#3182bd', alpha = 0.4) +
     group2_plot +
     xlab("value") +
@@ -438,7 +438,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_class")
       sigma2 <- arguments$sigma
     }
 
-    y2 <- rnorm(n, mu2, sigma2)
+    y2 <- stats::rnorm(n, mu2, sigma2)
   } else {
     warning(wrong_arguments)
     return()

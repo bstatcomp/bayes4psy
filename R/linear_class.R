@@ -1,5 +1,5 @@
 #' @title linear_class
-#' @import stats dplyr ggplot2
+#' @import dplyr ggplot2
 #' @description An S4 class for storing results of normal linear model.
 #' summary(`linear_class`): prints summary od the fit.
 #'
@@ -200,9 +200,9 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
   x_max_slope <- max(df1$slope)
 
   # plot
-  graph_intercept <- ggplot2::ggplot() +
+  graph_intercept <- ggplot() +
     geom_density(data = df1, aes(x = intercept), fill = "#3182bd", alpha = 0.4, color = NA)
-  graph_slope <- ggplot2::ggplot() +
+  graph_slope <- ggplot() +
     geom_density(data = df1, aes(x = slope), fill = "#3182bd", alpha = 0.4, color = NA)
 
 
@@ -289,11 +289,11 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
   # first group data
   mu_intercept1 <- mean(object@extract$mu_a)
   sigma_intercept1 <- sqrt(mean(object@extract$ss_a))
-  intercept1 <- rnorm(n, mean = mu_intercept1, sd = sigma_intercept1)
+  intercept1 <- stats::rnorm(n, mean = mu_intercept1, sd = sigma_intercept1)
 
   mu_slope1 <- mean(object@extract$mu_b)
   sigma_slope1 <- sqrt(mean(object@extract$ss_b))
-  slope1 <- rnorm(n, mean = mu_slope1, sd = sigma_slope1)
+  slope1 <- stats::rnorm(n, mean = mu_slope1, sd = sigma_slope1)
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
@@ -305,11 +305,11 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
     }
     mu_intercept2 <- mean(fit2@extract$mu_a)
     sigma_intercept2 <- sqrt(mean(fit2@extract$ss_a))
-    intercept2 <- rnorm(n, mean = mu_intercept2, sd = sigma_intercept2)
+    intercept2 <- stats::rnorm(n, mean = mu_intercept2, sd = sigma_intercept2)
 
     mu_slope2 <- mean(fit2@extract$mu_b)
     sigma_slope2 <- sqrt(mean(fit2@extract$ss_b))
-    slope2 <- rnorm(n, mean = mu_slope2, sd = sigma_slope2)
+    slope2 <- stats::rnorm(n, mean = mu_slope2, sd = sigma_slope2)
 
     cat("---------- Intercept ----------\n")
     shared_difference(y1 = intercept1, y2 = intercept2, rope = rope_intercept)
@@ -329,8 +329,11 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_distributions
 setMethod(f = "plot_distributions", signature(object = "linear_class"), definition = function(object, ...) {
+  # init local varibales for CRAN check
+  y=y_min=NULL
+
   # precision
-  n = 1000
+  n <- 1000
 
   # first group data
   intercept1 <- mean(object@extract$mu_a)
@@ -343,7 +346,7 @@ setMethod(f = "plot_distributions", signature(object = "linear_class"), definiti
   y_max <- NULL
 
   # second group data
-  graph <- ggplot2::ggplot()
+  graph <- ggplot()
   arguments <- list(...)
   if (length(arguments) > 0) {
     if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
@@ -375,8 +378,8 @@ setMethod(f = "plot_distributions", signature(object = "linear_class"), definiti
       y_max <- ceiling(max(df2$y + 2*sigma2))
 
       graph <- graph +
-        geom_line(data = df2, aes(x = .data$x, y = .data$y), colour = '#ff4e3f', size = 1) +
-        geom_ribbon(data = df2, aes(x = x, ymin = .data$y_min, ymax = .data$y_max), fill = '#ff4e3f', alpha = 0.4)
+        geom_line(data = df2, aes(x = x, y = y), colour = '#ff4e3f', size = 1) +
+        geom_ribbon(data = df2, aes(x = x, ymin = y_min, ymax = y_max), fill = '#ff4e3f', alpha = 0.4)
     }
   }
 
@@ -394,8 +397,8 @@ setMethod(f = "plot_distributions", signature(object = "linear_class"), definiti
   y_max <- ceiling(max(y_max, df1$y + 2*sigma1))
 
   graph <- graph +
-    geom_line(data = df1, aes(x = x, y = .data$y), colour = '#3182bd', size = 1) +
-    geom_ribbon(data = df1, aes(x = x, ymin = .data$y_min, ymax = y_max), fill = '#3182bd', alpha = 0.4) +
+    geom_line(data = df1, aes(x = x, y = y), colour = '#3182bd', size = 1) +
+    geom_ribbon(data = df1, aes(x = x, ymin = y_min, ymax = y_max), fill = '#3182bd', alpha = 0.4) +
     ylim(0, y_max) +
     xlab("time") +
     ylab("value")
@@ -437,11 +440,11 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
   # first group data
   mu_intercept1 <- mean(object@extract$mu_a)
   sigma_intercept1 <- sqrt(mean(object@extract$ss_a))
-  intercept1 <- rnorm(n, mean = mu_intercept1, sd = sigma_intercept1)
+  intercept1 <- stats::rnorm(n, mean = mu_intercept1, sd = sigma_intercept1)
 
   mu_slope1 <- mean(object@extract$mu_b)
   sigma_slope1 <- sqrt(mean(object@extract$ss_b))
-  slope1 <- rnorm(n, mean = mu_slope1, sd = sigma_slope1)
+  slope1 <- stats::rnorm(n, mean = mu_slope1, sd = sigma_slope1)
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
@@ -453,11 +456,11 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
     }
     mu_intercept2 <- mean(fit2@extract$mu_a)
     sigma_intercept2 <- sqrt(mean(fit2@extract$ss_a))
-    intercept2 <- rnorm(n, mean = mu_intercept2, sd = sigma_intercept2)
+    intercept2 <- stats::rnorm(n, mean = mu_intercept2, sd = sigma_intercept2)
 
     mu_slope2 <- mean(fit2@extract$mu_b)
     sigma_slope2 <- sqrt(mean(fit2@extract$ss_b))
-    slope2 <- rnorm(n, mean = mu_slope2, sd = sigma_slope2)
+    slope2 <- stats::rnorm(n, mean = mu_slope2, sd = sigma_slope2)
 
     # bins in the histogram
     bins <- 30
@@ -517,10 +520,10 @@ setMethod(f = "plot_fit", signature(object = "linear_class"), definition = funct
   n_col <- ceiling(sqrt(n))
 
   # density per subject
-  graph <- ggplot2::ggplot() +
-    geom_point(data = df_data, aes(x = .data$x, y = .data$y), color = "#3182bd", alpha = 0.4) +
-    geom_line(data = df_fit, aes(x = .data$x, y = .data$y), color = "#3182bd") +
-    facet_wrap(~ .data$s, ncol = n_col)
+  graph <- ggplot() +
+    geom_point(data = df_data, aes(x = x, y = y), color = "#3182bd", alpha = 0.4) +
+    geom_line(data = df_fit, aes(x = x, y = y), color = "#3182bd") +
+    facet_wrap(. ~ s, ncol = n_col)
 
   return(graph)
 })

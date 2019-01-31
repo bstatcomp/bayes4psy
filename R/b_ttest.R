@@ -1,6 +1,6 @@
 #' @title b_ttest
 #' @description Bayesian t-test.
-#' @import rstan stats
+#' @import rstan
 #' @export
 #' @param y Numeric vector of values on which the fit will be based.
 #' @return An object of class `ttest_class`.
@@ -11,7 +11,7 @@ b_ttest <- function(y) {
 
   # used for priors
   yMu <- mean(y)
-  ySd <- sd(y)
+  ySd <- stats::sd(y)
 
   stan_data <- list(
     n = n,
