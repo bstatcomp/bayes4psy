@@ -216,6 +216,9 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
 #' @param ... fit2 - a second linear_class object, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_samples
 setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definition = function(object, ...) {
+  # init local varibales for CRAN check
+  value=NULL
+
   # extract arguments
   arguments <- list(...)
 
@@ -462,6 +465,9 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
 #' @param object reaction_time_class object.
 #' @rdname reaction_time_class-plot_fit
 setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition = function(object) {
+  # init local varibales for CRAN check
+  rt=x=y=NULL
+
   df_data <- data.frame(rt = object@data$rt, s = object@data$s)
 
   df_fit <- NULL

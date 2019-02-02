@@ -190,6 +190,9 @@ setMethod(f = "plot_difference", signature(object = "linear_class"), definition 
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_samples
 setMethod(f = "plot_samples", signature(object = "linear_class"), definition = function(object, ...) {
+  # init local varibales for CRAN check
+  intercept=slope=NULL
+
   # first group data
   df1 <- data.frame(intercept = object@extract$mu_a, slope = object@extract$mu_b)
 
@@ -493,6 +496,9 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
 #' @param object linear_class object.
 #' @rdname linear_class-plot_fit
 setMethod(f = "plot_fit", signature(object = "linear_class"), definition = function(object) {
+  # init local varibales for CRAN check
+  s=x=y=NULL
+
   df_data <- data.frame(x = object@data$x, y = object@data$y, s = object@data$s)
 
   n <- length(unique(df_data$s))

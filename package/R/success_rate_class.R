@@ -153,6 +153,9 @@ setMethod(f = "plot_difference", signature(object = "success_rate_class"), defin
 #' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_samples
 setMethod(f = "plot_samples", signature(object = "success_rate_class"), definition = function(object, ...) {
+  # init local varibales for CRAN check
+  value=NULL
+
   # first group data
   df1 <- data.frame(value = rowMeans(object@extract$p))
 
@@ -306,6 +309,9 @@ setMethod(f = "plot_distributions", signature(object = "success_rate_class"), de
 #' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_distributions_difference
 setMethod(f = "plot_distributions_difference", signature(object = "success_rate_class"), definition = function(object, ...) {
+  # init local varibales for CRAN check
+  x=value=variable=NULL
+
   arguments <- list(...)
 
   wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(reaction_time_class, fit2 = reaction_time_class) is required!"
@@ -364,6 +370,9 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
 #' @param object success_rate_class object.
 #' @rdname success_rate_class-plot_fit
 setMethod(f = "plot_fit", signature(object = "success_rate_class"), definition = function(object) {
+  # init local varibales for CRAN check
+  r=x=subject=variable=value=NULL
+
   df_data <- data.frame(r = object@data$r, subject = object@data$s)
 
   df_data <- df_data %>% group_by(subject) %>% summarize(data=mean(r))
