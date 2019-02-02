@@ -216,6 +216,9 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
 #' @param ... fit2 - a second linear_class object, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_samples
 setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definition = function(object, ...) {
+  # init local varibales for CRAN check
+  value=NULL
+
   # extract arguments
   arguments <- list(...)
 
@@ -351,7 +354,10 @@ setMethod(f = "compare_distributions", signature(object = "reaction_time_class")
 #' @param ... fit2 - a second linear_class object.
 #' @rdname reaction_time_class-plot_distributions
 setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), definition = function(object, ...) {
-  n <- 100000
+  # init local varibales for CRAN check
+  value=NULL
+
+  n <- 10000
 
   # first group data
   mu_m1 <- mean(object@extract$mu_m)
@@ -386,7 +392,7 @@ setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), d
   df_x <- data.frame(value = c(0, x_max))
 
   # plot
-  graph <- ggplot(data = df_x, aes(x = .data$value)) +
+  graph <- ggplot(data = df_x, aes(x = value)) +
     stat_function(fun = demg, n = n, args = list(mu = mu_m1, sigma = mu_s1, lambda = mu_l1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
     group2_plot +
     xlab("value")
@@ -459,6 +465,9 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
 #' @param object reaction_time_class object.
 #' @rdname reaction_time_class-plot_fit
 setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition = function(object) {
+  # init local varibales for CRAN check
+  rt=x=y=NULL
+
   df_data <- data.frame(rt = object@data$rt, s = object@data$s)
 
   df_fit <- NULL
@@ -484,7 +493,7 @@ setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition 
   # density per subject
   graph <- ggplot(df_data, aes(x = rt)) +
     geom_density(fill = "#3182bd", alpha = 0.4, color = NA) +
-    geom_line(data = df_fit, aes(x = .data$x, y = .data$y)) +
+    geom_line(data = df_fit, aes(x = x, y = y)) +
     facet_wrap(~ s, ncol = n_col) +
     xlab("reaction time")
 

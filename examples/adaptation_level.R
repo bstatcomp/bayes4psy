@@ -13,7 +13,7 @@ df_1 <- df[df$group == 1, ]
 m = length(unique(df_1$subject))
 
 # map subject to 1..m interval
-df_1$subject <- mapvalues(df_1$subject, from = unique(df_1$subject), to=1:m)
+df_1$subject <- plyr::mapvalues(df_1$subject, from = unique(df_1$subject), to=1:m)
 
 # before - 1st part
 df_1b <- df_1[df_1$part == 1, ]
@@ -53,7 +53,7 @@ df_2 <- df[df$group == 2, ]
 m = length(unique(df_2$subject))
 
 # map subject to 1..m interval
-df_2$subject <- mapvalues(df_2$subject, from = unique(df_2$subject), to=1:m)
+df_2$subject <- plyr::mapvalues(df_2$subject, from = unique(df_2$subject), to=1:m)
 
 # before - 1st part
 df_2b <- df_2[df_2$part == 1, ]

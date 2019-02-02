@@ -200,6 +200,9 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
 #' @param ... fit2 - a second ttest_class object, mu - mean value.
 #' @rdname ttest_class-plot_samples
 setMethod(f = "plot_samples", signature(object = "ttest_class"), definition = function(object, ...) {
+  # init local varibales for CRAN check
+  value=NULL
+
   # first group data
   mu1 <- object@extract$mu
   df1 <- data.frame(value = mu1)
@@ -304,7 +307,7 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
     if (!is.null(arguments$sigma))
       sigma2 <- arguments$sigma;
 
-    y2 <- rnorm(n, mu2, sigma2)
+    y2 <- stats::rnorm(n, mu2, sigma2)
   } else {
     warning(wrong_arguments)
     return()
@@ -325,6 +328,9 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation.
 #' @rdname ttest_class-plot_distributions
 setMethod(f = "plot_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
+  # init local varibales for CRAN check
+  value=NULL
+
   # first group data
   n <- 10000
   nu <- mean(object@extract$nu)
@@ -363,7 +369,7 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
         x_min <- min(x_min, y2_mu - 4*y2_sigma)
         x_max <- max(x_max, y2_mu + 4*y2_sigma)
 
-        group2_plot <- stat_function(fun = dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
+        group2_plot <- stat_function(fun = stats::dnorm, n = n, args = list(mean = y2_mu, sd = y2_sigma), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
       } else {
         x_min <- min(x_min, y2_mu)
         x_max <- max(x_max, y2_mu)
@@ -374,7 +380,7 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
   # plot
   df_x <- data.frame(value = c(x_min, x_max))
 
-  graph <- ggplot(data = df_x, aes(x = .data$value)) +
+  graph <- ggplot(data = df_x, aes(x = value)) +
     stat_function(fun = dt.scaled, n = n, args = list(df = nu, mean = y1_mu, sd = y1_sigma), geom = 'area', fill = '#3182bd', alpha = 0.4) +
     group2_plot +
     xlab("value") +
@@ -438,7 +444,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_class")
       sigma2 <- arguments$sigma
     }
 
-    y2 <- rnorm(n, mu2, sigma2)
+    y2 <- stats::rnorm(n, mu2, sigma2)
   } else {
     warning(wrong_arguments)
     return()
@@ -461,6 +467,9 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_class")
 #' @param object ttest_class object.
 #' @rdname ttest_class-plot_fit
 setMethod(f = "plot_fit", signature(object = "ttest_class"), definition = function(object) {
+  # init local varibales for CRAN check
+  value=NULL
+
   n <- 10000
   df_data <- data.frame(value = object@data)
 

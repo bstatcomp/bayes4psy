@@ -169,7 +169,7 @@ compare(s_congruent, fit2 = s_incongruent, rope = 0.05)
 plot_difference(s_congruent, fit2 = s_incongruent)
 
 # difference plot with rope and custom bins
-plot_difference(s_congruent, fit2 = s_incongruent, rope = 0.05, bins = 10)
+plot_difference(s_congruent, fit2 = s_incongruent, rope = 0.05, bins = 20)
 
 # plot samples for both groups
 plot_samples(s_congruent, fit2 = s_incongruent)
@@ -183,5 +183,3 @@ plot_distributions(s_congruent, fit2 = s_incongruent)
 # plot distributions difference
 plot_distributions_difference(s_congruent, fit2 = s_incongruent)
 
-# plot distributions difference with custom bins
-plot_distributions_difference(s_congruent, fit2 = s_incongruent, bins = 10)

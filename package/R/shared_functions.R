@@ -1,5 +1,3 @@
-#' @import stats
-
 shared_difference <- function(y1, y2, rope = NULL) {
   y_diff <- y1 - y2
 
@@ -26,8 +24,8 @@ shared_difference <- function(y1, y2, rope = NULL) {
   }
 
   hdi <- mcmc_hdi(y_diff)
-  y_diff_l <- quantile(hdi[1], 0.025)
-  y_diff_h <- quantile(hdi[2], 0.975)
+  y_diff_l <- stats::quantile(hdi[1], 0.025)
+  y_diff_h <- stats::quantile(hdi[2], 0.975)
   cat(sprintf("\n95%% HDI:\n  - Group 1 - Group 2: [%.2f, %.2f]\n", y_diff_l, y_diff_h))
 }
 

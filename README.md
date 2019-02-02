@@ -20,5 +20,9 @@ Using HDI instead of CI now.
 
 # v 0.2
 Cross platform compilation.
-Package now passes CRAN checks.
+Package now passes CRAN checks (with a lot of warnings and notes).
 Documentation.
+
+# v 0.3
+Removed all possible warnings.
+CRAN ready!
