@@ -4,7 +4,7 @@ library(EasyBayes)
 
 ## data wrangling --------------------------------------------------------
 # load data
-df <- read.table("./examples/data/flanker.csv", sep = "\t", header = TRUE)
+df <- read.table("../examples/data/flanker.csv", sep = "\t", header = TRUE)
 
 # map correct/incorrect/timeout to 1/0
 df$result_numeric <- 0
@@ -25,10 +25,16 @@ df_control$subject <- df_control$subject - 21
 rt <- df_control$rt
 s <- df_control$subject
 
+# to control the amount of warmup and interation steps use
+# b_reaction_time(rt = rt, s = s, warmup = 5000, iter = 6000)
 rt_control <- b_reaction_time(rt = rt, s = s)
 
 # summary
 summary(rt_control)
+
+# print a more detailed summary (prints the fit object)
+# same as show(rt_control)
+print(rt_control)
 
 # check fits
 plot_fit(rt_control)

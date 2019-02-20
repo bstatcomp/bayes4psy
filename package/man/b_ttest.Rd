@@ -4,10 +4,14 @@
 \alias{b_ttest}
 \title{b_ttest}
 \usage{
-b_ttest(y)
+b_ttest(y, warmup = 9000, iter = 10000)
 }
 \arguments{
 \item{y}{Numeric vector of values on which the fit will be based.}
+
+\item{warmup}{Integer specifying the number of warmup iterations per chain.}
+
+\item{iter}{Integer specifying the number of iterations (including warmup).}
 }
 \value{
 An object of class `ttest_class`.

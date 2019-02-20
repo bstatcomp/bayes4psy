@@ -9,6 +9,10 @@
 An S4 class for storing results of normal linear model.
 summary(`linear_class`): prints summary od the fit.
 
+print(`linear_class`): prints a more detailed summary of the fit
+
+show(`linear_class`): prints a more detailed summary of the fit.
+
 compare(`linear_class`, fit2 = `linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
 
 plot_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between two groups. You can also provide the rope parameter.

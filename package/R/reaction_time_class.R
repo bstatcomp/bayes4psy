@@ -3,6 +3,10 @@
 #' @description An S4 class for storing results of reaction time Bayesian model.
 #' summary(`reaction_time_class`): prints summary od the fit.
 #'
+#' print(`reaction_time_class`): prints a more detailed summary of the fit
+#'
+#' show(`reaction_time_class`): prints a more detailed summary of the fit.
+#'
 #' compare(`reaction_time_class`, fit2 = `reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
 #'
 #' plot_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope parameter or visualize the comparison only through a chosen parameter - mu or lambda.
@@ -58,6 +62,14 @@ setMethod(f = "summary", signature(object = "reaction_time_class"), definition =
   cat(sprintf("lambda: %.2f, 95%% HDI: [%.2f, %.2f]\n", lambda, lambda_hdi[1], lambda_hdi[2]))
 })
 
+#' @title show
+#' @description \code{show} prints a more detailed summary of the Bayesian success rate fit.
+#' @param object reaction_time_class object.
+#' @exportMethod show
+setMethod(f = "show", signature(object = "reaction_time_class"), definition = function(object) {
+  # print
+  show(object@fit)
+})
 
 #' @title compare
 #' @description \code{compare} prints difference in reaction times between two groups.

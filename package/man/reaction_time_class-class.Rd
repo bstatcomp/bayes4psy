@@ -9,6 +9,10 @@
 An S4 class for storing results of reaction time Bayesian model.
 summary(`reaction_time_class`): prints summary od the fit.
 
+print(`reaction_time_class`): prints a more detailed summary of the fit
+
+show(`reaction_time_class`): prints a more detailed summary of the fit.
+
 compare(`reaction_time_class`, fit2 = `reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
 
 plot_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope parameter or visualize the comparison only through a chosen parameter - mu or lambda.

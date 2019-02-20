@@ -9,6 +9,10 @@
 An S4 class for storing results of Bayesian t-test results.
 summary(`ttest_class`): prints summary of the fit.
 
+print(`ttest_class`): prints a more detailed summary of the fit
+
+show(`ttest_class`): prints a more detailed summary of the fit.
+
 compare(`ttest_class`, fit2 = `ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
 
 compare(`ttest_class`, mu = `numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.

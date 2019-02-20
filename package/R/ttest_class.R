@@ -3,6 +3,10 @@
 #' @description An S4 class for storing results of Bayesian t-test results.
 #' summary(`ttest_class`): prints summary of the fit.
 #'
+#' print(`ttest_class`): prints a more detailed summary of the fit
+#'
+#' show(`ttest_class`): prints a more detailed summary of the fit.
+#'
 #' compare(`ttest_class`, fit2 = `ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
 #'
 #' compare(`ttest_class`, mu = `numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
@@ -78,6 +82,14 @@ setMethod(f = "summary", signature(object = "ttest_class"), definition = functio
   cat(sprintf("nu: %.2f, 95%% HDI: [%.2f, %.2f]\n", nu, nu_hdi[1], nu_hdi[2]))
 })
 
+#' @title show
+#' @description \code{show} prints a more detailed summary of the Bayesian ttest fit.
+#' @param object ttest_class object.
+#' @exportMethod show
+setMethod(f = "show", signature(object = "ttest_class"), definition = function(object) {
+  # print
+  show(object@fit)
+})
 
 #' @title compare
 #' @description \code{compare} prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.

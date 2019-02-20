@@ -3,6 +3,10 @@
 #' @description An S4 class for storing results of normal linear model.
 #' summary(`linear_class`): prints summary od the fit.
 #'
+#' print(`linear_class`): prints a more detailed summary of the fit
+#'
+#' show(`linear_class`): prints a more detailed summary of the fit.
+#'
 #' compare(`linear_class`, fit2 = `linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
 #'
 #' plot_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
@@ -51,7 +55,7 @@ setMethod(f = "summary", signature(object = "linear_class"), definition = functi
   # hdi
   alpha_hdi <- mcmc_hdi(object@extract$mu_a)
   beta_hdi <- mcmc_hdi(object@extract$mu_b)
-  sigma_hdi <- mcmc_hdi(object@extract$mu_s)
+  sigma_hdi <- mcmc_hdi(sqrt(object@extract$mu_s))
 
   # print
   cat(sprintf("intercept (alpha): %.2f, 95%% HDI: [%.2f, %.2f]\n", alpha, alpha_hdi[1], alpha_hdi[2]))
@@ -59,6 +63,14 @@ setMethod(f = "summary", signature(object = "linear_class"), definition = functi
   cat(sprintf("sigma: %.2f, 95%% HDI: [%.2f, %.2f]\n", sigma, sigma_hdi[1], sigma_hdi[2]))
 })
 
+#' @title show
+#' @description \code{show} prints a more detailed summary of the Bayesian linear model fit.
+#' @param object linear_class object.
+#' @exportMethod show
+setMethod(f = "show", signature(object = "linear_class"), definition = function(object) {
+  # print
+  show(object@fit)
+})
 
 #' @title compare
 #' @description \code{compare} prints difference in intercept and slope between two groups.

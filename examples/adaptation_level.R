@@ -3,7 +3,7 @@ library(EasyBayes)
 
 ## data wrangling --------------------------------------------------------
 # load data
-df <- read.table("./examples/data/adaptation_level.csv", sep="\t", header=TRUE)
+df <- read.table("../examples/data/adaptation_level.csv", sep="\t", header=TRUE)
 
 
 ## group 1 ---------------------------------------------------------------
@@ -23,9 +23,16 @@ al_1b <- b_linear(x = df_1b$sequence,
                  y = df_1b$response,
                  s = df_1b$subject)
 
+# to control the amount of warmup and interation steps use
+# b_linear(..., warmup = 5000, iter = 6000)
+
 # diagnostics
 # summary
 summary(al_1b)
+
+# print a more detailed summary (prints the fit object)
+# same as show(al_1b)
+print(al_1b)
 
 # check fits
 plot_fit(al_1b)

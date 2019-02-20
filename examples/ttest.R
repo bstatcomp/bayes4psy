@@ -20,11 +20,17 @@ sigma <- 10
 
 
 ## ttest fit -------------------------------------------------------------
+# to control the amount of warmup and interation steps use
+# b_ttest(y = y_brazil, warmup = 5000, iter = 6000)
 ttest_results <- b_ttest(y = y_brazil)
 ttest_results2 <- b_ttest(y = y_cameroon)
 
 # print summary
 summary(ttest_results)
+
+# print a more detailed summary (prints the fit object)
+# same as show(ttest_results)
+print(ttest_results)
 
 # visualize fit quality
 plot_fit(ttest_results)

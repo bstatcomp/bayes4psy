@@ -3,6 +3,10 @@
 #' @description An S4 class for storing results of successes (true/false) Bayesian model.
 #' summary(`success_rate_class`): prints summary od the fit.
 #'
+#' print(`success_rate_class`): prints a more detailed summary of the fit
+#'
+#' show(`success_rate_class`): prints a more detailed summary of the fit.
+#'
 #' compare(`success_rate_class`, fit2 = `success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
 #'
 #' plot_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
@@ -52,6 +56,14 @@ setMethod(f = "summary", signature(object = "success_rate_class"), definition = 
   cat(sprintf("Success rate: %.2f, 95%% HDI: [%.2f, %.2f]\n", p, p_hdi[1], p_hdi[2]))
 })
 
+#' @title show
+#' @description \code{show} prints a more detailed summary of the Bayesian success rate fit.
+#' @param object success_rate_class object.
+#' @exportMethod show
+setMethod(f = "show", signature(object = "success_rate_class"), definition = function(object) {
+  # print
+  show(object@fit)
+})
 
 #' @title compare
 #' @description \code{compare} prints difference in successfulness between two groups.
