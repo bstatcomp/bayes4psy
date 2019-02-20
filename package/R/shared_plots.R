@@ -2,7 +2,7 @@
 
 shared_plot_difference <- function(y1, y2, rope = NULL, bins = 30) {
   # init local varibales for CRAN check
-  value=NULL
+  value <- NULL
 
   # difference
   diff <- data.frame(value = y1 - y2)

@@ -229,7 +229,7 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
 #' @rdname reaction_time_class-plot_samples
 setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
-  value=NULL
+  value <- NULL
 
   # extract arguments
   arguments <- list(...)
@@ -367,7 +367,7 @@ setMethod(f = "compare_distributions", signature(object = "reaction_time_class")
 #' @rdname reaction_time_class-plot_distributions
 setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
-  value=NULL
+  value <- NULL
 
   n <- 10000
 
@@ -478,7 +478,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
 #' @rdname reaction_time_class-plot_fit
 setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition = function(object) {
   # init local varibales for CRAN check
-  rt=x=y=NULL
+  rt <- x <- y <- NULL
 
   df_data <- data.frame(rt = object@data$rt, s = object@data$s)
 

@@ -166,7 +166,7 @@ setMethod(f = "plot_difference", signature(object = "success_rate_class"), defin
 #' @rdname success_rate_class-plot_samples
 setMethod(f = "plot_samples", signature(object = "success_rate_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
-  value=NULL
+  value <- NULL
 
   # first group data
   df1 <- data.frame(value = rowMeans(object@extract$p))
@@ -271,7 +271,7 @@ setMethod(f = "compare_distributions", signature(object = "success_rate_class"),
 #' @rdname success_rate_class-plot_distributions
 setMethod(f = "plot_distributions", signature(object = "success_rate_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
-  value=y=y_min=NULL
+  value <- y <- y_min <- NULL
 
   n <- nrow(object@extract$p)
   m <- 10000
@@ -322,7 +322,7 @@ setMethod(f = "plot_distributions", signature(object = "success_rate_class"), de
 #' @rdname success_rate_class-plot_distributions_difference
 setMethod(f = "plot_distributions_difference", signature(object = "success_rate_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
-  x=value=variable=NULL
+  x <- value <- variable <- NULL
 
   arguments <- list(...)
 
@@ -333,11 +333,14 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
     return()
   }
 
-  n <- 100000
+  n <- 1000
+  m <- 1000
+
+  # results
+  df <- data.frame()
 
   # first group data
   p1 <- mean(object@extract$p)
-  y1 <- stats::rbinom(n, 1, p1)
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
@@ -348,26 +351,30 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
       fit2 <- arguments[[1]]
     }
     p2 <- mean(fit2@extract$p)
-    y2 <- stats::rbinom(n, 1, p2)
 
-    # calculate
-    y1_smaller <- round(sum(y1 < y2) / n, 2)
-    y1_greater <- round(sum(y1 > y2) / n, 2)
-    equal <- 1 - y1_smaller - y1_greater
+    for (i in 1:m){
+      y1 <- stats::rbinom(n, 1, p1)
+      y2 <- stats::rbinom(n, 1, p2)
 
-    levels <- c("Group 1 > Group 2", "Equal", "Group 1 < Group 2")
-    df <- data.frame(x = c(1, 1, 1),
-                     variable = factor(levels, levels = levels),
-                     value = c(y1_greater, equal, y1_smaller))
+      # calculate
+      y1_smaller <- sum(y1 < y2) / n
+      y1_greater <- sum(y1 > y2) / n
+      equal <- 1 - y1_smaller - y1_greater
+
+      df <- rbind(df, c(y1_greater, equal, y1_smaller))
+    }
+
+    colnames(df) <- c("greater", "equal", "smaller")
+    df <- reshape::melt(as.data.frame(df), id = NULL)
 
     # plot
-    graph <- ggplot(data = df, aes(x = x, y = value, fill = variable)) +
-      geom_bar(stat = "identity") +
-      scale_fill_manual(values = c("#3182bd", "grey80", "#ff4e3f")) +
+    graph <- ggplot() +
+      geom_density(data = df, aes(x = value, fill = variable), alpha = 0.4, color = NA) +
+      scale_fill_manual(values = c("#3182bd", "grey60", "#ff4e3f"),
+                        labels = c("Group 1 > Group 2", "Equal", "Group 1 < Group 2")) +
       theme(legend.title=element_blank()) +
-      theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
-      ylab("Probability") +
-      xlim(0.3, 1.7)
+      xlim(0, 1) +
+      xlab("probability")
 
     return(graph)
   } else {
@@ -383,28 +390,26 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
 #' @rdname success_rate_class-plot_fit
 setMethod(f = "plot_fit", signature(object = "success_rate_class"), definition = function(object) {
   # init local varibales for CRAN check
-  r=x=subject=variable=value=NULL
+  variable<-value<-NULL
 
-  df_data <- data.frame(r = object@data$r, subject = object@data$s)
+  df_data <- data.frame(value = object@data$r, variable = object@data$s)
 
-  df_data <- df_data %>% group_by(subject) %>% summarize(data=mean(r))
-  #ddply(df_data, ~ subject, summarise, data=mean(r))
+  df_data <- df_data %>% group_by(variable) %>% summarize(value=mean(value))
 
-  df_data$fit <- colMeans(object@extract$p)
+  df_fit <- object@extract$p
+  colnames(df_fit) <- seq(1:ncol(df_fit))
+  df_fit <- reshape::melt(as.data.frame(df_fit), id = NULL)
 
   # ncol
   n_col <- ceiling(sqrt(nrow(df_data)))
 
-  # melt
-  df_data <- reshape::melt(as.data.frame(df_data), id = "subject")
-
   # density per subject
-  graph <- ggplot(df_data, aes(x = variable, y = value, fill = variable)) +
-    geom_bar(stat="identity") +
-    facet_wrap(~ subject, ncol = n_col) +
-    scale_fill_manual(values = c("#3182bd", "#ff4e3f")) +
-    ylim(0, 1) +
-    theme(legend.title=element_blank())
+  graph <- ggplot() +
+    geom_vline(data = df_data, aes(xintercept = value), color = "#ff4e3f", size = 1) +
+    geom_density(data = df_fit, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
+    xlim(0, 1) +
+    facet_wrap(~ variable, ncol = n_col) +
+    xlab("success rate")
 
   return(graph)
 })

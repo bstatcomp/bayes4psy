@@ -213,7 +213,7 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
 #' @rdname ttest_class-plot_samples
 setMethod(f = "plot_samples", signature(object = "ttest_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
-  value=NULL
+  value <- NULL
 
   # first group data
   mu1 <- object@extract$mu
@@ -341,7 +341,7 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
 #' @rdname ttest_class-plot_distributions
 setMethod(f = "plot_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
-  value=NULL
+  value <- NULL
 
   # first group data
   n <- 10000
@@ -480,7 +480,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_class")
 #' @rdname ttest_class-plot_fit
 setMethod(f = "plot_fit", signature(object = "ttest_class"), definition = function(object) {
   # init local varibales for CRAN check
-  value=NULL
+  value <- NULL
 
   n <- 10000
   df_data <- data.frame(value = object@data)

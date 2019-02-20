@@ -203,7 +203,7 @@ setMethod(f = "plot_difference", signature(object = "linear_class"), definition 
 #' @rdname linear_class-plot_samples
 setMethod(f = "plot_samples", signature(object = "linear_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
-  intercept=slope=NULL
+  intercept <- slope <- NULL
 
   # first group data
   df1 <- data.frame(intercept = object@extract$mu_a, slope = object@extract$mu_b)
@@ -345,7 +345,7 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
 #' @rdname linear_class-plot_distributions
 setMethod(f = "plot_distributions", signature(object = "linear_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
-  y=y_min=NULL
+  y <- y_min <- NULL
 
   # precision
   n <- 1000
@@ -509,7 +509,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
 #' @rdname linear_class-plot_fit
 setMethod(f = "plot_fit", signature(object = "linear_class"), definition = function(object) {
   # init local varibales for CRAN check
-  s=x=y=NULL
+  s <- x <- y <- NULL
 
   df_data <- data.frame(x = object@data$x, y = object@data$y, s = object@data$s)
 
