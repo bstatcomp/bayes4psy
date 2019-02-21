@@ -405,7 +405,7 @@ setMethod(f = "plot_fit", signature(object = "success_rate_class"), definition =
 
   # density per subject
   graph <- ggplot() +
-    geom_vline(data = df_data, aes(xintercept = value), color = "#ff4e3f", size = 1) +
+    geom_vline(data = df_data, aes(xintercept = value), color = "#ff4e3f", alpha=0.4) +
     geom_density(data = df_fit, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
     xlim(0, 1) +
     facet_wrap(~ variable, ncol = n_col) +
