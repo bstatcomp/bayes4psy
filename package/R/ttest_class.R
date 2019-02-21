@@ -1,6 +1,9 @@
 #' @title ttest_class
 #' @import ggplot2 metRology rstan
 #' @description An S4 class for storing results of Bayesian t-test results.
+#'
+#' \strong{Functions}
+#'
 #' summary(`ttest_class`): prints summary of the fit.
 #'
 #' print(`ttest_class`): prints a more detailed summary of the fit
@@ -99,6 +102,7 @@ setMethod(f = "show", signature(object = "ttest_class"), definition = function(o
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
 #' @rdname ttest_class-compare
+#' @aliases compare_ttest
 setMethod(f = "compare", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -159,6 +163,7 @@ setMethod(f = "compare", signature(object = "ttest_class"), definition = functio
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname ttest_class-plot_difference
+#' @aliases plot_difference_ttest
 setMethod(f = "plot_difference", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -214,6 +219,7 @@ setMethod(f = "plot_difference", signature(object = "ttest_class"), definition =
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value.
 #' @rdname ttest_class-plot_samples
+#' @aliases plot_samples_ttest
 setMethod(f = "plot_samples", signature(object = "ttest_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
@@ -277,6 +283,7 @@ setMethod(f = "plot_samples", signature(object = "ttest_class"), definition = fu
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
 #' @rdname ttest_class-compare_distributions
+#' @aliases compare_distributions_ttest
 setMethod(f = "compare_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -342,6 +349,7 @@ setMethod(f = "compare_distributions", signature(object = "ttest_class"), defini
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation.
 #' @rdname ttest_class-plot_distributions
+#' @aliases plot_distributions_ttest
 setMethod(f = "plot_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
@@ -418,6 +426,7 @@ setMethod(f = "plot_distributions", signature(object = "ttest_class"), definitio
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname ttest_class-plot_distributions_difference
+#' @aliases plot_distributions_difference_ttest
 setMethod(f = "plot_distributions_difference", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -481,6 +490,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "ttest_class")
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
 #' @param object ttest_class object.
 #' @rdname ttest_class-plot_fit
+#' @aliases plot_fit_ttest
 setMethod(f = "plot_fit", signature(object = "ttest_class"), definition = function(object) {
   # init local varibales for CRAN check
   value <- NULL
@@ -512,6 +522,7 @@ setMethod(f = "plot_fit", signature(object = "ttest_class"), definition = functi
 #' @description \code{plot_trace} traceplot for main fitted model parameters.
 #' @param object ttest_class object.
 #' @rdname ttest_class-plot_trace
+#' @aliases plot_trace_ttest
 setMethod(f = "plot_trace", signature(object = "ttest_class"), definition = function(object) {
   traceplot(object@fit, pars = c("mu", "sigma"), inc_warmup = TRUE)
 })

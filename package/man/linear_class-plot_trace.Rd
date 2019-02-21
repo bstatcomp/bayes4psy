@@ -3,6 +3,7 @@
 \docType{methods}
 \name{plot_trace,linear_class-method}
 \alias{plot_trace,linear_class-method}
+\alias{plot_trace_linear}
 \title{plot_trace}
 \usage{
 \S4method{plot_trace}{linear_class}(object)

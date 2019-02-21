@@ -3,6 +3,7 @@
 \docType{methods}
 \name{plot_trace,reaction_time_class-method}
 \alias{plot_trace,reaction_time_class-method}
+\alias{plot_trace_reaction_time}
 \title{plot_trace}
 \usage{
 \S4method{plot_trace}{reaction_time_class}(object)

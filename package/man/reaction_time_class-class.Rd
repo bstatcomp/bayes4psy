@@ -7,6 +7,9 @@
 \title{reaction_time_class}
 \description{
 An S4 class for storing results of reaction time Bayesian model.
+
+\strong{Functions}
+
 summary(`reaction_time_class`): prints summary od the fit.
 
 print(`reaction_time_class`): prints a more detailed summary of the fit

@@ -3,6 +3,7 @@
 \docType{methods}
 \name{compare_distributions,success_rate_class-method}
 \alias{compare_distributions,success_rate_class-method}
+\alias{compare_distributions_success_rate}
 \title{compare_distributions}
 \usage{
 \S4method{compare_distributions}{success_rate_class}(object, ...)

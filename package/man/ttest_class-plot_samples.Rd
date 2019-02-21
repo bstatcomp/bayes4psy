@@ -3,6 +3,7 @@
 \docType{methods}
 \name{plot_samples,ttest_class-method}
 \alias{plot_samples,ttest_class-method}
+\alias{plot_samples_ttest}
 \title{plot_samples}
 \usage{
 \S4method{plot_samples}{ttest_class}(object, ...)

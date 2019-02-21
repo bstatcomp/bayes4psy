@@ -3,6 +3,7 @@
 \docType{methods}
 \name{compare,success_rate_class-method}
 \alias{compare,success_rate_class-method}
+\alias{compare_success_rate}
 \title{compare}
 \usage{
 \S4method{compare}{success_rate_class}(object, ...)

@@ -7,6 +7,9 @@
 \title{success_rate_class}
 \description{
 An S4 class for storing results of successes (true/false) Bayesian model.
+
+\strong{Functions}
+
 summary(`success_rate_class`): prints summary od the fit.
 
 print(`success_rate_class`): prints a more detailed summary of the fit

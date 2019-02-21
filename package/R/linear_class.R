@@ -1,6 +1,9 @@
 #' @title linear_class
 #' @import dplyr ggplot2
 #' @description An S4 class for storing results of normal linear model.
+#'
+#' \strong{Functions}
+#'
 #' summary(`linear_class`): prints summary od the fit.
 #'
 #' print(`linear_class`): prints a more detailed summary of the fit
@@ -80,6 +83,7 @@ setMethod(f = "show", signature(object = "linear_class"), definition = function(
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
 #' @rdname linear_class-compare
+#' @aliases compare_linear
 setMethod(f = "compare", signature(object = "linear_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -133,8 +137,9 @@ setMethod(f = "compare", signature(object = "linear_class"), definition = functi
 #' @title plot_difference
 #' @description \code{plot_difference} plots difference between two groups.
 #' @param object linear_class object.
-#' @rdname linear_class-plot_difference
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
+#' @rdname linear_class-plot_difference
+#' @aliases plot_difference_linear
 setMethod(f = "plot_difference", signature(object = "linear_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -204,6 +209,7 @@ setMethod(f = "plot_difference", signature(object = "linear_class"), definition 
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_samples
+#' @aliases plot_samples_linear
 setMethod(f = "plot_samples", signature(object = "linear_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
   intercept <- slope <- NULL
@@ -222,7 +228,6 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
     geom_density(data = df1, aes(x = intercept), fill = "#3182bd", alpha = 0.4, color = NA)
   graph_slope <- ggplot() +
     geom_density(data = df1, aes(x = slope), fill = "#3182bd", alpha = 0.4, color = NA)
-
 
   # second group data
   df2 <- NULL
@@ -279,6 +284,7 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
 #' @rdname linear_class-compare_distributions
+#' @aliases compare_distributions_linear
 setMethod(f = "compare_distributions", signature(object = "linear_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -346,6 +352,7 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_distributions
+#' @aliases plot_distributions_linear
 setMethod(f = "plot_distributions", signature(object = "linear_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
   y <- y_min <- NULL
@@ -430,6 +437,7 @@ setMethod(f = "plot_distributions", signature(object = "linear_class"), definiti
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
 #' @rdname linear_class-plot_distributions_difference
+#' @aliases plot_distributions_difference_linear
 setMethod(f = "plot_distributions_difference", signature(object = "linear_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -510,6 +518,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
 #' @param object linear_class object.
 #' @rdname linear_class-plot_fit
+#' @aliases plot_fit_linear
 setMethod(f = "plot_fit", signature(object = "linear_class"), definition = function(object) {
   # init local varibales for CRAN check
   s <- x <- y <- NULL
@@ -554,6 +563,7 @@ setMethod(f = "plot_fit", signature(object = "linear_class"), definition = funct
 #' @description \code{plot_trace} traceplot for main fitted model parameters.
 #' @param object linear_class object.
 #' @rdname linear_class-plot_trace
+#' @aliases plot_trace_linear
 setMethod(f = "plot_trace", signature(object = "linear_class"), definition = function(object) {
   rstan::traceplot(object@fit, pars = c("mu_a", "mu_b", "mu_s"), inc_warmup = TRUE)
 })

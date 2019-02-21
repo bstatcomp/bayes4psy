@@ -3,6 +3,7 @@
 \docType{methods}
 \name{plot_difference,ttest_class-method}
 \alias{plot_difference,ttest_class-method}
+\alias{plot_difference_ttest}
 \title{plot_difference}
 \usage{
 \S4method{plot_difference}{ttest_class}(object, ...)

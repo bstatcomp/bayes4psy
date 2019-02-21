@@ -1,6 +1,9 @@
 #' @title success_rate_class
 #' @import dplyr ggplot2
 #' @description An S4 class for storing results of successes (true/false) Bayesian model.
+#'
+#' \strong{Functions}
+#'
 #' summary(`success_rate_class`): prints summary od the fit.
 #'
 #' print(`success_rate_class`): prints a more detailed summary of the fit
@@ -71,6 +74,7 @@ setMethod(f = "show", signature(object = "success_rate_class"), definition = fun
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, rope - region of practical equivalence.
 #' @rdname success_rate_class-compare
+#' @aliases compare_success_rate
 setMethod(f = "compare", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -114,6 +118,7 @@ setMethod(f = "compare", signature(object = "success_rate_class"), definition = 
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname success_rate_class-plot_difference
+#' @aliases plot_difference_success_rate
 setMethod(f = "plot_difference", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -165,6 +170,7 @@ setMethod(f = "plot_difference", signature(object = "success_rate_class"), defin
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_samples
+#' @aliases plot_samples_success_rate
 setMethod(f = "plot_samples", signature(object = "success_rate_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
@@ -222,6 +228,7 @@ setMethod(f = "plot_samples", signature(object = "success_rate_class"), definiti
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-compare_distributions
+#' @aliases compare_distributions_success_rate
 setMethod(f = "compare_distributions", signature(object = "success_rate_class"), definition = function(object, ...) {
   arguments <- list(...)
 
@@ -270,6 +277,7 @@ setMethod(f = "compare_distributions", signature(object = "success_rate_class"),
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_distributions
+#' @aliases plot_distributions_success_rate
 setMethod(f = "plot_distributions", signature(object = "success_rate_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
   value <- y <- y_min <- NULL
@@ -321,6 +329,7 @@ setMethod(f = "plot_distributions", signature(object = "success_rate_class"), de
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_distributions_difference
+#' @aliases plot_distributions_difference_success_rate
 setMethod(f = "plot_distributions_difference", signature(object = "success_rate_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
   x <- value <- variable <- NULL
@@ -389,6 +398,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
 #' @param object success_rate_class object.
 #' @rdname success_rate_class-plot_fit
+#' @aliases plot_fit_success_rate
 setMethod(f = "plot_fit", signature(object = "success_rate_class"), definition = function(object) {
   # init local varibales for CRAN check
   variable<-value<-NULL
@@ -420,6 +430,7 @@ setMethod(f = "plot_fit", signature(object = "success_rate_class"), definition =
 #' @description \code{plot_trace} traceplot for main fitted model parameters.
 #' @param object success_rate_class object.
 #' @rdname success_rate_class-plot_trace
+#' @aliases plot_trace_success_rate
 setMethod(f = "plot_trace", signature(object = "success_rate_class"), definition = function(object) {
   rstan::traceplot(object@fit, pars = c("p"), inc_warmup = TRUE)
 })

@@ -3,6 +3,7 @@
 \docType{methods}
 \name{plot_trace,ttest_class-method}
 \alias{plot_trace,ttest_class-method}
+\alias{plot_trace_ttest}
 \title{plot_trace}
 \usage{
 \S4method{plot_trace}{ttest_class}(object)

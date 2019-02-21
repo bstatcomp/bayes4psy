@@ -3,6 +3,7 @@
 \docType{methods}
 \name{plot_distributions_difference,ttest_class-method}
 \alias{plot_distributions_difference,ttest_class-method}
+\alias{plot_distributions_difference_ttest}
 \title{plot_distributions_difference}
 \usage{
 \S4method{plot_distributions_difference}{ttest_class}(object, ...)

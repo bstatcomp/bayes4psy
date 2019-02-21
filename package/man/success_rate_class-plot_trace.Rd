@@ -3,6 +3,7 @@
 \docType{methods}
 \name{plot_trace,success_rate_class-method}
 \alias{plot_trace,success_rate_class-method}
+\alias{plot_trace_success_rate}
 \title{plot_trace}
 \usage{
 \S4method{plot_trace}{success_rate_class}(object)

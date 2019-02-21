@@ -9,7 +9,7 @@ plot_difference(object, ...)
 \arguments{
 \item{object}{S4 class object from EasyBayes library.}
 
-\item{...}{see documentation for specific class for the description of available parameters.}
+\item{...}{see documentation for specific class for the description of available parameters, e.g. ?plot_difference_ttest or ?plot_difference_linear.}
 }
 \description{
 \code{plot_difference} plots difference between two groups.

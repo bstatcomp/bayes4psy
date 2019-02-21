@@ -3,6 +3,7 @@
 \docType{methods}
 \name{plot_difference,reaction_time_class-method}
 \alias{plot_difference,reaction_time_class-method}
+\alias{plot_difference_reaction_time}
 \title{plot_difference}
 \usage{
 \S4method{plot_difference}{reaction_time_class}(object, ...)
