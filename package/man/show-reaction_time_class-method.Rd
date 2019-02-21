@@ -11,5 +11,5 @@
 \item{object}{reaction_time_class object.}
 }
 \description{
-\code{show} prints a more detailed summary of the Bayesian success rate fit.
+\code{show} prints a more detailed summary of the Bayesian reaction time fit.
 }

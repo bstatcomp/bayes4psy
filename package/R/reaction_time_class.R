@@ -9,7 +9,7 @@
 #'
 #' compare(`reaction_time_class`, fit2 = `reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
 #'
-#' plot_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope parameter or visualize the comparison only through a chosen parameter - mu or lambda.
+#' plot_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
 #'
 #' plot_samples(`reaction_time_class`): plots density for the first group samples. You can also visualize the denisty only for a chosen parameter - mu or lambda.
 #'
@@ -21,7 +21,7 @@
 #'
 #' plot_distributions(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the distribution for the first group and the second group.
 #'
-#' plot_distributions_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope parameter.
+#' plot_distributions_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_fit(`reaction_time_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
@@ -57,13 +57,16 @@ setMethod(f = "summary", signature(object = "reaction_time_class"), definition =
   lambda_hdi <- mcmc_hdi(object@extract$mu_l)
 
   # print
-  cat(sprintf("mu: %.2f, 95%% HDI: [%.2f, %.2f]\n", mu, mu_hdi[1], mu_hdi[2]))
-  cat(sprintf("sigma: %.2f, 95%% HDI: [%.2f, %.2f]\n", sigma, sigma_hdi[1], sigma_hdi[2]))
-  cat(sprintf("lambda: %.2f, 95%% HDI: [%.2f, %.2f]\n", lambda, lambda_hdi[1], lambda_hdi[2]))
+  cat(sprintf("mu: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+              mu, mcmcse::mcse(object@extract$mu_m)$se, mu_hdi[1], mu_hdi[2]))
+  cat(sprintf("sigma: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+              sigma, mcmcse::mcse(object@extract$mu_s)$se, sigma_hdi[1], sigma_hdi[2]))
+  cat(sprintf("lambda: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+              lambda, mcmcse::mcse(object@extract$mu_l)$se, lambda_hdi[1], lambda_hdi[2]))
 })
 
 #' @title show
-#' @description \code{show} prints a more detailed summary of the Bayesian success rate fit.
+#' @description \code{show} prints a more detailed summary of the Bayesian reaction time fit.
 #' @param object reaction_time_class object.
 #' @exportMethod show
 setMethod(f = "show", signature(object = "reaction_time_class"), definition = function(object) {

@@ -9,7 +9,7 @@
 #'
 #' compare(`success_rate_class`, fit2 = `success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
 #'
-#' plot_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
+#' plot_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_samples(`success_rate_class`): plots density for the first samples.
 #'
@@ -21,7 +21,7 @@
 #'
 #' plot_distributions(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the distribution for the first group and the second group.
 #'
-#' plot_distributions_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope parameter.
+#' plot_distributions_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
@@ -53,7 +53,8 @@ setMethod(f = "summary", signature(object = "success_rate_class"), definition = 
   p_hdi <- mcmc_hdi(object@extract$p)
 
   # print
-  cat(sprintf("Success rate: %.2f, 95%% HDI: [%.2f, %.2f]\n", p, p_hdi[1], p_hdi[2]))
+  cat(sprintf("Success rate: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+              p, mcmcse::mcse(object@extract$p)$se, p_hdi[1], p_hdi[2]))
 })
 
 #' @title show
@@ -238,7 +239,7 @@ setMethod(f = "compare_distributions", signature(object = "success_rate_class"),
   y1 <- stats::rbinom(n, 1, p1)
 
   # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
     # provided another fit
     if (!is.null(arguments$fit2)) {
       fit2 <- arguments$fit2
@@ -286,7 +287,7 @@ setMethod(f = "plot_distributions", signature(object = "success_rate_class"), de
   group2_plot <- NULL
   arguments <- list(...)
   if (length(arguments) > 0) {
-    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
+    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
       # provided another fit
       if (!is.null(arguments$fit2)) {
         fit2 <- arguments$fit2
@@ -326,14 +327,21 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
 
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(reaction_time_class, fit2 = reaction_time_class) is required!"
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(success_rate_class, fit2 = success_rate_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(success_rate_class, fit2 = success_rate_class, rope = numeric, bins = numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
 
-  n <- 1000
+  # prepare rope
+  rope <- NULL
+  if (!is.null(arguments$rope)) {
+    rope = arguments$rope
+  }
+  rope <- prepare_rope(rope)
+
+  n <- 10000
   m <- 1000
 
   # results
@@ -343,7 +351,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
   p1 <- mean(object@extract$p)
 
   # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
     # provided another fit
     if (!is.null(arguments$fit2)) {
       fit2 <- arguments$fit2
@@ -353,29 +361,22 @@ setMethod(f = "plot_distributions_difference", signature(object = "success_rate_
     p2 <- mean(fit2@extract$p)
 
     for (i in 1:m){
-      y1 <- stats::rbinom(n, 1, p1)
-      y2 <- stats::rbinom(n, 1, p2)
+      y1_draw <- stats::rbinom(n, 1, p1)
+      y2_draw <- stats::rbinom(n, 1, p2)
 
       # calculate
-      y1_smaller <- sum(y1 < y2) / n
-      y1_greater <- sum(y1 > y2) / n
-      equal <- 1 - y1_smaller - y1_greater
-
-      df <- rbind(df, c(y1_greater, equal, y1_smaller))
+      y1[i] <- sum(y1_draw) / n
+      y2[i] <- sum(y2_draw) / n
     }
 
-    colnames(df) <- c("greater", "equal", "smaller")
-    df <- reshape::melt(as.data.frame(df), id = NULL)
+    # bins in the histogram
+    bins <- 30
+    if (!is.null(arguments$bins)) {
+      bins <- arguments$bins
+    }
 
-    # plot
-    graph <- ggplot() +
-      geom_density(data = df, aes(x = value, fill = variable), alpha = 0.4, color = NA) +
-      scale_fill_manual(values = c("#3182bd", "grey60", "#ff4e3f"),
-                        labels = c("Group 1 > Group 2", "Equal", "Group 1 < Group 2")) +
-      theme(legend.title=element_blank()) +
-      xlim(0, 1) +
-      xlab("probability")
-
+    # call plot difference from shared plots
+    graph <- shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
     return(graph)
   } else {
     warning(wrong_arguments)

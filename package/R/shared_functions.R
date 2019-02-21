@@ -5,22 +5,32 @@ shared_difference <- function(y1, y2, rope = NULL) {
 
   if (is.null(rope)) {
     # 1 > 2
-    y1_smaller <- round(sum(y_diff < 0) / n, 2)
-    y1_greater <- round(sum(y_diff > 0) / n, 2)
-    cat(sprintf("Probabilities:\n  - Group 1 < Group 2: %.2f", y1_smaller))
-    cat(sprintf("\n  - Group 1 > Group 2: %.2f", y1_greater))
+    diff_smaller = y_diff < 0
+    y1_smaller <- round(sum(diff_smaller) / n, 2)
+    diff_greater = y_diff > 0
+    y1_greater <- round(sum(diff_greater) / n, 2)
+    cat(sprintf("Probabilities:\n  - Group 1 < Group 2: %.2f +/- %.5f",
+                y1_smaller, mcmcse::mcse(diff_smaller)$se))
+    cat(sprintf("\n  - Group 1 > Group 2: %.2f +/- %.5f",
+                y1_greater, mcmcse::mcse(diff_greater)$se))
   } else {
     # 1 > 2
-    y1_smaller <- round(sum(y_diff < rope[1]) / n, 2)
-    cat(sprintf("Probabilities:\n  - Group 1 < Group 2: %.2f", y1_smaller))
+    diff_smaller = y_diff < rope[1]
+    y1_smaller <- round(sum(diff_smaller) / n, 2)
+    cat(sprintf("Probabilities:\n  - Group 1 < Group 2: %.2f +/- %.5f",
+                y1_smaller, mcmcse::mcse(diff_smaller)$se))
 
     # 2 > 1
-    y1_greater <- round(sum(y_diff > rope[2]) / n, 2)
-    cat(sprintf("\n  - Group 1 > Group 2: %.2f", y1_greater))
+    diff_greater = y_diff > rope[2]
+    y1_greater <- round(sum(y_diff > diff_greater) / n, 2)
+    cat(sprintf("\n  - Group 1 > Group 2: %.2f +/- %.5f",
+                y1_greater, mcmcse::mcse(diff_greater)$se))
 
     # equal
+    diff_equal = y_diff > rope[1] & y_diff < rope[2]
     equal <- 1 - y1_smaller - y1_greater
-    cat(sprintf("\n  - Equal: %.2f\n", equal))
+    cat(sprintf("\n  - Equal: %.2f\n +/- %.5f",
+                equal, mcmcse::mcse(diff_equal)$se))
   }
 
   hdi <- mcmc_hdi(y_diff)

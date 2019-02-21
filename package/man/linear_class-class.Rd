@@ -15,7 +15,7 @@ show(`linear_class`): prints a more detailed summary of the fit.
 
 compare(`linear_class`, fit2 = `linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
 
-plot_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
+plot_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_samples(`linear_class`): plots density for the first group samples.
 
@@ -27,7 +27,7 @@ plot_distributions(`linear_class`): a visualization of the distribution for the 
 
 plot_distributions(`linear_class`, fit2 = `linear_class`): a visualization of the distribution for the first group and the second group.
 
-plot_distributions_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope parameter.
+plot_distributions_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 

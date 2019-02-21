@@ -9,7 +9,7 @@
 #'
 #' compare(`linear_class`, fit2 = `linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
 #'
-#' plot_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
+#' plot_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_samples(`linear_class`): plots density for the first group samples.
 #'
@@ -21,7 +21,7 @@
 #'
 #' plot_distributions(`linear_class`, fit2 = `linear_class`): a visualization of the distribution for the first group and the second group.
 #'
-#' plot_distributions_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope parameter.
+#' plot_distributions_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
@@ -58,9 +58,12 @@ setMethod(f = "summary", signature(object = "linear_class"), definition = functi
   sigma_hdi <- mcmc_hdi(sqrt(object@extract$mu_s))
 
   # print
-  cat(sprintf("intercept (alpha): %.2f, 95%% HDI: [%.2f, %.2f]\n", alpha, alpha_hdi[1], alpha_hdi[2]))
-  cat(sprintf("slope (beta): %.2f, 95%% HDI: [%.2f, %.2f]\n", beta, beta_hdi[1], beta_hdi[2]))
-  cat(sprintf("sigma: %.2f, 95%% HDI: [%.2f, %.2f]\n", sigma, sigma_hdi[1], sigma_hdi[2]))
+  cat(sprintf("intercept (alpha): %.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
+              alpha, mcmcse::mcse(object@extract$mu_a)$se, alpha_hdi[1], alpha_hdi[2]))
+  cat(sprintf("slope (beta): %.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
+              beta, mcmcse::mcse(object@extract$mu_b)$se, beta_hdi[1], beta_hdi[2]))
+  cat(sprintf("sigma: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+              sigma, mcmcse::mcse(object@extract$mu_s)$se, sigma_hdi[1], sigma_hdi[2]))
 })
 
 #' @title show
