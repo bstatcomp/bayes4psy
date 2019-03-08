@@ -26,3 +26,10 @@ Documentation.
 # v 0.3
 Removed all possible warnings.
 CRAN ready!
+
+# v 0.4
+Large update to documentation, which is now CRAN compliant.
+Added an additional, more detailed diagnostic print of fit.
+Updates to various visualisations.
+Bayesian bootstrap implementation.
+Tidyverse style code.

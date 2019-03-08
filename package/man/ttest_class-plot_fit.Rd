@@ -3,6 +3,7 @@
 \docType{methods}
 \name{plot_fit,ttest_class-method}
 \alias{plot_fit,ttest_class-method}
+\alias{plot_fit_ttest}
 \title{plot_fit}
 \usage{
 \S4method{plot_fit}{ttest_class}(object)

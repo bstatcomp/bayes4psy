@@ -6,5 +6,12 @@
 \title{b_results}
 \description{
 Parent S4 class for declaring shared function generics.
-summary(`success_rate_class`): prints summary od the fit.
+
+\strong{Functions}
+
+summary(`success_rate_class`): prints summary of the fit.
+
+print(`success_rate_class`): prints a more detailed summary of the fit.
+
+show(`success_rate_class`): prints a more detailed summary of the fit.
 }

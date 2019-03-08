@@ -6,8 +6,10 @@
 \alias{EasyBayes}
 \title{The 'EasyBayes' package.}
 \description{
-A DESCRIPTION OF THE PACKAGE
+A user-friendly implementation of Bayesian statistical methods commonly used in social sciences. All used models are precompiled, meaning that users only need to call appropriate functions using their data.
 }
 \references{
-Stan Development Team (NA). RStan: the R interface to Stan. R package version NA. http://mc-stan.org
+Stan Development Team (NA) - the Stan framework and RStan interface.
+John Kruschke - mcmc_hdi function
+Rasmus Bååth - Easy Bayesian Bootstrap in R
 }

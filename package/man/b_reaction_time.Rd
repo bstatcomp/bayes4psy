@@ -4,12 +4,16 @@
 \alias{b_reaction_time}
 \title{b_reaction_time}
 \usage{
-b_reaction_time(rt, s)
+b_reaction_time(rt, s, warmup = 200, iter = 1200)
 }
 \arguments{
 \item{rt}{a vector containing reaction times for each measurement.}
 
 \item{s}{a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).}
+
+\item{warmup}{Integer specifying the number of warmup iterations per chain.}
+
+\item{iter}{Integer specifying the number of iterations (including warmup).}
 }
 \value{
 An object of class `reaction_time_class`.

@@ -5,7 +5,7 @@ library(rstan)
 
 ## data wrangling --------------------------------------------------------
 # load data
-df <- read.table("./examples/data/after_images.csv", sep="\t", header = TRUE)
+df <- read.table("./examples/data/after_images.csv", sep="\t", header=TRUE)
 
 # stimuli to indexes
 stimuli_names <- unique(df$stimuli)
@@ -22,7 +22,7 @@ g <- df$g
 b <- df$b
 
 # cast to hsv (do this inside lib late ron)
-df[c("h", "s", "v")] <- with(df, t(rgb2hsv(r, g, b, maxColorValue = 255)))
+df[c("h", "s", "v")] <- with(df, t(rgb2hsv(r, g, b, maxColorValue=255)))
 df$h <- df$h * 2 * pi
 
 h <- df$h
@@ -40,7 +40,7 @@ stan_data <- list(n = n,
                   s = s,
                   v = v)
 
-model <- stan_model(file = './examples/colours.stan')
+model <- stan_model(file='./examples/colours.stan')
 
 fit <- sampling(model,
                   data = stan_data,
@@ -50,7 +50,7 @@ fit <- sampling(model,
 
 extract <- extract(fit)
 
-plot_trace(fit, pars = c("mu_h"), inc_warmup = TRUE)
+plot_trace(fit, pars=c("mu_h"), inc_warmup=TRUE)
 
 
 ## plot fit --------------------------------------------------------------
@@ -90,11 +90,11 @@ for (i in 1:m) {
       }
 
       # plot
-      data_plot <- data.frame(value = mu)
+      data_plot <- data.frame(value=mu)
 
       #graph <-
-      ggplot(data = df_x, aes(x = value)) +
-        geom_density(data = data_plot, aes(x = value), fill = colours[j], alpha = 0.4, color = NA) +
+      ggplot(data=df_x, aes(x=value)) +
+        geom_density(data=data_plot, aes(x=value), fill=colours[j], alpha=0.4, color=NA) +
         xlab("value") +
         ylab("density") +
         xlim(0, x_max)
@@ -106,12 +106,12 @@ for (i in 1:m) {
       mu <- mu[,i]
 
       # plot
-      data_plot <- data.frame(value = mu)
+      data_plot <- data.frame(value=mu)
 
       # TODO x axis in PI units
       #graph <-
-      ggplot(data = df_x, aes(x = value)) +
-        geom_density(data = data_plot, aes(x = value), fill = colours[j], alpha = 0.4, color = NA) +
+      ggplot(data=df_x, aes(x=value)) +
+        geom_density(data=data_plot, aes(x=value), fill=colours[j], alpha=0.4, color=NA) +
         xlab("value") +
         ylab("density") +
         xlim(0, 2*pi)
@@ -126,7 +126,7 @@ for (i in 1:m) {
 
 
 
-cowplot::plot_grid(plotlist = plotlist, ncol = 6, nrow = m, scale = 0.9)
+cowplot::plot_grid(plotlist=plotlist, ncol=6, nrow=m, scale=0.9)
 
 mu <- pi
 kappa <- 1
@@ -135,4 +135,3 @@ x <- seq(-pi,pi,0.01)
 y <- (exp(kappa * cos(x - mu))) / (2 * pi * besselI(kappa, 0))
 
 plot(x, y)
-

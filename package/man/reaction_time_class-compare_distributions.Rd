@@ -3,6 +3,7 @@
 \docType{methods}
 \name{compare_distributions,reaction_time_class-method}
 \alias{compare_distributions,reaction_time_class-method}
+\alias{compare_distributions_reaction_time}
 \title{compare_distributions}
 \usage{
 \S4method{compare_distributions}{reaction_time_class}(object, ...)

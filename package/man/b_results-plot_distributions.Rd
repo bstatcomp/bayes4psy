@@ -9,7 +9,7 @@ plot_distributions(object, ...)
 \arguments{
 \item{object}{S4 class object from EasyBayes library.}
 
-\item{...}{see documentation for specific class for the description of available parameters.}
+\item{...}{see documentation for specific class for the description of available parameters, e.g. ?plot_distributions_ttest or ?plot_distributions_linear.}
 }
 \description{
 \code{plot_distributions} visualizes distributions underlying tested groups.

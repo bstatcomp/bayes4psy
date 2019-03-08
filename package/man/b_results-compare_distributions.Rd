@@ -9,7 +9,7 @@ compare_distributions(object, ...)
 \arguments{
 \item{object}{S4 class object from EasyBayes library.}
 
-\item{...}{see documentation for specific class for the description of available parameters.}
+\item{...}{see documentation for specific class for the description of available parameters, e.g. ?compare_distributions_ttest or ?compare_distributions_linear.}
 }
 \description{
 \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group,

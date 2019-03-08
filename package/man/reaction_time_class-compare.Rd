@@ -3,6 +3,7 @@
 \docType{methods}
 \name{compare,reaction_time_class-method}
 \alias{compare,reaction_time_class-method}
+\alias{compare_reaction_time}
 \title{compare}
 \usage{
 \S4method{compare}{reaction_time_class}(object, ...)

@@ -1,23 +1,30 @@
 #' @title linear_class
 #' @import dplyr ggplot2
 #' @description An S4 class for storing results of normal linear model.
+#'
+#' \strong{Functions}
+#'
 #' summary(`linear_class`): prints summary od the fit.
 #'
-#' compare(`linear_class`, fit2 = `linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
+#' print(`linear_class`): prints a more detailed summary of the fit
 #'
-#' plot_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
+#' show(`linear_class`): prints a more detailed summary of the fit.
+#'
+#' compare(`linear_class`, fit2=`linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
+#'
+#' plot_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_samples(`linear_class`): plots density for the first group samples.
 #'
-#' plot_samples(`linear_class`, fit2 = `linear_class`): plots density for the first and the second group samples.
+#' plot_samples(`linear_class`, fit2=`linear_class`): plots density for the first and the second group samples.
 #'
-#' compare_distributions(`linear_class`, fit2 = `linear_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+#' compare_distributions(`linear_class`, fit2=`linear_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #'
 #' plot_distributions(`linear_class`): a visualization of the distribution for the first group.
 #'
-#' plot_distributions(`linear_class`, fit2 = `linear_class`): a visualization of the distribution for the first group and the second group.
+#' plot_distributions(`linear_class`, fit2=`linear_class`): a visualization of the distribution for the first group and the second group.
 #'
-#' plot_distributions_difference(`linear_class`, fit2 = `linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope parameter.
+#' plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
@@ -30,7 +37,7 @@
 linear_class <- setClass(
   "linear_class",
   slots = c(
-    extract  = "list",
+    extract = "list",
     fit = "stanfit",
     data = "list"
   ),
@@ -42,7 +49,7 @@ linear_class <- setClass(
 #' @description \code{summary} prints summary of the Bayesian linear model fit.
 #' @param object linear_class object.
 #' @exportMethod summary
-setMethod(f = "summary", signature(object = "linear_class"), definition = function(object) {
+setMethod(f="summary", signature(object="linear_class"), definition=function(object) {
   # get means
   alpha <- mean(object@extract$mu_a)
   beta <- mean(object@extract$mu_b)
@@ -51,12 +58,25 @@ setMethod(f = "summary", signature(object = "linear_class"), definition = functi
   # hdi
   alpha_hdi <- mcmc_hdi(object@extract$mu_a)
   beta_hdi <- mcmc_hdi(object@extract$mu_b)
-  sigma_hdi <- mcmc_hdi(object@extract$mu_s)
+  sigma_hdi <- mcmc_hdi(sqrt(object@extract$mu_s))
 
   # print
-  cat(sprintf("intercept (alpha): %.2f, 95%% HDI: [%.2f, %.2f]\n", alpha, alpha_hdi[1], alpha_hdi[2]))
-  cat(sprintf("slope (beta): %.2f, 95%% HDI: [%.2f, %.2f]\n", beta, beta_hdi[1], beta_hdi[2]))
-  cat(sprintf("sigma: %.2f, 95%% HDI: [%.2f, %.2f]\n", sigma, sigma_hdi[1], sigma_hdi[2]))
+  cat(sprintf("intercept (alpha): %.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
+              alpha, mcmcse::mcse(object@extract$mu_a)$se, alpha_hdi[1], alpha_hdi[2]))
+  cat(sprintf("slope (beta): %.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
+              beta, mcmcse::mcse(object@extract$mu_b)$se, beta_hdi[1], beta_hdi[2]))
+  cat(sprintf("sigma: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+              sigma, mcmcse::mcse(object@extract$mu_s)$se, sigma_hdi[1], sigma_hdi[2]))
+})
+
+
+#' @title show
+#' @description \code{show} prints a more detailed summary of the Bayesian linear model fit.
+#' @param object linear_class object.
+#' @exportMethod show
+setMethod(f="show", signature(object="linear_class"), definition=function(object) {
+  # print
+  show(object@fit)
 })
 
 
@@ -65,10 +85,11 @@ setMethod(f = "summary", signature(object = "linear_class"), definition = functi
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
 #' @rdname linear_class-compare
-setMethod(f = "compare", signature(object = "linear_class"), definition = function(object, ...) {
+#' @aliases compare_linear
+setMethod(f="compare", signature(object="linear_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(linear_class, fit2 = linear_class) is required! You can also provide the rope parameters, e.g. compare(linear_class, fit2 = linear_class, rope_intercept = numeric, rope_slope = numeric)."
+  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(linear_class, fit2=linear_class) is required! You can also provide the rope parameters, e.g. compare(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -78,13 +99,13 @@ setMethod(f = "compare", signature(object = "linear_class"), definition = functi
   # prepare rope
   rope_intercept <- NULL
   if (!is.null(arguments$rope_intercept)) {
-    rope_intercept = arguments$rope_intercept
+    rope_intercept <- arguments$rope_intercept
   }
   rope_intercept <- prepare_rope(rope_intercept)
 
   rope_slope <- NULL
   if (!is.null(arguments$rope_slope)) {
-    rope_slope = arguments$rope_slope
+    rope_slope <- arguments$rope_slope
   }
   rope_slope <- prepare_rope(rope_slope)
 
@@ -104,10 +125,10 @@ setMethod(f = "compare", signature(object = "linear_class"), definition = functi
     slope2 <- fit2@extract$mu_b
 
     cat("---------- Intercept ----------\n")
-    shared_difference(y1 = intercept1, y2 = intercept2, rope = rope_intercept)
+    shared_difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
 
     cat("\n---------- Slope ----------\n")
-    shared_difference(y1 = slope1, y2 = slope2, rope = rope_slope)
+    shared_difference(y1=slope1, y2=slope2, rope=rope_slope)
   } else {
     warning(wrong_arguments)
     return()
@@ -118,12 +139,13 @@ setMethod(f = "compare", signature(object = "linear_class"), definition = functi
 #' @title plot_difference
 #' @description \code{plot_difference} plots difference between two groups.
 #' @param object linear_class object.
-#' @rdname linear_class-plot_difference
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
-setMethod(f = "plot_difference", signature(object = "linear_class"), definition = function(object, ...) {
+#' @rdname linear_class-plot_difference
+#' @aliases plot_difference_linear
+setMethod(f="plot_difference", signature(object="linear_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(linear_class, fit2 = linear_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(linear_class, fit2 = linear_class, rope_intercept = numeric, rope_slope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(linear_class, fit2=linear_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -133,13 +155,13 @@ setMethod(f = "plot_difference", signature(object = "linear_class"), definition 
   # prepare rope
   rope_intercept <- NULL
   if (!is.null(arguments$rope_intercept)) {
-    rope_intercept = arguments$rope_intercept
+    rope_intercept <- arguments$rope_intercept
   }
   rope_intercept <- prepare_rope(rope_intercept)
 
   rope_slope <- NULL
   if (!is.null(arguments$rope_slope)) {
-    rope_slope = arguments$rope_slope
+    rope_slope <- arguments$rope_slope
   }
   rope_slope <- prepare_rope(rope_slope)
 
@@ -165,17 +187,17 @@ setMethod(f = "plot_difference", signature(object = "linear_class"), definition 
     }
 
     # call plot difference from shared plots
-    graph_intercept <- shared_plot_difference(y1 = intercept1, y2 = intercept2, rope = rope_intercept, bins = bins)
+    graph_intercept <- shared_plot_difference(y1=intercept1, y2=intercept2, rope=rope_intercept, bins=bins)
     graph_intercept <- graph_intercept +
       ggtitle("Intercept") +
-      theme(plot.title = element_text(hjust = 0.5))
+      theme(plot.title=element_text(hjust=0.5))
 
-    graph_slope <- shared_plot_difference(y1 = slope1, y2 = slope2, rope = rope_slope, bins = bins)
+    graph_slope <- shared_plot_difference(y1=slope1, y2=slope2, rope=rope_slope, bins=bins)
     graph_slope <- graph_slope +
       ggtitle("Slope") +
-      theme(plot.title = element_text(hjust = 0.5))
+      theme(plot.title=element_text(hjust=0.5))
 
-    graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol = 2, nrow = 1, scale = 0.9)
+    graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol=2, nrow=1, scale=0.9)
     return(graph)
   } else {
     warning(wrong_arguments)
@@ -189,12 +211,13 @@ setMethod(f = "plot_difference", signature(object = "linear_class"), definition 
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_samples
-setMethod(f = "plot_samples", signature(object = "linear_class"), definition = function(object, ...) {
+#' @aliases plot_samples_linear
+setMethod(f="plot_samples", signature(object="linear_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  intercept=slope=NULL
+  intercept <- slope <- NULL
 
   # first group data
-  df1 <- data.frame(intercept = object@extract$mu_a, slope = object@extract$mu_b)
+  df1 <- data.frame(intercept=object@extract$mu_a, slope=object@extract$mu_b)
 
   # limits
   x_min_intercept <- min(df1$intercept)
@@ -204,10 +227,9 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
 
   # plot
   graph_intercept <- ggplot() +
-    geom_density(data = df1, aes(x = intercept), fill = "#3182bd", alpha = 0.4, color = NA)
+    geom_density(data=df1, aes(x=intercept), fill="#3182bd", alpha=0.4, color=NA)
   graph_slope <- ggplot() +
-    geom_density(data = df1, aes(x = slope), fill = "#3182bd", alpha = 0.4, color = NA)
-
+    geom_density(data=df1, aes(x=slope), fill="#3182bd", alpha=0.4, color=NA)
 
   # second group data
   df2 <- NULL
@@ -221,7 +243,7 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
         fit2 <- arguments[[1]]
       }
 
-      df2 <- data.frame(intercept = fit2@extract$mu_a, slope = fit2@extract$mu_b)
+      df2 <- data.frame(intercept=fit2@extract$mu_a, slope=fit2@extract$mu_b)
 
       # limits
       x_min_intercept <- min(x_min_intercept, df2$intercept)
@@ -231,9 +253,9 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
 
       # plot
       graph_intercept <- graph_intercept +
-        geom_density(data = df2, aes(x = intercept), fill = "#ff4e3f", alpha = 0.4, color = NA)
+        geom_density(data=df2, aes(x=intercept), fill="#ff4e3f", alpha=0.4, color=NA)
       graph_slope <- graph_slope +
-        geom_density(data = df2, aes(x = slope), fill = "#ff4e3f", alpha = 0.4, color = NA)
+        geom_density(data=df2, aes(x=slope), fill="#ff4e3f", alpha=0.4, color=NA)
     }
   }
 
@@ -253,7 +275,7 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
     xlab("slope") +
     xlim(x_min_slope, x_max_slope)
 
-  graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol = 2, nrow = 1, scale = 0.9)
+  graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol=2, nrow=1, scale=0.9)
 
   return(graph)
 })
@@ -264,10 +286,11 @@ setMethod(f = "plot_samples", signature(object = "linear_class"), definition = f
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
 #' @rdname linear_class-compare_distributions
-setMethod(f = "compare_distributions", signature(object = "linear_class"), definition = function(object, ...) {
+#' @aliases compare_distributions_linear
+setMethod(f="compare_distributions", signature(object="linear_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(linear_class, fit2 = linear_class) is required! You can also provide the rope parameter, e.g. compare_distributions(linear_class, fit2 = linear_class, rope_intercept = numeric, rope_slope = numeric)."
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(linear_class, fit2=linear_class) is required! You can also provide the rope parameter, e.g. compare_distributions(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -277,13 +300,13 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
   # prepare rope
   rope_intercept <- NULL
   if (!is.null(arguments$rope_intercept)) {
-    rope_intercept = arguments$rope_intercept
+    rope_intercept <- arguments$rope_intercept
   }
   rope_intercept <- prepare_rope(rope_intercept)
 
   rope_slope <- NULL
   if (!is.null(arguments$rope_slope)) {
-    rope_slope = arguments$rope_slope
+    rope_slope <- arguments$rope_slope
   }
   rope_slope <- prepare_rope(rope_slope)
 
@@ -292,11 +315,11 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
   # first group data
   mu_intercept1 <- mean(object@extract$mu_a)
   sigma_intercept1 <- sqrt(mean(object@extract$ss_a))
-  intercept1 <- stats::rnorm(n, mean = mu_intercept1, sd = sigma_intercept1)
+  intercept1 <- stats::rnorm(n, mean=mu_intercept1, sd=sigma_intercept1)
 
   mu_slope1 <- mean(object@extract$mu_b)
   sigma_slope1 <- sqrt(mean(object@extract$ss_b))
-  slope1 <- stats::rnorm(n, mean = mu_slope1, sd = sigma_slope1)
+  slope1 <- stats::rnorm(n, mean=mu_slope1, sd=sigma_slope1)
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
@@ -308,17 +331,17 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
     }
     mu_intercept2 <- mean(fit2@extract$mu_a)
     sigma_intercept2 <- sqrt(mean(fit2@extract$ss_a))
-    intercept2 <- stats::rnorm(n, mean = mu_intercept2, sd = sigma_intercept2)
+    intercept2 <- stats::rnorm(n, mean=mu_intercept2, sd=sigma_intercept2)
 
     mu_slope2 <- mean(fit2@extract$mu_b)
     sigma_slope2 <- sqrt(mean(fit2@extract$ss_b))
-    slope2 <- stats::rnorm(n, mean = mu_slope2, sd = sigma_slope2)
+    slope2 <- stats::rnorm(n, mean=mu_slope2, sd=sigma_slope2)
 
     cat("---------- Intercept ----------\n")
-    shared_difference(y1 = intercept1, y2 = intercept2, rope = rope_intercept)
+    shared_difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
 
     cat("\n---------- Slope ----------\n")
-    shared_difference(y1 = slope1, y2 = slope2, rope = rope_slope)
+    shared_difference(y1=slope1, y2=slope2, rope=rope_slope)
   } else {
     warning(wrong_arguments)
     return()
@@ -331,22 +354,24 @@ setMethod(f = "compare_distributions", signature(object = "linear_class"), defin
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_distributions
-setMethod(f = "plot_distributions", signature(object = "linear_class"), definition = function(object, ...) {
+#' @aliases plot_distributions_linear
+setMethod(f="plot_distributions", signature(object="linear_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  y=y_min=NULL
+  y <- y_min <- NULL
 
-  # precision
-  n <- 1000
+  # first group mean data
+  df_mean <- data.frame(intercept=mean(object@extract$mu_a), slope=mean(object@extract$mu_b), group="1")
 
-  # first group data
-  intercept1 <- mean(object@extract$mu_a)
-  slope1 <- mean(object@extract$mu_b)
-  sigma1 <- sqrt(mean(object@extract$mu_s))
+  # first group samples
+  n <- min(100, length(object@extract$mu_a))
+  df <- data.frame(intercept=object@extract$mu_a, slope=object@extract$mu_b, group="1")
+  df <- sample_n(df, n)
 
   # limits
   x_min <- min(object@data$x)
   x_max <- max(object@data$x)
-  y_max <- NULL
+  y_min <- min(object@data$y)
+  y_max <- max(object@data$y)
 
   # second group data
   graph <- ggplot()
@@ -359,52 +384,32 @@ setMethod(f = "plot_distributions", signature(object = "linear_class"), definiti
       } else {
         fit2 <- arguments[[1]]
       }
-      intercept2 <- mean(fit2@extract$mu_a)
-      slope2 <- mean(fit2@extract$mu_b)
-      sigma2 <- sqrt(mean(fit2@extract$mu_s))
+      # second group mean data
+      df_mean <- rbind(df_mean, data.frame(intercept=mean(fit2@extract$mu_a), slope=mean(fit2@extract$mu_b), group="2"))
 
-      # x limits
+      # second group samples
+      n <- min(100, length(fit2@extract$mu_a))
+      df2 <- data.frame(intercept=fit2@extract$mu_a, slope=fit2@extract$mu_b, group="2")
+      df2 <- sample_n(df2, n)
+      df <- rbind(df, df2)
+
+      # limits
       x_min <- min(x_min, fit2@data$x)
       x_max <- max(x_max, fit2@data$x)
-
-      # pointe in time
-      step <- (x_max - x_min) / n
-      x <- seq(x_min, x_max, step)
-
-      # get values
-      y2 <- intercept2 + slope2*x
-      y2_min = y2 - 2*sigma2
-      y2_max = y2 + 2*sigma2
-      df2 <- data.frame(x = x, y = y2, y_min = y2_min, y_max = y2_max)
-
-      # y limit
-      y_max <- ceiling(max(df2$y + 2*sigma2))
-
-      graph <- graph +
-        geom_line(data = df2, aes(x = x, y = y), colour = '#ff4e3f', size = 1) +
-        geom_ribbon(data = df2, aes(x = x, ymin = y_min, ymax = y_max), fill = '#ff4e3f', alpha = 0.4)
+      y_min <- min(y_min, fit2@data$y)
+      y_max <- max(y_max, fit2@data$y)
     }
   }
 
-  # points in time
-  step <- (x_max - x_min) / n
-  x <- seq(x_min, x_max, step)
-
-  # get values
-  y1 <- intercept1 + slope1*x
-  y1_min = y1 - 2*sigma1
-  y1_max = y1 + 2*sigma1
-  df1 <- data.frame(x = x, y = y1, y_min = y1_min, y_max = y1_max)
-
-  # y limit
-  y_max <- ceiling(max(y_max, df1$y + 2*sigma1))
-
-  graph <- graph +
-    geom_line(data = df1, aes(x = x, y = y), colour = '#3182bd', size = 1) +
-    geom_ribbon(data = df1, aes(x = x, ymin = y_min, ymax = y_max), fill = '#3182bd', alpha = 0.4) +
-    ylim(0, y_max) +
-    xlab("time") +
-    ylab("value")
+  graph <- ggplot() +
+    geom_abline(data=df, aes(slope=slope, intercept=intercept, color=group), alpha=0.1, size=1) +
+    geom_abline(data=df_mean, aes(slope=slope, intercept=intercept, color=group), size=1.5) +
+    scale_color_manual(values=c("#3182bd", "#ff4e3f")) +
+    xlim(x_min, x_max) +
+    ylim(y_min, y_max) +
+    xlab("") +
+    ylab("") +
+    theme(legend.position="none")
 
   return(graph)
 })
@@ -415,10 +420,11 @@ setMethod(f = "plot_distributions", signature(object = "linear_class"), definiti
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
 #' @rdname linear_class-plot_distributions_difference
-setMethod(f = "plot_distributions_difference", signature(object = "linear_class"), definition = function(object, ...) {
+#' @aliases plot_distributions_difference_linear
+setMethod(f="plot_distributions_difference", signature(object="linear_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(linear_class, fit2 = linear_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(linear_class, fit2 = linear_class, rope_intercept = numeric, rope_slope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(linear_class, fit2=linear_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -428,13 +434,13 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
   # prepare rope
   rope_intercept <- NULL
   if (!is.null(arguments$rope_intercept)) {
-    rope_intercept = arguments$rope_intercept
+    rope_intercept <- arguments$rope_intercept
   }
   rope_intercept <- prepare_rope(rope_intercept)
 
   rope_slope <- NULL
   if (!is.null(arguments$rope_slope)) {
-    rope_slope = arguments$rope_slope
+    rope_slope <- arguments$rope_slope
   }
   rope_slope <- prepare_rope(rope_slope)
 
@@ -443,11 +449,11 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
   # first group data
   mu_intercept1 <- mean(object@extract$mu_a)
   sigma_intercept1 <- sqrt(mean(object@extract$ss_a))
-  intercept1 <- stats::rnorm(n, mean = mu_intercept1, sd = sigma_intercept1)
+  intercept1 <- stats::rnorm(n, mean=mu_intercept1, sd=sigma_intercept1)
 
   mu_slope1 <- mean(object@extract$mu_b)
   sigma_slope1 <- sqrt(mean(object@extract$ss_b))
-  slope1 <- stats::rnorm(n, mean = mu_slope1, sd = sigma_slope1)
+  slope1 <- stats::rnorm(n, mean=mu_slope1, sd=sigma_slope1)
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
@@ -459,11 +465,11 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
     }
     mu_intercept2 <- mean(fit2@extract$mu_a)
     sigma_intercept2 <- sqrt(mean(fit2@extract$ss_a))
-    intercept2 <- stats::rnorm(n, mean = mu_intercept2, sd = sigma_intercept2)
+    intercept2 <- stats::rnorm(n, mean=mu_intercept2, sd=sigma_intercept2)
 
     mu_slope2 <- mean(fit2@extract$mu_b)
     sigma_slope2 <- sqrt(mean(fit2@extract$ss_b))
-    slope2 <- stats::rnorm(n, mean = mu_slope2, sd = sigma_slope2)
+    slope2 <- stats::rnorm(n, mean=mu_slope2, sd=sigma_slope2)
 
     # bins in the histogram
     bins <- 30
@@ -472,17 +478,17 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
     }
 
     # call plot difference from shared plots
-    graph_intercept <- shared_plot_difference(y1 = intercept1, y2 = intercept2, rope = rope_intercept, bins = bins)
+    graph_intercept <- shared_plot_difference(y1=intercept1, y2=intercept2, rope=rope_intercept, bins=bins)
     graph_intercept <- graph_intercept +
       ggtitle("Intercept") +
-      theme(plot.title = element_text(hjust = 0.5))
+      theme(plot.title=element_text(hjust=0.5))
 
-    graph_slope <- shared_plot_difference(y1 = slope1, y2 = slope2, rope = rope_slope, bins = bins)
+    graph_slope <- shared_plot_difference(y1=slope1, y2=slope2, rope=rope_slope, bins=bins)
     graph_slope <- graph_slope +
       ggtitle("Slope") +
-      theme(plot.title = element_text(hjust = 0.5))
+      theme(plot.title=element_text(hjust=0.5))
 
-    graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol = 2, nrow = 1, scale = 0.9)
+    graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol=2, nrow=1, scale=0.9)
     return(graph)
   } else {
     warning(wrong_arguments)
@@ -495,11 +501,12 @@ setMethod(f = "plot_distributions_difference", signature(object = "linear_class"
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
 #' @param object linear_class object.
 #' @rdname linear_class-plot_fit
-setMethod(f = "plot_fit", signature(object = "linear_class"), definition = function(object) {
+#' @aliases plot_fit_linear
+setMethod(f="plot_fit", signature(object="linear_class"), definition=function(object) {
   # init local varibales for CRAN check
-  s=x=y=NULL
+  s <- x <- y <- NULL
 
-  df_data <- data.frame(x = object@data$x, y = object@data$y, s = object@data$s)
+  df_data <- data.frame(x=object@data$x, y=object@data$y, s=object@data$s)
 
   n <- length(unique(df_data$s))
 
@@ -507,13 +514,13 @@ setMethod(f = "plot_fit", signature(object = "linear_class"), definition = funct
   x_max <- ceiling(max(df_data$x))
 
   # mean per subject
-  df_data <- df_data %>% group_by(s, x) %>% summarize(y = mean(y, na.rm=TRUE))
+  df_data <- df_data %>% group_by(s, x) %>% summarize(y=mean(y, na.rm=TRUE))
 
   # fits
   df_fit <- data.frame(x=numeric, y=numeric, s=numeric)
   for (i in 1:n) {
-    alpha = mean(object@extract$alpha[,i])
-    beta = mean(object@extract$beta[,i])
+    alpha <- mean(object@extract$alpha[,i])
+    beta <- mean(object@extract$beta[,i])
 
     df <- data.frame(x = seq(x_min, x_max, 0.01),
                      y = alpha + beta*seq(x_min, x_max, 0.01),
@@ -527,9 +534,9 @@ setMethod(f = "plot_fit", signature(object = "linear_class"), definition = funct
 
   # density per subject
   graph <- ggplot() +
-    geom_point(data = df_data, aes(x = x, y = y), color = "#3182bd", alpha = 0.4) +
-    geom_line(data = df_fit, aes(x = x, y = y), color = "#3182bd") +
-    facet_wrap(. ~ s, ncol = n_col)
+    geom_point(data=df_data, aes(x=x, y=y), color="#3182bd", alpha=0.4) +
+    geom_line(data=df_fit, aes(x=x, y=y), color="#3182bd") +
+    facet_wrap(. ~ s, ncol=n_col)
 
   return(graph)
 })
@@ -539,6 +546,7 @@ setMethod(f = "plot_fit", signature(object = "linear_class"), definition = funct
 #' @description \code{plot_trace} traceplot for main fitted model parameters.
 #' @param object linear_class object.
 #' @rdname linear_class-plot_trace
-setMethod(f = "plot_trace", signature(object = "linear_class"), definition = function(object) {
-  rstan::traceplot(object@fit, pars = c("mu_a", "mu_b", "mu_s"), inc_warmup = TRUE)
+#' @aliases plot_trace_linear
+setMethod(f="plot_trace", signature(object="linear_class"), definition=function(object) {
+  rstan::traceplot(object@fit, pars=c("mu_a", "mu_b", "mu_s"), inc_warmup=TRUE)
 })

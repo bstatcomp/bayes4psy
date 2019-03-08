@@ -3,6 +3,7 @@
 \docType{methods}
 \name{plot_distributions,success_rate_class-method}
 \alias{plot_distributions,success_rate_class-method}
+\alias{plot_distributions_success_rate}
 \title{plot_distributions}
 \usage{
 \S4method{plot_distributions}{success_rate_class}(object, ...)

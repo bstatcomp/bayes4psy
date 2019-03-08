@@ -7,23 +7,30 @@
 \title{success_rate_class}
 \description{
 An S4 class for storing results of successes (true/false) Bayesian model.
+
+\strong{Functions}
+
 summary(`success_rate_class`): prints summary od the fit.
 
-compare(`success_rate_class`, fit2 = `success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
+print(`success_rate_class`): prints a more detailed summary of the fit
 
-plot_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between two groups. You can also provide the rope parameter.
+show(`success_rate_class`): prints a more detailed summary of the fit.
+
+compare(`success_rate_class`, fit2=`success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
+
+plot_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_samples(`success_rate_class`): plots density for the first samples.
 
-plot_samples(`success_rate_class`, fit2 = `success_rate_class`): plots density for the first and the second group samples.
+plot_samples(`success_rate_class`, fit2=`success_rate_class`): plots density for the first and the second group samples.
 
-compare_distributions(`success_rate_class`, fit2 = `success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+compare_distributions(`success_rate_class`, fit2=`success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 
 plot_distributions(`success_rate_class`): a visualization of the distribution for the first group.
 
-plot_distributions(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the distribution for the first group and the second group.
+plot_distributions(`success_rate_class`, fit2=`success_rate_class`): a visualization of the distribution for the first group and the second group.
 
-plot_distributions_difference(`success_rate_class`, fit2 = `success_rate_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope parameter.
+plot_distributions_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 

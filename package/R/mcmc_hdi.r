@@ -1,5 +1,5 @@
 # author: John Kruschke
-mcmc_hdi <- function(samples, cred_mass = 0.95) {
+mcmc_hdi <- function(samples, cred_mass=0.95) {
   samples <- sort(samples)
   ci_ceil <- ceiling(cred_mass * length(samples))
   n <- length(samples) - ci_ceil

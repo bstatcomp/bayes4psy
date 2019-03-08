@@ -23,6 +23,7 @@ Imports:
     reshape (>= 0.8.7),
     rstan (>= 2.17.3),
     rstantools (>= 1.5.0),
+    mcmcse (>= 1.3.2),
     stats,
     utils,
 LinkingTo:

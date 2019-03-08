@@ -9,7 +9,7 @@ plot_distributions_difference(object, ...)
 \arguments{
 \item{object}{S4 class object from EasyBayes library.}
 
-\item{...}{see documentation for specific class for the description of available parameters.}
+\item{...}{see documentation for specific class for the description of available parameters, e.g. ?plot_distributions_difference_ttest or ?plot_distributions_difference_linear.}
 }
 \description{
 \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the distribution or a constant value for the second group.

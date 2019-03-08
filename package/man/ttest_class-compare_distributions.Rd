@@ -3,6 +3,7 @@
 \docType{methods}
 \name{compare_distributions,ttest_class-method}
 \alias{compare_distributions,ttest_class-method}
+\alias{compare_distributions_ttest}
 \title{compare_distributions}
 \usage{
 \S4method{compare_distributions}{ttest_class}(object, ...)
