@@ -7,14 +7,14 @@ library(dplyr)
 # load data
 df <- read.table("../examples/data/adaptation_level.csv", sep="\t", header=TRUE)
 
-## split first group data to before and after weights
-df_1 <- df[df$group == 1, ]
+## group 1 data only
+df <- df[df$group == 1, ]
 
-# before
-df_b <- df_1[df_1$part == 1, ]
+# samples
+df_b <- df[df$part == 1, ]
 
 # after
-df_a <- df_1[df_1$part == 2, ]
+df_a <- df[df$part == 2, ]
 
 # linear function of seqence vs. response
 lm_statistic <- function(data) {

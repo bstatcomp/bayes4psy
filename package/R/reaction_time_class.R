@@ -44,6 +44,7 @@ reaction_time_class <- setClass(
   contains = "b_results"
 )
 
+
 #' @title summary
 #' @description \code{summary} prints summary of the Bayesian reaction time fit.
 #' @param object reaction_time_class object.
@@ -68,6 +69,7 @@ setMethod(f="summary", signature(object="reaction_time_class"), definition=funct
               lambda, mcmcse::mcse(object@extract$mu_l)$se, lambda_hdi[1], lambda_hdi[2]))
 })
 
+
 #' @title show
 #' @description \code{show} prints a more detailed summary of the Bayesian reaction time fit.
 #' @param object reaction_time_class object.
@@ -76,6 +78,7 @@ setMethod(f="show", signature(object="reaction_time_class"), definition=function
   # print
   show(object@fit)
 })
+
 
 #' @title compare
 #' @description \code{compare} prints difference in reaction times between two groups.
@@ -258,21 +261,14 @@ setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=
   }
 
   # first group data
+  df <- NULL
   if (is.null(par)) {
-    df1 <- data.frame(value=object@extract$mu_m + 1/object@extract$mu_l)
+    df <- data.frame(value=object@extract$mu_m + 1/object@extract$mu_l, group="1")
   } else if (par == "mu") {
-    df1 <- data.frame(value=object@extract$mu_m)
+    df <- data.frame(value=object@extract$mu_m, group="1")
   } else if (par == "lambda") {
-    df1 <- data.frame(value=object@extract$mu_l)
+    df <- data.frame(value=object@extract$mu_l, group="1")
   }
-
-  # limits
-  x_min <- min(df1$value)
-  x_max <- max(df1$value)
-
-  # plot
-  graph <- ggplot() +
-    geom_density(data=df1, aes(x=value), fill="#3182bd", alpha=0.4, color=NA)
 
   # second group data
   df2 <- NULL
@@ -286,33 +282,29 @@ setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=
       }
 
       if (is.null(par)) {
-        df2 <- data.frame(value=fit2@extract$mu_m + 1/fit2@extract$mu_l)
+        df <- rbind(df, data.frame(value=fit2@extract$mu_m + 1/fit2@extract$mu_l, group="2"))
       } else if (par == "mu") {
-        df2 <- data.frame(value=fit2@extract$mu_m)
+        df <- rbind(df, data.frame(value=fit2@extract$mu_m, group="2"))
       } else if (par == "lambda") {
-        df2 <- data.frame(value=fit2@extract$mu_l)
+        df <- rbind(df, data.frame(value=fit2@extract$mu_l, group="2"))
       }
-
-      # limits
-      x_min <- min(x_min, df2$value)
-      x_max <- max(x_max, df2$value)
-
-      # plot
-      graph <- graph +
-        geom_density(data=df2, aes(x=value), fill="#ff4e3f", alpha=0.4, color=NA)
     }
   }
 
   # limits
+  x_min <- min(df$value)
+  x_max <- max(df$value)
   diff <- x_max - x_min
-
   x_min <- x_min - 0.1*diff
   x_max <- x_max + 0.1*diff
 
   # plot
-  graph <- graph +
+  graph <- ggplot() +
+    geom_density(data=df, aes(x=value, fill=group), alpha=0.4, color=NA) +
+    scale_fill_manual(values=c("#3182bd", "#ff4e3f")) +
     xlab("value") +
-    xlim(x_min, x_max)
+    xlim(x_min, x_max) +
+    theme(legend.position="none")
 
   return(graph)
 })

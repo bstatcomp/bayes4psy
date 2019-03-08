@@ -69,6 +69,7 @@ setMethod(f="summary", signature(object="linear_class"), definition=function(obj
               sigma, mcmcse::mcse(object@extract$mu_s)$se, sigma_hdi[1], sigma_hdi[2]))
 })
 
+
 #' @title show
 #' @description \code{show} prints a more detailed summary of the Bayesian linear model fit.
 #' @param object linear_class object.
@@ -77,6 +78,7 @@ setMethod(f="show", signature(object="linear_class"), definition=function(object
   # print
   show(object@fit)
 })
+
 
 #' @title compare
 #' @description \code{compare} prints difference in intercept and slope between two groups.
