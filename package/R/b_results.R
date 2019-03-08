@@ -16,7 +16,7 @@ setClass("b_results")
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?compare_ttest or ?compare_linear.
 #' @rdname b_results-compare
 #' @exportMethod compare
-setGeneric(name = "compare", function(object, ...) standardGeneric("compare"))
+setGeneric(name="compare", function(object, ...) standardGeneric("compare"))
 
 
 #' @title plot_difference
@@ -25,7 +25,7 @@ setGeneric(name = "compare", function(object, ...) standardGeneric("compare"))
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_difference_ttest or ?plot_difference_linear.
 #' @rdname b_results-plot_difference
 #' @exportMethod plot_difference
-setGeneric(name = "plot_difference", function(object, ...) standardGeneric("plot_difference"))
+setGeneric(name="plot_difference", function(object, ...) standardGeneric("plot_difference"))
 
 
 #' @title plot_samples
@@ -34,7 +34,7 @@ setGeneric(name = "plot_difference", function(object, ...) standardGeneric("plot
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_samples_ttest or ?plot_samples_linear.
 #' @rdname b_results-plot_samples
 #' @exportMethod plot_samples
-setGeneric(name = "plot_samples", function(object, ...) standardGeneric("plot_samples"))
+setGeneric(name="plot_samples", function(object, ...) standardGeneric("plot_samples"))
 
 #' @title compare_distributions
 #' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group,
@@ -42,7 +42,7 @@ setGeneric(name = "plot_samples", function(object, ...) standardGeneric("plot_sa
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?compare_distributions_ttest or ?compare_distributions_linear.
 #' @rdname b_results-compare_distributions
 #' @exportMethod compare_distributions
-setGeneric(name = "compare_distributions", function(object, ...) standardGeneric("compare_distributions"))
+setGeneric(name="compare_distributions", function(object, ...) standardGeneric("compare_distributions"))
 
 
 #' @title plot_distributions
@@ -51,7 +51,7 @@ setGeneric(name = "compare_distributions", function(object, ...) standardGeneric
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_distributions_ttest or ?plot_distributions_linear.
 #' @rdname b_results-plot_distributions
 #' @exportMethod plot_distributions
-setGeneric(name = "plot_distributions", function(object, ...) standardGeneric("plot_distributions"))
+setGeneric(name="plot_distributions", function(object, ...) standardGeneric("plot_distributions"))
 
 
 #' @title plot_distributions_difference
@@ -60,7 +60,7 @@ setGeneric(name = "plot_distributions", function(object, ...) standardGeneric("p
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_distributions_difference_ttest or ?plot_distributions_difference_linear.
 #' @rdname b_results-plot_distributions_difference
 #' @exportMethod plot_distributions_difference
-setGeneric(name = "plot_distributions_difference", function(object, ...) standardGeneric("plot_distributions_difference"))
+setGeneric(name="plot_distributions_difference", function(object, ...) standardGeneric("plot_distributions_difference"))
 
 
 #' @title plot_fit
@@ -68,7 +68,7 @@ setGeneric(name = "plot_distributions_difference", function(object, ...) standar
 #' @param object S4 class object from EasyBayes library.
 #' @rdname b_results-plot_fit
 #' @exportMethod plot_fit
-setGeneric(name = "plot_fit", function(object) standardGeneric("plot_fit"))
+setGeneric(name="plot_fit", function(object) standardGeneric("plot_fit"))
 
 
 #' @title plot_trace
@@ -76,4 +76,4 @@ setGeneric(name = "plot_fit", function(object) standardGeneric("plot_fit"))
 #' @param object S4 class object from EasyBayes library.
 #' @rdname b_results-plot_trace
 #' @exportMethod plot_trace
-setGeneric(name = "plot_trace", function(object) standardGeneric("plot_trace"))
+setGeneric(name="plot_trace", function(object) standardGeneric("plot_trace"))

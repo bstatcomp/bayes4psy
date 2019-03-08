@@ -22,12 +22,12 @@ b_reaction_time <- function(rt, s, warmup=200, iter=1200) {
                         iter = iter,
                         warmup = warmup,
                         chains = 1,
-                        control = list(adapt_delta = 0.99, max_treedepth = 15))
+                        control = list(adapt_delta=0.99, max_treedepth=15))
 
   extract <- extract(fit)
 
   # create output class
-  out <- reaction_time_class(extract = extract, data = stan_data, fit = fit)
+  out <- reaction_time_class(extract=extract, data=stan_data, fit=fit)
 
   # return
   return(out)

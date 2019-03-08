@@ -22,8 +22,8 @@ lm_statistic <- function(data) {
 }
 
 # bootstrap
-boot_b <- b_bootstrap(df_b, lm_statistic, n1 = 1000, n2 = 1000)
-boot_a <- b_bootstrap(df_a, lm_statistic, n1 = 1000, n2 = 1000)
+boot_b <- b_bootstrap(df_b, lm_statistic, n1=1000, n2=1000)
+boot_a <- b_bootstrap(df_a, lm_statistic, n1=1000, n2=1000)
 
 # prepare for plotting
 boot_b$type <- "before"
@@ -46,8 +46,8 @@ df_mean <- rbind(df_mean, data.frame(intercept=mean(boot_a$intercept), slope=mea
 # plot
 ggplot() +
   geom_abline(data=df_random, aes(slope=slope, intercept=intercept, color=type), alpha=0.1, size=1) +
-  geom_abline(data=df_mean, aes(slope=slope, intercept=intercept, color=type), size=2) +
+  geom_abline(data=df_mean, aes(slope=slope, intercept=intercept, color=type), size=1.5) +
   xlim(0, 10) +
   ylim(0, 10) +
-  scale_color_manual(values = c("#3182bd", "#ff4e3f")) +
+  scale_color_manual(values=c("#3182bd", "#ff4e3f")) +
   theme(legend.title=element_blank())

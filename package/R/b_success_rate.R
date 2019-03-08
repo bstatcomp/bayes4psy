@@ -27,7 +27,7 @@ b_success_rate <- function(r, s, warmup=200, iter=1200) {
   extract <- extract(fit)
 
   # create output class
-  out <- success_rate_class(extract = extract, data = stan_data, fit = fit)
+  out <- success_rate_class(extract=extract, data=stan_data, fit=fit)
 
   # return
   return(out)

@@ -12,11 +12,11 @@
 #' @param weight_arg If the statistic function includes a named argument for the weights this could be specified here (default = NULL).
 #' @param ... Further arguments passed on to the statistic function.
 #' @return An object of class `linear_class`.
-b_bootstrap <- function(data, statistic, n1 = 1000, n2 = 1000, use_weights = FALSE, weight_arg = NULL, ...) {
+b_bootstrap <- function(data, statistic, n1=1000, n2=1000, use_weights=FALSE, weight_arg=NULL, ...) {
   # Draw from a uniform Dirichlet dist. with alpha set to rep(1, n_dim).
   # Using the facts that you can transform gamma distributed draws into
   # Dirichlet draws and that rgamma(n, 1) <=> rexp(n, 1)
-  dirichlet_weights <- matrix( rexp(NROW(data) * n1, 1) , ncol = NROW(data), byrow = TRUE)
+  dirichlet_weights <- matrix(rexp(NROW(data) * n1, 1) , ncol=NROW(data), byrow=TRUE)
   dirichlet_weights <- dirichlet_weights / rowSums(dirichlet_weights)
 
   if(use_weights) {
@@ -28,13 +28,13 @@ b_bootstrap <- function(data, statistic, n1 = 1000, n2 = 1000, use_weights = FAL
   } else {
     if(is.null(dim(data)) || length(dim(data)) < 2) { # data is a list type of object
       boot_sample <- apply(dirichlet_weights, 1, function(w) {
-        data_sample <- sample(data, size = n2, replace = TRUE, prob = w)
+        data_sample <- sample(data, size=n2, replace=TRUE, prob=w)
         statistic(data_sample, ...)
       })
     } else { # data is a table type of object
       boot_sample <- apply(dirichlet_weights, 1, function(w) {
-        index_sample <- sample(nrow(data), size = n2, replace = TRUE, prob = w)
-        statistic(data[index_sample, ,drop = FALSE], ...)
+        index_sample <- sample(nrow(data), size=n2, replace=TRUE, prob=w)
+        statistic(data[index_sample, , drop=FALSE], ...)
       })
     }
   }

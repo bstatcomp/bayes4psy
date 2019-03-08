@@ -10,21 +10,21 @@
 #'
 #' show(`reaction_time_class`): prints a more detailed summary of the fit.
 #'
-#' compare(`reaction_time_class`, fit2 = `reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
+#' compare(`reaction_time_class`, fit2=`reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
 #'
-#' plot_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
+#' plot_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
 #'
 #' plot_samples(`reaction_time_class`): plots density for the first group samples. You can also visualize the denisty only for a chosen parameter - mu or lambda.
 #'
-#' plot_samples(`reaction_time_class`, fit2 = `reaction_time_class`): plots density for the first and the second group samples. You can also visualize the denisty only for a chosen parameter - mu or lambda.
+#' plot_samples(`reaction_time_class`, fit2=`reaction_time_class`): plots density for the first and the second group samples. You can also visualize the denisty only for a chosen parameter - mu or lambda.
 #'
-#' compare_distributions(`reaction_time_class`, fit2 = `reaction_time_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
+#' compare_distributions(`reaction_time_class`, fit2=`reaction_time_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
 #' plot_distributions(`reaction_time_class`): a visualization of the distribution for the first group.
 #'
-#' plot_distributions(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the distribution for the first group and the second group.
+#' plot_distributions(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the distribution for the first group and the second group.
 #'
-#' plot_distributions_difference(`reaction_time_class`, fit2 = `reaction_time_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_distributions_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_fit(`reaction_time_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
@@ -48,7 +48,7 @@ reaction_time_class <- setClass(
 #' @description \code{summary} prints summary of the Bayesian reaction time fit.
 #' @param object reaction_time_class object.
 #' @exportMethod summary
-setMethod(f = "summary", signature(object = "reaction_time_class"), definition = function(object) {
+setMethod(f="summary", signature(object="reaction_time_class"), definition=function(object) {
   # get means
   mu <- mean(object@extract$mu_m)
   sigma <- mean(object@extract$mu_s)
@@ -72,7 +72,7 @@ setMethod(f = "summary", signature(object = "reaction_time_class"), definition =
 #' @description \code{show} prints a more detailed summary of the Bayesian reaction time fit.
 #' @param object reaction_time_class object.
 #' @exportMethod show
-setMethod(f = "show", signature(object = "reaction_time_class"), definition = function(object) {
+setMethod(f="show", signature(object="reaction_time_class"), definition=function(object) {
   # print
   show(object@fit)
 })
@@ -83,10 +83,10 @@ setMethod(f = "show", signature(object = "reaction_time_class"), definition = fu
 #' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-compare
 #' @aliases compare_reaction_time
-setMethod(f = "compare", signature(object = "reaction_time_class"), definition = function(object, ...) {
+setMethod(f="compare", signature(object="reaction_time_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(reaction_time_class, fit2 = reaction_time_class) is required! You can optionallly provide the rope parameter, e.g. compare(reaction_time_class, fit2 = reaction_time_class, rope = numeric). You can also execute the comparison through only the mu or the lamdba parameter, e.g. compare(reaction_time_class, fit2 = reaction_time_class, par = \"mu\")."
+  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(reaction_time_class, fit2=reaction_time_class) is required! You can optionallly provide the rope parameter, e.g. compare(reaction_time_class, fit2=reaction_time_class, rope=numeric). You can also execute the comparison through only the mu or the lamdba parameter, e.g. compare(reaction_time_class, fit2=reaction_time_class, par=\"mu\")."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -96,7 +96,7 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
   # prepare rope
   rope <- NULL
   if (!is.null(arguments$rope)) {
-    rope = arguments$rope
+    rope <- arguments$rope
   }
   rope <- prepare_rope(rope)
 
@@ -140,7 +140,7 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
       y2 <- fit2@extract$mu_l
     }
 
-    shared_difference(y1 = y1, y2 = y2, rope = rope)
+    shared_difference(y1=y1, y2=y2, rope=rope)
   } else {
     warning(wrong_arguments)
     return()
@@ -154,10 +154,10 @@ setMethod(f = "compare", signature(object = "reaction_time_class"), definition =
 #' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_difference
 #' @aliases plot_difference_reaction_time
-setMethod(f = "plot_difference", signature(object = "reaction_time_class"), definition = function(object, ...) {
+setMethod(f="plot_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(reaction_time_class, fit2 = reaction_time_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(reaction_time_class, fit2 = reaction_time_class, rope = numeric, bins = numeric). You can also visualize the difference through only the mu or the lamdba parameter, e.g. plot_difference(reaction_time_class, fit2 = reaction_time_class, par = \"mu\")."
+  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(reaction_time_class, fit2=reaction_time_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(reaction_time_class, fit2=reaction_time_class, rope=numeric, bins=numeric). You can also visualize the difference through only the mu or the lamdba parameter, e.g. plot_difference(reaction_time_class, fit2=reaction_time_class, par=\"mu\")."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -167,7 +167,7 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
   # prepare rope
   rope <- NULL
   if (!is.null(arguments$rope)) {
-    rope = arguments$rope
+    rope <- arguments$rope
   }
   rope <- prepare_rope(rope)
 
@@ -221,7 +221,7 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
     }
 
     # call plot difference from shared plots
-    graph <- shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+    graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
     return(graph)
   } else {
     warning(wrong_arguments)
@@ -236,7 +236,7 @@ setMethod(f = "plot_difference", signature(object = "reaction_time_class"), defi
 #' @param ... fit2 - a second linear_class object, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_samples
 #' @aliases plot_samples_reaction_time
-setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definition = function(object, ...) {
+setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
 
@@ -259,11 +259,11 @@ setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definit
 
   # first group data
   if (is.null(par)) {
-    df1 <- data.frame(value = object@extract$mu_m + 1/object@extract$mu_l)
+    df1 <- data.frame(value=object@extract$mu_m + 1/object@extract$mu_l)
   } else if (par == "mu") {
-    df1 <- data.frame(value = object@extract$mu_m)
+    df1 <- data.frame(value=object@extract$mu_m)
   } else if (par == "lambda") {
-    df1 <- data.frame(value = object@extract$mu_l)
+    df1 <- data.frame(value=object@extract$mu_l)
   }
 
   # limits
@@ -272,7 +272,7 @@ setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definit
 
   # plot
   graph <- ggplot() +
-    geom_density(data = df1, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA)
+    geom_density(data=df1, aes(x=value), fill="#3182bd", alpha=0.4, color=NA)
 
   # second group data
   df2 <- NULL
@@ -286,11 +286,11 @@ setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definit
       }
 
       if (is.null(par)) {
-        df2 <- data.frame(value = fit2@extract$mu_m + 1/fit2@extract$mu_l)
+        df2 <- data.frame(value=fit2@extract$mu_m + 1/fit2@extract$mu_l)
       } else if (par == "mu") {
-        df2 <- data.frame(value = fit2@extract$mu_m)
+        df2 <- data.frame(value=fit2@extract$mu_m)
       } else if (par == "lambda") {
-        df2 <- data.frame(value = fit2@extract$mu_l)
+        df2 <- data.frame(value=fit2@extract$mu_l)
       }
 
       # limits
@@ -299,7 +299,7 @@ setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definit
 
       # plot
       graph <- graph +
-        geom_density(data = df2, aes(x = value), fill = "#ff4e3f", alpha = 0.4, color = NA)
+        geom_density(data=df2, aes(x=value), fill="#ff4e3f", alpha=0.4, color=NA)
     }
   }
 
@@ -324,10 +324,10 @@ setMethod(f = "plot_samples", signature(object = "reaction_time_class"), definit
 #' @param ... fit2 - a second linear_class object, rope - region of practical equivalence.
 #' @rdname reaction_time_class-compare_distributions
 #' @aliases compare_distributions_reaction_time
-setMethod(f = "compare_distributions", signature(object = "reaction_time_class"), definition = function(object, ...) {
+setMethod(f="compare_distributions", signature(object="reaction_time_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(reaction_time_class, fit2 = reaction_time_class) is required! You can also provide the rope parameter, e.g. compare_distributions(reaction_time_class, fit2 = reaction_time_class, rope = numeric)."
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(reaction_time_class, fit2=reaction_time_class) is required! You can also provide the rope parameter, e.g. compare_distributions(reaction_time_class, fit2=reaction_time_class, rope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -337,7 +337,7 @@ setMethod(f = "compare_distributions", signature(object = "reaction_time_class")
   # prepare rope
   rope <- NULL
   if (!is.null(arguments$rope)) {
-    rope = arguments$rope
+    rope <- arguments$rope
   }
   rope <- prepare_rope(rope)
 
@@ -347,7 +347,7 @@ setMethod(f = "compare_distributions", signature(object = "reaction_time_class")
   mu_m1 <- mean(object@extract$mu_m)
   mu_s1 <- mean(object@extract$mu_s)
   mu_l1 <- mean(object@extract$mu_l)
-  y1 <- remg(n, mu = mu_m1, sigma = mu_s1, lambda = mu_l1)
+  y1 <- remg(n, mu=mu_m1, sigma=mu_s1, lambda=mu_l1)
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
@@ -360,9 +360,9 @@ setMethod(f = "compare_distributions", signature(object = "reaction_time_class")
     mu_m2 <- mean(fit2@extract$mu_m)
     mu_s2 <- mean(fit2@extract$mu_s)
     mu_l2 <- mean(fit2@extract$mu_l)
-    y2 <- remg(n, mu = mu_m2, sigma = mu_s2, lambda = mu_l2)
+    y2 <- remg(n, mu=mu_m2, sigma=mu_s2, lambda=mu_l2)
 
-    shared_difference(y1 = y1, y2 = y2, rope = rope)
+    shared_difference(y1=y1, y2=y2, rope=rope)
   } else {
     warning(wrong_arguments)
     return()
@@ -376,7 +376,7 @@ setMethod(f = "compare_distributions", signature(object = "reaction_time_class")
 #' @param ... fit2 - a second linear_class object.
 #' @rdname reaction_time_class-plot_distributions
 #' @aliases plot_distributions_reaction_time
-setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), definition = function(object, ...) {
+setMethod(f="plot_distributions", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
 
@@ -407,16 +407,16 @@ setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), d
 
       x_max <- max(x_max, mu_m2 + 1/mu_l2 + 4*mu_s2)
 
-      group2_plot <- stat_function(fun = demg, n = n, args = list(mu = mu_m2, sigma = mu_s2, lambda = mu_l2), geom = 'area', fill = '#ff4e3f', alpha = 0.4)
+      group2_plot <- stat_function(fun=demg, n=n, args=list(mu=mu_m2, sigma=mu_s2, lambda=mu_l2), geom='area', fill='#ff4e3f', alpha=0.4)
     }
   }
 
   x_max <- ceiling(x_max)
-  df_x <- data.frame(value = c(0, x_max))
+  df_x <- data.frame(value=c(0, x_max))
 
   # plot
-  graph <- ggplot(data = df_x, aes(x = value)) +
-    stat_function(fun = demg, n = n, args = list(mu = mu_m1, sigma = mu_s1, lambda = mu_l1), geom = 'area', fill = '#3182bd', alpha = 0.4) +
+  graph <- ggplot(data=df_x, aes(x=value)) +
+    stat_function(fun=demg, n=n, args=list(mu=mu_m1, sigma=mu_s1, lambda=mu_l1), geom='area', fill='#3182bd', alpha=0.4) +
     group2_plot +
     xlab("value")
 
@@ -430,10 +430,10 @@ setMethod(f = "plot_distributions", signature(object = "reaction_time_class"), d
 #' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname reaction_time_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_reaction_time
-setMethod(f = "plot_distributions_difference", signature(object = "reaction_time_class"), definition = function(object, ...) {
+setMethod(f="plot_distributions_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(reaction_time_class, fit2 = reaction_time_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(reaction_time_class, fit2 = reaction_time_class, rope = numeric, bins = numeric)."
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(reaction_time_class, fit2=reaction_time_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(reaction_time_class, fit2=reaction_time_class, rope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -443,7 +443,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
   # prepare rope
   rope <- NULL
   if (!is.null(arguments$rope)) {
-    rope = arguments$rope
+    rope <- arguments$rope
   }
   rope <- prepare_rope(rope)
 
@@ -453,7 +453,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
   mu_m1 <- mean(object@extract$mu_m)
   mu_s1 <- mean(object@extract$mu_s)
   mu_l1 <- mean(object@extract$mu_l)
-  y1 <- remg(n, mu = mu_m1, sigma = mu_s1, lambda = mu_l1)
+  y1 <- remg(n, mu=mu_m1, sigma=mu_s1, lambda=mu_l1)
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
@@ -466,7 +466,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
     mu_m2 <- mean(fit2@extract$mu_m)
     mu_s2 <- mean(fit2@extract$mu_s)
     mu_l2 <- mean(fit2@extract$mu_l)
-    y2 <- remg(n, mu = mu_m2, sigma = mu_s2, lambda = mu_l2)
+    y2 <- remg(n, mu=mu_m2, sigma=mu_s2, lambda=mu_l2)
 
     # bins in the histogram
     bins <- 30
@@ -475,7 +475,7 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
     }
 
     # call plot difference from shared plots
-    graph <- shared_plot_difference(y1 = y1, y2 = y2, rope = rope, bins = bins)
+    graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
     return(graph)
   } else {
     warning(wrong_arguments)
@@ -489,11 +489,11 @@ setMethod(f = "plot_distributions_difference", signature(object = "reaction_time
 #' @param object reaction_time_class object.
 #' @rdname reaction_time_class-plot_fit
 #' @aliases plot_fit_reaction_time
-setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition = function(object) {
+setMethod(f="plot_fit", signature(object="reaction_time_class"), definition=function(object) {
   # init local varibales for CRAN check
   rt <- x <- y <- NULL
 
-  df_data <- data.frame(rt = object@data$rt, s = object@data$s)
+  df_data <- data.frame(rt=object@data$rt, s=object@data$s)
 
   df_fit <- NULL
   n <- length(unique(object@data$s))
@@ -516,10 +516,10 @@ setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition 
   n_col <- ceiling(sqrt(n))
 
   # density per subject
-  graph <- ggplot(df_data, aes(x = rt)) +
-    geom_density(fill = "#3182bd", alpha = 0.4, color = NA) +
-    geom_line(data = df_fit, aes(x = x, y = y)) +
-    facet_wrap(~ s, ncol = n_col) +
+  graph <- ggplot(df_data, aes(x=rt)) +
+    geom_density(fill="#3182bd", alpha=0.4, color=NA) +
+    geom_line(data=df_fit, aes(x=x, y=y)) +
+    facet_wrap(~ s, ncol=n_col) +
     xlab("reaction time")
 
   return(graph)
@@ -531,6 +531,6 @@ setMethod(f = "plot_fit", signature(object = "reaction_time_class"), definition 
 #' @param object reaction_time_class object.
 #' @rdname reaction_time_class-plot_trace
 #' @aliases plot_trace_reaction_time
-setMethod(f = "plot_trace", signature(object = "reaction_time_class"), definition = function(object) {
-  rstan::traceplot(object@fit, pars = c("mu_m", "mu_s", "mu_l"), inc_warmup = TRUE)
+setMethod(f="plot_trace", signature(object="reaction_time_class"), definition=function(object) {
+  rstan::traceplot(object@fit, pars=c("mu_m", "mu_s", "mu_l"), inc_warmup = TRUE)
 })

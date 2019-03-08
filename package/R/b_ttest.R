@@ -31,7 +31,7 @@ b_ttest <- function(y, warmup=9000, iter=10000) {
   extract <- extract(fit)
 
   # create output class
-  out <- ttest_class(extract = extract, fit = fit, data = y)
+  out <- ttest_class(extract=extract, fit=fit, data=y)
 
   # return
   return(out)
