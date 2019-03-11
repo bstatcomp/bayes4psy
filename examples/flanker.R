@@ -96,10 +96,10 @@ plot_samples(rt_control, fit2=rt_test)
 plot_samples(rt_control, fit2=rt_test, par="lambda")
 
 # compare distributions
-compare_distributions(rt_control, fit2=rt_test, rope=0.1)
+compare_distributions(rt_control, fit2=rt_test)
 
 # compare distributions with rope
-compare_distributions(rt_control, fit2=rt_test)
+compare_distributions(rt_control, fit2=rt_test, rope=0.1)
 
 # plot distributions
 plot_distributions(rt_control, fit2=rt_test)
@@ -128,6 +128,9 @@ s_congruent <- b_success_rate(r=r, s=s)
 
 # summary
 summary(s_congruent)
+
+# detailed summery
+print(s_congruent)
 
 # check fits
 plot_fit(s_congruent)
