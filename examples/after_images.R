@@ -5,7 +5,7 @@ library(rstan)
 
 ## data wrangling --------------------------------------------------------
 # load data
-df <- read.table("./examples/data/after_images.csv", sep="\t", header=TRUE)
+df <- read.table("../examples/data/after_images.csv", sep="\t", header=TRUE)
 
 # stimuli to indexes
 stimuli_names <- unique(df$stimuli)
@@ -21,7 +21,7 @@ r <- df$r
 g <- df$g
 b <- df$b
 
-# cast to hsv (do this inside lib late ron)
+# cast to hsv (do this inside lib later on)
 df[c("h", "s", "v")] <- with(df, t(rgb2hsv(r, g, b, maxColorValue=255)))
 df$h <- df$h * 2 * pi
 
@@ -40,7 +40,7 @@ stan_data <- list(n = n,
                   s = s,
                   v = v)
 
-model <- stan_model(file="./examples/colours.stan")
+model <- stan_model(file="../examples/colors.stan")
 
 fit <- sampling(model,
                   data = stan_data,
