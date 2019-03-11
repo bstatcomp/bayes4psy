@@ -6,12 +6,21 @@ data {
 }
 
 parameters {
-  // success probability
+  // global parameters
+  real<lower=0,upper=1> p0;
+  real<lower=0> tau;
+
+  // success per subject
   vector<lower=0,upper=1>[m] p;
 }
 
 model {
-  p ~ beta(1, 1);
+  // priors
+  p0 ~ beta(1, 1);
+  tau ~ uniform(0, 500);
+
+  // percentage
+  p ~ beta(p0*tau, (1 - p0)*tau);
 
   // iterate over all measurements
   for (i in 1:n) {

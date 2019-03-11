@@ -40,7 +40,7 @@ stan_data <- list(n = n,
                   s = s,
                   v = v)
 
-model <- stan_model(file='./examples/colours.stan')
+model <- stan_model(file="./examples/colours.stan")
 
 fit <- sampling(model,
                   data = stan_data,

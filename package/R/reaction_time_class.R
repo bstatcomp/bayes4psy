@@ -399,7 +399,7 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
 
       x_max <- max(x_max, mu_m2 + 1/mu_l2 + 4*mu_s2)
 
-      group2_plot <- stat_function(fun=demg, n=n, args=list(mu=mu_m2, sigma=mu_s2, lambda=mu_l2), geom='area', fill='#ff4e3f', alpha=0.4)
+      group2_plot <- stat_function(fun=demg, n=n, args=list(mu=mu_m2, sigma=mu_s2, lambda=mu_l2), geom="area", fill="#ff4e3f", alpha=0.4)
     }
   }
 
@@ -408,7 +408,7 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
 
   # plot
   graph <- ggplot(data=df_x, aes(x=value)) +
-    stat_function(fun=demg, n=n, args=list(mu=mu_m1, sigma=mu_s1, lambda=mu_l1), geom='area', fill='#3182bd', alpha=0.4) +
+    stat_function(fun=demg, n=n, args=list(mu=mu_m1, sigma=mu_s1, lambda=mu_l1), geom="area", fill="#3182bd", alpha=0.4) +
     group2_plot +
     xlab("value")
 
