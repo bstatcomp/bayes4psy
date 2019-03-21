@@ -53,12 +53,12 @@ setMethod(f="summary", signature(object="linear_class"), definition=function(obj
   # get means
   alpha <- mean(object@extract$mu_a)
   beta <- mean(object@extract$mu_b)
-  sigma <- sqrt(mean(object@extract$mu_s))
+  sigma <- mean(object@extract$mu_s)
 
   # hdi
   alpha_hdi <- mcmc_hdi(object@extract$mu_a)
   beta_hdi <- mcmc_hdi(object@extract$mu_b)
-  sigma_hdi <- mcmc_hdi(sqrt(object@extract$mu_s))
+  sigma_hdi <- mcmc_hdi(object@extract$mu_s)
 
   # print
   cat(sprintf("intercept (alpha): %.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
@@ -314,11 +314,11 @@ setMethod(f="compare_distributions", signature(object="linear_class"), definitio
 
   # first group data
   mu_intercept1 <- mean(object@extract$mu_a)
-  sigma_intercept1 <- sqrt(mean(object@extract$ss_a))
+  sigma_intercept1 <- mean(object@extract$sigma_a)
   intercept1 <- stats::rnorm(n, mean=mu_intercept1, sd=sigma_intercept1)
 
   mu_slope1 <- mean(object@extract$mu_b)
-  sigma_slope1 <- sqrt(mean(object@extract$ss_b))
+  sigma_slope1 <- mean(object@extract$sigma_b)
   slope1 <- stats::rnorm(n, mean=mu_slope1, sd=sigma_slope1)
 
   # second group data
@@ -330,11 +330,11 @@ setMethod(f="compare_distributions", signature(object="linear_class"), definitio
       fit2 <- arguments[[1]]
     }
     mu_intercept2 <- mean(fit2@extract$mu_a)
-    sigma_intercept2 <- sqrt(mean(fit2@extract$ss_a))
+    sigma_intercept2 <- mean(fit2@extract$sigma_a)
     intercept2 <- stats::rnorm(n, mean=mu_intercept2, sd=sigma_intercept2)
 
     mu_slope2 <- mean(fit2@extract$mu_b)
-    sigma_slope2 <- sqrt(mean(fit2@extract$ss_b))
+    sigma_slope2 <- mean(fit2@extract$sigma_b)
     slope2 <- stats::rnorm(n, mean=mu_slope2, sd=sigma_slope2)
 
     cat("---------- Intercept ----------\n")
@@ -448,11 +448,11 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
 
   # first group data
   mu_intercept1 <- mean(object@extract$mu_a)
-  sigma_intercept1 <- sqrt(mean(object@extract$ss_a))
+  sigma_intercept1 <- mean(object@extract$sigma_a)
   intercept1 <- stats::rnorm(n, mean=mu_intercept1, sd=sigma_intercept1)
 
   mu_slope1 <- mean(object@extract$mu_b)
-  sigma_slope1 <- sqrt(mean(object@extract$ss_b))
+  sigma_slope1 <- mean(object@extract$sigma_b)
   slope1 <- stats::rnorm(n, mean=mu_slope1, sd=sigma_slope1)
 
   # second group data
@@ -464,11 +464,11 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
       fit2 <- arguments[[1]]
     }
     mu_intercept2 <- mean(fit2@extract$mu_a)
-    sigma_intercept2 <- sqrt(mean(fit2@extract$ss_a))
+    sigma_intercept2 <- mean(fit2@extract$sigma_a)
     intercept2 <- stats::rnorm(n, mean=mu_intercept2, sd=sigma_intercept2)
 
     mu_slope2 <- mean(fit2@extract$mu_b)
-    sigma_slope2 <- sqrt(mean(fit2@extract$ss_b))
+    sigma_slope2 <- mean(fit2@extract$sigma_b)
     slope2 <- stats::rnorm(n, mean=mu_slope2, sd=sigma_slope2)
 
     # bins in the histogram

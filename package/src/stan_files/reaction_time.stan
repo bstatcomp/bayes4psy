@@ -15,15 +15,15 @@ parameters {
   real mu_m;
   real mu_l;
   real mu_s;
-  real<lower=0> ss_m;
-  real<lower=0> ss_l;
-  real<lower=0> ss_s;
+  real<lower=0> sigma_m;
+  real<lower=0> sigma_l;
+  real<lower=0> sigma_s;
 }
 
 model {
-  mu ~ normal(mu_m, ss_m);
-  sigma ~ normal(mu_s, ss_s);
-  lambda ~ normal(mu_l, ss_l);
+  mu ~ normal(mu_m, sigma_m);
+  sigma ~ normal(mu_s, sigma_s);
+  lambda ~ normal(mu_l, sigma_l);
 
   // iterate over all measurements
   for (i in 1:n) {
