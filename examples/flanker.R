@@ -1,7 +1,6 @@
 # libs
 library(EasyBayes)
 
-
 ## data wrangling --------------------------------------------------------
 # load data
 df <- read.table("../examples/data/flanker.csv", sep="\t", header=TRUE)
