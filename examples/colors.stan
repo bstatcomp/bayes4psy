@@ -1,7 +1,5 @@
 data {
 	int<lower=1> n; // number of samples
-	int<lower=1> m; // number of stimuli
-	int<lower=0> stimuli[n]; // id of the stimuli
 	// rgb
 	real<lower=0,upper=255> r[n];
 	real<lower=0,upper=255> g[n];
@@ -14,48 +12,46 @@ data {
 
 parameters {
 	// rgb
-	real<lower=0,upper=255> mu_r[m];
-	real<lower=0> ss_r[m];
-	real<lower=0,upper=255> mu_g[m];
-	real<lower=0> ss_g[m];
-	real<lower=0,upper=255> mu_b[m];
-	real<lower=0> ss_b[m];
+	real<lower=0,upper=255> mu_r;
+	real<lower=0> sigma_r;
+	real<lower=0,upper=255> mu_g;
+	real<lower=0> sigma_g;
+	real<lower=0,upper=255> mu_b;
+	real<lower=0> sigma_b;
 	
 	// hsv
-	real<lower=0,upper=2*pi()> mu_h[m];
-	real<lower=0> kappa_h[m];
-	real<lower=0,upper=1> mu_s[m];
-	real<lower=0> ss_s[m];
-	real<lower=0,upper=1> mu_v[m];
-	real<lower=0> ss_v[m];
+	real<lower=0,upper=2*pi()> mu_h;
+	real<lower=0> kappa_h;
+	real<lower=0,upper=1> mu_s;
+	real<lower=0> sigma_s;
+	real<lower=0,upper=1> mu_v;
+	real<lower=0> sigma_v;
 }
 
 model {
 	// priors
 	// rgb
-	mu_r ~ normal(127.5, 100);
-	ss_r ~ normal(100, 50);
-	mu_g ~ normal(127.5, 100);
-	ss_g ~ normal(100, 50);
-	mu_b ~ normal(127.5, 100);
-	ss_b ~ normal(100, 50);
-
+	mu_r ~ uniform(0, 255);
+	sigma_r ~ uniform(0, 100);
+	mu_g ~ uniform(0, 255);
+	sigma_g ~ uniform(0, 100);
+	mu_b ~ uniform(0, 255);
+	sigma_b ~ uniform(0, 100);
 	// hsv
-	mu_h ~ von_mises(pi(), 1);
-	kappa_h ~ normal(50, 25);
-	mu_s ~ normal(0.5, 0.5);
-	ss_s ~ normal(0.5, 0.2);
-	mu_v ~ normal(0.5, 0.5);
-	ss_v ~ normal(0.5, 0.2);
+	mu_h ~ uniform(0, 2*pi()); 
+	kappa_h ~ uniform(0, 50);
+	mu_s ~ uniform(0, 1);
+	sigma_s ~ uniform(0, 0.5);
+	mu_v ~ uniform(0, 1);
+	sigma_v ~ uniform(0, 0.5);
 
-	for (i in 1:n) {
-		// rgb
-		r[i] ~ normal(mu_r[stimuli[i]], ss_r[stimuli[i]]);
-		g[i] ~ normal(mu_g[stimuli[i]], ss_g[stimuli[i]]);
-		b[i] ~ normal(mu_b[stimuli[i]], ss_b[stimuli[i]]);
-		// hsv
-		h[i] ~ von_mises(mu_h[stimuli[i]], kappa_h[stimuli[i]]);
-		s[i] ~ normal(mu_s[stimuli[i]], ss_s[stimuli[i]]);
-		v[i] ~ normal(mu_v[stimuli[i]], ss_v[stimuli[i]]);
-	}
+	// posteriors
+	// rgb
+	r ~ normal(mu_r, sigma_r);
+	g ~ normal(mu_g, sigma_g);
+	b ~ normal(mu_b, sigma_b);
+	// hsv
+	h ~ von_mises(mu_h, kappa_h);
+	s ~ normal(mu_s, sigma_s);
+	v ~ normal(mu_v, sigma_v);
 }
