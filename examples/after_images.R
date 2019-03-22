@@ -3,14 +3,27 @@ library(EasyBayes)
 library(dplyr)
 library(rstan)
 
+## dummy s4 class
+colors_class <- setClass(
+  "colors_class",
+  slots = c(
+    extract  = "list",
+    fit = "stanfit",
+    data = "list"
+  )
+)
+
 # build model
-model_vm <- stan_model(file = 'colors.stan')
+model <- stan_model(file = 'colors.stan')
 
 ## data wrangling --------------------------------------------------------
 # load data
-df <- read.table("../examples/data/after_images.csv", sep="\t", header=TRUE)
+df_all <- read.table("../examples/data/after_images.csv", sep="\t", header=TRUE)
 
+df_blue <- df_all %>% filter(stimuli == "blue")
+df <- df_blue
 
+## BLUE
 ## colour analysis -------------------------------------------------------
 n <- nrow(df) # number of measurements
 r <- df$r
@@ -34,17 +47,23 @@ stan_data <- list(n = n,
                   s = s,
                   v = v)
 
-model <- stan_model(file="../examples/colors.stan")
-
 fit <- sampling(model,
                   data = stan_data,
-                  warmup = 200,
-                  iter = 400,
+                  warmup = 2000,
+                  iter = 3000,
                   chains = 1)
 
 extract <- extract(fit)
 
-plot_trace(fit, pars=c("mu_h"), inc_warmup=TRUE)
+object <- new("colors_class", extract=extract, fit=fit, data=stan_data)
+
+
+
+## trace plot ------------------------------------------------------------
+traceplot(object@fit, pars=c("mu_r", "mu_g", "mu_b", "mu_h", "mu_s", "mu_v"), inc_warmup=TRUE)
+
+
+
 
 ## summary ---------------------------------------------------------------
 # get means
@@ -91,7 +110,7 @@ cat(sprintf("sigma_b: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
 cat(sprintf("mu_h: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
             mu_h, mcmcse::mcse(object@extract$mu_h)$se, mu_h_hdi[1], mu_h_hdi[2]))
 cat(sprintf("kappa_h: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            kappa_h, mcmcse::mcse(object@extract$kappa_h)$se, kappa_h_hdi[1], kappa_hhdi[2]))
+            kappa_h, mcmcse::mcse(object@extract$kappa_h)$se, kappa_h_hdi[1], kappa_h_hdi[2]))
 cat(sprintf("mu_s: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
             mu_s, mcmcse::mcse(object@extract$mu_s)$se, mu_s_hdi[1], mu_s_hdi[2]))
 cat(sprintf("sigma_s: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
@@ -100,6 +119,208 @@ cat(sprintf("mu_v: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
             mu_v, mcmcse::mcse(object@extract$mu_v)$se, mu_v_hdi[1], mu_v_hdi[2]))
 cat(sprintf("sigma_v: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
             sigma_v, mcmcse::mcse(object@extract$sigma_v)$se, sigma_v_hdi[1], sigma_v_hdi[2]))
+
+
+## show ----------------------------------------------------------------
+show(object@fit)
+
+
+## SECOND FIT
+## RED
+df_red <- df_all %>% filter(stimuli == "red")
+df <- df_red
+
+## colour analysis -------------------------------------------------------
+n <- nrow(df) # number of measurements
+r <- df$r
+g <- df$g
+b <- df$b
+
+# cast to hsv (TODO: this goes inside the b_colors fitter later on)
+df[c("h", "s", "v")] <- with(df, t(rgb2hsv(r, g, b, maxColorValue=255)))
+df$h <- df$h * 2 * pi
+
+h <- df$h
+s <- df$s
+v <- df$v
+
+# fit
+stan_data <- list(n = n,
+                  r = r,
+                  g = g,
+                  b = b,
+                  h = h,
+                  s = s,
+                  v = v)
+
+fit <- sampling(model,
+                data = stan_data,
+                warmup = 2000,
+                iter = 3000,
+                chains = 1)
+
+extract <- extract(fit)
+
+
+fit2 <- new("colors_class", extract=extract, fit=fit, data=stan_data)
+
+traceplot(fit2@fit, pars=c("mu_r", "mu_g", "mu_b", "mu_h", "mu_s", "mu_v"), inc_warmup=TRUE)
+
+
+
+## compare ------------------------------------------------------------ 
+rope <- 1
+rope <- prepare_rope(rope)
+
+# compare fit1, fit2
+y1 <- object@extract$mu_r
+y2 <- fit2@extract$mu_r
+cat("\n---------- R component ----------\n")
+shared_difference(y1=y1, y2=y2, rope=rope)
+
+y1 <- object@extract$mu_g
+y2 <- fit2@extract$mu_g
+cat("\n---------- G component ----------\n")
+shared_difference(y1=y1, y2=y2, rope=rope)
+
+y1 <- object@extract$mu_b
+y2 <- fit2@extract$mu_b
+cat("\n---------- B component ----------\n")
+shared_difference(y1=y1, y2=y2, rope=rope)
+
+y1 <- object@extract$mu_h
+y2 <- fit2@extract$mu_h
+cat("\n---------- H component ----------\n")
+shared_difference(y1=y1, y2=y2, rope=rope)
+
+y1 <- object@extract$mu_s
+y2 <- fit2@extract$mu_s
+cat("\n---------- S component ----------\n")
+shared_difference(y1=y1, y2=y2, rope=rope)
+
+y1 <- object@extract$mu_v
+y2 <- fit2@extract$mu_v
+cat("\n---------- V component ----------\n")
+shared_difference(y1=y1, y2=y2, rope=rope)
+
+
+# hsv2rgb conversion
+# http://www.easyrgb.com/en/math.php
+hsv2rgb <- function(hsv) {
+  h <- hsv[1] / (2 * pi)
+  s <- hsv[2]
+  v <- hsv[3]
+  
+  if (s == 0) {
+    r = v * 255
+    g = v * 255
+    b = v * 255
+  } else {
+    h <- h * 6
+    
+    if (h == 6) {
+      h = 0
+    }
+    
+    i <- floor(h)
+    
+    v1 <- v * (1 - s)
+    v2 <- v * (1 - s * (h - i))
+    v3 <- v * (1 - s * (1 - (h - i)))
+    
+    if (i == 0) {
+      r = v
+      g = v3
+      b = v1
+    }
+    else if (i == 1) {
+      r = v2
+      g = v
+      b = v1
+    }
+    else if (i == 2) {
+      r = v1
+      g = v
+      b = v3
+    }
+    else if (i == 3) {
+      r = v1
+      g = v2
+      b = v
+    }  
+    else if (i == 4) {
+      r = v3
+      g = v1
+      b = v
+    }
+    else {
+      r = v
+      g = v1
+      b = v2
+    }
+    
+    r <- r * 255
+    g <- g * 255
+    b <- b * 255
+  }
+  
+  return(c(r, g, b))
+}
+
+# compare fit1, rgb
+rgb <- c(255,0,0)
+r <- rgb[1]
+g <- rgb[2]
+b <- rgb[3]
+
+hsv <- rgb2hsv(r, g, b, maxColorValue=255)
+h <- hsv[1]
+s <- hsv[2]
+v <- hsv[3]
+
+# compare fit1, hsv
+hsv <- c(0, 1, 1)
+h <- hsv[1]
+s <- hsv[2]
+v <- hsv[3]
+
+rgb <- hsv2rgb(hsv)
+r <- rgb[1]
+g <- rgb[2]
+b <- rgb[3]
+
+# compare fit1, constant
+y1 <- object@extract$mu_r
+y2 <- r
+cat("\n---------- R component ----------\n")
+shared_difference(y1=y1, y2=y2, rope=rope)
+
+y1 <- object@extract$mu_g
+y2 <- g
+cat("\n---------- G component ----------\n")
+shared_difference(y1=y1, y2=y2, rope=rope)
+
+y1 <- object@extract$mu_b
+y2 <- b
+cat("\n---------- B component ----------\n")
+shared_difference(y1=y1, y2=y2, rope=rope)
+
+y1 <- object@extract$mu_h
+y2 <- h
+cat("\n---------- H component ----------\n")
+shared_difference(y1=y1, y2=y2, rope=rope)
+
+y1 <- object@extract$mu_s
+y2 <- s
+cat("\n---------- S component ----------\n")
+shared_difference(y1=y1, y2=y2, rope=rope)
+
+y1 <- object@extract$mu_v
+y2 <- v
+cat("\n---------- V component ----------\n")
+shared_difference(y1=y1, y2=y2, rope=rope)
+
+
 
 # add stimuli data
 colors <- c("cyan", "magenta", "blue", "yellow", "green", "red")
