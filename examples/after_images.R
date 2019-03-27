@@ -203,7 +203,6 @@ y2 <- fit2@extract$mu_v
 cat("\n---------- V component ----------\n")
 shared_difference(y1=y1, y2=y2, rope=rope)
 
-
 # hsv2rgb conversion
 # http://www.easyrgb.com/en/math.php
 hsv2rgb <- function(hsv) {
@@ -319,6 +318,91 @@ y1 <- object@extract$mu_v
 y2 <- v
 cat("\n---------- V component ----------\n")
 shared_difference(y1=y1, y2=y2, rope=rope)
+
+
+## plot_difference --------------------------------------------------------
+bins = 30
+rope <- 1
+rope <- prepare_rope(rope)
+
+# difference between two fits
+y1 <- object@extract$mu_r
+y2 <- fit2@extract$mu_r
+graph_r <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+
+y1 <- object@extract$mu_g
+y2 <- fit2@extract$mu_g
+graph_g <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+
+y1 <- object@extract$mu_b
+y2 <- fit2@extract$mu_b
+graph_b <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+
+y1 <- object@extract$mu_h
+y2 <- fit2@extract$mu_h
+graph_h <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+
+y1 <- object@extract$mu_s
+y2 <- fit2@extract$mu_s
+graph_s <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+
+y1 <- object@extract$mu_v
+y2 <- fit2@extract$mu_v
+graph_v <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+
+cowplot::plot_grid(graph_r, graph_g, graph_b, graph_h, graph_s, graph_v, ncol=3, nrow=2, scale=0.9)
+
+# difference between rgb, hsv
+# compare fit1, rgb
+rgb <- c(255,0,0)
+r <- rgb[1]
+g <- rgb[2]
+b <- rgb[3]
+
+hsv <- rgb2hsv(r, g, b, maxColorValue=255)
+h <- hsv[1]
+s <- hsv[2]
+v <- hsv[3]
+
+# compare fit1, hsv
+hsv <- c(0, 1, 1)
+h <- hsv[1]
+s <- hsv[2]
+v <- hsv[3]
+
+rgb <- hsv2rgb(hsv)
+r <- rgb[1]
+g <- rgb[2]
+b <- rgb[3]
+
+y1 <- object@extract$mu_r
+y2 <- r
+graph_r <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+
+y1 <- object@extract$mu_g
+y2 <- g
+graph_g <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+
+y1 <- object@extract$mu_b
+y2 <- b
+graph_b <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+
+y1 <- object@extract$mu_h
+y2 <- h
+graph_h <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+
+y1 <- object@extract$mu_s
+y2 <- s
+graph_s <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+
+y1 <- object@extract$mu_v
+y2 <- v
+graph_v <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+
+cowplot::plot_grid(graph_r, graph_g, graph_b, graph_h, graph_s, graph_v, ncol=3, nrow=2, scale=0.9)
+
+
+
 
 
 
