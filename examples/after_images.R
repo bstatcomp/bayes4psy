@@ -168,7 +168,7 @@ traceplot(fit2@fit, pars=c("mu_r", "mu_g", "mu_b", "mu_h", "mu_s", "mu_v"), inc_
 
 
 
-## compare ------------------------------------------------------------ 
+## compare ------------------------------------------------------------
 rope <- 1
 rope <- prepare_rope(rope)
 
@@ -209,24 +209,24 @@ hsv2rgb <- function(hsv) {
   h <- hsv[1] / (2 * pi)
   s <- hsv[2]
   v <- hsv[3]
-  
+
   if (s == 0) {
     r = v * 255
     g = v * 255
     b = v * 255
   } else {
     h <- h * 6
-    
+
     if (h == 6) {
       h = 0
     }
-    
+
     i <- floor(h)
-    
+
     v1 <- v * (1 - s)
     v2 <- v * (1 - s * (h - i))
     v3 <- v * (1 - s * (1 - (h - i)))
-    
+
     if (i == 0) {
       r = v
       g = v3
@@ -246,7 +246,7 @@ hsv2rgb <- function(hsv) {
       r = v1
       g = v2
       b = v
-    }  
+    }
     else if (i == 4) {
       r = v3
       g = v1
@@ -257,12 +257,12 @@ hsv2rgb <- function(hsv) {
       g = v1
       b = v2
     }
-    
+
     r <- r * 255
     g <- g * 255
     b <- b * 255
   }
-  
+
   return(c(r, g, b))
 }
 
@@ -402,6 +402,64 @@ graph_v <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
 cowplot::plot_grid(graph_r, graph_g, graph_b, graph_h, graph_s, graph_v, ncol=3, nrow=2, scale=0.9)
 
 
+## TODO HUE DIFFERENCE PLOT
+
+
+## plot samples ----------------------------------------------------------
+# TODO ALL COMPONENTS
+
+# two fits
+df <- data.frame(value=object@extract$mu_r, group="1")
+df <- rbind(df, data.frame(value=fit2@extract$mu_r, group="2"))
+
+# limits
+x_min <- min(df$value)
+x_max <- max(df$value)
+diff <- x_max - x_min
+x_min <- x_min - 0.1*diff
+x_max <- x_max + 0.1*diff
+
+graph <- ggplot() +
+  geom_density(data=df, aes(x=value, fill=group), alpha=0.4, color=NA) +
+  scale_fill_manual(values=c("#a0a0a0", "#000000")) +
+  xlab("value") +
+  xlim(x_min, x_max) +
+  theme(legend.position="none")
+
+
+# fit and rgb
+# compare fit1, rgb or hsv
+df <- data.frame(value=object@extract$mu_r)
+
+rgb <- c(255,255,0)
+r <- rgb[1]
+g <- rgb[2]
+b <- rgb[3]
+
+# limits
+x_min <- min(df$value, r)
+x_max <- max(df$value, r)
+diff <- x_max - x_min
+x_min <- x_min - 0.1*diff
+x_max <- x_max + 0.1*diff
+
+graph <- ggplot() +
+  geom_density(data=df, aes(x=value), alpha=0.4, fill="#000000", color=NA) +
+  xlab("value") +
+  xlim(x_min, x_max) +
+  theme(legend.position="none")
+
+y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+
+graph <- graph +
+  geom_segment(aes(x=r, xend=r, y=0, yend=y_max[2]*1.05), size=1.5, color=rgb(r, g, b, max=255), alpha=0.4) +
+  geom_text(aes(label=sprintf("%.2f", r), x=r, y=y_max[2]*1.08), size=4)
+
+## TODO HSV
+
+
+
+## compare distributions -------------------------------------------------
 
 
 
