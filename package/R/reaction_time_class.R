@@ -83,7 +83,7 @@ setMethod(f="show", signature(object="reaction_time_class"), definition=function
 #' @title compare
 #' @description \code{compare} prints difference in reaction times between two groups.
 #' @param object reaction_time_class object.
-#' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, par - specific parameter of comparison - mu or lambda.
+#' @param ... fit2 - a second reaction_time_class object, rope - region of practical equivalence, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-compare
 #' @aliases compare_reaction_time
 setMethod(f="compare", signature(object="reaction_time_class"), definition=function(object, ...) {
@@ -154,7 +154,7 @@ setMethod(f="compare", signature(object="reaction_time_class"), definition=funct
 #' @title plot_difference
 #' @description \code{plot_difference} a visualization of the difference between two groups.
 #' @param object reaction_time_class object.
-#' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.
+#' @param ... fit2 - a second reaction_time_class object, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_difference
 #' @aliases plot_difference_reaction_time
 setMethod(f="plot_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
@@ -236,7 +236,7 @@ setMethod(f="plot_difference", signature(object="reaction_time_class"), definiti
 #' @title plot_samples
 #' @description \code{plot_samples} plots density for the first group samples, or the first and the second group samples.
 #' @param object reaction_time_class object.
-#' @param ... fit2 - a second linear_class object, par - specific parameter of comparison - mu or lambda.
+#' @param ... fit2 - a second reaction_time_class object, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_samples
 #' @aliases plot_samples_reaction_time
 setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=function(object, ...) {
@@ -313,7 +313,7 @@ setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=
 #' @title compare_distributions
 #' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #' @param object reaction_time_class object.
-#' @param ... fit2 - a second linear_class object, rope - region of practical equivalence.
+#' @param ... fit2 - a second reaction_time_class object, rope - region of practical equivalence.
 #' @rdname reaction_time_class-compare_distributions
 #' @aliases compare_distributions_reaction_time
 setMethod(f="compare_distributions", signature(object="reaction_time_class"), definition=function(object, ...) {
@@ -365,7 +365,7 @@ setMethod(f="compare_distributions", signature(object="reaction_time_class"), de
 #' @title plot_distributions
 #' @description \code{plot_distributions} a visualization of the distribution for the first group, or the first group and the second group.
 #' @param object reaction_time_class object.
-#' @param ... fit2 - a second linear_class object.
+#' @param ... fit2 - a second reaction_time_class object.
 #' @rdname reaction_time_class-plot_distributions
 #' @aliases plot_distributions_reaction_time
 setMethod(f="plot_distributions", signature(object="reaction_time_class"), definition=function(object, ...) {
@@ -419,7 +419,7 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
 #' @title plot_distributions_difference
 #' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group.
 #' @param object reaction_time_class object.
-#' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram.
+#' @param ... fit2 - a second reaction_time_class object, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname reaction_time_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_reaction_time
 setMethod(f="plot_distributions_difference", signature(object="reaction_time_class"), definition=function(object, ...) {

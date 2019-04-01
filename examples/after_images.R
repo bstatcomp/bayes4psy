@@ -207,6 +207,143 @@ bins = 30
 rope <- 1
 rope <- prepare_rope(rope)
 
+plot_difference <- function(object, ...) {
+  # init local varibales for CRAN check
+  value <- NULL
+  
+  # get arguments
+  arguments <- list(...)
+  
+  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(color_class, fit2=color_class), plot_difference(color_class, rgb=vector) or plot_difference(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. plot_difference(color_class, fit2=color_class, rope=numeric), or the bins parameter plot_difference(color_class, fit2=color_class, bins=numeric). You can also execute the comparison through a subset of color components, e.g. plot_difference(color_class, fit2=color_class, par=c(\"h\", \"s\", \"v\"))."
+  
+  if (length(arguments) == 0) {
+    warning(wrong_arguments)
+    return()
+  }
+  
+  # comparing with another fit, rgb or hsv
+  fit2 <- NULL
+  rgb <- NULL
+  hsv <- NULL
+  
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class") {
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+  } else if (!is.null(arguments$rgb)) {
+    rgb <- arguments$rgb
+    hsv <- rgb2hsv(rgb)
+  } else if (!is.null(arguments$hsv)) {
+    hsv <- arguments$hsv
+    rgb <- hsv2rgb(hsv[1], hsv[2], hsv[3])
+  }
+  
+  # are all null?
+  if (is.null(fit2) && is.null(rgb) && is.null(hsv)) {
+    warning(wrong_arguments)
+    return()
+  }
+  
+  # prepare rope
+  rope <- NULL
+  if (!is.null(arguments$rope)) {
+    rope <- arguments$rope
+  }
+  rope <- prepare_rope(rope)
+  
+  # compare through all components or through a subset
+  par <- c("r", "g", "b", "h", "s", "v")
+  if (!is.null(arguments$par)) {
+    par <- arguments$par
+  }
+  
+  graphs <- NULL
+  i <- 0
+  for (p in par) {
+    if (p == "r") {
+      y1 <- object@extract$mu_r
+      
+      if (!is.null(fit2)) {
+        y2 <- fit2@extract$mu_r
+      } else {
+        y2 <- rgb[1]
+      }
+      
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "g") {
+      y1 <- object@extract$mu_g
+      
+      if (!is.null(fit2)) {
+        y2 <- fit2@extract$mu_g
+      } else {
+        y2 <- rgb[2]
+      }
+      
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "b") {
+      y1 <- object@extract$mu_b
+      
+      if (!is.null(fit2)) {
+        y2 <- fit2@extract$mu_b
+      } else {
+        y2 <- rgb[3]
+      }
+      
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "h") {
+      y1 <- object@extract$mu_h
+      
+      if (!is.null(fit2)) {
+        y2 <- fit2@extract$mu_h
+      } else {
+        y2 <- hsv[1]
+      }
+      
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, angular=TRUE)
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "s") {
+      y1 <- object@extract$mu_s
+      
+      if (!is.null(fit2)) {
+        y2 <- fit2@extract$mu_s
+      } else {
+        y2 <- hsv[2]
+      }
+      
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "v") {
+      y1 <- object@extract$mu_v
+      
+      if (!is.null(fit2)) {
+        y2 <- fit2@extract$mu_v
+      } else {
+        y2 <- hsv[3]
+      }
+      
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+      graphs[[i]] <- graph
+      i <- i + 1
+    }
+  }
+  
+  if (i > 1)
+    
+    graph <- cowplot::plot_grid(graphs, ncol=i %% 3, nrow=i %% 3, scale=0.9)
+  
+  return(graph)
+}
+
 # difference between two fits
 y1 <- object@extract$mu_r
 y2 <- fit2@extract$mu_r

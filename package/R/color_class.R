@@ -10,17 +10,17 @@
 #'
 #' show(`color_class`): prints a more detailed summary of the fit.
 #'
-#' compare(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' compare(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' compare(`color_class`, hsv=`vector`): prints color difference between a fit and a color defined with hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare(`color_class`, hsv=`vector`): prints color difference between a fit and a color defined with hsv components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' plot_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
+#' plot_difference(`color_class`, fit2=`color_class`): a visualization of the difference between two fits You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 #'
+#' plot_difference(`color_class`, rgb=`vector`): a visualization of the difference between a fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#'
-#'
+#' plot_difference(`color_class`, hsv=`vector`): a visualization of the difference between a fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 #'
 #'
 #'
@@ -254,84 +254,13 @@ setMethod(f="compare", signature(object="color_class"), definition=function(obje
 
 
 #' @title plot_difference
-#' @description \code{plot_difference} a visualization of the difference between two groups.
-#' @param object reaction_time_class object.
-#' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.
-#' @rdname reaction_time_class-plot_difference
+#' @description \code{plot_difference} a visualization of the difference between two fits
+#' @param object color_class object.
+#' @param ... fit2 - a second color_class object, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.
+#' @rdname color_class-plot_difference
 #' @aliases plot_difference_reaction_time
-setMethod(f="plot_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
-  arguments <- list(...)
+setMethod(f="plot_difference", signature(object="color_class"), definition=function(object, ...) {
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(reaction_time_class, fit2=reaction_time_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(reaction_time_class, fit2=reaction_time_class, rope=numeric, bins=numeric). You can also visualize the difference through only the mu or the lamdba parameter, e.g. plot_difference(reaction_time_class, fit2=reaction_time_class, par=\"mu\")."
-
-  if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
-  }
-
-  # prepare rope
-  rope <- NULL
-  if (!is.null(arguments$rope)) {
-    rope <- arguments$rope
-  }
-  rope <- prepare_rope(rope)
-
-  # compare only through one parameter
-  par <- NULL
-  if (!is.null(arguments$par)) {
-    par <- arguments$par
-
-    if (!(par == "mu" || par == "lambda")) {
-      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu and lambda! Using the default setting for comparison.", par)
-      warning(w)
-      par <- NULL
-    } else {
-      cat(sprintf("Using only the %s parameter.\n", par))
-    }
-  }
-
-  # first group data
-  if (is.null(par)) {
-    y1 <- object@extract$mu_m + 1/object@extract$mu_l
-  } else if (par == "mu") {
-    y1 <- object@extract$mu_m
-  } else if (par == "lambda") {
-    y1 <- object@extract$mu_l
-  }
-
-  # first group data
-  y1 <- object@extract$mu_m + 1/object@extract$mu_l
-
-  # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
-    # provided another fit
-    if (!is.null(arguments$fit2)) {
-      fit2 <- arguments$fit2
-    } else {
-      fit2 <- arguments[[1]]
-    }
-
-    if (is.null(par)) {
-      y2 <- fit2@extract$mu_m + 1/fit2@extract$mu_l
-    } else if (par == "mu") {
-      y2 <- fit2@extract$mu_m
-    } else if (par == "lambda") {
-      y2 <- fit2@extract$mu_l
-    }
-
-    # bins in the histogram
-    bins <- 30
-    if (!is.null(arguments$bins)) {
-      bins <- arguments$bins
-    }
-
-    # call plot difference from shared plots
-    graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
-    return(graph)
-  } else {
-    warning(wrong_arguments)
-    return()
-  }
 })
 
 
