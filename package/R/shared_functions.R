@@ -1,5 +1,12 @@
-shared_difference <- function(y1, y2, rope=NULL) {
+# function for printing the difference between two datasets
+shared_difference <- function(y1, y2, rope=NULL, angular=FALSE) {
   y_diff <- y1 - y2
+
+  # if angular cast differences to a -pi..pi interval
+  if (angular) {
+    y_diff[y_diff > pi] <- y_diff[y_diff > pi] - 2*pi
+    y_diff[y_diff < -pi] <- y_diff[y_diff < -pi] + 2*pi
+  }
 
   n <- length(y_diff)
 
@@ -39,6 +46,8 @@ shared_difference <- function(y1, y2, rope=NULL) {
   cat(sprintf("\n95%% HDI:\n  - Group 1 - Group 2: [%.2f, %.2f]\n", y_diff_l, y_diff_h))
 }
 
+
+# cast the rope interval into the format used throughout the whole library
 prepare_rope <- function(rope) {
   # rope is NULL
   if (is.null(rope)) {
@@ -66,4 +75,76 @@ prepare_rope <- function(rope) {
 
   # return
   return(rope)
+}
+
+
+# hsv2rgb conversion
+# http://www.easyrgb.com/en/math.php
+hsv2rgb <- function(hues, saturations, values) {
+  n <- length(hues)
+  colors <- NULL
+  colors <- matrix(nrow = 3, ncol=0, dimnames = list(c("r","g","b")))
+
+  for (i in 1:n) {
+    h <- hues[i] / (2 * pi)
+    s <- saturations[i]
+    v <- values[i]
+
+    if (s == 0) {
+      r = as.integer(v * 255)
+      g = as.integer(v * 255)
+      b = as.integer(v * 255)
+    } else {
+      h <- h * 6
+
+      if (h == 6) {
+        h = 0
+      }
+
+      i <- floor(h)
+
+      v1 <- v * (1 - s)
+      v2 <- v * (1 - s * (h - i))
+      v3 <- v * (1 - s * (1 - (h - i)))
+
+      if (i == 0) {
+        r = v
+        g = v3
+        b = v1
+      }
+      else if (i == 1) {
+        r = v2
+        g = v
+        b = v1
+      }
+      else if (i == 2) {
+        r = v1
+        g = v
+        b = v3
+      }
+      else if (i == 3) {
+        r = v1
+        g = v2
+        b = v
+      }
+      else if (i == 4) {
+        r = v3
+        g = v1
+        b = v
+      }
+      else {
+        r = v
+        g = v1
+        b = v2
+      }
+
+      r <- as.integer(r * 255)
+      g <- as.integer(g * 255)
+      b <- as.integer(b * 255)
+    }
+
+    colors <- cbind(colors, c(r,g,b))
+  }
+
+  return(colors)
 }

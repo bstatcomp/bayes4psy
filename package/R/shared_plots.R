@@ -1,21 +1,31 @@
 #' @import ggplot2
 
-shared_plot_difference <- function(y1, y2, rope=NULL, bins=30) {
+# function for visalizsing the difference between two datasets
+shared_plot_difference <- function(y1, y2, rope=NULL, bins=30, angular=FALSE) {
   # init local varibales for CRAN check
   value <- NULL
 
   # difference
-  diff <- data.frame(value=y1 - y2)
+  y_diff <- y1 - y2
+
+  # if angular cast differences to a -pi..pi interval
+  if (angular) {
+    y_diff[y_diff > pi] <- y_diff[y_diff > pi] - 2*pi
+    y_diff[y_diff < -pi] <- y_diff[y_diff < -pi] + 2*pi
+  }
+
+  # create df
+  df_diff <- data.frame(value=y_diff)
 
   # get 95% hdi
-  hdi <- mcmc_hdi(diff$value)
+  hdi <- mcmc_hdi(df_diff$value)
 
   # mean difference
-  mean_diff <- mean(diff$value)
+  mean_diff <- mean(df_diff$value)
 
   # get x range
-  x_min <- min(diff)
-  x_max <- max(diff)
+  x_min <- min(df_diff)
+  x_max <- max(df_diff)
   if (!is.null(rope)) {
     x_min <- min(x_min, rope[1])
     x_max <- max(x_max, rope[2])
@@ -23,7 +33,7 @@ shared_plot_difference <- function(y1, y2, rope=NULL, bins=30) {
 
   # basic histogram chart
   graph <- ggplot() +
-    geom_histogram(data=diff, aes(x=value), fill="#3182bd", alpha=0.4, bins=bins, na.rm=T) +
+    geom_histogram(data=df_diff, aes(x=value), fill="#3182bd", alpha=0.4, bins=bins, na.rm=T) +
     xlim(x_min, x_max)
 
   # add mean

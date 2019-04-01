@@ -4,8 +4,8 @@ library(dplyr)
 library(rstan)
 
 ## dummy s4 class
-colors_class <- setClass(
-  "colors_class",
+color_class <- setClass(
+  "color_class",
   slots = c(
     extract  = "list",
     fit = "stanfit",
@@ -55,70 +55,13 @@ fit <- sampling(model,
 
 extract <- extract(fit)
 
-object <- new("colors_class", extract=extract, fit=fit, data=stan_data)
+object <- new("color_class", extract=extract, fit=fit, data=stan_data)
 
 
 
 ## trace plot ------------------------------------------------------------
 traceplot(object@fit, pars=c("mu_r", "mu_g", "mu_b", "mu_h", "mu_s", "mu_v"), inc_warmup=TRUE)
 
-
-
-
-## summary ---------------------------------------------------------------
-# get means
-mu_r <- mean(object@extract$mu_r)
-sigma_r <- mean(object@extract$sigma_r)
-mu_g <- mean(object@extract$mu_g)
-sigma_g <- mean(object@extract$sigma_g)
-mu_b <- mean(object@extract$mu_b)
-sigma_b <- mean(object@extract$sigma_b)
-mu_h <- mean(object@extract$mu_h)
-kappa_h <- mean(object@extract$kappa_h)
-mu_s <- mean(object@extract$mu_s)
-sigma_s <- mean(object@extract$sigma_s)
-mu_v <- mean(object@extract$mu_v)
-sigma_v <- mean(object@extract$sigma_v)
-
-# hdi
-mu_r_hdi <- mcmc_hdi(object@extract$mu_r)
-sigma_r_hdi <- mcmc_hdi(object@extract$sigma_r)
-mu_g_hdi <- mcmc_hdi(object@extract$mu_g)
-sigma_g_hdi <- mcmc_hdi(object@extract$sigma_g)
-mu_b_hdi <- mcmc_hdi(object@extract$mu_b)
-sigma_b_hdi <- mcmc_hdi(object@extract$sigma_b)
-mu_h_hdi <- mcmc_hdi(object@extract$mu_h)
-kappa_h_hdi <- mcmc_hdi(object@extract$kappa_h)
-mu_s_hdi <- mcmc_hdi(object@extract$mu_s)
-sigma_s_hdi <- mcmc_hdi(object@extract$sigma_s)
-mu_v_hdi <- mcmc_hdi(object@extract$mu_v)
-sigma_v_hdi <- mcmc_hdi(object@extract$sigma_v)
-
-# print)
-cat(sprintf("mu_r: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            mu_r, mcmcse::mcse(object@extract$mu_r)$se, mu_r_hdi[1], mu_r_hdi[2]))
-cat(sprintf("sigma_r: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            sigma_r, mcmcse::mcse(object@extract$sigma_r)$se, sigma_r_hdi[1], sigma_r_hdi[2]))
-cat(sprintf("mu_g: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            mu_g, mcmcse::mcse(object@extract$mu_g)$se, mu_g_hdi[1], mu_g_hdi[2]))
-cat(sprintf("sigma_g: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            sigma_g, mcmcse::mcse(object@extract$sigma_g)$se, sigma_g_hdi[1], sigma_g_hdi[2]))
-cat(sprintf("mu_b: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            mu_b, mcmcse::mcse(object@extract$mu_b)$se, mu_b_hdi[1], mu_b_hdi[2]))
-cat(sprintf("sigma_b: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            sigma_b, mcmcse::mcse(object@extract$sigma_b)$se, sigma_b_hdi[1], sigma_b_hdi[2]))
-cat(sprintf("mu_h: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            mu_h, mcmcse::mcse(object@extract$mu_h)$se, mu_h_hdi[1], mu_h_hdi[2]))
-cat(sprintf("kappa_h: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            kappa_h, mcmcse::mcse(object@extract$kappa_h)$se, kappa_h_hdi[1], kappa_h_hdi[2]))
-cat(sprintf("mu_s: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            mu_s, mcmcse::mcse(object@extract$mu_s)$se, mu_s_hdi[1], mu_s_hdi[2]))
-cat(sprintf("sigma_s: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            sigma_s, mcmcse::mcse(object@extract$sigma_s)$se, sigma_s_hdi[1], sigma_s_hdi[2]))
-cat(sprintf("mu_v: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            mu_v, mcmcse::mcse(object@extract$mu_v)$se, mu_v_hdi[1], mu_v_hdi[2]))
-cat(sprintf("sigma_v: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-            sigma_v, mcmcse::mcse(object@extract$sigma_v)$se, sigma_v_hdi[1], sigma_v_hdi[2]))
 
 
 ## show ----------------------------------------------------------------
@@ -162,7 +105,7 @@ fit <- sampling(model,
 extract <- extract(fit)
 
 
-fit2 <- new("colors_class", extract=extract, fit=fit, data=stan_data)
+fit2 <- new("color_class", extract=extract, fit=fit, data=stan_data)
 
 traceplot(fit2@fit, pars=c("mu_r", "mu_g", "mu_b", "mu_h", "mu_s", "mu_v"), inc_warmup=TRUE)
 
@@ -191,7 +134,7 @@ shared_difference(y1=y1, y2=y2, rope=rope)
 y1 <- object@extract$mu_h
 y2 <- fit2@extract$mu_h
 cat("\n---------- H component ----------\n")
-shared_difference(y1=y1, y2=y2, rope=rope)
+shared_difference(y1=y1, y2=y2, rope=rope, angular=TRUE)
 
 y1 <- object@extract$mu_s
 y2 <- fit2@extract$mu_s
@@ -203,68 +146,7 @@ y2 <- fit2@extract$mu_v
 cat("\n---------- V component ----------\n")
 shared_difference(y1=y1, y2=y2, rope=rope)
 
-# hsv2rgb conversion
-# http://www.easyrgb.com/en/math.php
-hsv2rgb <- function(hsv) {
-  h <- hsv[1] / (2 * pi)
-  s <- hsv[2]
-  v <- hsv[3]
 
-  if (s == 0) {
-    r = v * 255
-    g = v * 255
-    b = v * 255
-  } else {
-    h <- h * 6
-
-    if (h == 6) {
-      h = 0
-    }
-
-    i <- floor(h)
-
-    v1 <- v * (1 - s)
-    v2 <- v * (1 - s * (h - i))
-    v3 <- v * (1 - s * (1 - (h - i)))
-
-    if (i == 0) {
-      r = v
-      g = v3
-      b = v1
-    }
-    else if (i == 1) {
-      r = v2
-      g = v
-      b = v1
-    }
-    else if (i == 2) {
-      r = v1
-      g = v
-      b = v3
-    }
-    else if (i == 3) {
-      r = v1
-      g = v2
-      b = v
-    }
-    else if (i == 4) {
-      r = v3
-      g = v1
-      b = v
-    }
-    else {
-      r = v
-      g = v1
-      b = v2
-    }
-
-    r <- r * 255
-    g <- g * 255
-    b <- b * 255
-  }
-
-  return(c(r, g, b))
-}
 
 # compare fit1, rgb
 rgb <- c(255,0,0)
@@ -458,8 +340,16 @@ graph <- graph +
 ## TODO HSV
 
 
+## plot fit --------------------------------------------------------------
+
+
+
 
 ## compare distributions -------------------------------------------------
+
+
+
+
 
 
 
@@ -472,8 +362,6 @@ df_stimuli <- expand.grid(r_s = c(255, 0), g_s = c(255, 0), b_s = c(255, 0))[c(-
 df_stimuli[c("h_s", "s_s", "v_s")] <- with(df_stimuli, t(rgb2hsv(r_s, g_s, b_s, maxColorValue = 255)))
 # merge stimuli data with measurements
 df2 <- inner_join(df, df_stimuli)
-
-
 
 
 ## plot fit --------------------------------------------------------------

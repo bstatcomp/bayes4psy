@@ -5,8 +5,8 @@
 #' @param x a vector containting index of sequence (time).
 #' @param y a vector containting subjet's responses.
 #' @param s a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).
-#' @param warmup Integer specifying the number of warmup iterations per chain.
-#' @param iter Integer specifying the number of iterations (including warmup).
+#' @param warmup Integer specifying the number of warmup iterations per chain (default = 200).
+#' @param iter Integer specifying the number of iterations (including warmup, default = 1200).
 #' @return An object of class `linear_class`.
 b_linear <- function(x, y, s, warmup=200, iter=1200) {
 

@@ -4,8 +4,8 @@
 #' @export
 #' @param r a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).
 #' @param s a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).
-#' @param warmup Integer specifying the number of warmup iterations per chain.
-#' @param iter Integer specifying the number of iterations (including warmup).
+#' @param warmup Integer specifying the number of warmup iterations per chain (default = 200).
+#' @param iter Integer specifying the number of iterations (including warmup, default = 1200).
 #' @return An object of class `success_rate_class`.
 b_success_rate <- function(r, s, warmup=200, iter=1200) {
 

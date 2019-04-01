@@ -4,8 +4,8 @@
 #' @export
 #' @param rt a vector containing reaction times for each measurement.
 #' @param s a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).
-#' @param warmup Integer specifying the number of warmup iterations per chain.
-#' @param iter Integer specifying the number of iterations (including warmup).
+#' @param warmup Integer specifying the number of warmup iterations per chain (default = 200).
+#' @param iter Integer specifying the number of iterations (including warmup, default = 1200).
 #' @return An object of class `reaction_time_class`.
 b_reaction_time <- function(rt, s, warmup=200, iter=1200) {
 
