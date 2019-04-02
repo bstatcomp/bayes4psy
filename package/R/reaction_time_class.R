@@ -14,9 +14,9 @@
 #'
 #' plot_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
 #'
-#' plot_samples(`reaction_time_class`): plots density for the first group samples. You can also visualize the denisty only for a chosen parameter - mu or lambda.
+#' plot_samples(`reaction_time_class`): plots density of the samples samples. You can also visualize the density only for a chosen parameter - mu or lambda.
 #'
-#' plot_samples(`reaction_time_class`, fit2=`reaction_time_class`): plots density for the first and the second group samples. You can also visualize the denisty only for a chosen parameter - mu or lambda.
+#' plot_samples(`reaction_time_class`, fit2=`reaction_time_class`): plots density for the first and the second group samples. You can also visualize the density only for a chosen parameter - mu or lambda.
 #'
 #' compare_distributions(`reaction_time_class`, fit2=`reaction_time_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
@@ -234,7 +234,7 @@ setMethod(f="plot_difference", signature(object="reaction_time_class"), definiti
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots density for the first group samples, or the first and the second group samples.
+#' @description \code{plot_samples} plots density of the samples, or the first and the second group samples.
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second reaction_time_class object, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_samples

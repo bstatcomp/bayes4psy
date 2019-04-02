@@ -20,7 +20,7 @@
 #'
 #' plot_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_samples(`ttest_class`): plots density for the first group samples.
+#' plot_samples(`ttest_class`): plots density of the samples.
 #'
 #' plot_samples(`ttest_class`, fit2=`ttest_class`): plots density for the first and the second group samples.
 #'
@@ -217,7 +217,7 @@ setMethod(f="plot_difference", signature(object="ttest_class"), definition=funct
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots density for the first group samples, the first and the second group samples, or a mean value in case second group is defined as a normal distribution or as a constant.
+#' @description \code{plot_samples} plots density of the samples, the first and the second group samples, or a mean value in case second group is defined as a normal distribution or as a constant.
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value.
 #' @rdname ttest_class-plot_samples
@@ -263,7 +263,7 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
 
     graph <- graph +
       geom_segment(aes(x=mu2, xend=mu2, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
-      geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4)
+      geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4, vjust="inward", hjust="inward")
   }
 
   # limits
@@ -416,7 +416,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
 
     graph <- graph +
       geom_segment(aes(x=y2_mu, xend=y2_mu, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
-      geom_text(aes(label=sprintf("%.2f", y2_mu), x=y2_mu, y=y_max[2]*1.08), size=4)
+      geom_text(aes(label=sprintf("%.2f", y2_mu), x=y2_mu, y=y_max[2]*1.08), size=4, vjust="inward", hjust="inward")
   }
 
   return(graph)

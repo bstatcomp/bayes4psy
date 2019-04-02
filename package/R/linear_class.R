@@ -14,7 +14,7 @@
 #'
 #' plot_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_samples(`linear_class`): plots density for the first group samples.
+#' plot_samples(`linear_class`): plots density of the samples.
 #'
 #' plot_samples(`linear_class`, fit2=`linear_class`): plots density for the first and the second group samples.
 #'
@@ -207,7 +207,7 @@ setMethod(f="plot_difference", signature(object="linear_class"), definition=func
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots first group samples, or the first and the second group samples.
+#' @description \code{plot_samples} plots samples, or the first and the second group samples.
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_samples
