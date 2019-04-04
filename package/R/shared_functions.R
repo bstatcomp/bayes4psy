@@ -40,44 +40,55 @@ shared_difference <- function(y1, y2, rope=NULL) {
   cat(sprintf("\n95%% HDI:\n  - Group 1 - Group 2: [%.2f, %.2f]\n", y_diff_l, y_diff_h))
 }
 
-angular_difference <- function(y1, y2, rope=NULL) {
-  y_diff <- y1 - y2
-  
+# shift circular data, shift according to base if provided
+preprocess_circular <- function (y, base=NULL) {
   # if mean difference is around 0 use a -pi .. pi interval
   # else use 0..2pi
-  mean_diff <- mean(y_diff)
-  
-  small_diff = FALSE
-  if (abs(mean_diff) < pi/2) {
-    small_diff = TRUE
+  mean_y <- mean(y)
+  if (!is.null(base)) {
+    mean_y <- mean(base)
   }
-  
-  if (small_diff) {
-    y_diff[y_diff > pi] <- y_diff[y_diff > pi] - 2*pi
-    y_diff[y_diff < -pi] <- y_diff[y_diff < -pi] + 2*pi
+
+  small_y = FALSE
+  if (abs(mean_y) < pi/2) {
+    small_y = TRUE
+  }
+
+  if (small_y) {
+    y[y > pi] <- y[y > pi] - 2*pi
+    y[y < -pi] <- y[y < -pi] + 2*pi
   } else {
-    y_diff[y_diff < 0] <- y_diff[y_diff < 0] + 2*pi
+    y[y < 0] <- y[y < 0] + 2*pi
   }
-  
+
+  return(y)
+}
+
+# function for printing the difference between two circular datasets
+circular_difference <- function(y1, y2, rope=NULL) {
+  y_diff <- y1 - y2
+
+  y_diff <- preprocess_circular(y_diff)
+
   n <- length(y_diff)
-  
-  # angular distance
+
+  # circular distance
   cat(sprintf("Average difference:\n  |Group 1 - Group 2|: %.2f +/- %.5f",
               mean(y_diff), mcmcse::mcse(y_diff)$se))
-  
+
   hdi <- mcmc_hdi(y_diff)
   y_diff_l <- stats::quantile(hdi[1], 0.025)
   y_diff_h <- stats::quantile(hdi[2], 0.975)
   cat(sprintf("\n95%% HDI:\n  - Group 1 - Group 2: [%.2f, %.2f]", y_diff_l, y_diff_h))
-  
+
   if (!is.null(rope)) {
-    # angular distance
+    # circular distance
     diff_equal <- y_diff > rope[1] & y_diff < rope[2]
     equal <- round(sum(diff_equal) / n, 2)
     cat(sprintf("\nEquality probability:\n  -  %.2f +/- %.5f",
                 equal, mcmcse::mcse(diff_equal)$se))
   }
-  
+
   cat("\n")
 }
 
@@ -190,12 +201,12 @@ mcmc_hdi <- function(samples, cred_mass=0.95) {
   samples <- sort(samples)
   ci_ceil <- ceiling(cred_mass * length(samples))
   n <- length(samples) - ci_ceil
-  
+
   ci_width <- rep(0, n)
   for (i in 1:n) {
     ci_width[i] <- samples[i + ci_ceil] - samples[i]
   }
-  
+
   hdi_min <- samples[which.min(ci_width)]
   hdi_max <- samples[which.min(ci_width) + ci_ceil]
   hdi <- c(hdi_min, hdi_max)

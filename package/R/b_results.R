@@ -46,7 +46,7 @@ setGeneric(name="compare_distributions", function(object, ...) standardGeneric("
 
 
 #' @title plot_distributions
-#' @description \code{plot_distributions} visualizes distributions underlying tested groups.
+#' @description \code{plot_distributions} visualizes fitted distributions.
 #' @param object S4 class object from EasyBayes library.
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_distributions_ttest or ?plot_distributions_linear.
 #' @rdname b_results-plot_distributions

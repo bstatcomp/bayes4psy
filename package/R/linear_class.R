@@ -20,9 +20,9 @@
 #'
 #' compare_distributions(`linear_class`, fit2=`linear_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #'
-#' plot_distributions(`linear_class`): a visualization of the distribution for the first group.
+#' plot_distributions(`linear_class`): a visualization of the fitted distribution.
 #'
-#' plot_distributions(`linear_class`, fit2=`linear_class`): a visualization of the distribution for the first group and the second group.
+#' plot_distributions(`linear_class`, fit2=`linear_class`): a visualization of two fitted distribution.
 #'
 #' plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
@@ -350,7 +350,7 @@ setMethod(f="compare_distributions", signature(object="linear_class"), definitio
 
 
 #' @title plot_distributions
-#' @description \code{plot_distributions} plots distribution of the first group and optionally the distribution of the second group.
+#' @description \code{plot_distributions} a visualization of the fitted distribution, for one or two fits.
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_distributions

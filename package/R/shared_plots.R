@@ -1,29 +1,16 @@
 #' @import ggplot2
 
 # function for visalizsing the difference between two datasets
-shared_plot_difference <- function(y1, y2, rope=NULL, bins=30, angular=FALSE, nrow=1) {
+shared_plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, nrow=1) {
   # init local varibales for CRAN check
   value <- NULL
 
   # difference
   y_diff <- y1 - y2
 
-  # if angular cast differences to a -pi..pi interval or 0..2pi interval
-  if (angular) {
-    # if mean difference is around 0 use a -pi .. pi interval
-    # else use 0..2pi
-    mean_diff <- mean(y_diff)
-    
-    small_diff = FALSE
-    if (abs(mean_diff) < pi/2)
-      small_diff = TRUE
-    
-    if (small_diff) {
-      y_diff[y_diff > pi] <- y_diff[y_diff > pi] - 2*pi
-      y_diff[y_diff < -pi] <- y_diff[y_diff < -pi] + 2*pi
-    } else {
-      y_diff[y_diff < 0] <- y_diff[y_diff < 0] + 2*pi
-    }
+  # if circular cast differences to a -pi..pi interval or 0..2pi interval
+  if (circular) {
+    y_diff <- preprocess_circular(y_diff)
   }
 
   # create df

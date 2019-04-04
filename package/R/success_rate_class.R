@@ -20,9 +20,9 @@
 #'
 #' compare_distributions(`success_rate_class`, fit2=`success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #'
-#' plot_distributions(`success_rate_class`): a visualization of the distribution for the first group.
+#' plot_distributions(`success_rate_class`): a visualization of the fitted distribution.
 #'
-#' plot_distributions(`success_rate_class`, fit2=`success_rate_class`): a visualization of the distribution for the first group and the second group.
+#' plot_distributions(`success_rate_class`, fit2=`success_rate_class`): a visualization of the distribution for two fits.
 #'
 #' plot_distributions_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
@@ -268,7 +268,7 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
 
 
 #' @title plot_distributions
-#' @description \code{plot_distributions} a visualization of the distribution for the first group, or the first group and the second group.
+#' @description \code{plot_distributions} a visualization of the fitted distribution, for one or two fits.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_distributions
@@ -344,7 +344,7 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
   }
   rope <- prepare_rope(rope)
 
-  n <- 10000
+  n <- 100000
 
   # results
   df <- data.frame()

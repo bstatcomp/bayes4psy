@@ -14,7 +14,7 @@ color_class <- setClass(
 )
 
 # build model
-model <- stan_model(file = 'colors.stan')
+model <- stan_model(file = 'src/stan_files/color.stan')
 
 ## data wrangling --------------------------------------------------------
 # load data
@@ -98,15 +98,6 @@ fit2 <- new("color_class", extract=extract, fit=fit, data=stan_data)
 
 
 
-# add stimuli data
-colors <- c("cyan", "magenta", "blue", "yellow", "green", "red")
-df_stimuli <- expand.grid(r_s = c(255, 0), g_s = c(255, 0), b_s = c(255, 0))[c(-1, -8), ] %>%
-  mutate(stimuli = factor(colors), levels = levels(colors)) %>%
-  arrange(stimuli)
-df_stimuli[c("h_s", "s_s", "v_s")] <- with(df_stimuli, t(rgb2hsv(r_s, g_s, b_s, maxColorValue = 255)))
-# merge stimuli data with measurements
-df2 <- inner_join(df, df_stimuli)
-
 
 ## plot fit --------------------------------------------------------------
 
@@ -184,3 +175,16 @@ x <- seq(-pi,pi,0.01)
 y <- (exp(kappa * cos(x - mu))) / (2 * pi * besselI(kappa, 0))
 
 plot(x, y)
+
+
+## TODO FOR EXAMPLE
+
+# add stimuli data
+colors <- c("cyan", "magenta", "blue", "yellow", "green", "red")
+df_stimuli <- expand.grid(r_s = c(255, 0), g_s = c(255, 0), b_s = c(255, 0))[c(-1, -8), ] %>%
+  mutate(stimuli = factor(colors), levels = levels(colors)) %>%
+  arrange(stimuli)
+df_stimuli[c("h_s", "s_s", "v_s")] <- with(df_stimuli, t(rgb2hsv(r_s, g_s, b_s, maxColorValue = 255)))
+# merge stimuli data with measurements
+df2 <- inner_join(df, df_stimuli)
+

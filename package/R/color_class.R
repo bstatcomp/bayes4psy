@@ -29,19 +29,23 @@
 #' plot_samples(`color_class`, rgb=`vector`): plots density for the first and a color defined with rgb components. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
 #'
 #' plot_samples(`color_class`, hsv=`vector`): plots density for the first and a color defined with hsv components. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
-#' 
+#'
 #' compare_distributions(`color_class`, fit2=`color_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
 #' compare_distributions(`color_class`, rgb=`vector`): draws samples from distribution of the first group and compares them againsta color defined with rgb components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #'
 #' compare_distributions(`color_class`, hsv=`vector`): draws samples from distribution of the first group and compares them against a color defined with hsv components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
-#' 
-#' 
-#' 
 #'
-#' plot_distributions(`reaction_time_class`): a visualization of the distribution for the first group.
+#' plot_distributions(`color_class`): a visualization of the fitted distribution.
 #'
-#' plot_distributions(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the distribution for the first group and the second group.
+#' plot_distributions(`color_class`, fit2=`color_class`): a visualization of two fitted distributions.
+#'
+#' plot_distributions(`color_class`, rgb=`vector`): a visualization of the fitted distribution and a color defined with rgb components.
+#'
+#' plot_distributions(`color_class`, hsv=`vector`): a visualization of the fitted distribution and a color defined with hsv components.
+#'
+#'
+#'
 #'
 #' plot_distributions_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
@@ -78,7 +82,8 @@ setMethod(f="summary", signature(object="color_class"), definition=function(obje
   sigma_g <- mean(object@extract$sigma_g)
   mu_b <- mean(object@extract$mu_b)
   sigma_b <- mean(object@extract$sigma_b)
-  mu_h <- mean(object@extract$mu_h)
+
+  mu_h <- mean(preprocess_circular(object@extract$mu_h))
   kappa_h <- mean(object@extract$kappa_h)
   mu_s <- mean(object@extract$mu_s)
   sigma_s <- mean(object@extract$sigma_s)
@@ -92,7 +97,8 @@ setMethod(f="summary", signature(object="color_class"), definition=function(obje
   sigma_g_hdi <- mcmc_hdi(object@extract$sigma_g)
   mu_b_hdi <- mcmc_hdi(object@extract$mu_b)
   sigma_b_hdi <- mcmc_hdi(object@extract$sigma_b)
-  mu_h_hdi <- mcmc_hdi(object@extract$mu_h)
+
+  mu_h_hdi <- mcmc_hdi(preprocess_circular(object@extract$mu_h))
   kappa_h_hdi <- mcmc_hdi(object@extract$kappa_h)
   mu_s_hdi <- mcmc_hdi(object@extract$mu_s)
   sigma_s_hdi <- mcmc_hdi(object@extract$sigma_s)
@@ -113,7 +119,7 @@ setMethod(f="summary", signature(object="color_class"), definition=function(obje
   cat(sprintf("sigma_b: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
               sigma_b, mcmcse::mcse(object@extract$sigma_b)$se, sigma_b_hdi[1], sigma_b_hdi[2]))
   cat(sprintf("mu_h: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-              mu_h, mcmcse::mcse(object@extract$mu_h)$se, mu_h_hdi[1], mu_h_hdi[2]))
+              mu_h, mcmcse::mcse(preprocess_circular(object@extract$mu_h))$se, mu_h_hdi[1], mu_h_hdi[2]))
   cat(sprintf("kappa_h: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
               kappa_h, mcmcse::mcse(object@extract$kappa_h)$se, kappa_h_hdi[1], kappa_h_hdi[2]))
   cat(sprintf("mu_s: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
@@ -235,7 +241,7 @@ setMethod(f="compare", signature(object="color_class"), definition=function(obje
       }
 
       cat("\n------------- H component -------------\n")
-      angular_difference(y1=y1, y2=y2, rope=rope)
+      circular_difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "s") {
       y1 <- object@extract$mu_s
 
@@ -272,19 +278,19 @@ setMethod(f="compare", signature(object="color_class"), definition=function(obje
 setMethod(f="plot_difference", signature(object="color_class"), definition=function(object, ...) {
   # get arguments
   arguments <- list(...)
-  
+
   wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(color_class, fit2=color_class), plot_difference(color_class, rgb=vector) or plot_difference(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. plot_difference(color_class, fit2=color_class, rope=numeric), or the bins parameter plot_difference(color_class, fit2=color_class, bins=numeric). You can also execute the comparison through a subset of color components, e.g. plot_difference(color_class, fit2=color_class, par=c(\"h\", \"s\", \"v\"))."
-  
+
   if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
-  
+
   # comparing with another fit, rgb or hsv
   fit2 <- NULL
   rgb <- NULL
   hsv <- NULL
-  
+
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class") {
     if (!is.null(arguments$fit2)) {
       fit2 <- arguments$fit2
@@ -298,32 +304,32 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
     hsv <- arguments$hsv
     rgb <- hsv2rgb(hsv[1], hsv[2], hsv[3])
   }
-  
+
   # are all null?
   if (is.null(fit2) && is.null(rgb) && is.null(hsv)) {
     warning(wrong_arguments)
     return()
   }
-  
+
   # prepare rope
   rope <- NULL
   if (!is.null(arguments$rope)) {
     rope <- arguments$rope
   }
   rope <- prepare_rope(rope)
-  
+
   # bins in the histogram
   bins <- 30
   if (!is.null(arguments$bins)) {
     bins <- arguments$bins
   }
-  
+
   # compare through all components or through a subset
   par <- c("r", "g", "b", "h", "s", "v")
   if (!is.null(arguments$par)) {
     par <- arguments$par
   }
-  
+
   # calculate number of columns and rows
   n <- length(par)
   nrow <- 1
@@ -335,96 +341,96 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
       ncol = 2
     }
   }
-  
+
   # plot
   graphs <- list()
   i <- 1
   for (p in par) {
     if (p == "r") {
       y1 <- object@extract$mu_r
-      
+
       if (!is.null(fit2)) {
         y2 <- fit2@extract$mu_r
       } else {
         y2 <- rgb[1]
       }
-      
+
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("r") + theme(plot.title = element_text(hjust = 0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "g") {
       y1 <- object@extract$mu_g
-      
+
       if (!is.null(fit2)) {
         y2 <- fit2@extract$mu_g
       } else {
         y2 <- rgb[2]
       }
-      
+
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("g") + theme(plot.title = element_text(hjust = 0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "b") {
       y1 <- object@extract$mu_b
-      
+
       if (!is.null(fit2)) {
         y2 <- fit2@extract$mu_b
       } else {
         y2 <- rgb[3]
       }
-      
+
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("b") + theme(plot.title = element_text(hjust = 0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "h") {
       y1 <- object@extract$mu_h
-      
+
       if (!is.null(fit2)) {
         y2 <- fit2@extract$mu_h
       } else {
         y2 <- hsv[1]
       }
-      
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, angular=TRUE, nrow=nrow)
+
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, circular=TRUE, nrow=nrow)
       graph <- graph + ggtitle("h") + theme(plot.title = element_text(hjust = 0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "s") {
       y1 <- object@extract$mu_s
-      
+
       if (!is.null(fit2)) {
         y2 <- fit2@extract$mu_s
       } else {
         y2 <- hsv[2]
       }
-      
+
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("s") + theme(plot.title = element_text(hjust = 0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "v") {
       y1 <- object@extract$mu_v
-      
+
       if (!is.null(fit2)) {
         y2 <- fit2@extract$mu_v
       } else {
         y2 <- hsv[3]
       }
-      
+
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("v") + theme(plot.title = element_text(hjust = 0.5))
       graphs[[i]] <- graph
       i <- i + 1
     }
   }
-  
+
   if (n > 1) {
     graph <- cowplot::plot_grid(plotlist=graphs, ncol=ncol, nrow=nrow, scale=0.9)
   }
-  
+
   return(graph)
 })
 
@@ -438,22 +444,22 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
 setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
-  
+
   # get arguments
   arguments <- list(...)
-  
+
   wrong_arguments <- "The provided arguments for the plot_samples function are invalid, plot_samples(color_class, fit2=color_class), plot_samples(color_class, rgb=vector) or plot_samples(color_class, hsv=vector) is required! You can execute the comparison through a subset of color components, e.g. plot_samples(color_class, fit2=color_class, par=c(\"h\", \"s\", \"v\"))."
-  
+
   if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
-  
+
   # comparing with another fit, rgb or hsv
   fit2 <- NULL
   rgb <- NULL
   hsv <- NULL
-  
+
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class") {
     if (!is.null(arguments$fit2)) {
       fit2 <- arguments$fit2
@@ -467,13 +473,13 @@ setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=
     hsv <- arguments$hsv
     rgb <- hsv2rgb(hsv[1], hsv[2], hsv[3])
   }
-  
+
   # plot all components or a subset
   par <- c("r", "g", "b", "h", "s", "v")
   if (!is.null(arguments$par)) {
     par <- arguments$par
   }
-  
+
   # calculate number of columns and rows
   n <- length(par)
   nrow <- 1
@@ -485,7 +491,7 @@ setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=
       ncol = 2
     }
   }
-  
+
   # plot
   graphs <- list()
   i <- 1
@@ -494,195 +500,209 @@ setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=
       # first group data
       r_mu1 <- object@extract$mu_r
       r_df1 <- data.frame(value=r_mu1)
-      
+
       # plot
       graph <- ggplot() +
-        geom_density(data=r_df1, aes(x=value), fill="#a0a0a0", alpha=0.4, color=NA) +
+        geom_density(data=r_df1, aes(x=value), fill="#808080", alpha=0.6, color=NA) +
         xlab("value") +
         ggtitle("r") +
-        theme(plot.title = element_text(hjust = 0.5))
-      
+        theme(plot.title = element_text(hjust = 0.5)) +
+        xlim(0, 255)
+
       if (!is.null(fit2)) {
         # second group data
         r_mu2 <- fit2@extract$mu_r
-        r_df2 <- data.frame(value=mu2)
-        
+        r_df2 <- data.frame(value=r_mu2)
+
         graph <- graph +
-          geom_density(data=r_df2, aes(x=value), fill="#000000", alpha=0.4, color=NA)
+          geom_density(data=r_df2, aes(x=value), fill="#000000", alpha=0.6, color=NA)
       } else {
         # predefined color
         r_x2 <- rgb[1]
         r_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
-        
+
         graph <- graph +
           geom_segment(aes(x=r_x2, xend=r_x2, y=0, yend=r_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
           geom_text(aes(label=sprintf("%d", r_x2), x=r_x2, y=r_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
       }
-      
+
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "g") {
       # first group data
       g_mu1 <- object@extract$mu_g
       g_df1 <- data.frame(value=g_mu1)
-      
+
       # plot
       graph <- ggplot() +
-        geom_density(data=g_df1, aes(x=value), fill="#a0a0a0", alpha=0.4, color=NA) +
+        geom_density(data=g_df1, aes(x=value), fill="#808080", alpha=0.6, color=NA) +
         xlab("value") +
         ggtitle("g") +
-        theme(plot.title = element_text(hjust = 0.5))
-      
+        theme(plot.title = element_text(hjust = 0.5)) +
+        xlim(0, 255)
+
       if (!is.null(fit2)) {
         # second group data
         g_mu2 <- fit2@extract$mu_g
         g_df2 <- data.frame(value=g_mu2)
-        
+
         graph <- graph +
-          geom_density(data=g_df2, aes(x=value), fill="#000000", alpha=0.4, color=NA)
+          geom_density(data=g_df2, aes(x=value), fill="#000000", alpha=0.6, color=NA)
       } else {
         # predefined color
         g_x2 <- rgb[2]
         g_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
-        
+
         graph <- graph +
           geom_segment(aes(x=g_x2, xend=g_x2, y=0, yend=g_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
           geom_text(aes(label=sprintf("%d", g_x2), x=g_x2, y=g_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
       }
-      
+
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "b") {
       # first group data
       b_mu1 <- object@extract$mu_b
       b_df1 <- data.frame(value=b_mu1)
-      
+
       # plot
       graph <- ggplot() +
-        geom_density(data=b_df1, aes(x=value), fill="#a0a0a0", alpha=0.4, color=NA) +
+        geom_density(data=b_df1, aes(x=value), fill="#808080", alpha=0.6, color=NA) +
         xlab("value") +
         ggtitle("b") +
-        theme(plot.title = element_text(hjust = 0.5))
-      
+        theme(plot.title = element_text(hjust = 0.5)) +
+        xlim(0, 255)
+
       if (!is.null(fit2)) {
         # second group data
         b_mu2 <- fit2@extract$mu_b
         b_df2 <- data.frame(value=b_mu2)
-        
+
         graph <- graph +
-          geom_density(data=b_df2, aes(x=value), fill="#000000", alpha=0.4, color=NA)
+          geom_density(data=b_df2, aes(x=value), fill="#000000", alpha=0.6, color=NA)
       } else {
         # predefined color
         b_x2 <- rgb[3]
         b_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
-        
+
         graph <- graph +
           geom_segment(aes(x=b_x2, xend=b_x2, y=0, yend=b_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
           geom_text(aes(label=sprintf("%d", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
       }
-      
+
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "h") {
       # first group data
-      h_mu1 <- object@extract$mu_h
+      h_mu1 <- preprocess_circular(object@extract$mu_h)
       h_df1 <- data.frame(value=h_mu1)
-      
+
+      if (sum(h_mu1 < 0) > 0) {
+        x_min = -pi
+        x_max = pi
+      } else {
+        x_min = 0
+        x_max = 2*pi
+      }
+
       # plot
       graph <- ggplot() +
-        geom_density(data=h_df1, aes(x=value), fill="#a0a0a0", alpha=0.4, color=NA) +
+        geom_density(data=h_df1, aes(x=value), fill="#808080", alpha=0.6, color=NA) +
         xlab("value") +
         ggtitle("h") +
-        theme(plot.title = element_text(hjust = 0.5))
-      
+        theme(plot.title = element_text(hjust = 0.5)) +
+        xlim(x_min, x_max)
+
       if (!is.null(fit2)) {
         # second group data
-        h_mu2 <- fit2@extract$mu_h
+        h_mu2 <- preprocess_circular(fit2@extract$mu_h, base=h_mu1)
         h_df2 <- data.frame(value=h_mu2)
-        
+
         graph <- graph +
-          geom_density(data=h_df2, aes(x=value), fill="#000000", alpha=0.4, color=NA)
+          geom_density(data=h_df2, aes(x=value), fill="#000000", alpha=0.6, color=NA)
       } else {
         # predefined color
         h_x2 <- hsv[1]
         h_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
-        
+
         graph <- graph +
           geom_segment(aes(x=h_x2, xend=h_x2, y=0, yend=h_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
           geom_text(aes(label=sprintf("%.2f", h_x2), x=h_x2, y=h_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
       }
-      
+
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "s") {
       # first group data
       s_mu1 <- object@extract$mu_s
       s_df1 <- data.frame(value=s_mu1)
-      
+
       # plot
       graph <- ggplot() +
-        geom_density(data=s_df1, aes(x=value), fill="#a0a0a0", alpha=0.4, color=NA) +
+        geom_density(data=s_df1, aes(x=value), fill="#808080", alpha=0.6, color=NA) +
         xlab("value") +
         ggtitle("s") +
-        theme(plot.title = element_text(hjust = 0.5))
-      
+        theme(plot.title = element_text(hjust = 0.5)) +
+        xlim(0, 1)
+
       if (!is.null(fit2)) {
         # second group data
         s_mu2 <- fit2@extract$mu_s
         s_df2 <- data.frame(value=s_mu2)
-        
+
         graph <- graph +
-          geom_density(data=s_df2, aes(x=value), fill="#000000", alpha=0.4, color=NA)
+          geom_density(data=s_df2, aes(x=value), fill="#000000", alpha=0.6, color=NA)
       } else {
         # predefined color
         s_x2 <- hsv[2]
         s_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
-        
+
         graph <- graph +
           geom_segment(aes(x=s_x2, xend=s_x2, y=0, yend=s_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
           geom_text(aes(label=sprintf("%.2f", s_x2), x=s_x2, y=s_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
       }
-      
+
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "v") {
       # first group data
       v_mu1 <- object@extract$mu_v
       v_df1 <- data.frame(value=v_mu1)
-      
+
       # plot
       graph <- ggplot() +
-        geom_density(data=v_df1, aes(x=value), fill="#a0a0a0", alpha=0.4, color=NA) +
+        geom_density(data=v_df1, aes(x=value), fill="#808080", alpha=0.6, color=NA) +
         xlab("value") +
         ggtitle("v") +
-        theme(plot.title = element_text(hjust = 0.5))
-      
+        theme(plot.title = element_text(hjust = 0.5)) +
+        xlim(0, 1)
+
       if (!is.null(fit2)) {
         # second group data
         v_mu2 <- fit2@extract$mu_v
         v_df2 <- data.frame(value=v_mu2)
-        
+
         graph <- graph +
-          geom_density(data=v_df2, aes(x=value), fill="#000000", alpha=0.4, color=NA)
+          geom_density(data=v_df2, aes(x=value), fill="#000000", alpha=0.6, color=NA)
       } else {
         # predefined color
         v_x2 <- hsv[3]
         v_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
-        
+
         graph <- graph +
           geom_segment(aes(x=v_x2, xend=v_x2, y=0, yend=v_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
           geom_text(aes(label=sprintf("%.2f", v_x2), x=v_x2, y=v_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
       }
-      
+
       graphs[[i]] <- graph
       i <- i + 1
     }
   }
-  
+
   if (n > 1) {
     graph <- cowplot::plot_grid(plotlist=graphs, ncol=ncol, nrow=nrow, scale=0.9)
   }
-  
+
   return(graph)
 })
 
@@ -695,19 +715,19 @@ setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=
 #' @aliases compare_distributions_reaction_time
 setMethod(f="compare_distributions", signature(object="color_class"), definition=function(object, ...) {
   arguments <- list(...)
-  
+
   wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(color_class, fit2=color_class), compare_distributions(color_class, rgb=vector) or compare_distributions(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. compare_distributions(color_class, fit2=color_class, rope=numeric). You can also execute the comparison through a subset of color components, e.g. compare_distributions(color_class, fit2=color_class, par=c(\"h\", \"s\", \"v\"))."
-  
+
   if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
   }
-  
+
   # comparing with another fit, rgb or hsv
   fit2 <- NULL
   rgb <- NULL
   hsv <- NULL
-  
+
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class") {
     if (!is.null(arguments$fit2)) {
       fit2 <- arguments$fit2
@@ -721,129 +741,129 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
     hsv <- arguments$hsv
     rgb <- hsv2rgb(hsv[1], hsv[2], hsv[3])
   }
-  
+
   # are all null?
   if (is.null(fit2) && is.null(rgb) && is.null(hsv)) {
     warning(wrong_arguments)
     return()
   }
-  
+
   # prepare rope
   rope <- NULL
   if (!is.null(arguments$rope)) {
     rope <- arguments$rope
   }
   rope <- prepare_rope(rope)
-  
+
   # compare through all components or through a subset
   par <- c("r", "g", "b", "h", "s", "v")
   if (!is.null(arguments$par)) {
     par <- arguments$par
   }
-  
+
   # compare
   n <- 100000
   for (p in par) {
     if (p == "r") {
       mu1 <- mean(object@extract$mu_r)
       sigma1 <- mean(object@extract$sigma_r)
-      
+
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      
+
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_r)
         sigma2 <- mean(fit2@extract$sigma_r)
-        
+
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
       } else {
         y2 <- rgb[1]
       }
-      
+
       cat("\n------------- R component -------------\n")
       shared_difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "g") {
       mu1 <- mean(object@extract$mu_g)
       sigma1 <- mean(object@extract$sigma_g)
-      
+
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      
+
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_g)
         sigma2 <- mean(fit2@extract$sigma_g)
-        
+
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
       } else {
         y2 <- rgb[2]
       }
-      
+
       cat("\n------------- G component -------------\n")
       shared_difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "b") {
       mu1 <- mean(object@extract$mu_b)
       sigma1 <- mean(object@extract$sigma_b)
-      
+
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      
+
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_b)
         sigma2 <- mean(fit2@extract$sigma_b)
-        
+
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
       } else {
         y2 <- rgb[3]
       }
-      
+
       cat("\n------------- B component -------------\n")
       shared_difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "h") {
-      mu1 <- mean(object@extract$mu_h)
+      mu1 <- mean(preprocess_circular((object@extract$mu_h)))
       kappa1 <- mean(object@extract$kappa_h)
-      
+
       suppressWarnings(y1 <- circular::rvonmises(n, mu=mu1, kappa=kappa1))
-      
+
       if (!is.null(fit2)) {
-        mu2 <- mean(fit2@extract$mu_h)
+        mu2 <- mean(preprocess_circular(fit2@extract$mu_h))
         kappa2 <- mean(fit2@extract$kappa_h)
-        
+
         suppressWarnings(y2 <- circular::rvonmises(n, mu=mu2, kappa=kappa2))
       } else {
         y2 <- hsv[1]
       }
-      
+
       cat("\n------------- H component -------------\n")
-      angular_difference(y1=y1, y2=y2, rope=rope)
+      circular_difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "s") {
       mu1 <- mean(object@extract$mu_s)
       sigma1 <- mean(object@extract$sigma_s)
-      
+
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      
+
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_s)
         sigma2 <- mean(fit2@extract$sigma_s)
-        
+
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
       } else {
         y2 <- hsv[2]
       }
-      
+
       cat("\n------------- S component -------------\n")
       shared_difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "v") {
       mu1 <- mean(object@extract$mu_v)
       sigma1 <- mean(object@extract$sigma_v)
-      
+
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      
+
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_v)
         sigma2 <- mean(fit2@extract$sigma_v)
-        
+
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
       } else {
         y2 <- hsv[3]
       }
-      
+
       cat("\n------------- V component -------------\n")
       shared_difference(y1=y1, y2=y2, rope=rope)
     }
@@ -852,7 +872,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
 
 
 #' @title plot_distributions
-#' @description \code{plot_distributions} a visualization of the distribution for the first group, or the first group and the second group.
+#' @description \code{plot_distributions} a visualization of the fitted distributions or constant colors.
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second linear_class object.
 #' @rdname reaction_time_class-plot_distributions
@@ -861,45 +881,288 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
   # init local varibales for CRAN check
   value <- NULL
 
-  n <- 10000
-
-  # first group data
-  mu_m1 <- mean(object@extract$mu_m)
-  mu_s1 <- mean(object@extract$mu_s)
-  mu_l1 <- mean(object@extract$mu_l)
-
-  # limits
-  x_max <- mu_m1 + 4/mu_l1 + 4*mu_s1
-
-  # second group data
-  group2_plot <- NULL
+  # get arguments
   arguments <- list(...)
-  if (length(arguments) > 0) {
-    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
-      # provided another fit
-      if (!is.null(arguments$fit2)) {
-        fit2 <- arguments$fit2
-      } else {
-        fit2 <- arguments[[1]]
-      }
-      mu_m2 <- mean(fit2@extract$mu_m)
-      mu_s2 <- mean(fit2@extract$mu_s)
-      mu_l2 <- mean(fit2@extract$mu_l)
 
-      x_max <- max(x_max, mu_m2 + 1/mu_l2 + 4*mu_s2)
+  wrong_arguments <- "The provided arguments for the plot_distributions function are invalid, plot_distributions(color_class, fit2=color_class), plot_distributions(color_class, rgb=vector) or plot_distributions(color_class, hsv=vector) is required! You can execute the comparison through a subset of color components, e.g. plot_samples(color_class, fit2=color_class, par=c(\"h\", \"s\", \"v\"))."
 
-      group2_plot <- stat_function(fun=demg, n=n, args=list(mu=mu_m2, sigma=mu_s2, lambda=mu_l2), geom="area", fill="#ff4e3f", alpha=0.4)
+  if (length(arguments) == 0) {
+    warning(wrong_arguments)
+    return()
+  }
+
+  # comparing with another fit, rgb or hsv
+  fit2 <- NULL
+  rgb <- NULL
+  hsv <- NULL
+
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class") {
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+  } else if (!is.null(arguments$rgb)) {
+    rgb <- arguments$rgb
+    hsv <- rgb2hsv(rgb)
+  } else if (!is.null(arguments$hsv)) {
+    hsv <- arguments$hsv
+    rgb <- hsv2rgb(hsv[1], hsv[2], hsv[3])
+  }
+
+  # plot all components or a subset
+  par <- c("r", "g", "b", "h", "s", "v")
+  if (!is.null(arguments$par)) {
+    par <- arguments$par
+  }
+
+  # calculate number of columns and rows
+  n <- length(par)
+  nrow <- 1
+  ncol <- 1
+  if (n > 1) {
+    nrow <- ceiling(n / 3)
+    ncol = 3
+    if (n == 2 || n == 4) {
+      ncol = 2
     }
   }
 
-  x_max <- ceiling(x_max)
-  df_x <- data.frame(value=c(0, x_max))
+  n <- 1000
 
   # plot
-  graph <- ggplot(data=df_x, aes(x=value)) +
-    stat_function(fun=demg, n=n, args=list(mu=mu_m1, sigma=mu_s1, lambda=mu_l1), geom="area", fill="#3182bd", alpha=0.4) +
-    group2_plot +
-    xlab("value")
+  graphs <- list()
+  i <- 1
+  for (p in par) {
+    if (p == "r") {
+      # first group data
+      r_mu1 <- mean(object@extract$mu_r)
+      r_sigma1 <- mean(object@extract$sigma_r)
+
+      # plot
+      df_x <- data.frame(value=c(0, 255))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=r_mu1, sd=r_sigma1), geom="area", fill="#808080", alpha=0.6) +
+        xlab("value") +
+        ggtitle("r") +
+        theme(plot.title = element_text(hjust = 0.5))
+
+      if (!is.null(fit2)) {
+        # second group data
+        r_mu2 <- mean(fit2@extract$mu_r)
+        r_sigma2 <- mean(fit2@extract$sigma_r)
+
+        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=r_mu2, sd=r_sigma2), geom="area", fill="#000000", alpha=0.6)
+      } else {
+        # predefined color
+        r_x2 <- rgb[1]
+        r_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+
+        graph <- graph +
+          geom_segment(aes(x=r_x2, xend=r_x2, y=0, yend=r_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
+          geom_text(aes(label=sprintf("%d", r_x2), x=r_x2, y=r_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+      }
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "g") {
+      # first group data
+      g_mu1 <- mean(object@extract$mu_g)
+      g_sigma1 <- mean(object@extract$sigma_g)
+
+      # plot
+      df_x <- data.frame(value=c(0, 255))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=g_mu1, sd=g_sigma1), geom="area", fill="#808080", alpha=0.6) +
+        xlab("value") +
+        ggtitle("g") +
+        theme(plot.title = element_text(hjust = 0.5))
+
+      if (!is.null(fit2)) {
+        # second group data
+        g_mu2 <- mean(fit2@extract$mu_g)
+        g_sigma2 <- mean(fit2@extract$sigma_g)
+
+        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=g_mu2, sd=g_sigma2), geom="area", fill="#000000", alpha=0.6)
+      } else {
+        # predefined color
+        g_x2 <- rgb[2]
+        g_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+
+        graph <- graph +
+          geom_segment(aes(x=g_x2, xend=g_x2, y=0, yend=g_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
+          geom_text(aes(label=sprintf("%d", g_x2), x=g_x2, y=g_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+      }
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "b") {
+      # first group data
+      b_mu1 <- mean(object@extract$mu_b)
+      b_sigma1 <- mean(object@extract$sigma_b)
+
+      # plot
+      df_x <- data.frame(value=c(0, 255))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu1, sd=b_sigma1), geom="area", fill="#808080", alpha=0.6) +
+        xlab("value") +
+        ggtitle("b") +
+        theme(plot.title = element_text(hjust = 0.5))
+
+      if (!is.null(fit2)) {
+        # second group data
+        b_mu2 <- mean(fit2@extract$mu_b)
+        b_sigma2 <- mean(fit2@extract$sigma_b)
+
+        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu2, sd=b_sigma2), geom="area", fill="#000000", alpha=0.6)
+      } else {
+        # predefined color
+        b_x2 <- rgb[3]
+        b_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+
+        graph <- graph +
+          geom_segment(aes(x=b_x2, xend=b_x2, y=0, yend=b_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
+          geom_text(aes(label=sprintf("%d", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+      }
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "h") {
+      # first group data
+      h_mu1 <- mean(preprocess_circular(object@extract$mu_h))
+      h_kappa1 <- mean(object@extract$kappa_h)
+
+      # plot on -pi..pi or 0..2pi
+      if (sum(h_mu1 < 0) > 0) {
+        x_min = -pi
+        x_max = pi
+      } else {
+        x_min = 0
+        x_max = 2*pi
+      }
+
+      # suppress circular warnings
+      h_mu1 <- suppressWarnings(circular::as.circular(h_mu1))
+      h_kappa1 <- suppressWarnings(circular::as.circular(h_kappa1))
+
+      # get data points
+      step <- 2*pi/n
+      h_x <- suppressWarnings(circular::as.circular(seq(x_min, x_max, step)))
+      h_y1 <- circular::dvonmises(h_x, h_mu1, h_kappa1)
+      df1 <- data.frame(x=h_x, y=h_y1)
+
+      # plot
+      graph <- ggplot() +
+        geom_area(data=df1, aes(x=x, y=y), fill="#808080", alpha=0.6) +
+        xlab("value") +
+        ggtitle("h") +
+        theme(plot.title = element_text(hjust = 0.5))
+
+      if (!is.null(fit2)) {
+        # second group data
+        h_mu2 <- mean(preprocess_circular(fit2@extract$mu_h))
+        h_kappa2 <- mean(fit2@extract$kappa_h)
+
+        # suppress circular warnings
+        h_mu2 <- suppressWarnings(circular::as.circular(h_mu2))
+        h_kappa2 <- suppressWarnings(circular::as.circular(h_kappa2))
+
+        # get data points
+        h_y2 <- circular::dvonmises(h_x, h_mu2, h_kappa2)
+        df2 <- data.frame(x=h_x, y=h_y2)
+
+        # plot
+        graph <- graph + geom_area(data=df1, aes(x=x, y=y), fill="#000000", alpha=0.6)
+      } else {
+        # predefined color
+        h_x2 <- hsv[1]
+        h_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+
+        graph <- graph +
+          geom_segment(aes(x=h_x2, xend=h_x2, y=0, yend=h_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
+          geom_text(aes(label=sprintf("%.2f", h_x2), x=h_x2, y=h_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+      }
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "s") {
+      # first group data
+      s_mu1 <- mean(object@extract$mu_s)
+      s_sigma1 <- mean(object@extract$sigma_s)
+
+      # plot
+      df_x <- data.frame(value=c(0, 1))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=s_mu1, sd=s_sigma1), geom="area", fill="#808080", alpha=0.6) +
+        xlab("value") +
+        ggtitle("s") +
+        theme(plot.title = element_text(hjust = 0.5))
+
+      if (!is.null(fit2)) {
+        # second group data
+        s_mu2 <- mean(fit2@extract$mu_s)
+        s_sigma2 <- mean(fit2@extract$sigma_s)
+
+        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=s_mu2, sd=s_sigma2), geom="area", fill="#000000", alpha=0.6)
+      } else {
+        # predefined color
+        s_x2 <- hsv[2]
+        s_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+
+        graph <- graph +
+          geom_segment(aes(x=s_x2, xend=s_x2, y=0, yend=s_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
+          geom_text(aes(label=sprintf("%.2f", s_x2), x=s_x2, y=s_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+      }
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "v") {
+      # first group data
+      b_mu1 <- mean(object@extract$mu_v)
+      b_sigma1 <- mean(object@extract$sigma_v)
+
+      # plot
+      df_x <- data.frame(value=c(0, 1))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu1, sd=b_sigma1), geom="area", fill="#808080", alpha=0.6) +
+        xlab("value") +
+        ggtitle("v") +
+        theme(plot.title = element_text(hjust = 0.5))
+
+      if (!is.null(fit2)) {
+        # second group data
+        b_mu2 <- mean(fit2@extract$mu_v)
+        b_sigma2 <- mean(fit2@extract$sigma_v)
+
+        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu2, sd=b_sigma2), geom="area", fill="#000000", alpha=0.6)
+      } else {
+        # predefined color
+        b_x2 <- hsv[3]
+        b_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+
+        graph <- graph +
+          geom_segment(aes(x=b_x2, xend=b_x2, y=0, yend=b_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
+          geom_text(aes(label=sprintf("%.2f", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+      }
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    }
+  }
+
+  if (n > 1) {
+    graph <- cowplot::plot_grid(plotlist=graphs, ncol=ncol, nrow=nrow, scale=0.9)
+  }
 
   return(graph)
 })
