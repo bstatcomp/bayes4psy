@@ -51,7 +51,7 @@
 #'
 #' plot_fit(`reaction_time_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
-#'
+#' TODO plot_hue
 #'
 #' plot_trace(`color_class`): traceplot for main fitted model parameters.
 #'
