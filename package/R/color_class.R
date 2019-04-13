@@ -1,6 +1,6 @@
 #' @title color_class
 #' @import ggplot2
-#' @description An S4 class for storing results of reaction time Bayesian model.
+#' @description An S4 class for storing results of Bayesian color model.
 #'
 #' \strong{Functions}
 #'
@@ -44,12 +44,15 @@
 #'
 #' plot_distributions(`color_class`, hsv=`vector`): a visualization of the fitted distribution and a color defined with hsv components.
 #'
+#' plot_distributions_difference(`color_class`, fit2=`color_class`): a visualization of the difference between the distribution of the first fit and the second fit. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#'
+#' plot_distributions_difference(`color_class`, rgb=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#'
+#' plot_distributions_difference(`color_class`, hsv=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 #'
 #'
 #'
-#' plot_distributions_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
-#'
-#' plot_fit(`reaction_time_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
+#' plot_fit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
 #' TODO plot_hue
 #'
@@ -134,21 +137,21 @@ setMethod(f="summary", signature(object="color_class"), definition=function(obje
 
 
 #' @title show
-#' @description \code{show} prints a more detailed summary of the Bayesian reaction time fit.
-#' @param object reaction_time_class object.
+#' @description \code{show} prints a more detailed summary of the Bayesian color fit.
+#' @param object color_class object.
 #' @exportMethod show
-setMethod(f="show", signature(object="reaction_time_class"), definition=function(object) {
+setMethod(f="show", signature(object="color_class"), definition=function(object) {
   # print
   show(object@fit)
 })
 
 
 #' @title compare
-#' @description \code{compare} prints difference in reaction times between two groups.
+#' @description \code{compare} prints difference in colors between two fits, or a fit and a color.
 #' @param object color_class object.
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, par - components of comparison - a subset of (r, g, b, h, s, v).
 #' @rdname color_class-compare
-#' @aliases compare_reaction_time
+#' @aliases compare_color
 setMethod(f="compare", signature(object="color_class"), definition=function(object, ...) {
   arguments <- list(...)
 
@@ -274,7 +277,7 @@ setMethod(f="compare", signature(object="color_class"), definition=function(obje
 #' @param object color_class object.
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, par - components of comparison - a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_difference
-#' @aliases plot_difference_reaction_time
+#' @aliases plot_difference_color
 setMethod(f="plot_difference", signature(object="color_class"), definition=function(object, ...) {
   # get arguments
   arguments <- list(...)
@@ -437,11 +440,11 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
 
 #' @title plot_samples
 #' @description \code{plot_samples} lots density of the samples, the first and the second group samples, or a constant values in case second group is defined as rgb or hsv color..
-#' @param object reaction_time_class object.
+#' @param object color_class object.
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, par - components of comparison - a subset of (r, g, b, h, s, v).
-#' @rdname reaction_time_class-plot_samples
-#' @aliases plot_samples_reaction_time
-setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=function(object, ...) {
+#' @rdname color_class-plot_samples
+#' @aliases plot_samples_color
+setMethod(f="plot_samples", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
 
@@ -712,7 +715,7 @@ setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=
 #' @param object color_class object.
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, par - components of comparison - a subset of (r, g, b, h, s, v).
 #' @rdname color_class-compare_distributions
-#' @aliases compare_distributions_reaction_time
+#' @aliases compare_distributions_color
 setMethod(f="compare_distributions", signature(object="color_class"), definition=function(object, ...) {
   arguments <- list(...)
 
@@ -769,12 +772,14 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       sigma1 <- mean(object@extract$sigma_r)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
+      y1 <- clamp(y1, 0, 255)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_r)
         sigma2 <- mean(fit2@extract$sigma_r)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
+        y2 <- clamp(y2, 0, 255)
       } else {
         y2 <- rgb[1]
       }
@@ -786,12 +791,14 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       sigma1 <- mean(object@extract$sigma_g)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
+      y1 <- clamp(y1, 0, 255)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_g)
         sigma2 <- mean(fit2@extract$sigma_g)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
+        y2 <- clamp(y2, 0, 255)
       } else {
         y2 <- rgb[2]
       }
@@ -803,12 +810,14 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       sigma1 <- mean(object@extract$sigma_b)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
+      y1 <- clamp(y1, 0, 255)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_b)
         sigma2 <- mean(fit2@extract$sigma_b)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
+        y2 <- clamp(y2, 0, 255)
       } else {
         y2 <- rgb[3]
       }
@@ -837,12 +846,14 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       sigma1 <- mean(object@extract$sigma_s)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
+      y1 <- clamp(y1, 0, 1)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_s)
         sigma2 <- mean(fit2@extract$sigma_s)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
+        y2 <- clamp(y2, 0, 1)
       } else {
         y2 <- hsv[2]
       }
@@ -854,12 +865,14 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       sigma1 <- mean(object@extract$sigma_v)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
+      y1 <- clamp(y1, 0, 1)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_v)
         sigma2 <- mean(fit2@extract$sigma_v)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
+        y2 <- clamp(y2, 0, 1)
       } else {
         y2 <- hsv[3]
       }
@@ -873,11 +886,11 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
 
 #' @title plot_distributions
 #' @description \code{plot_distributions} a visualization of the fitted distributions or constant colors.
-#' @param object reaction_time_class object.
-#' @param ... fit2 - a second linear_class object.
-#' @rdname reaction_time_class-plot_distributions
-#' @aliases plot_distributions_reaction_time
-setMethod(f="plot_distributions", signature(object="reaction_time_class"), definition=function(object, ...) {
+#' @param object color_class object.
+#' @param ... fit2 - a second color_class object.
+#' @rdname color_class-plot_distributions
+#' @aliases plot_distributions_color
+setMethod(f="plot_distributions", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
 
@@ -1170,16 +1183,42 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
 
 #' @title plot_distributions_difference
 #' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group.
-#' @param object reaction_time_class object.
+#' @param object color_class object.
 #' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram.
-#' @rdname reaction_time_class-plot_distributions_difference
-#' @aliases plot_distributions_difference_reaction_time
-setMethod(f="plot_distributions_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
+#' @rdname color_class-plot_distributions_difference
+#' @aliases plot_distributions_difference_color
+setMethod(f="plot_distributions_difference", signature(object="color_class"), definition=function(object, ...) {
+  # get arguments
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(reaction_time_class, fit2=reaction_time_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(reaction_time_class, fit2=reaction_time_class, rope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(color_class, fit2=color_class), plot_distributions_difference(color_class, rgb=vector) or plot_distributions_difference(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. plot_distributions_difference(color_class, fit2=color_class, rope=numeric), or the bins parameter plot_distributions_difference(color_class, fit2=color_class, bins=numeric). You can also execute the comparison through a subset of color components, e.g. plot_distributions_difference(color_class, fit2=color_class, par=c(\"h\", \"s\", \"v\"))."
 
   if (length(arguments) == 0) {
+    warning(wrong_arguments)
+    return()
+  }
+
+  # comparing with another fit, rgb or hsv
+  fit2 <- NULL
+  rgb <- NULL
+  hsv <- NULL
+
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class") {
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+  } else if (!is.null(arguments$rgb)) {
+    rgb <- arguments$rgb
+    hsv <- rgb2hsv(rgb)
+  } else if (!is.null(arguments$hsv)) {
+    hsv <- arguments$hsv
+    rgb <- hsv2rgb(hsv[1], hsv[2], hsv[3])
+  }
+
+  # are all null?
+  if (is.null(fit2) && is.null(rgb) && is.null(hsv)) {
     warning(wrong_arguments)
     return()
   }
@@ -1191,40 +1230,165 @@ setMethod(f="plot_distributions_difference", signature(object="reaction_time_cla
   }
   rope <- prepare_rope(rope)
 
-  n <- 100000
-
-  # first group data
-  mu_m1 <- mean(object@extract$mu_m)
-  mu_s1 <- mean(object@extract$mu_s)
-  mu_l1 <- mean(object@extract$mu_l)
-  y1 <- remg(n, mu=mu_m1, sigma=mu_s1, lambda=mu_l1)
-
-  # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "reaction_time_class") {
-    # provided another fit
-    if (!is.null(arguments$fit2)) {
-      fit2 <- arguments$fit2
-    } else {
-      fit2 <- arguments[[1]]
-    }
-    mu_m2 <- mean(fit2@extract$mu_m)
-    mu_s2 <- mean(fit2@extract$mu_s)
-    mu_l2 <- mean(fit2@extract$mu_l)
-    y2 <- remg(n, mu=mu_m2, sigma=mu_s2, lambda=mu_l2)
-
-    # bins in the histogram
-    bins <- 30
-    if (!is.null(arguments$bins)) {
-      bins <- arguments$bins
-    }
-
-    # call plot difference from shared plots
-    graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
-    return(graph)
-  } else {
-    warning(wrong_arguments)
-    return()
+  # bins in the histogram
+  bins <- 30
+  if (!is.null(arguments$bins)) {
+    bins <- arguments$bins
   }
+
+  # compare through all components or through a subset
+  par <- c("r", "g", "b", "h", "s", "v")
+  if (!is.null(arguments$par)) {
+    par <- arguments$par
+  }
+
+  # calculate number of columns and rows
+  n <- length(par)
+  nrow <- 1
+  ncol <- 1
+  if (n > 1) {
+    nrow <- ceiling(n / 3)
+    ncol = 3
+    if (n == 2 || n == 4) {
+      ncol = 2
+    }
+  }
+
+  # plot
+  n <- 100000
+  graphs <- list()
+  i <- 1
+  for (p in par) {
+    if (p == "r") {
+      mu1 <- mean(object@extract$mu_r)
+      sigma1 <- mean(object@extract$sigma_r)
+
+      y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
+      y1 <- clamp(y1, 0, 255)
+
+      if (!is.null(fit2)) {
+        mu2 <- mean(fit2@extract$mu_r)
+        sigma2 <- mean(fit2@extract$sigma_r)
+
+        y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
+        y2 <- clamp(y2, 0, 255)
+      } else {
+        y2 <- rgb[1]
+      }
+
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- graph + ggtitle("r") + theme(plot.title = element_text(hjust = 0.5))
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "g") {
+      mu1 <- mean(object@extract$mu_g)
+      sigma1 <- mean(object@extract$sigma_g)
+
+      y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
+      y1 <- clamp(y1, 0, 255)
+
+      if (!is.null(fit2)) {
+        mu2 <- mean(fit2@extract$mu_g)
+        sigma2 <- mean(fit2@extract$sigma_g)
+
+        y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
+        y2 <- clamp(y2, 0, 255)
+      } else {
+        y2 <- rgb[2]
+      }
+
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- graph + ggtitle("g") + theme(plot.title = element_text(hjust = 0.5))
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "b") {
+      mu1 <- mean(object@extract$mu_b)
+      sigma1 <- mean(object@extract$sigma_b)
+
+      y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
+      y1 <- clamp(y1, 0, 255)
+
+      if (!is.null(fit2)) {
+        mu2 <- mean(fit2@extract$mu_b)
+        sigma2 <- mean(fit2@extract$sigma_b)
+
+        y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
+        y2 <- clamp(y2, 0, 255)
+      } else {
+        y2 <- rgb[3]
+      }
+
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- graph + ggtitle("b") + theme(plot.title = element_text(hjust = 0.5))
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "h") {
+      mu1 <- mean(preprocess_circular((object@extract$mu_h)))
+      kappa1 <- mean(object@extract$kappa_h)
+
+      suppressWarnings(y1 <- circular::rvonmises(n, mu=mu1, kappa=kappa1))
+
+      if (!is.null(fit2)) {
+        mu2 <- mean(preprocess_circular(fit2@extract$mu_h))
+        kappa2 <- mean(fit2@extract$kappa_h)
+
+        suppressWarnings(y2 <- circular::rvonmises(n, mu=mu2, kappa=kappa2))
+      } else {
+        y2 <- hsv[1]
+      }
+
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, circular=TRUE, nrow=nrow)
+      graph <- graph + ggtitle("h") + theme(plot.title = element_text(hjust = 0.5))
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "s") {
+      mu1 <- mean(object@extract$mu_s)
+      sigma1 <- mean(object@extract$sigma_s)
+
+      y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
+      y1 <- clamp(y1, 0, 1)
+
+      if (!is.null(fit2)) {
+        mu2 <- mean(fit2@extract$mu_s)
+        sigma2 <- mean(fit2@extract$sigma_s)
+
+        y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
+        y2 <- clamp(y2, 0, 1)
+      } else {
+        y2 <- hsv[2]
+      }
+
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- graph + ggtitle("s") + theme(plot.title = element_text(hjust = 0.5))
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "v") {
+      mu1 <- mean(object@extract$mu_v)
+      sigma1 <- mean(object@extract$sigma_v)
+
+      y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
+
+      if (!is.null(fit2)) {
+        mu2 <- mean(fit2@extract$mu_v)
+        sigma2 <- mean(fit2@extract$sigma_v)
+
+        y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
+      } else {
+        y2 <- hsv[3]
+      }
+
+      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- graph + ggtitle("v") + theme(plot.title = element_text(hjust = 0.5))
+      graphs[[i]] <- graph
+      i <- i + 1
+    }
+  }
+
+  if (n > 1) {
+    graph <- cowplot::plot_grid(plotlist=graphs, ncol=ncol, nrow=nrow, scale=0.9)
+  }
+
+  return(graph)
 })
 
 
@@ -1274,7 +1438,7 @@ setMethod(f="plot_fit", signature(object="reaction_time_class"), definition=func
 #' @description \code{plot_trace} traceplot for main fitted model parameters.
 #' @param object color_class object.
 #' @rdname color_class-plot_trace
-#' @aliases plot_trace_reaction_time
+#' @aliases plot_trace_color
 setMethod(f="plot_trace", signature(object="color_class"), definition=function(object) {
   rstan::traceplot(object@fit, pars=c("mu_r", "mu_g", "mu_b", "mu_h", "mu_s", "mu_v"), inc_warmup=TRUE)
 })

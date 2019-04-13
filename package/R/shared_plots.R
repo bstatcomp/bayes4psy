@@ -11,6 +11,7 @@ shared_plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, n
   # if circular cast differences to a -pi..pi interval or 0..2pi interval
   if (circular) {
     y_diff <- preprocess_circular(y_diff)
+    y_diff <- as.numeric(y_diff)
   }
 
   # create df
@@ -37,15 +38,38 @@ shared_plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, n
 
   # add mean
   y_max <- max(ggplot_build(graph)$data[[1]]$count)
-  graph <- graph +
-    geom_segment(aes(x=mean_diff, xend=mean_diff, y=0, yend=y_max * 1.05), size=1.5, color="#3182bd", na.rm=T) +
-    geom_text(aes(label=sprintf("%.2f", mean_diff), x=mean_diff, y=y_max * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+
+  # if mean is near min or max hjust inward
+  hjust_range <- (x_max - x_min) * 0.1
+  if (mean_diff < (x_min + hjust_range) || mean_diff > (x_max - hjust_range)) {
+    graph <- graph +
+      geom_segment(aes(x=mean_diff, xend=mean_diff, y=0, yend=y_max * 1.05), size=1.5, color="#3182bd", na.rm=T) +
+      geom_text(aes(label=sprintf("%.2f", mean_diff), x=mean_diff, y=y_max * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+  } else {
+    graph <- graph +
+      geom_segment(aes(x=mean_diff, xend=mean_diff, y=0, yend=y_max * 1.05), size=1.5, color="#3182bd", na.rm=T) +
+      geom_text(aes(label=sprintf("%.2f", mean_diff), x=mean_diff, y=y_max * (1.05 + (nrow * 0.05))), size=4, vjust="inward")
+  }
 
   # add HDI
   graph <- graph +
-    geom_segment(aes(x=hdi[1], xend=hdi[2], y=-(y_max * 0.01 * nrow), yend=-(y_max * 0.01 * nrow)), size=3, color="black", na.rm=T) +
-    geom_text(aes(label=sprintf("%.2f", hdi[1]), x=hdi[1], y=-(y_max * (0.05 * nrow))), size=4, vjust="inward", hjust="inward") +
-    geom_text(aes(label=sprintf("%.2f", hdi[2]), x=hdi[2], y=-(y_max * (0.05 * nrow))), size=4, vjust="inward", hjust="inward")
+    geom_segment(aes(x=hdi[1], xend=hdi[2], y=-(y_max * 0.01 * nrow), yend=-(y_max * 0.01 * nrow)), size=3, color="black", na.rm=T)
+
+  if (hdi[1] < (x_min + hjust_range)) {
+    graph <- graph +
+      geom_text(aes(label=sprintf("%.2f", hdi[1]), x=hdi[1], y=-(y_max * (0.05 * nrow))), size=4, vjust="inward", hjust="inward")
+  } else {
+    graph <- graph +
+      geom_text(aes(label=sprintf("%.2f", hdi[1]), x=hdi[1], y=-(y_max * (0.05 * nrow))), size=4, vjust="inward")
+  }
+
+  if (hdi[2] > (x_max - hjust_range)) {
+    graph <- graph +
+      geom_text(aes(label=sprintf("%.2f", hdi[2]), x=hdi[2], y=-(y_max * (0.05 * nrow))), size=4, vjust="inward", hjust="inward")
+  } else {
+    graph <- graph +
+      geom_text(aes(label=sprintf("%.2f", hdi[2]), x=hdi[2], y=-(y_max * (0.05 * nrow))), size=4, vjust="inward")
+  }
 
   # add ROPE interval?
   if (!is.null(rope)) {

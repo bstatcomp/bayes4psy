@@ -195,6 +195,12 @@ hsv2rgb <- function(hues, saturations, values) {
   return(colors)
 }
 
+# clamp vector between 2 values
+clamp <- function(y, min, max) {
+  y[y < min] <- min
+  y[y > max] <- max
+  return(y)
+}
 
 # author: John Kruschke
 mcmc_hdi <- function(samples, cred_mass=0.95) {
