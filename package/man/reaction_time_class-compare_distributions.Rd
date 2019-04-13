@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{reaction_time_class object.}
 
-\item{...}{fit2 - a second linear_class object, rope - region of practical equivalence.}
+\item{...}{fit2 - a second reaction_time_class object, rope - region of practical equivalence.}
 }
 \description{
 \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.

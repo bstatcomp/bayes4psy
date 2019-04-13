@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{reaction_time_class object.}
 
-\item{...}{fit2 - a second linear_class object, rope - region of practical equivalence, par - specific parameter of comparison - mu or lambda.}
+\item{...}{fit2 - a second reaction_time_class object, rope - region of practical equivalence, par - specific parameter of comparison - mu or lambda.}
 }
 \description{
 \code{compare} prints difference in reaction times between two groups.

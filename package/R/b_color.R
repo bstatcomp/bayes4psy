@@ -9,7 +9,7 @@
 #' @return An object of class `color_class`
 b_color <- function(colors, hsv=FALSE, warmup=2000, iter=3000) {
 
-  n <- length(colors)
+  n <- nrow(colors)
 
   if (!hsv) {
     # extract rgb

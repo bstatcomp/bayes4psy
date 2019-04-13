@@ -14,5 +14,5 @@
 \item{...}{fit2 - a second ttest_class object, mu - mean value.}
 }
 \description{
-\code{plot_samples} plots density for the first group samples, the first and the second group samples, or a mean value in case second group is defined as a normal distribution or as a constant.
+\code{plot_samples} plots density of the samples, the first and the second group samples, or a mean value in case second group is defined as a normal distribution or as a constant.
 }

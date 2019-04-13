@@ -1,7 +1,6 @@
 # libs
 library(EasyBayes)
 library(dplyr)
-library(rstan)
 
 
 ## data wrangling --------------------------------------------------------
@@ -13,6 +12,8 @@ df_blue <- df_all %>% filter(stimuli == "blue")
 n <- nrow(df_blue) # number of measurements
 df <- data.frame(r = df_blue$r, g=df_blue$g, b=df_blue$b)
 fit1 <- b_color(df)
+
+plot_fit(fit1, par=c("h", "s", "v"))
 
 ## RED
 df_red <- df_all %>% filter(stimuli == "red")

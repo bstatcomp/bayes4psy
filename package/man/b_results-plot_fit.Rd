@@ -4,7 +4,7 @@
 \alias{plot_fit}
 \title{plot_fit}
 \usage{
-plot_fit(object)
+plot_fit(object, ...)
 }
 \arguments{
 \item{object}{S4 class object from EasyBayes library.}

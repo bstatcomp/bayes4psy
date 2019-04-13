@@ -14,5 +14,5 @@
 \item{...}{fit2 - a second linear_class object.}
 }
 \description{
-\code{plot_distributions} plots distribution of the first group and optionally the distribution of the second group.
+\code{plot_distributions} a visualization of the fitted distribution, for one or two fits.
 }
