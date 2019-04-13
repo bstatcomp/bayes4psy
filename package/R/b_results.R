@@ -68,7 +68,7 @@ setGeneric(name="plot_distributions_difference", function(object, ...) standardG
 #' @param object S4 class object from EasyBayes library.
 #' @rdname b_results-plot_fit
 #' @exportMethod plot_fit
-setGeneric(name="plot_fit", function(object) standardGeneric("plot_fit"))
+setGeneric(name="plot_fit", function(object, ...) standardGeneric("plot_fit"))
 
 
 #' @title plot_trace

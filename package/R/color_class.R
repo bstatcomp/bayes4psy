@@ -50,9 +50,7 @@
 #'
 #' plot_distributions_difference(`color_class`, hsv=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#'
-#'
-#' plot_fit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
+#' plot_fit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
 #'
 #' TODO plot_hue
 #'
@@ -1393,42 +1391,174 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
 
 
 #' @title plot_fit
-#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
-#' @param object reaction_time_class object.
-#' @rdname reaction_time_class-plot_fit
-#' @aliases plot_fit_reaction_time
-setMethod(f="plot_fit", signature(object="reaction_time_class"), definition=function(object) {
-  # init local varibales for CRAN check
-  rt <- x <- y <- NULL
+#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
+#' @param object color_class object.
+#' @rdname color_class-plot_fit
+#' @aliases plot_fit_color
+setMethod(f="plot_fit", signature(object="color_class"), definition=function(object, ...) {
+  # get arguments
+  arguments <- list(...)
 
-  df_data <- data.frame(rt=object@data$rt, s=object@data$s)
-
-  df_fit <- NULL
-  n <- length(unique(object@data$s))
-
-  x_min <- floor(min(object@data$rt))
-  x_max <- ceiling(max(object@data$rt))
-
-  for (i in 1:n) {
-    df <- data.frame(x = seq(x_min, x_max, 0.01),
-                     s = i,
-                     y = demg(seq(x_min, x_max, 0.01),
-                              mu = mean(object@extract$mu[,i]),
-                              sigma = mean(object@extract$sigma[,i]),
-                              lambda = mean(object@extract$lambda[,i])))
-
-    df_fit <- rbind(df_fit, df)
+  # compare through all components or through a subset
+  par <- c("r", "g", "b", "h", "s", "v")
+  if (length(arguments) != 0 && !is.null(arguments$par)) {
+    par <- arguments$par
   }
 
-  # ncol
-  n_col <- ceiling(sqrt(n))
+  # calculate number of columns and rows
+  n <- length(par)
+  nrow <- 1
+  ncol <- 1
+  if (n > 1) {
+    nrow <- ceiling(n / 3)
+    ncol = 3
+    if (n == 2 || n == 4) {
+      ncol = 2
+    }
+  }
 
-  # density per subject
-  graph <- ggplot(df_data, aes(x=rt)) +
-    geom_density(fill="#3182bd", alpha=0.4, color=NA) +
-    geom_line(data=df_fit, aes(x=x, y=y)) +
-    facet_wrap(~ s, ncol=n_col) +
-    xlab("reaction time")
+  n <- 1000
+
+  # plot
+  graphs <- list()
+  i <- 1
+  for (p in par) {
+    if (p == "r") {
+      # first group data
+      r_data <- data.frame(x=object@data$r)
+      r_mu <- mean(object@extract$mu_r)
+      r_sigma <- mean(object@extract$sigma_r)
+
+      # plot
+      df_x <- data.frame(value=c(0, 255))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        geom_density(data=r_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=r_mu, sd=r_sigma), geom="line", size=1, color="#000000") +
+        xlab("value") +
+        ggtitle("r") +
+        theme(plot.title = element_text(hjust = 0.5))
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "g") {
+      # first group data
+      g_data <- data.frame(x=object@data$g)
+      g_mu <- mean(object@extract$mu_g)
+      g_sigma <- mean(object@extract$sigma_g)
+
+      # plot
+      df_x <- data.frame(value=c(0, 255))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        geom_density(data=g_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=g_mu, sd=g_sigma), geom="line", size=1, color="#000000") +
+        xlab("value") +
+        ggtitle("g") +
+        theme(plot.title = element_text(hjust = 0.5))
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "b") {
+      # first group data
+      b_data <- data.frame(x=object@data$b)
+      b_mu <- mean(object@extract$mu_b)
+      b_sigma <- mean(object@extract$sigma_b)
+
+      # plot
+      df_x <- data.frame(value=c(0, 255))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        geom_density(data=b_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu, sd=b_sigma), geom="line", size=1, color="#000000") +
+        xlab("value") +
+        ggtitle("b") +
+        theme(plot.title = element_text(hjust = 0.5))
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "h") {
+      # first group data
+      h_data <- data.frame(x=preprocess_circular(object@data$h))
+      h_mu <- mean(preprocess_circular(object@extract$mu_h))
+      h_kappa <- mean(object@extract$kappa_h)
+
+      # plot on -pi..pi or 0..2pi
+      if (sum(h_mu < 0) > 0) {
+        x_min = -pi
+        x_max = pi
+      } else {
+        x_min = 0
+        x_max = 2*pi
+      }
+
+      # suppress circular warnings
+      h_mu <- suppressWarnings(circular::as.circular(h_mu))
+      h_kappa <- suppressWarnings(circular::as.circular(h_kappa))
+
+      # get data points
+      step <- 2*pi/n
+      h_x <- suppressWarnings(circular::as.circular(seq(x_min, x_max, step)))
+      h_y <- circular::dvonmises(h_x, h_mu, h_kappa)
+      df <- data.frame(x=h_x, y=h_y)
+
+      # plot
+      graph <- ggplot() +
+        geom_density(data=h_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
+        geom_line(data=df, aes(x=x, y=y), color="#000000", size=1) +
+        xlab("value") +
+        ggtitle("h") +
+        theme(plot.title = element_text(hjust = 0.5))
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "s") {
+      # first group data
+      s_data <- data.frame(x=object@data$s)
+      s_mu <- mean(object@extract$mu_s)
+      s_sigma <- mean(object@extract$sigma_s)
+
+      # plot
+      df_x <- data.frame(value=c(0, 1))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        geom_density(data=s_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=s_mu, sd=s_sigma), geom="line", size=1, color="#000000") +
+        xlab("value") +
+        ggtitle("s") +
+        theme(plot.title = element_text(hjust = 0.5))
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "v") {
+      # first group data
+      v_data <- data.frame(x=object@data$v)
+      b_mu <- mean(object@extract$mu_v)
+      b_sigma <- mean(object@extract$sigma_v)
+
+      # plot
+      df_x <- data.frame(value=c(0, 1))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        geom_density(data=v_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu, sd=b_sigma), geom="line", size=1, color="#000000") +
+        xlab("value") +
+        ggtitle("v") +
+        theme(plot.title = element_text(hjust = 0.5))
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    }
+  }
+
+  if (n > 1) {
+    graph <- cowplot::plot_grid(plotlist=graphs, ncol=ncol, nrow=nrow, scale=0.9)
+  }
 
   return(graph)
 })

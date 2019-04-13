@@ -2,12 +2,12 @@
 #' @description Bayesian model for comparing colors.
 #' @import rstan
 #' @export
-#' @param colors a data frame of colors either in RGB or HSV format. The first column should be the R (or H) component , the second column should be the G (or S) component, and the third columne should be the B (or V) component.
+#' @param colors a data frame of colors either in RGB or HSV format. The first column should be the R (or H) component, the second column should be the G (or S) component, and the third columne should be the B (or V) component.
 #' @param hsv set to TRUE if colors are provided in HSV format (default = FALSE).
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 2000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 3000).
-#' @return An object of class `color_class`.
-b_color <- function(colors, hsv=FALSE, warmup=200, iter=1200) {
+#' @return An object of class `color_class`
+b_color <- function(colors, hsv=FALSE, warmup=2000, iter=3000) {
 
   n <- length(colors)
 
