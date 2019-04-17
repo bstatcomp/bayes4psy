@@ -61,11 +61,11 @@ setMethod(f="summary", signature(object="linear_class"), definition=function(obj
   sigma_hdi <- mcmc_hdi(object@extract$mu_s)
 
   # print
-  cat(sprintf("intercept (alpha): %.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("intercept (alpha):\t%.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
               alpha, mcmcse::mcse(object@extract$mu_a)$se, alpha_hdi[1], alpha_hdi[2]))
-  cat(sprintf("slope (beta): %.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("slope (beta):\t\t%.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
               beta, mcmcse::mcse(object@extract$mu_b)$se, beta_hdi[1], beta_hdi[2]))
-  cat(sprintf("sigma: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("sigma:\t\t\t%.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
               sigma, mcmcse::mcse(object@extract$mu_s)$se, sigma_hdi[1], sigma_hdi[2]))
 })
 

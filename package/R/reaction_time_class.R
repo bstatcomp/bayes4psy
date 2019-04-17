@@ -61,11 +61,11 @@ setMethod(f="summary", signature(object="reaction_time_class"), definition=funct
   lambda_hdi <- mcmc_hdi(object@extract$mu_l)
 
   # print
-  cat(sprintf("mu: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("mu:\tzt%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               mu, mcmcse::mcse(object@extract$mu_m)$se, mu_hdi[1], mu_hdi[2]))
-  cat(sprintf("sigma: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("sigma:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               sigma, mcmcse::mcse(object@extract$mu_s)$se, sigma_hdi[1], sigma_hdi[2]))
-  cat(sprintf("lambda: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("lambda:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               lambda, mcmcse::mcse(object@extract$mu_l)$se, lambda_hdi[1], lambda_hdi[2]))
 })
 

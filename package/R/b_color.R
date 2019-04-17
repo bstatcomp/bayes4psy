@@ -36,19 +36,18 @@ b_color <- function(colors, hsv=FALSE, warmup=2000, iter=3000) {
     b <- colors$b
   }
 
-  stan_data <- list(n = n,
-                    r = r,
-                    g = g,
-                    b = b,
-                    h = h,
-                    s = s,
-                    v = v)
+  stan_data <- list(n=n,
+                    r=r,
+                    g=g,
+                    b=b,
+                    h=h,
+                    s=s,
+                    v=v)
 
   fit <- sampling(stanmodels$color,
-                        data = stan_data,
-                        iter = iter,
-                        warmup = warmup,
-                        chains = 1)
+                        data=stan_data,
+                        iter=iter,
+                        warmup=warmup)
 
   extract <- extract(fit)
 

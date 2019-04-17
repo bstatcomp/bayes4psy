@@ -13,18 +13,17 @@ b_linear <- function(x, y, s, warmup=200, iter=1200) {
   n <- length(y)
   m <- length(unique(s))
 
-  stan_data <- list(n = n,
-                    m = m,
-                    x = x,
-                    y = y,
-                    s = s)
+  stan_data <- list(n=n,
+                    m=m,
+                    x=x,
+                    y=y,
+                    s=s)
 
   fit <- sampling(stanmodels$linear,
-                         data = stan_data,
-                         iter = iter,
-                         warmup = warmup,
-                         chains = 1,
-                         control = list(adapt_delta=0.99, max_treedepth=15))
+                         data=stan_data,
+                         iter=iter,
+                         warmup=warmup,
+                         control=list(adapt_delta=0.99, max_treedepth=15))
 
   extract <- extract(fit)
 

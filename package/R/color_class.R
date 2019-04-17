@@ -107,29 +107,29 @@ setMethod(f="summary", signature(object="color_class"), definition=function(obje
   sigma_v_hdi <- mcmc_hdi(object@extract$sigma_v)
 
   # print)
-  cat(sprintf("mu_r: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("mu_r:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               mu_r, mcmcse::mcse(object@extract$mu_r)$se, mu_r_hdi[1], mu_r_hdi[2]))
-  cat(sprintf("sigma_r: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("sigma_r:\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               sigma_r, mcmcse::mcse(object@extract$sigma_r)$se, sigma_r_hdi[1], sigma_r_hdi[2]))
-  cat(sprintf("mu_g: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("mu_g:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               mu_g, mcmcse::mcse(object@extract$mu_g)$se, mu_g_hdi[1], mu_g_hdi[2]))
-  cat(sprintf("sigma_g: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("sigma_g:\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               sigma_g, mcmcse::mcse(object@extract$sigma_g)$se, sigma_g_hdi[1], sigma_g_hdi[2]))
-  cat(sprintf("mu_b: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("mu_b:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               mu_b, mcmcse::mcse(object@extract$mu_b)$se, mu_b_hdi[1], mu_b_hdi[2]))
-  cat(sprintf("sigma_b: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("sigma_b:\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               sigma_b, mcmcse::mcse(object@extract$sigma_b)$se, sigma_b_hdi[1], sigma_b_hdi[2]))
-  cat(sprintf("mu_h: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("mu_h:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               mu_h, mcmcse::mcse(preprocess_circular(object@extract$mu_h))$se, mu_h_hdi[1], mu_h_hdi[2]))
-  cat(sprintf("kappa_h: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("kappa_h:\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               kappa_h, mcmcse::mcse(object@extract$kappa_h)$se, kappa_h_hdi[1], kappa_h_hdi[2]))
-  cat(sprintf("mu_s: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("mu_s:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               mu_s, mcmcse::mcse(object@extract$mu_s)$se, mu_s_hdi[1], mu_s_hdi[2]))
-  cat(sprintf("sigma_s: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("sigma_s:\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               sigma_s, mcmcse::mcse(object@extract$sigma_s)$se, sigma_s_hdi[1], sigma_s_hdi[2]))
-  cat(sprintf("mu_v: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("mu_v:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               mu_v, mcmcse::mcse(object@extract$mu_v)$se, mu_v_hdi[1], mu_v_hdi[2]))
-  cat(sprintf("sigma_v: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("sigma_v:\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               sigma_v, mcmcse::mcse(object@extract$sigma_v)$se, sigma_v_hdi[1], sigma_v_hdi[2]))
 })
 
@@ -332,13 +332,13 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
   }
 
   # calculate number of columns and rows
-  n <- length(par)
+  n_graph <- length(par)
   nrow <- 1
   ncol <- 1
-  if (n > 1) {
-    nrow <- ceiling(n / 3)
+  if (n_graph > 1) {
+    nrow <- ceiling(n_graph / 3)
     ncol = 3
-    if (n == 2 || n == 4) {
+    if (n_graph == 2 || n_graph == 4) {
       ncol = 2
     }
   }
@@ -428,7 +428,7 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
     }
   }
 
-  if (n > 1) {
+  if (n_graph > 1) {
     graph <- cowplot::plot_grid(plotlist=graphs, ncol=ncol, nrow=nrow, scale=0.9)
   }
 
@@ -447,13 +447,9 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
   value <- NULL
 
   # get arguments
-  arguments <- list(...)
-
-  wrong_arguments <- "The provided arguments for the plot_samples function are invalid, plot_samples(color_class, fit2=color_class), plot_samples(color_class, rgb=vector) or plot_samples(color_class, hsv=vector) is required! You can execute the comparison through a subset of color components, e.g. plot_samples(color_class, fit2=color_class, par=c(\"h\", \"s\", \"v\"))."
-
-  if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+  arguments <- NULL
+  if (length(list(...))) {
+    arguments <- list(...)
   }
 
   # comparing with another fit, rgb or hsv
@@ -461,7 +457,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
   rgb <- NULL
   hsv <- NULL
 
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class") {
+  if (!is.null(arguments) && (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class")) {
     if (!is.null(arguments$fit2)) {
       fit2 <- arguments$fit2
     } else {
@@ -482,13 +478,13 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
   }
 
   # calculate number of columns and rows
-  n <- length(par)
+  n_graph <- length(par)
   nrow <- 1
   ncol <- 1
-  if (n > 1) {
-    nrow <- ceiling(n / 3)
+  if (n_graph > 1) {
+    nrow <- ceiling(n_graph / 3)
     ncol = 3
-    if (n == 2 || n == 4) {
+    if (n_graph == 2 || n_graph == 4) {
       ncol = 2
     }
   }
@@ -504,7 +500,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
 
       # plot
       graph <- ggplot() +
-        geom_density(data=r_df1, aes(x=value), fill="#808080", alpha=0.6, color=NA) +
+        geom_density(data=r_df1, aes(x=value), fill="#808080", alpha=0.5, color=NA) +
         xlab("value") +
         ggtitle("r") +
         theme(plot.title = element_text(hjust = 0.5)) +
@@ -516,8 +512,8 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         r_df2 <- data.frame(value=r_mu2)
 
         graph <- graph +
-          geom_density(data=r_df2, aes(x=value), fill="#000000", alpha=0.6, color=NA)
-      } else {
+          stat_density(data=r_df2, aes(x=value), geom="line", color="#000000", size=1)
+      } else if (!is.null(rgb)) {
         # predefined color
         r_x2 <- rgb[1]
         r_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
@@ -536,7 +532,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
 
       # plot
       graph <- ggplot() +
-        geom_density(data=g_df1, aes(x=value), fill="#808080", alpha=0.6, color=NA) +
+        geom_density(data=g_df1, aes(x=value), fill="#808080", alpha=0.5, color=NA) +
         xlab("value") +
         ggtitle("g") +
         theme(plot.title = element_text(hjust = 0.5)) +
@@ -548,8 +544,8 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         g_df2 <- data.frame(value=g_mu2)
 
         graph <- graph +
-          geom_density(data=g_df2, aes(x=value), fill="#000000", alpha=0.6, color=NA)
-      } else {
+          stat_density(data=g_df2, aes(x=value), geom="line", color="#000000", size=1)
+      } else if (!is.null(rgb)) {
         # predefined color
         g_x2 <- rgb[2]
         g_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
@@ -568,7 +564,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
 
       # plot
       graph <- ggplot() +
-        geom_density(data=b_df1, aes(x=value), fill="#808080", alpha=0.6, color=NA) +
+        geom_density(data=b_df1, aes(x=value), fill="#808080", alpha=0.5, color=NA) +
         xlab("value") +
         ggtitle("b") +
         theme(plot.title = element_text(hjust = 0.5)) +
@@ -580,8 +576,8 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         b_df2 <- data.frame(value=b_mu2)
 
         graph <- graph +
-          geom_density(data=b_df2, aes(x=value), fill="#000000", alpha=0.6, color=NA)
-      } else {
+          stat_density(data=b_df2, aes(x=value), geom="line", color="#000000", size=1)
+      } else if (!is.null(rgb)) {
         # predefined color
         b_x2 <- rgb[3]
         b_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
@@ -608,7 +604,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
 
       # plot
       graph <- ggplot() +
-        geom_density(data=h_df1, aes(x=value), fill="#808080", alpha=0.6, color=NA) +
+        geom_density(data=h_df1, aes(x=value), fill="#808080", alpha=0.5, color=NA) +
         xlab("value") +
         ggtitle("h") +
         theme(plot.title = element_text(hjust = 0.5)) +
@@ -620,8 +616,8 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         h_df2 <- data.frame(value=h_mu2)
 
         graph <- graph +
-          geom_density(data=h_df2, aes(x=value), fill="#000000", alpha=0.6, color=NA)
-      } else {
+          stat_density(data=h_df2, aes(x=value), geom="line", color="#000000", size=1)
+      } else if (!is.null(hsv)) {
         # predefined color
         h_x2 <- hsv[1]
         h_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
@@ -640,7 +636,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
 
       # plot
       graph <- ggplot() +
-        geom_density(data=s_df1, aes(x=value), fill="#808080", alpha=0.6, color=NA) +
+        geom_density(data=s_df1, aes(x=value), fill="#808080", alpha=0.5, color=NA) +
         xlab("value") +
         ggtitle("s") +
         theme(plot.title = element_text(hjust = 0.5)) +
@@ -652,8 +648,8 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         s_df2 <- data.frame(value=s_mu2)
 
         graph <- graph +
-          geom_density(data=s_df2, aes(x=value), fill="#000000", alpha=0.6, color=NA)
-      } else {
+          stat_density(data=s_df2, aes(x=value), geom="line", color="#000000", size=1)
+      } else if (!is.null(hsv)) {
         # predefined color
         s_x2 <- hsv[2]
         s_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
@@ -672,7 +668,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
 
       # plot
       graph <- ggplot() +
-        geom_density(data=v_df1, aes(x=value), fill="#808080", alpha=0.6, color=NA) +
+        geom_density(data=v_df1, aes(x=value), fill="#808080", alpha=0.5, color=NA) +
         xlab("value") +
         ggtitle("v") +
         theme(plot.title = element_text(hjust = 0.5)) +
@@ -684,8 +680,8 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         v_df2 <- data.frame(value=v_mu2)
 
         graph <- graph +
-          geom_density(data=v_df2, aes(x=value), fill="#000000", alpha=0.6, color=NA)
-      } else {
+          stat_density(data=v_df2, aes(x=value), geom="line", color="#000000", size=1)
+      } else if (!is.null(hsv)) {
         # predefined color
         v_x2 <- hsv[3]
         v_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
@@ -700,7 +696,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
     }
   }
 
-  if (n > 1) {
+  if (n_graph > 1) {
     graph <- cowplot::plot_grid(plotlist=graphs, ncol=ncol, nrow=nrow, scale=0.9)
   }
 
@@ -829,7 +825,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       suppressWarnings(y1 <- circular::rvonmises(n, mu=mu1, kappa=kappa1))
 
       if (!is.null(fit2)) {
-        mu2 <- mean(preprocess_circular(fit2@extract$mu_h))
+        mu2 <- mean(preprocess_circular(fit2@extract$mu_h, base=object@extract$mu_h))
         kappa2 <- mean(fit2@extract$kappa_h)
 
         suppressWarnings(y2 <- circular::rvonmises(n, mu=mu2, kappa=kappa2))
@@ -893,13 +889,9 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
   value <- NULL
 
   # get arguments
-  arguments <- list(...)
-
-  wrong_arguments <- "The provided arguments for the plot_distributions function are invalid, plot_distributions(color_class, fit2=color_class), plot_distributions(color_class, rgb=vector) or plot_distributions(color_class, hsv=vector) is required! You can execute the comparison through a subset of color components, e.g. plot_samples(color_class, fit2=color_class, par=c(\"h\", \"s\", \"v\"))."
-
-  if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+  arguments <- NULL
+  if (length(list(...))) {
+    arguments <- list(...)
   }
 
   # comparing with another fit, rgb or hsv
@@ -907,7 +899,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
   rgb <- NULL
   hsv <- NULL
 
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class") {
+  if (!is.null(arguments) && (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class")) {
     if (!is.null(arguments$fit2)) {
       fit2 <- arguments$fit2
     } else {
@@ -928,13 +920,13 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
   }
 
   # calculate number of columns and rows
-  n <- length(par)
+  n_graph <- length(par)
   nrow <- 1
   ncol <- 1
-  if (n > 1) {
-    nrow <- ceiling(n / 3)
+  if (n_graph > 1) {
+    nrow <- ceiling(n_graph / 3)
     ncol = 3
-    if (n == 2 || n == 4) {
+    if (n_graph == 2 || n_graph == 4) {
       ncol = 2
     }
   }
@@ -955,7 +947,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
 
       # plot
       graph <- ggplot(data=df_x, aes(x=value)) +
-        stat_function(fun=stats::dnorm, n=n, args=list(mean=r_mu1, sd=r_sigma1), geom="area", fill="#808080", alpha=0.6) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=r_mu1, sd=r_sigma1), geom="area", fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("r") +
         theme(plot.title = element_text(hjust = 0.5))
@@ -965,8 +957,8 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         r_mu2 <- mean(fit2@extract$mu_r)
         r_sigma2 <- mean(fit2@extract$sigma_r)
 
-        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=r_mu2, sd=r_sigma2), geom="area", fill="#000000", alpha=0.6)
-      } else {
+        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=r_mu2, sd=r_sigma2), geom="line", color="#000000", size=1)
+      } else if (!is.null(rgb)) {
         # predefined color
         r_x2 <- rgb[1]
         r_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
@@ -988,7 +980,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
 
       # plot
       graph <- ggplot(data=df_x, aes(x=value)) +
-        stat_function(fun=stats::dnorm, n=n, args=list(mean=g_mu1, sd=g_sigma1), geom="area", fill="#808080", alpha=0.6) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=g_mu1, sd=g_sigma1), geom="area", fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("g") +
         theme(plot.title = element_text(hjust = 0.5))
@@ -998,8 +990,8 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         g_mu2 <- mean(fit2@extract$mu_g)
         g_sigma2 <- mean(fit2@extract$sigma_g)
 
-        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=g_mu2, sd=g_sigma2), geom="area", fill="#000000", alpha=0.6)
-      } else {
+        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=g_mu2, sd=g_sigma2), geom="line", color="#000000", size=1)
+      } else if (!is.null(rgb)) {
         # predefined color
         g_x2 <- rgb[2]
         g_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
@@ -1021,7 +1013,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
 
       # plot
       graph <- ggplot(data=df_x, aes(x=value)) +
-        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu1, sd=b_sigma1), geom="area", fill="#808080", alpha=0.6) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu1, sd=b_sigma1), geom="area", fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("b") +
         theme(plot.title = element_text(hjust = 0.5))
@@ -1031,8 +1023,8 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         b_mu2 <- mean(fit2@extract$mu_b)
         b_sigma2 <- mean(fit2@extract$sigma_b)
 
-        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu2, sd=b_sigma2), geom="area", fill="#000000", alpha=0.6)
-      } else {
+        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu2, sd=b_sigma2), geom="line", color="#000000", size=1)
+      } else if (!is.null(rgb)) {
         # predefined color
         b_x2 <- rgb[3]
         b_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
@@ -1070,14 +1062,14 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
 
       # plot
       graph <- ggplot() +
-        geom_area(data=df1, aes(x=x, y=y), fill="#808080", alpha=0.6) +
+        geom_area(data=df1, aes(x=x, y=y), fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("h") +
         theme(plot.title = element_text(hjust = 0.5))
 
       if (!is.null(fit2)) {
         # second group data
-        h_mu2 <- mean(preprocess_circular(fit2@extract$mu_h))
+        h_mu2 <- mean(preprocess_circular(fit2@extract$mu_h, base=object@extract$mu_h))
         h_kappa2 <- mean(fit2@extract$kappa_h)
 
         # suppress circular warnings
@@ -1089,8 +1081,8 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         df2 <- data.frame(x=h_x, y=h_y2)
 
         # plot
-        graph <- graph + geom_area(data=df1, aes(x=x, y=y), fill="#000000", alpha=0.6)
-      } else {
+        graph <- graph + geom_line(data=df2, aes(x=x, y=y), color="#000000", size=1)
+      } else if (!is.null(hsv)) {
         # predefined color
         h_x2 <- hsv[1]
         h_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
@@ -1112,7 +1104,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
 
       # plot
       graph <- ggplot(data=df_x, aes(x=value)) +
-        stat_function(fun=stats::dnorm, n=n, args=list(mean=s_mu1, sd=s_sigma1), geom="area", fill="#808080", alpha=0.6) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=s_mu1, sd=s_sigma1), geom="area", fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("s") +
         theme(plot.title = element_text(hjust = 0.5))
@@ -1122,8 +1114,8 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         s_mu2 <- mean(fit2@extract$mu_s)
         s_sigma2 <- mean(fit2@extract$sigma_s)
 
-        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=s_mu2, sd=s_sigma2), geom="area", fill="#000000", alpha=0.6)
-      } else {
+        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=s_mu2, sd=s_sigma2), geom="line", color="#000000", size=1)
+      } else if (!is.null(hsv)) {
         # predefined color
         s_x2 <- hsv[2]
         s_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
@@ -1145,7 +1137,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
 
       # plot
       graph <- ggplot(data=df_x, aes(x=value)) +
-        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu1, sd=b_sigma1), geom="area", fill="#808080", alpha=0.6) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu1, sd=b_sigma1), geom="area", fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("v") +
         theme(plot.title = element_text(hjust = 0.5))
@@ -1155,8 +1147,8 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         b_mu2 <- mean(fit2@extract$mu_v)
         b_sigma2 <- mean(fit2@extract$sigma_v)
 
-        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu2, sd=b_sigma2), geom="area", fill="#000000", alpha=0.6)
-      } else {
+        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu2, sd=b_sigma2), geom="line", color="#000000", size=1)
+      } else if (!is.null(hsv)) {
         # predefined color
         b_x2 <- hsv[3]
         b_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
@@ -1171,7 +1163,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
     }
   }
 
-  if (n > 1) {
+  if (n_graph > 1) {
     graph <- cowplot::plot_grid(plotlist=graphs, ncol=ncol, nrow=nrow, scale=0.9)
   }
 
@@ -1241,13 +1233,13 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
   }
 
   # calculate number of columns and rows
-  n <- length(par)
+  n_graph <- length(par)
   nrow <- 1
   ncol <- 1
-  if (n > 1) {
-    nrow <- ceiling(n / 3)
+  if (n_graph > 1) {
+    nrow <- ceiling(n_graph / 3)
     ncol = 3
-    if (n == 2 || n == 4) {
+    if (n_graph == 2 || n_graph == 4) {
       ncol = 2
     }
   }
@@ -1327,7 +1319,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
       suppressWarnings(y1 <- circular::rvonmises(n, mu=mu1, kappa=kappa1))
 
       if (!is.null(fit2)) {
-        mu2 <- mean(preprocess_circular(fit2@extract$mu_h))
+        mu2 <- mean(preprocess_circular(fit2@extract$mu_h, base=object@extract$mu_h))
         kappa2 <- mean(fit2@extract$kappa_h)
 
         suppressWarnings(y2 <- circular::rvonmises(n, mu=mu2, kappa=kappa2))
@@ -1382,7 +1374,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
     }
   }
 
-  if (n > 1) {
+  if (n_graph > 1) {
     graph <- cowplot::plot_grid(plotlist=graphs, ncol=ncol, nrow=nrow, scale=0.9)
   }
 
@@ -1406,13 +1398,13 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
   }
 
   # calculate number of columns and rows
-  n <- length(par)
+  n_graph <- length(par)
   nrow <- 1
   ncol <- 1
-  if (n > 1) {
-    nrow <- ceiling(n / 3)
+  if (n_graph > 1) {
+    nrow <- ceiling(n_graph / 3)
     ncol = 3
-    if (n == 2 || n == 4) {
+    if (n_graph == 2 || n_graph == 4) {
       ncol = 2
     }
   }
@@ -1556,7 +1548,7 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
     }
   }
 
-  if (n > 1) {
+  if (n_graph > 1) {
     graph <- cowplot::plot_grid(plotlist=graphs, ncol=ncol, nrow=nrow, scale=0.9)
   }
 

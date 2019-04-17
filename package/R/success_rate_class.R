@@ -57,7 +57,7 @@ setMethod(f="summary", signature(object="success_rate_class"), definition=functi
   p_hdi <- mcmc_hdi(object@extract$p0)
 
   # print
-  cat(sprintf("Success rate: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("Success rate:\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               p, mcmcse::mcse(object@extract$p0)$se, p_hdi[1], p_hdi[2]))
 })
 

@@ -44,9 +44,9 @@ shared_difference <- function(y1, y2, rope=NULL) {
 preprocess_circular <- function (y, base=NULL) {
   # if mean difference is around 0 use a -pi .. pi interval
   # else use 0..2pi
-  mean_y <- mean(y)
+  suppressWarnings(mean_y <- mean(circular::as.circular(y)))
   if (!is.null(base)) {
-    mean_y <- mean(base)
+    suppressWarnings(mean_y <- mean(circular::as.circular(base)))
   }
 
   small_y = FALSE
@@ -68,7 +68,7 @@ preprocess_circular <- function (y, base=NULL) {
 circular_difference <- function(y1, y2, rope=NULL) {
   y_diff <- y1 - y2
 
-  y_diff <- preprocess_circular(y_diff)
+  y_diff <- as.numeric(preprocess_circular(y_diff))
 
   n <- length(y_diff)
 

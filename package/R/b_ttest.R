@@ -15,16 +15,13 @@ b_ttest <- function(y, warmup=9000, iter=10000) {
   yMu <- mean(y)
   ySd <- stats::sd(y)
 
-  stan_data <- list(
-    n = n,
-    y = y,
-    yMu = yMu,
-    ySd = ySd
-  )
+  stan_data <- list(n = n,
+                    y = y,
+                    yMu = yMu,
+                    ySd = ySd)
 
   fit <- sampling(stanmodels$ttest,
                          data = stan_data,
-                         chains = 1,
                          warmup = warmup,
                          iter = iter)
 

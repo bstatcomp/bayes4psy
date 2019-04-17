@@ -80,11 +80,11 @@ setMethod(f="summary", signature(object="ttest_class"), definition=function(obje
   nu_hdi <- mcmc_hdi(object@extract$nu)
 
   # print)
-  cat(sprintf("mu: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("mu:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               mu, mcmcse::mcse(object@extract$mu)$se, mu_hdi[1], mu_hdi[2]))
-  cat(sprintf("sigma: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("sigma:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               sigma, mcmcse::mcse(object@extract$sigma)$se, sigma_hdi[1], sigma_hdi[2]))
-  cat(sprintf("nu: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n", nu,
+  cat(sprintf("nu:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n", nu,
               mcmcse::mcse(object@extract$nu)$se, nu_hdi[1], nu_hdi[2]))
 })
 

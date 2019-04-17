@@ -12,17 +12,16 @@ b_reaction_time <- function(rt, s, warmup=200, iter=1200) {
   n <- length(rt)
   m <- length(unique(s))
 
-  stan_data <- list(n = n,
-                    m = m,
-                    rt = rt,
-                    s = s)
+  stan_data <- list(n=n,
+                    m=m,
+                    rt=rt,
+                    s=s)
 
   fit <- sampling(stanmodels$reaction_time,
-                        data = stan_data,
-                        iter = iter,
-                        warmup = warmup,
-                        chains = 1,
-                        control = list(adapt_delta=0.99, max_treedepth=15))
+                        data=stan_data,
+                        iter=iter,
+                        warmup=warmup,
+                        control=list(adapt_delta=0.99, max_treedepth=15))
 
   extract <- extract(fit)
 

@@ -11,15 +11,54 @@ df_all <- read.table("../examples/data/after_images.csv", sep="\t", header=TRUE)
 df_blue <- df_all %>% filter(stimuli == "blue")
 n <- nrow(df_blue) # number of measurements
 df <- data.frame(r = df_blue$r, g=df_blue$g, b=df_blue$b)
-fit1 <- b_color(df)
+fit_blue <- b_color(df)
 
-plot_fit(fit1, par=c("h", "s", "v"))
+# print summary
+summary(fit_blue)
+
+# print a more detailed summary (prints the fit object)
+# same as show(ttest_results)
+print(fit_blue)
+
+# visualize fit quality
+plot_fit(fit_blue)
+
+# plot trace
+plot_trace(fit_blue)
+
+# samples for single fit
+plot_samples(fit_blue)
+
+# distribution for single fit
+plot_distributions(fit_blue)
+
 
 ## RED
 df_red <- df_all %>% filter(stimuli == "red")
 n <- nrow(df_red) # number of measurements
-df <- data.frame(r = df_blue$r, g=df_blue$g, b=df_blue$b)
-fit1 <- b_color(df)
+df <- data.frame(r = df_red$r, g=df_red$g, b=df_red$b)
+fit_red <- b_color(df)
+
+# visualize fit quality for hsv only
+plot_fit(fit_red, par=c("h", "s", "v"))
+
+# compare
+compare(fit_blue, fit_red)
+
+# plot_difference
+plot_difference(fit_blue, fit_red)
+
+# plot_samples
+plot_samples(fit_blue, fit_red)
+
+# compare_distributions
+compare_distributions(fit_blue, fit_red)
+
+# plot_distributions
+plot_distributions(fit_blue, fit_red)
+
+# plot_distributions_difference
+plot_distributions_difference(fit_blue, fit_red)
 
 
 # add stimuli data

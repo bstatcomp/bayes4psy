@@ -12,17 +12,16 @@ b_success_rate <- function(r, s, warmup=200, iter=1200) {
   n <- length(r)
   m <- length(unique(s))
 
-  stan_data <- list(n = n,
-                    m = m,
-                    r = r,
-                    s = s)
+  stan_data <- list(n=n,
+                    m=m,
+                    r=r,
+                    s=s)
 
   fit <- sampling(stanmodels$success_rate,
-                         data = stan_data,
-                         iter = iter,
-                         warmup = warmup,
-                         chains = 1,
-                         control = list(adapt_delta = 0.99, max_treedepth = 15))
+                         data=stan_data,
+                         iter=iter,
+                         warmup=warmup,
+                         control=list(adapt_delta=0.99, max_treedepth=15))
 
   extract <- extract(fit)
 
