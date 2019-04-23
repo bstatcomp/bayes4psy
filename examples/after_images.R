@@ -42,8 +42,17 @@ n <- nrow(df_red) # number of measurements
 df <- data.frame(r = df_red$r, g=df_red$g, b=df_red$b)
 fit_red <- b_color(df)
 
-# visualize fit quality for hsv only
+# visualize fit quality
 plot_fit(fit_red, par=c("h", "s", "v"))
+
+# visualize fit quality through hsv plot
+plot_hsvfit(fit_red)
+
+# samples for single fit
+plot_samples(fit_red)
+
+# distribution for single fit
+plot_distributions(fit_red)
 
 # compare
 compare(fit_blue, fit_red)
