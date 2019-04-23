@@ -1042,7 +1042,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
       h_kappa1 <- mean(object@extract$kappa_h)
 
       # plot on -pi..pi or 0..2pi
-      if (sum(h_mu1 < 0) > 0) {
+      if (h_mu1 < 0) {
         x_min = -pi
         x_max = pi
       } else {
@@ -1555,6 +1555,64 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
   return(graph)
 })
 
+
+plot_hsvfit <- function(object) {
+  df_colors <- data.frame(r=object@data$r,
+                          g=object@data$g,
+                          b=object@data$b,
+                          h=object@data$h,
+                          s=object@data$s,
+                          v=object@data$v)
+
+  # in order to present this in a joined colourwheel, recode s and v to a joint variable
+  df_colors <- df_colors %>% mutate(sv = ifelse(s == 1, v - 1, (s - 1) * -1))
+
+  # cast h to 0..1
+  df_colors$h <- df_colors$h / (2*pi)
+
+  # annotate mu
+  mu_h <- mean(preprocess_circular(object@extract$mu_h))
+  if (mu_h < 0) {
+    mu_h <- mu_h + pi
+  }
+  mu_h <- mu_h / (2*pi)
+  mu_r <- mean(object@extract$mu_r)
+  mu_g <- mean(object@extract$mu_g)
+  mu_b <- mean(object@extract$mu_b)
+  df_mu_h <- data.frame(h=mu_h, r=mu_r, g=mu_g, b=mu_b)
+
+  # annotate HDI
+  mu_h_hdi <- mcmc_hdi(preprocess_circular(object@extract$mu_h))
+  mu_h_low <- mu_h_hdi[1]
+  mu_h_high <- mu_h_hdi[1]
+  # cast to 0..1
+  if (mu_h_low < 0) {
+    mu_h_low <- mu_h_low + pi
+    mu_h_high <- mu_h_high + pi
+  }
+  mu_h_low <- mu_h_low / (2*pi)
+  mu_h_high <- mu_h_high / (2*pi)
+
+
+  #df_h <- data.frame(h=object@extract$mu_h)
+  #ggplot(df_h, aes(h)) + geom_histogram()
+
+  ggplot(df_colors, aes(h, sv)) +
+    annotate(geom = "rect", xmin = 0, xmax = 1, ymin = -1, ymax = 1, alpha = 0.1) +
+    geom_hline(yintercept = 0, color = "gray", size=1) +
+    geom_point(aes(color=rgb(r, g, b, maxColorValue=255)), size=5, alpha=0.8, shape=16) +
+    geom_vline(data=df_mu_h, aes(xintercept=h, color=rgb(r, g, b, maxColorValue=255)), size=2) +
+    scale_colour_identity() +
+    theme(axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          axis.title = element_blank(),
+          axis.line = element_blank(),
+          panel.grid = element_blank()) +
+    coord_polar() +
+    scale_y_continuous(limits = c(-3, 1), expand = c(0,0)) +
+    scale_x_continuous(limits = c(0, 1), expand = c(0,0))
+
+}
 
 #' @title plot_trace
 #' @description \code{plot_trace} traceplot for main fitted model parameters.
