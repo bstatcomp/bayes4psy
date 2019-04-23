@@ -357,7 +357,7 @@ setMethod(f="compare_distributions", signature(object="linear_class"), definitio
 #' @aliases plot_distributions_linear
 setMethod(f="plot_distributions", signature(object="linear_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  y <- y_min <- NULL
+  slope <- intercept <- group <- y <- y_min <- NULL
 
   # first group mean data
   df_mean <- data.frame(intercept=mean(object@extract$mu_a), slope=mean(object@extract$mu_b), group="1")

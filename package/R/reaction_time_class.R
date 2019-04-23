@@ -241,7 +241,7 @@ setMethod(f="plot_difference", signature(object="reaction_time_class"), definiti
 #' @aliases plot_samples_reaction_time
 setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  value <- NULL
+  group <- value <- NULL
 
   # extract arguments
   arguments <- list(...)

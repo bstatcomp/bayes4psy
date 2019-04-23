@@ -8,6 +8,8 @@ plot_fit(object, ...)
 }
 \arguments{
 \item{object}{S4 class object from EasyBayes library.}
+
+\item{...}{see documentation for specific class for the description of available parameters, e.g. ?plot_fit_colors or ?plot_fit_linear.}
 }
 \description{
 \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.

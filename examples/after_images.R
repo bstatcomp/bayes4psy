@@ -23,6 +23,9 @@ print(fit_blue)
 # visualize fit quality
 plot_fit(fit_blue)
 
+# visualize fit quality through hsv plot
+plot_hsvfit(fit_blue)
+
 # plot trace
 plot_trace(fit_blue)
 

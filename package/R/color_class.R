@@ -52,7 +52,7 @@
 #'
 #' plot_fit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
 #'
-#' TODO plot_hue
+#' plot_hsvfit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
 #'
 #' plot_trace(`color_class`): traceplot for main fitted model parameters.
 #'
@@ -147,7 +147,7 @@ setMethod(f="show", signature(object="color_class"), definition=function(object)
 #' @title compare
 #' @description \code{compare} prints difference in colors between two fits, or a fit and a color.
 #' @param object color_class object.
-#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, par - components of comparison - a subset of (r, g, b, h, s, v).
+#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, par - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-compare
 #' @aliases compare_color
 setMethod(f="compare", signature(object="color_class"), definition=function(object, ...) {
@@ -173,7 +173,7 @@ setMethod(f="compare", signature(object="color_class"), definition=function(obje
     }
   } else if (!is.null(arguments$rgb)) {
     rgb <- arguments$rgb
-    hsv <- rgb2hsv(rgb)
+    hsv <- grDevices::rgb2hsv(rgb)
   } else if (!is.null(arguments$hsv)) {
     hsv <- arguments$hsv
     rgb <- hsv2rgb(hsv[1], hsv[2], hsv[3])
@@ -273,7 +273,7 @@ setMethod(f="compare", signature(object="color_class"), definition=function(obje
 #' @title plot_difference
 #' @description \code{plot_difference} a visualization of the difference between two fits
 #' @param object color_class object.
-#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, par - components of comparison - a subset of (r, g, b, h, s, v).
+#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, par - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_difference
 #' @aliases plot_difference_color
 setMethod(f="plot_difference", signature(object="color_class"), definition=function(object, ...) {
@@ -300,7 +300,7 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
     }
   } else if (!is.null(arguments$rgb)) {
     rgb <- arguments$rgb
-    hsv <- rgb2hsv(rgb)
+    hsv <- grDevices::rgb2hsv(rgb)
   } else if (!is.null(arguments$hsv)) {
     hsv <- arguments$hsv
     rgb <- hsv2rgb(hsv[1], hsv[2], hsv[3])
@@ -337,9 +337,9 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
   ncol <- 1
   if (n_graph > 1) {
     nrow <- ceiling(n_graph / 3)
-    ncol = 3
+    ncol <- 3
     if (n_graph == 2 || n_graph == 4) {
-      ncol = 2
+      ncol <- 2
     }
   }
 
@@ -357,7 +357,7 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
       }
 
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
-      graph <- graph + ggtitle("r") + theme(plot.title = element_text(hjust = 0.5))
+      graph <- graph + ggtitle("r") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "g") {
@@ -370,7 +370,7 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
       }
 
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
-      graph <- graph + ggtitle("g") + theme(plot.title = element_text(hjust = 0.5))
+      graph <- graph + ggtitle("g") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "b") {
@@ -383,7 +383,7 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
       }
 
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
-      graph <- graph + ggtitle("b") + theme(plot.title = element_text(hjust = 0.5))
+      graph <- graph + ggtitle("b") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "h") {
@@ -396,7 +396,7 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
       }
 
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, circular=TRUE, nrow=nrow)
-      graph <- graph + ggtitle("h") + theme(plot.title = element_text(hjust = 0.5))
+      graph <- graph + ggtitle("h") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "s") {
@@ -409,7 +409,7 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
       }
 
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
-      graph <- graph + ggtitle("s") + theme(plot.title = element_text(hjust = 0.5))
+      graph <- graph + ggtitle("s") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "v") {
@@ -422,7 +422,7 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
       }
 
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
-      graph <- graph + ggtitle("v") + theme(plot.title = element_text(hjust = 0.5))
+      graph <- graph + ggtitle("v") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
     }
@@ -439,7 +439,7 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
 #' @title plot_samples
 #' @description \code{plot_samples} lots density of the samples, the first and the second group samples, or a constant values in case second group is defined as rgb or hsv color..
 #' @param object color_class object.
-#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, par - components of comparison - a subset of (r, g, b, h, s, v).
+#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, par - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_samples
 #' @aliases plot_samples_color
 setMethod(f="plot_samples", signature(object="color_class"), definition=function(object, ...) {
@@ -465,7 +465,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
     }
   } else if (!is.null(arguments$rgb)) {
     rgb <- arguments$rgb
-    hsv <- rgb2hsv(rgb)
+    hsv <- grDevices::rgb2hsv(rgb)
   } else if (!is.null(arguments$hsv)) {
     hsv <- arguments$hsv
     rgb <- hsv2rgb(hsv[1], hsv[2], hsv[3])
@@ -483,9 +483,9 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
   ncol <- 1
   if (n_graph > 1) {
     nrow <- ceiling(n_graph / 3)
-    ncol = 3
+    ncol <- 3
     if (n_graph == 2 || n_graph == 4) {
-      ncol = 2
+      ncol <- 2
     }
   }
 
@@ -503,7 +503,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         geom_density(data=r_df1, aes(x=value), fill="#808080", alpha=0.5, color=NA) +
         xlab("value") +
         ggtitle("r") +
-        theme(plot.title = element_text(hjust = 0.5)) +
+        theme(plot.title=element_text(hjust=0.5)) +
         xlim(0, 255)
 
       if (!is.null(fit2)) {
@@ -535,7 +535,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         geom_density(data=g_df1, aes(x=value), fill="#808080", alpha=0.5, color=NA) +
         xlab("value") +
         ggtitle("g") +
-        theme(plot.title = element_text(hjust = 0.5)) +
+        theme(plot.title=element_text(hjust=0.5)) +
         xlim(0, 255)
 
       if (!is.null(fit2)) {
@@ -567,7 +567,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         geom_density(data=b_df1, aes(x=value), fill="#808080", alpha=0.5, color=NA) +
         xlab("value") +
         ggtitle("b") +
-        theme(plot.title = element_text(hjust = 0.5)) +
+        theme(plot.title=element_text(hjust=0.5)) +
         xlim(0, 255)
 
       if (!is.null(fit2)) {
@@ -594,12 +594,14 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
       h_mu1 <- preprocess_circular(object@extract$mu_h)
       h_df1 <- data.frame(value=h_mu1)
 
-      if (sum(h_mu1 < 0) > 0) {
-        x_min = -pi
-        x_max = pi
+      # plot on -pi..pi or 0..2pi
+      suppressWarnings(mean_h <- mean(circular::as.circular(h_mu1)))
+      if (abs(mean_h) < pi/2) {
+        x_min <- -pi
+        x_max <- pi
       } else {
-        x_min = 0
-        x_max = 2*pi
+        x_min <- 0
+        x_max <- 2*pi
       }
 
       # plot
@@ -607,7 +609,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         geom_density(data=h_df1, aes(x=value), fill="#808080", alpha=0.5, color=NA) +
         xlab("value") +
         ggtitle("h") +
-        theme(plot.title = element_text(hjust = 0.5)) +
+        theme(plot.title=element_text(hjust=0.5)) +
         xlim(x_min, x_max)
 
       if (!is.null(fit2)) {
@@ -639,7 +641,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         geom_density(data=s_df1, aes(x=value), fill="#808080", alpha=0.5, color=NA) +
         xlab("value") +
         ggtitle("s") +
-        theme(plot.title = element_text(hjust = 0.5)) +
+        theme(plot.title=element_text(hjust=0.5)) +
         xlim(0, 1)
 
       if (!is.null(fit2)) {
@@ -671,7 +673,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         geom_density(data=v_df1, aes(x=value), fill="#808080", alpha=0.5, color=NA) +
         xlab("value") +
         ggtitle("v") +
-        theme(plot.title = element_text(hjust = 0.5)) +
+        theme(plot.title=element_text(hjust=0.5)) +
         xlim(0, 1)
 
       if (!is.null(fit2)) {
@@ -707,7 +709,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
 #' @title compare_distributions
 #' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group or aagainst a color defined with rgb or hsv components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #' @param object color_class object.
-#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, par - components of comparison - a subset of (r, g, b, h, s, v).
+#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, par - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-compare_distributions
 #' @aliases compare_distributions_color
 setMethod(f="compare_distributions", signature(object="color_class"), definition=function(object, ...) {
@@ -733,7 +735,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
     }
   } else if (!is.null(arguments$rgb)) {
     rgb <- arguments$rgb
-    hsv <- rgb2hsv(rgb)
+    hsv <- grDevices::rgb2hsv(rgb)
   } else if (!is.null(arguments$hsv)) {
     hsv <- arguments$hsv
     rgb <- hsv2rgb(hsv[1], hsv[2], hsv[3])
@@ -881,12 +883,12 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
 #' @title plot_distributions
 #' @description \code{plot_distributions} a visualization of the fitted distributions or constant colors.
 #' @param object color_class object.
-#' @param ... fit2 - a second color_class object.
+#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, par - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_distributions
 #' @aliases plot_distributions_color
 setMethod(f="plot_distributions", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  value <- NULL
+  value <- x <- y <- NULL
 
   # get arguments
   arguments <- NULL
@@ -907,7 +909,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
     }
   } else if (!is.null(arguments$rgb)) {
     rgb <- arguments$rgb
-    hsv <- rgb2hsv(rgb)
+    hsv <- grDevices::rgb2hsv(rgb)
   } else if (!is.null(arguments$hsv)) {
     hsv <- arguments$hsv
     rgb <- hsv2rgb(hsv[1], hsv[2], hsv[3])
@@ -925,9 +927,9 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
   ncol <- 1
   if (n_graph > 1) {
     nrow <- ceiling(n_graph / 3)
-    ncol = 3
+    ncol <- 3
     if (n_graph == 2 || n_graph == 4) {
-      ncol = 2
+      ncol <- 2
     }
   }
 
@@ -950,7 +952,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         stat_function(fun=stats::dnorm, n=n, args=list(mean=r_mu1, sd=r_sigma1), geom="area", fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("r") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(plot.title=element_text(hjust=0.5))
 
       if (!is.null(fit2)) {
         # second group data
@@ -983,7 +985,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         stat_function(fun=stats::dnorm, n=n, args=list(mean=g_mu1, sd=g_sigma1), geom="area", fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("g") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(plot.title=element_text(hjust=0.5))
 
       if (!is.null(fit2)) {
         # second group data
@@ -1016,7 +1018,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu1, sd=b_sigma1), geom="area", fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("b") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(plot.title=element_text(hjust=0.5))
 
       if (!is.null(fit2)) {
         # second group data
@@ -1042,12 +1044,13 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
       h_kappa1 <- mean(object@extract$kappa_h)
 
       # plot on -pi..pi or 0..2pi
-      if (h_mu1 < 0) {
-        x_min = -pi
-        x_max = pi
+      suppressWarnings(mean_h <- mean(circular::as.circular(object@extract$mu_h)))
+      if (abs(mean_h) < pi/2) {
+        x_min <- -pi
+        x_max <- pi
       } else {
-        x_min = 0
-        x_max = 2*pi
+        x_min <- 0
+        x_max <- 2*pi
       }
 
       # suppress circular warnings
@@ -1065,7 +1068,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         geom_area(data=df1, aes(x=x, y=y), fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("h") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(plot.title=element_text(hjust=0.5))
 
       if (!is.null(fit2)) {
         # second group data
@@ -1107,7 +1110,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         stat_function(fun=stats::dnorm, n=n, args=list(mean=s_mu1, sd=s_sigma1), geom="area", fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("s") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(plot.title=element_text(hjust=0.5))
 
       if (!is.null(fit2)) {
         # second group data
@@ -1140,7 +1143,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu1, sd=b_sigma1), geom="area", fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("v") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(plot.title=element_text(hjust=0.5))
 
       if (!is.null(fit2)) {
         # second group data
@@ -1174,7 +1177,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
 #' @title plot_distributions_difference
 #' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group.
 #' @param object color_class object.
-#' @param ... fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram.
+#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, par - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_color
 setMethod(f="plot_distributions_difference", signature(object="color_class"), definition=function(object, ...) {
@@ -1201,7 +1204,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
     }
   } else if (!is.null(arguments$rgb)) {
     rgb <- arguments$rgb
-    hsv <- rgb2hsv(rgb)
+    hsv <- grDevices::rgb2hsv(rgb)
   } else if (!is.null(arguments$hsv)) {
     hsv <- arguments$hsv
     rgb <- hsv2rgb(hsv[1], hsv[2], hsv[3])
@@ -1238,9 +1241,9 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
   ncol <- 1
   if (n_graph > 1) {
     nrow <- ceiling(n_graph / 3)
-    ncol = 3
+    ncol <- 3
     if (n_graph == 2 || n_graph == 4) {
-      ncol = 2
+      ncol <- 2
     }
   }
 
@@ -1267,7 +1270,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
       }
 
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
-      graph <- graph + ggtitle("r") + theme(plot.title = element_text(hjust = 0.5))
+      graph <- graph + ggtitle("r") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "g") {
@@ -1288,7 +1291,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
       }
 
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
-      graph <- graph + ggtitle("g") + theme(plot.title = element_text(hjust = 0.5))
+      graph <- graph + ggtitle("g") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "b") {
@@ -1309,7 +1312,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
       }
 
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
-      graph <- graph + ggtitle("b") + theme(plot.title = element_text(hjust = 0.5))
+      graph <- graph + ggtitle("b") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "h") {
@@ -1328,7 +1331,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
       }
 
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, circular=TRUE, nrow=nrow)
-      graph <- graph + ggtitle("h") + theme(plot.title = element_text(hjust = 0.5))
+      graph <- graph + ggtitle("h") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "s") {
@@ -1349,7 +1352,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
       }
 
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
-      graph <- graph + ggtitle("s") + theme(plot.title = element_text(hjust = 0.5))
+      graph <- graph + ggtitle("s") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "v") {
@@ -1368,7 +1371,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
       }
 
       graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
-      graph <- graph + ggtitle("v") + theme(plot.title = element_text(hjust = 0.5))
+      graph <- graph + ggtitle("v") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
     }
@@ -1385,9 +1388,13 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
 #' @title plot_fit
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
 #' @param object color_class object.
+#' @param ... par - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_fit
 #' @aliases plot_fit_color
 setMethod(f="plot_fit", signature(object="color_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  value <- x <- y <- NULL
+
   # get arguments
   arguments <- list(...)
 
@@ -1403,9 +1410,9 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
   ncol <- 1
   if (n_graph > 1) {
     nrow <- ceiling(n_graph / 3)
-    ncol = 3
+    ncol <- 3
     if (n_graph == 2 || n_graph == 4) {
-      ncol = 2
+      ncol <- 2
     }
   }
 
@@ -1430,7 +1437,7 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
         stat_function(fun=stats::dnorm, n=n, args=list(mean=r_mu, sd=r_sigma), geom="line", size=1, color="#000000") +
         xlab("value") +
         ggtitle("r") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(plot.title=element_text(hjust=0.5))
 
       graphs[[i]] <- graph
       i <- i + 1
@@ -1449,7 +1456,7 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
         stat_function(fun=stats::dnorm, n=n, args=list(mean=g_mu, sd=g_sigma), geom="line", size=1, color="#000000") +
         xlab("value") +
         ggtitle("g") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(plot.title=element_text(hjust=0.5))
 
       graphs[[i]] <- graph
       i <- i + 1
@@ -1468,7 +1475,7 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
         stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu, sd=b_sigma), geom="line", size=1, color="#000000") +
         xlab("value") +
         ggtitle("b") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(plot.title=element_text(hjust=0.5))
 
       graphs[[i]] <- graph
       i <- i + 1
@@ -1479,12 +1486,13 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
       h_kappa <- mean(object@extract$kappa_h)
 
       # plot on -pi..pi or 0..2pi
-      if (sum(h_mu < 0) > 0) {
-        x_min = -pi
-        x_max = pi
+      suppressWarnings(mean_h <- mean(circular::as.circular(h_data)))
+      if (abs(mean_h) < pi/2) {
+        x_min <- -pi
+        x_max <- pi
       } else {
-        x_min = 0
-        x_max = 2*pi
+        x_min <- 0
+        x_max <- 2*pi
       }
 
       # suppress circular warnings
@@ -1503,7 +1511,7 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
         geom_line(data=df, aes(x=x, y=y), color="#000000", size=1) +
         xlab("value") +
         ggtitle("h") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(plot.title=element_text(hjust=0.5))
 
       graphs[[i]] <- graph
       i <- i + 1
@@ -1522,7 +1530,7 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
         stat_function(fun=stats::dnorm, n=n, args=list(mean=s_mu, sd=s_sigma), geom="line", size=1, color="#000000") +
         xlab("value") +
         ggtitle("s") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(plot.title=element_text(hjust=0.5))
 
       graphs[[i]] <- graph
       i <- i + 1
@@ -1541,7 +1549,7 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
         stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu, sd=b_sigma), geom="line", size=1, color="#000000") +
         xlab("value") +
         ggtitle("v") +
-        theme(plot.title = element_text(hjust = 0.5))
+        theme(plot.title=element_text(hjust=0.5))
 
       graphs[[i]] <- graph
       i <- i + 1
@@ -1556,7 +1564,22 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
 })
 
 
-plot_hsvfit <- function(object) {
+#' @title plot_hsvfit
+#' @description \code{plot_hsvfit} plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
+#' @param object color_class object.
+#' @rdname color_class-plot_hsvfit
+#' @exportMethod plot_hsvfit
+setGeneric(name="plot_hsvfit", function(object) standardGeneric("plot_hsvfit"))
+
+#' @title plot_hsvfit
+#' @description \code{plot_hsvfit} plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
+#' @param object color_class object.
+#' @rdname color_class-plot_hsvfit
+#' @aliases plot_hsvfit_color
+setMethod(f="plot_hsvfit", signature(object="color_class"), definition=function(object) {
+  # init local varibales for CRAN check
+  r <- g <- b <- h <- s <- v <- sv <- NULL
+
   df_colors <- data.frame(r=object@data$r,
                           g=object@data$g,
                           b=object@data$b,
@@ -1565,7 +1588,7 @@ plot_hsvfit <- function(object) {
                           v=object@data$v)
 
   # in order to present this in a joined colourwheel, recode s and v to a joint variable
-  df_colors <- df_colors %>% mutate(sv = ifelse(s == 1, v - 1, (s - 1) * -1))
+  df_colors <- df_colors %>% mutate(sv=ifelse(s == 1, v - 1, (s - 1) * -1))
 
   # cast h to 0..1
   df_colors$h <- df_colors$h / (2*pi)
@@ -1593,26 +1616,24 @@ plot_hsvfit <- function(object) {
   mu_h_low <- mu_h_low / (2*pi)
   mu_h_high <- mu_h_high / (2*pi)
 
-
-  #df_h <- data.frame(h=object@extract$mu_h)
-  #ggplot(df_h, aes(h)) + geom_histogram()
-
-  ggplot(df_colors, aes(h, sv)) +
-    annotate(geom = "rect", xmin = 0, xmax = 1, ymin = -1, ymax = 1, alpha = 0.1) +
-    geom_hline(yintercept = 0, color = "gray", size=1) +
-    geom_point(aes(color=rgb(r, g, b, maxColorValue=255)), size=5, alpha=0.8, shape=16) +
-    geom_vline(data=df_mu_h, aes(xintercept=h, color=rgb(r, g, b, maxColorValue=255)), size=2) +
+  graph <- ggplot(df_colors, aes(h, sv)) +
+    annotate(geom="rect", xmin=0, xmax=1, ymin=-1, ymax=1, alpha=0.1) +
+    geom_hline(yintercept=0, color="gray", size=1) +
+    geom_point(aes(color=grDevices::rgb(r, g, b, maxColorValue=255)), size=5, alpha=0.8, shape=16) +
+    geom_vline(data=df_mu_h, aes(xintercept=h, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=2) +
+    theme_minimal() +
     scale_colour_identity() +
-    theme(axis.ticks = element_blank(),
-          axis.text = element_blank(),
-          axis.title = element_blank(),
-          axis.line = element_blank(),
-          panel.grid = element_blank()) +
+    theme(axis.ticks=element_blank(),
+          axis.text=element_blank(),
+          axis.title=element_blank(),
+          axis.line=element_blank(),
+          panel.grid=element_blank()) +
     coord_polar() +
-    scale_y_continuous(limits = c(-3, 1), expand = c(0,0)) +
-    scale_x_continuous(limits = c(0, 1), expand = c(0,0))
+    scale_y_continuous(limits=c(-3, 1), expand=c(0,0)) +
+    scale_x_continuous(limits=c(0, 1), expand=c(0,0))
 
-}
+  return(graph)
+})
 
 #' @title plot_trace
 #' @description \code{plot_trace} traceplot for main fitted model parameters.

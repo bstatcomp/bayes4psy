@@ -66,6 +66,7 @@ setGeneric(name="plot_distributions_difference", function(object, ...) standardG
 #' @title plot_fit
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
 #' @param object S4 class object from EasyBayes library.
+#' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_fit_colors or ?plot_fit_linear.
 #' @rdname b_results-plot_fit
 #' @exportMethod plot_fit
 setGeneric(name="plot_fit", function(object, ...) standardGeneric("plot_fit"))

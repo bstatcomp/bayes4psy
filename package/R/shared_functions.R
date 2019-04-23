@@ -41,7 +41,7 @@ shared_difference <- function(y1, y2, rope=NULL) {
 }
 
 # shift circular data, shift according to base if provided
-preprocess_circular <- function (y, base=NULL) {
+preprocess_circular <- function(y, base=NULL) {
   # if mean difference is around 0 use a -pi .. pi interval
   # else use 0..2pi
   suppressWarnings(mean_y <- mean(circular::as.circular(y)))

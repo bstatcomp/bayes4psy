@@ -176,7 +176,7 @@ setMethod(f="plot_difference", signature(object="success_rate_class"), definitio
 #' @aliases plot_samples_success_rate
 setMethod(f="plot_samples", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  value <- NULL
+  group <- value <- NULL
 
   # first group data
   df <- data.frame(value=object@extract$p0, group="1")
