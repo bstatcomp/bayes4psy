@@ -1566,9 +1566,6 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
 })
 
 
-#' @title plot_fit_hsv
-#' @description \code{plot_fit_hsv} plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
-#' @param object color_class object.
 #' @rdname color_class-plot_fit_hsv
 #' @exportMethod plot_fit_hsv
 setGeneric(name="plot_fit_hsv", function(object) standardGeneric("plot_fit_hsv"))
@@ -1641,21 +1638,19 @@ setMethod(f="plot_fit_hsv", signature(object="color_class"), definition=function
 })
 
 
-#' @title plot_difference_hsv
-#' @description \code{plot_difference_hsv} a visualization of the difference between two fits thorough a circular visualization of hsv color components. You can also provide a list of rgb or hsv defined colors and a list of hues that will be annotated on the visualization.
-#' @param object color_class object.
 #' @rdname color_class-plot_difference_hsv
 #' @exportMethod plot_difference_hsv
-setGeneric(name="plot_difference_hsv", function(object) standardGeneric("plot_difference_hsv"))
+setGeneric(name="plot_difference_hsv", function(object, ...) standardGeneric("plot_difference_hsv"))
 
 #' @title plot_difference_hsv
 #' @description \code{plot_difference_hsv} a visualization of the difference between two fits thorough a circular visualization of hsv color components. You can also provide a list of rgb or hsv defined colors and a list of hues that will be annotated on the visualization.
 #' @param object color_class object.
+#' @param ... fit2 - a second color_class object, points - points to plot defined through rgb or hsv, lines - lines to plot defined through rgb or hsv, hsv - are points and lines defined in hsv format (default = FALSE).
 #' @rdname color_class-plot_difference_hsv
 #' @aliases plot_difference_hsv_color
 setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=function(object, ...) {
     # init local varibales for CRAN check
-    r <- g <- b <- h <- s <- v <- sv <- NULL
+    points <- lines <- r <- g <- b <- h <- s <- v <- sv <- NULL
 
     # get arguments
     arguments <- list(...)

@@ -58,7 +58,9 @@ plot_distributions_difference(`color_class`, hsv=`vector`): a visualization of t
 
 plot_fit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
 
-plot_hsvfit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
+plot_fit_hsv(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
+
+plot_difference_hsv(`color_class`): a visualization of the difference between two fits thorough a circular visualization of hsv color components. You can also provide a list of rgb or hsv defined colors and a list of hues that will be annotated on the visualization.
 
 plot_trace(`color_class`): traceplot for main fitted model parameters.
 }
