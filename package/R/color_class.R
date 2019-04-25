@@ -1619,10 +1619,10 @@ setMethod(f="plot_fit_hsv", signature(object="color_class"), definition=function
 
   graph <- ggplot() +
     annotate(geom="rect", xmin=0, xmax=1, ymin=-1, ymax=1, alpha=0.1) +
-    annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.5) +
     geom_hline(yintercept=0, color="gray", size=1) +
-    geom_point(data=df_colors, aes(x=h, y=sv, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=5, alpha=0.8, shape=16) +
-    geom_segment(data=df_fit, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=2) +
+    geom_point(data=df_colors, aes(x=h, y=sv, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=5, alpha=0.5, shape=16) +
+    annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.6) +
+    geom_segment(data=df_fit, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=1) +
     theme_minimal() +
     scale_colour_identity() +
     theme(axis.ticks=element_blank(),
@@ -1649,19 +1649,27 @@ setGeneric(name="plot_difference_hsv", function(object, ...) standardGeneric("pl
 #' @rdname color_class-plot_difference_hsv
 #' @aliases plot_difference_hsv_color
 setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=function(object, ...) {
-    # init local varibales for CRAN check
-    points <- lines <- r <- g <- b <- h <- s <- v <- sv <- NULL
+  # init local varibales for CRAN check
+  points <- lines <- r <- g <- b <- h <- s <- v <- sv <- NULL
 
-    # get arguments
-    arguments <- list(...)
+  # get arguments
+  arguments <- list(...)
 
-    # are provided colors hsv or rgb
-    hsv <- FALSE
-    if (length(arguments) != 0 && !is.null(arguments$hsv)) {
-      hsv <- TRUE
-    }
+  # are provided colors hsv or rgb
+  hsv <- FALSE
+  if (length(arguments) != 0 && !is.null(arguments$hsv)) {
+    hsv <- TRUE
+  }
 
-    # did user provide custom points
+  # start graph
+  graph <- ggplot() +
+    annotate(geom="rect", xmin=0, xmax=1, ymin=-1, ymax=1, alpha=0.1) +
+    geom_hline(yintercept=0, color="gray", size=1)
+
+  # did user provide custom points
+  if (length(arguments) != 0 && !is.null(arguments$points)) {
+    points <- arguments$points
+
     df_points <- data.frame(r=numeric(),
                             g=numeric(),
                             b=numeric(),
@@ -1669,29 +1677,27 @@ setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=f
                             s=numeric(),
                             v=numeric())
 
-    if (length(arguments) != 0 && !is.null(arguments$points)) {
-      for (p in points) {
-        if (hsv) {
-          h <- p[1]
-          if (h < 0)
-            h <- h + 2*pi
-          s <- p[2]
-          v <- p[3]
-          rgb <- hsv2rgb(h, s, v)
-          r <- rgb[1]
-          g <- rgb[2]
-          b <- rgb[3]
-          df_points <- rbind(df_points, data.frame(r=r, g=g, b=b, h=h, s=s, v=v))
-        } else {
-          r <- p[1]
-          g <- p[2]
-          b <- p[3]
-          hsv <- grDevices::rgb2hsv(p)
-          h <- hsv[1]
-          s <- hsv[2]
-          v <- hsv[3]
-          df_points <- rbind(df_points, data.frame(r=r, g=g, b=b, h=h, s=s, v=v))
-        }
+    for (p in points) {
+      if (hsv) {
+        h <- p[1]
+        if (h < 0)
+          h <- h + 2*pi
+        s <- p[2]
+        v <- p[3]
+        rgb <- hsv2rgb(h, s, v)
+        r <- rgb[1]
+        g <- rgb[2]
+        b <- rgb[3]
+        df_points <- rbind(df_points, data.frame(r=r, g=g, b=b, h=h, s=s, v=v))
+      } else {
+        r <- p[1]
+        g <- p[2]
+        b <- p[3]
+        hsv <- grDevices::rgb2hsv(p)
+        h <- hsv[1]
+        s <- hsv[2]
+        v <- hsv[3]
+        df_points <- rbind(df_points, data.frame(r=r, g=g, b=b, h=h, s=s, v=v))
       }
     }
 
@@ -1701,7 +1707,15 @@ setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=f
     # cast h to 0..1
     df_points$h <- df_points$h / (2*pi)
 
-    # did user provide custom lines
+    # add to graph
+    graph <- graph +
+      geom_point(data=df_points, aes(x=h, y=sv, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=5, shape=16)
+  }
+
+  # did user provide custom lines
+  if (length(arguments) != 0 && !is.null(arguments$lines)) {
+    lines <- arguments$lines
+
     df_lines <- data.frame(r=numeric(),
                            g=numeric(),
                            b=numeric(),
@@ -1709,131 +1723,128 @@ setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=f
                            s=numeric(),
                            v=numeric())
 
-    if (length(arguments) != 0 && !is.null(arguments$lines)) {
-      for (l in lines) {
-        if (hsv) {
-          h <- l[1]
-          if (h < 0)
-            h <- h + 2*pi
-          s <- l[2]
-          v <- l[3]
-          rgb <- hsv2rgb(h, s, v)
-          r <- rgb[1]
-          g <- rgb[2]
-          b <- rgb[3]
-          df_lines <- rbind(df_lines, data.frame(r=r, g=g, b=b, h=h, s=s, v=v))
-        } else {
-          r <- l[1]
-          g <- l[2]
-          b <- l[3]
-          hsv <- grDevices::rgb2hsv(l)
-          h <- hsv[1]
-          s <- hsv[2]
-          v <- hsv[3]
-          df_lines <- rbind(df_lines, data.frame(r=r, g=g, b=b, h=h, s=s, v=v))
-        }
+    for (l in lines) {
+      if (hsv) {
+        h <- l[1]
+        if (h < 0)
+          h <- h + 2*pi
+        s <- l[2]
+        v <- l[3]
+        rgb <- hsv2rgb(h, s, v)
+        r <- rgb[1]
+        g <- rgb[2]
+        b <- rgb[3]
+        df_lines <- rbind(df_lines, data.frame(r=r, g=g, b=b, h=h, s=s, v=v))
+      } else {
+        r <- l[1]
+        g <- l[2]
+        b <- l[3]
+        hsv <- grDevices::rgb2hsv(l)
+        h <- hsv[1]
+        s <- hsv[2]
+        v <- hsv[3]
+        df_lines <- rbind(df_lines, data.frame(r=r, g=g, b=b, h=h, s=s, v=v))
       }
     }
 
     # cast h to 0..1
     df_lines$h <- df_lines$h / (2*pi)
 
+    # add to graph
+    graph <- graph +
+      geom_segment(data=df_lines, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=2)
+  }
 
-    # fits and their hdi
-    df_fits <- data.frame(r=numeric(),
-                          g=numeric(),
-                          b=numeric(),
-                          h=numeric(),
-                          h_low=vector(),
-                          h_high=vector())
+  # add main fit
+  # annotate mu
+  h <- mean(preprocess_circular(object@extract$mu_h))
+  if (h < 0) {
+    h <- h + pi
+  }
+  h <- h / (2*pi)
+  r <- mean(object@extract$mu_r)
+  g <- mean(object@extract$mu_g)
+  b <- mean(object@extract$mu_b)
 
-    # add main fit
-    # annotate mu
-    h <- mean(preprocess_circular(object@extract$mu_h))
-    if (h < 0) {
-      h <- h + pi
+  # fits
+  df_fits <- data.frame(r=numeric(),
+                        g=numeric(),
+                        b=numeric(),
+                        h=numeric())
+
+  df_fits <- rbind(df_fits, data.frame(h=h, r=r, g=g, b=b))
+
+  # annotate HDI
+  h_hdi <- mcmc_hdi(preprocess_circular(object@extract$mu_h))
+
+  # cast to 0..1
+  h_hdi <- h_hdi / (2*pi)
+  h_low <- h_hdi[1]
+  h_high <- h_hdi[2]
+
+  if (h_low < 0) {
+    h_low <- h_low + 1
+    h_low <- c(h_low, 0)
+    h_high <- c(1, h_high)
+  }
+
+  graph <- graph +
+    annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.6)
+
+  # fit2 provided?
+  if (length(arguments) != 0 && (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class")) {
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
     }
-    h <- h / (2*pi)
-    r <- mean(object@extract$mu_r)
-    g <- mean(object@extract$mu_g)
-    b <- mean(object@extract$mu_b)
 
-    df_fits <- rbind(df_fits, data.frame(h=h, r=r, g=g, b=b))
+    # annotate mu
+    h_2 <- mean(preprocess_circular(fit2@extract$mu_h))
+    if (h_2 < 0) {
+      h_2 <- h + pi
+    }
+    h_2 <- h_2 / (2*pi)
+    r_2 <- mean(fit2@extract$mu_r)
+    g_2 <- mean(fit2@extract$mu_g)
+    b_2 <- mean(fit2@extract$mu_b)
+
+    df_fits <- rbind(df_fits, data.frame(h=h_2, r=r_2, g=g_2, b=b_2))
 
     # annotate HDI
-    h_hdi <- mcmc_hdi(preprocess_circular(object@extract$mu_h))
+    h_hdi_2 <- mcmc_hdi(preprocess_circular(fit2@extract$mu_h))
 
     # cast to 0..1
-    h_hdi <- h_hdi / (2*pi)
-    h_low <- h_hdi[1]
-    h_high <- h_hdi[2]
+    h_hdi_2 <- h_hdi_2 / (2*pi)
+    h_low_2 <- h_hdi_2[1]
+    h_high_2 <- h_hdi_2[2]
 
-    if (h_low < 0) {
-      h_low <- h_low + 1
-      h_low <- c(h_low, 0)
-      h_high <- c(1, h_high)
-    }
-
-    graph <- ggplot() +
-      annotate(geom="rect", xmin=0, xmax=1, ymin=-1, ymax=1, alpha=0.1) +
-      annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.5)
-
-    # fit2 provided?
-    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class") {
-      if (!is.null(arguments$fit2)) {
-        fit2 <- arguments$fit2
-      } else {
-        fit2 <- arguments[[1]]
-      }
-
-      # annotate mu
-      h_2 <- mean(preprocess_circular(fit2@extract$mu_h))
-      if (h_2 < 0) {
-        h_2 <- h + pi
-      }
-      h_2 <- h_2 / (2*pi)
-      r_2 <- mean(fit2@extract$mu_r)
-      g_2 <- mean(fit2@extract$mu_g)
-      b_2 <- mean(fit2@extract$mu_b)
-
-      df_fits <- rbind(df_fits, data.frame(h=h_2, r=r_2, g=g_2, b=b_2))
-
-      # annotate HDI
-      h_hdi_2 <- mcmc_hdi(preprocess_circular(fit2@extract$mu_h))
-
-      # cast to 0..1
-      h_hdi_2 <- h_hdi_2 / (2*pi)
-      h_low_2 <- h_hdi_2[1]
-      h_high_2 <- h_hdi_2[2]
-
-      if (h_low_2 < 0) {
-        h_low_2 <- h_low_2 + 1
-        h_low_2 <- c(h_low_2, 0)
-        h_high_2 <- c(1, h_high_2)
-      }
-
-      graph <- graph +
-        annotate(geom="rect", xmin=h_low_2, xmax=h_high_2, ymin=-1, ymax=1, fill=grDevices::rgb(r_2, g_2, b_2, maxColorValue=255), alpha=0.5)
+    if (h_low_2 < 0) {
+      h_low_2 <- h_low_2 + 1
+      h_low_2 <- c(h_low_2, 0)
+      h_high_2 <- c(1, h_high_2)
     }
 
     graph <- graph +
-      geom_hline(yintercept=0, color="gray", size=1) +
-      geom_point(data=df_points, aes(x=h, y=sv, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=5, alpha=0.8, shape=16) +
-      geom_segment(data=df_lines, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=1) +
-      geom_segment(data=df_fits, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=2) +
-      theme_minimal() +
-      scale_colour_identity() +
-      theme(axis.ticks=element_blank(),
-            axis.text=element_blank(),
-            axis.title=element_blank(),
-            axis.line=element_blank(),
-            panel.grid=element_blank(),
-            legend.position="none") +
-      coord_polar() +
-      scale_y_continuous(limits=c(-3, 1), expand=c(0,0)) +
-      scale_x_continuous(limits=c(0, 1), expand=c(0,0))
+      annotate(geom="rect", xmin=h_low_2, xmax=h_high_2, ymin=-1, ymax=1, fill=grDevices::rgb(r_2, g_2, b_2, maxColorValue=255), alpha=0.5)
+  }
 
-    return(graph)
+  # add fits and beutify chart
+  graph <- graph +
+    geom_segment(data=df_fits, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=1) +
+    theme_minimal() +
+    scale_colour_identity() +
+    theme(axis.ticks=element_blank(),
+          axis.text=element_blank(),
+          axis.title=element_blank(),
+          axis.line=element_blank(),
+          panel.grid=element_blank(),
+          legend.position="none") +
+    coord_polar() +
+    scale_y_continuous(limits=c(-3, 1), expand=c(0,0)) +
+    scale_x_continuous(limits=c(0, 1), expand=c(0,0))
+
+  return(graph)
 })
 
 
