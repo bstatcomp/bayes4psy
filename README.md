@@ -33,3 +33,10 @@ Added an additional, more detailed diagnostic print of fit.
 Updates to various visualisations.
 Bayesian bootstrap implementation.
 Tidyverse style code.
+
+# v 0.5
+Color model implementation.
+Specific visualizations for colors.
+Success rate hierarchical model rework.
+Extended documentation.
+Multiple chains support.
