@@ -17,5 +17,5 @@ plot_difference_hsv(object, ...)
 \item{...}{fit2 - a second color_class object, points - points to plot defined through rgb or hsv, lines - lines to plot defined through rgb or hsv, hsv - are points and lines defined in hsv format (default = FALSE).}
 }
 \description{
-\code{plot_difference_hsv} a visualization of the difference between two fits thorough a circular visualization of hsv color components. You can also provide a list of rgb or hsv defined colors and a list of hues that will be annotated on the visualization.
+\code{plot_difference_hsv} a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 }

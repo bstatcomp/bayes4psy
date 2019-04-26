@@ -54,7 +54,9 @@
 #'
 #' plot_fit_hsv(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
 #'
-#' plot_difference_hsv(`color_class`): a visualization of the difference between two fits thorough a circular visualization of hsv color components. You can also provide a list of rgb or hsv defined colors and a list of hues that will be annotated on the visualization.
+#' plot_difference_hsv(`color_class`): a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
+#'
+#' plot_distributions_difference_hsv(`color_class`): a visualization of the difference between distributions of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #'
 #' plot_trace(`color_class`): traceplot for main fitted model parameters.
 #'
@@ -1593,9 +1595,11 @@ setMethod(f="plot_fit_hsv", signature(object="color_class"), definition=function
   df_colors$h <- df_colors$h / (2*pi)
 
   # annotate mu
-  h <- mean(preprocess_circular(object@extract$mu_h))
+  mu_h_processed <- preprocess_circular(object@extract$mu_h)
+  h <- mean(mu_h_processed)
   if (h < 0) {
-    h <- h + pi
+    h <- h + 2 * pi
+    mu_h_processed <- mu_h_processed + 2 * pi
   }
   h <- h / (2*pi)
   r <- mean(object@extract$mu_r)
@@ -1604,26 +1608,35 @@ setMethod(f="plot_fit_hsv", signature(object="color_class"), definition=function
   df_fit <- data.frame(h=h, r=r, g=g, b=b)
 
   # annotate HDI
-  h_hdi <- mcmc_hdi(preprocess_circular(object@extract$mu_h))
+  h_hdi <- mcmc_hdi(mu_h_processed)
 
   # cast to 0..1
   h_hdi <- h_hdi / (2*pi)
   h_low <- h_hdi[1]
   h_high <- h_hdi[2]
 
-  if (h_low < 0) {
+  if (h_low < 0 && h_high < 0) {
     h_low <- h_low + 1
+    h_high <- h_high + 1
+  } else if (h_low > 1 && h_high > 1) {
+    h_low <- h_low - 1
+    h_high <- h_high - 1
+  } else if (h_low < 0) {
+    h_low <- h_low + 1
+    h_low <- c(h_low, 0)
+    h_high <- c(1, h_high)
+  } else if (h_high > 1) {
+    h_high <- h_high - 1
     h_low <- c(h_low, 0)
     h_high <- c(1, h_high)
   }
 
   graph <- ggplot() +
     annotate(geom="rect", xmin=0, xmax=1, ymin=-1, ymax=1, alpha=0.1) +
-    geom_hline(yintercept=0, color="gray", size=1) +
+    geom_hline(yintercept=0, color="gray20", size=1) +
     geom_point(data=df_colors, aes(x=h, y=sv, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=5, alpha=0.5, shape=16) +
     annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.6) +
     geom_segment(data=df_fit, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=1) +
-    theme_minimal() +
     scale_colour_identity() +
     theme(axis.ticks=element_blank(),
           axis.text=element_blank(),
@@ -1643,7 +1656,7 @@ setMethod(f="plot_fit_hsv", signature(object="color_class"), definition=function
 setGeneric(name="plot_difference_hsv", function(object, ...) standardGeneric("plot_difference_hsv"))
 
 #' @title plot_difference_hsv
-#' @description \code{plot_difference_hsv} a visualization of the difference between two fits thorough a circular visualization of hsv color components. You can also provide a list of rgb or hsv defined colors and a list of hues that will be annotated on the visualization.
+#' @description \code{plot_difference_hsv} a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #' @param object color_class object.
 #' @param ... fit2 - a second color_class object, points - points to plot defined through rgb or hsv, lines - lines to plot defined through rgb or hsv, hsv - are points and lines defined in hsv format (default = FALSE).
 #' @rdname color_class-plot_difference_hsv
@@ -1664,7 +1677,7 @@ setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=f
   # start graph
   graph <- ggplot() +
     annotate(geom="rect", xmin=0, xmax=1, ymin=-1, ymax=1, alpha=0.1) +
-    geom_hline(yintercept=0, color="gray", size=1)
+    geom_hline(yintercept=0, color="gray20", size=1)
 
   # did user provide custom points
   if (length(arguments) != 0 && !is.null(arguments$points)) {
@@ -1712,6 +1725,98 @@ setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=f
       geom_point(data=df_points, aes(x=h, y=sv, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=5, shape=16)
   }
 
+  # annotate mu
+  mu_h_processed <- preprocess_circular(object@extract$mu_h)
+  h <- mean(mu_h_processed)
+  if (h < 0) {
+    h <- h + 2 * pi
+    mu_h_processed <- mu_h_processed + 2 * pi
+  }
+  h <- h / (2*pi)
+  r <- mean(object@extract$mu_r)
+  g <- mean(object@extract$mu_g)
+  b <- mean(object@extract$mu_b)
+
+  # annotate HDI
+  h_hdi <- mcmc_hdi(mu_h_processed)
+
+  # cast to 0..1
+  h_hdi <- h_hdi / (2*pi)
+  h_low <- h_hdi[1]
+  h_high <- h_hdi[2]
+
+  if (h_low < 0 && h_high < 0) {
+    h_low <- h_low + 1
+    h_high <- h_high + 1
+  } else if (h_low > 1 && h_high > 1) {
+    h_low <- h_low - 1
+    h_high <- h_high - 1
+  } else if (h_low < 0) {
+    h_low <- h_low + 1
+    h_low <- c(h_low, 0)
+    h_high <- c(1, h_high)
+  } else if (h_high > 1) {
+    h_high <- h_high - 1
+    h_low <- c(h_low, 0)
+    h_high <- c(1, h_high)
+  }
+
+  # fits
+  df_fits <- data.frame(r=numeric(),
+                        g=numeric(),
+                        b=numeric(),
+                        h=numeric())
+
+  df_fits <- rbind(df_fits, data.frame(h=h, r=r, g=g, b=b))
+
+  graph <- graph +
+    annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.6)
+
+  # fit2 provided?
+  if (length(arguments) != 0 && (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class")) {
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+
+    # annotate mu
+    mu_h2_processed <- preprocess_circular(fit2@extract$mu_h)
+    h_2 <- mean(mu_h2_processed)
+    if (h_2 < 0) {
+      h_2 <- h + 2 * pi
+      mu_h2_processed <- mu_h2_processed + 2 * pi
+    }
+    h_2 <- h_2 / (2*pi)
+    r_2 <- mean(fit2@extract$mu_r)
+    g_2 <- mean(fit2@extract$mu_g)
+    b_2 <- mean(fit2@extract$mu_b)
+
+    df_fits <- rbind(df_fits, data.frame(h=h_2, r=r_2, g=g_2, b=b_2))
+
+    # annotate HDI
+    h_hdi_2 <- mcmc_hdi(mu_h2_processed)
+
+    # cast to 0..1
+    h_hdi_2 <- h_hdi_2 / (2*pi)
+    h_low_2 <- h_hdi_2[1]
+    h_high_2 <- h_hdi_2[2]
+
+    if (h_low_2 < 0) {
+      h_low_2 <- h_low_2 + 1
+      h_low_2 <- c(h_low_2, 0)
+      h_high_2 <- c(1, h_high_2)
+    } else if (h_high_2 > 1) {
+      h_high_2 <- h_high_2 - 1
+      h_low_2 <- c(h_low_2, 0)
+      h_high_2 <- c(1, h_high_2)
+    }
+
+    graph <- graph +
+      annotate(geom="rect", xmin=h_low_2, xmax=h_high_2, ymin=-1, ymax=1, fill=grDevices::rgb(r_2, g_2, b_2, maxColorValue=255), alpha=0.5)
+  }
+
+
   # did user provide custom lines
   if (length(arguments) != 0 && !is.null(arguments$lines)) {
     lines <- arguments$lines
@@ -1721,8 +1826,10 @@ setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=f
                            b=numeric(),
                            h=numeric(),
                            s=numeric(),
-                           v=numeric())
+                           v=numeric(),
+                           id=factor())
 
+    id = 1
     for (l in lines) {
       if (hsv) {
         h <- l[1]
@@ -1734,7 +1841,7 @@ setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=f
         r <- rgb[1]
         g <- rgb[2]
         b <- rgb[3]
-        df_lines <- rbind(df_lines, data.frame(r=r, g=g, b=b, h=h, s=s, v=v))
+        df_lines <- rbind(df_lines, data.frame(r=r, g=g, b=b, h=h, s=s, v=v, id=as.factor(id)))
       } else {
         r <- l[1]
         g <- l[2]
@@ -1743,8 +1850,9 @@ setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=f
         h <- hsv[1]
         s <- hsv[2]
         v <- hsv[3]
-        df_lines <- rbind(df_lines, data.frame(r=r, g=g, b=b, h=h, s=s, v=v))
+        df_lines <- rbind(df_lines, data.frame(r=r, g=g, b=b, h=h, s=s, v=v, id=as.factor(id)))
       }
+      id <- id + 1
     }
 
     # cast h to 0..1
@@ -1752,41 +1860,152 @@ setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=f
 
     # add to graph
     graph <- graph +
-      geom_segment(data=df_lines, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=2)
+      geom_segment(data=df_lines, aes(x=h, xend=h, y=-3, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255), linetype=id), size=2)
   }
 
-  # add main fit
+  # add fits and beutify chart
+  graph <- graph +
+    geom_segment(data=df_fits, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=1) +
+    scale_colour_identity() +
+    theme(axis.ticks=element_blank(),
+          axis.text=element_blank(),
+          axis.title=element_blank(),
+          axis.line=element_blank(),
+          panel.grid=element_blank(),
+          legend.position="none") +
+    coord_polar() +
+    scale_y_continuous(limits=c(-3, 1), expand=c(0,0)) +
+    scale_x_continuous(limits=c(0, 1), expand=c(0,0))
+
+  return(graph)
+})
+
+
+#' @rdname color_class-plot_distributions_difference_hsv
+#' @exportMethod plot_distributions_difference_hsv
+setGeneric(name="plot_distributions_difference_hsv", function(object, ...) standardGeneric("plot_distributions_difference_hsv"))
+
+#' @title plot_distributions_difference_hsv
+#' @description \code{plot_distributions_difference_hsv} a visualization of the difference between distributions of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
+#' @param object color_class object.
+#' @param ... fit2 - a second color_class object, points - points to plot defined through rgb or hsv, lines - lines to plot defined through rgb or hsv, hsv - are points and lines defined in hsv format (default = FALSE).
+#' @rdname color_class-plot_distributions_difference_hsv
+#' @aliases plot_distributions_difference_hsv_color
+setMethod(f="plot_distributions_difference_hsv", signature(object="color_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  points <- lines <- r <- g <- b <- h <- s <- v <- sv <- NULL
+
+  # get arguments
+  arguments <- list(...)
+
+  # are provided colors hsv or rgb
+  hsv <- FALSE
+  if (length(arguments) != 0 && !is.null(arguments$hsv)) {
+    hsv <- TRUE
+  }
+
+  # start graph
+  graph <- ggplot() +
+    annotate(geom="rect", xmin=0, xmax=1, ymin=-1, ymax=1, alpha=0.1) +
+    geom_hline(yintercept=0, color="gray20", size=1)
+
+  # did user provide custom points
+  if (length(arguments) != 0 && !is.null(arguments$points)) {
+    points <- arguments$points
+
+    df_points <- data.frame(r=numeric(),
+                            g=numeric(),
+                            b=numeric(),
+                            h=numeric(),
+                            s=numeric(),
+                            v=numeric())
+
+    for (p in points) {
+      if (hsv) {
+        h <- p[1]
+        if (h < 0)
+          h <- h + 2*pi
+        s <- p[2]
+        v <- p[3]
+        rgb <- hsv2rgb(h, s, v)
+        r <- rgb[1]
+        g <- rgb[2]
+        b <- rgb[3]
+        df_points <- rbind(df_points, data.frame(r=r, g=g, b=b, h=h, s=s, v=v))
+      } else {
+        r <- p[1]
+        g <- p[2]
+        b <- p[3]
+        hsv <- grDevices::rgb2hsv(p)
+        h <- hsv[1]
+        s <- hsv[2]
+        v <- hsv[3]
+        df_points <- rbind(df_points, data.frame(r=r, g=g, b=b, h=h, s=s, v=v))
+      }
+    }
+
+    # in order to present this in a joined colourwheel, recode s and v to a joint variable
+    df_points <- df_points %>% mutate(sv=ifelse(s == 1, v - 1, (s - 1) * -1))
+
+    # cast h to 0..1
+    df_points$h <- df_points$h / (2*pi)
+
+    # add to graph
+    graph <- graph +
+      geom_point(data=df_points, aes(x=h, y=sv, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=5, shape=16)
+  }
+
   # annotate mu
   h <- mean(preprocess_circular(object@extract$mu_h))
   if (h < 0) {
-    h <- h + pi
+    h <- h + 2 * pi
   }
-  h <- h / (2*pi)
   r <- mean(object@extract$mu_r)
   g <- mean(object@extract$mu_g)
   b <- mean(object@extract$mu_b)
 
-  # fits
-  df_fits <- data.frame(r=numeric(),
-                        g=numeric(),
-                        b=numeric(),
-                        h=numeric())
-
-  df_fits <- rbind(df_fits, data.frame(h=h, r=r, g=g, b=b))
 
   # annotate HDI
-  h_hdi <- mcmc_hdi(preprocess_circular(object@extract$mu_h))
+  kappa <- mean(object@extract$kappa_h)
+  # suppress circular warnings
+  h <- suppressWarnings(circular::as.circular(h))
+  kappa <- suppressWarnings(circular::as.circular(kappa))
+
+  # draW from distribution
+  n <- 10000
+  y <- circular::rvonmises(n, h, kappa)
+  y <- preprocess_circular(y, base=h)
+  h_hdi <- as.numeric(mcmc_hdi(y))
 
   # cast to 0..1
   h_hdi <- h_hdi / (2*pi)
   h_low <- h_hdi[1]
   h_high <- h_hdi[2]
 
-  if (h_low < 0) {
+  if (h_low < 0 && h_high < 0) {
+    h_low <- h_low + 1
+    h_high <- h_high + 1
+  } else if (h_low > 1 && h_high > 1) {
+    h_low <- h_low - 1
+    h_high <- h_high - 1
+  } else if (h_low < 0) {
     h_low <- h_low + 1
     h_low <- c(h_low, 0)
     h_high <- c(1, h_high)
+  } else if (h_high > 1) {
+    h_high <- h_high - 1
+    h_low <- c(h_low, 0)
+    h_high <- c(1, h_high)
   }
+
+  # fits
+  h <- h / (2*pi)
+  df_fits <- data.frame(r=numeric(),
+                        g=numeric(),
+                        b=numeric(),
+                        h=numeric())
+
+  df_fits <- rbind(df_fits, data.frame(h=h, r=r, g=g, b=b))
 
   graph <- graph +
     annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.6)
@@ -1802,17 +2021,22 @@ setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=f
     # annotate mu
     h_2 <- mean(preprocess_circular(fit2@extract$mu_h))
     if (h_2 < 0) {
-      h_2 <- h + pi
+      h_2 <- h + 2 * pi
     }
-    h_2 <- h_2 / (2*pi)
     r_2 <- mean(fit2@extract$mu_r)
     g_2 <- mean(fit2@extract$mu_g)
     b_2 <- mean(fit2@extract$mu_b)
 
-    df_fits <- rbind(df_fits, data.frame(h=h_2, r=r_2, g=g_2, b=b_2))
-
     # annotate HDI
-    h_hdi_2 <- mcmc_hdi(preprocess_circular(fit2@extract$mu_h))
+    kappa_2 <- mean(fit2@extract$kappa_h)
+    # suppress circular warnings
+    h_2 <- suppressWarnings(circular::as.circular(h_2))
+    kappa_2 <- suppressWarnings(circular::as.circular(kappa_2))
+
+    # draw from distribution
+    y_2 <- circular::rvonmises(n, h_2, kappa_2)
+    y_2 <- preprocess_circular(y_2, base=h_2)
+    h_hdi_2 <- as.numeric(mcmc_hdi(y_2))
 
     # cast to 0..1
     h_hdi_2 <- h_hdi_2 / (2*pi)
@@ -1823,16 +2047,69 @@ setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=f
       h_low_2 <- h_low_2 + 1
       h_low_2 <- c(h_low_2, 0)
       h_high_2 <- c(1, h_high_2)
+    } else if (h_high_2 > 1) {
+      h_high_2 <- h_high_2 - 1
+      h_low_2 <- c(h_low_2, 0)
+      h_high_2 <- c(1, h_high_2)
     }
+
+    # fits
+    h_2 <- h_2 / (2*pi)
+    df_fits <- rbind(df_fits, data.frame(h=h_2, r=r_2, g=g_2, b=b_2))
 
     graph <- graph +
       annotate(geom="rect", xmin=h_low_2, xmax=h_high_2, ymin=-1, ymax=1, fill=grDevices::rgb(r_2, g_2, b_2, maxColorValue=255), alpha=0.5)
   }
 
+  # did user provide custom lines
+  if (length(arguments) != 0 && !is.null(arguments$lines)) {
+    lines <- arguments$lines
+
+    df_lines <- data.frame(r=numeric(),
+                           g=numeric(),
+                           b=numeric(),
+                           h=numeric(),
+                           s=numeric(),
+                           v=numeric(),
+                           id=factor())
+
+    id = 1
+    for (l in lines) {
+      if (hsv) {
+        h <- l[1]
+        if (h < 0)
+          h <- h + 2*pi
+        s <- l[2]
+        v <- l[3]
+        rgb <- hsv2rgb(h, s, v)
+        r <- rgb[1]
+        g <- rgb[2]
+        b <- rgb[3]
+        df_lines <- rbind(df_lines, data.frame(r=r, g=g, b=b, h=h, s=s, v=v, id=as.factor(id)))
+      } else {
+        r <- l[1]
+        g <- l[2]
+        b <- l[3]
+        hsv <- grDevices::rgb2hsv(l)
+        h <- hsv[1]
+        s <- hsv[2]
+        v <- hsv[3]
+        df_lines <- rbind(df_lines, data.frame(r=r, g=g, b=b, h=h, s=s, v=v, id=as.factor(id)))
+      }
+      id <- id + 1
+    }
+
+    # cast h to 0..1
+    df_lines$h <- df_lines$h / (2*pi)
+
+    # add to graph
+    graph <- graph +
+      geom_segment(data=df_lines, aes(x=h, xend=h, y=-3, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255), linetype=id), size=2)
+  }
+
   # add fits and beutify chart
   graph <- graph +
     geom_segment(data=df_fits, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=1) +
-    theme_minimal() +
     scale_colour_identity() +
     theme(axis.ticks=element_blank(),
           axis.text=element_blank(),

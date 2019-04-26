@@ -39,7 +39,7 @@ model {
 	sigma_b ~ uniform(0, 100);
 	// hsv
 	mu_h ~ uniform(0, 2*pi()); 
-	kappa_h ~ uniform(0, 50);
+	kappa_h ~ uniform(0, 2);
 	mu_s ~ uniform(0, 1);
 	sigma_s ~ uniform(0, 0.5);
 	mu_v ~ uniform(0, 1);
