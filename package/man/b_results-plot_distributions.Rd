@@ -12,5 +12,5 @@ plot_distributions(object, ...)
 \item{...}{see documentation for specific class for the description of available parameters, e.g. ?plot_distributions_ttest or ?plot_distributions_linear.}
 }
 \description{
-\code{plot_distributions} visualizes distributions underlying tested groups.
+\code{plot_distributions} visualizes fitted distributions.
 }

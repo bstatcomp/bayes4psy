@@ -1,5 +1,6 @@
 # libs
 library(EasyBayes)
+library(ggplot2)
 
 ## data wrangling --------------------------------------------------------
 # load data

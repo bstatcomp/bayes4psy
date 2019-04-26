@@ -262,43 +262,43 @@ public:
             throw std::runtime_error(std::string("Error transforming variable mu_s: ") + e.what());
         }
 
-        if (!(context__.contains_r("ss_m")))
-            throw std::runtime_error("variable ss_m missing");
-        vals_r__ = context__.vals_r("ss_m");
+        if (!(context__.contains_r("sigma_m")))
+            throw std::runtime_error("variable sigma_m missing");
+        vals_r__ = context__.vals_r("sigma_m");
         pos__ = 0U;
-        context__.validate_dims("initialization", "ss_m", "double", context__.to_vec());
-        double ss_m(0);
-        ss_m = vals_r__[pos__++];
+        context__.validate_dims("initialization", "sigma_m", "double", context__.to_vec());
+        double sigma_m(0);
+        sigma_m = vals_r__[pos__++];
         try {
-            writer__.scalar_lb_unconstrain(0,ss_m);
+            writer__.scalar_lb_unconstrain(0,sigma_m);
         } catch (const std::exception& e) { 
-            throw std::runtime_error(std::string("Error transforming variable ss_m: ") + e.what());
+            throw std::runtime_error(std::string("Error transforming variable sigma_m: ") + e.what());
         }
 
-        if (!(context__.contains_r("ss_l")))
-            throw std::runtime_error("variable ss_l missing");
-        vals_r__ = context__.vals_r("ss_l");
+        if (!(context__.contains_r("sigma_l")))
+            throw std::runtime_error("variable sigma_l missing");
+        vals_r__ = context__.vals_r("sigma_l");
         pos__ = 0U;
-        context__.validate_dims("initialization", "ss_l", "double", context__.to_vec());
-        double ss_l(0);
-        ss_l = vals_r__[pos__++];
+        context__.validate_dims("initialization", "sigma_l", "double", context__.to_vec());
+        double sigma_l(0);
+        sigma_l = vals_r__[pos__++];
         try {
-            writer__.scalar_lb_unconstrain(0,ss_l);
+            writer__.scalar_lb_unconstrain(0,sigma_l);
         } catch (const std::exception& e) { 
-            throw std::runtime_error(std::string("Error transforming variable ss_l: ") + e.what());
+            throw std::runtime_error(std::string("Error transforming variable sigma_l: ") + e.what());
         }
 
-        if (!(context__.contains_r("ss_s")))
-            throw std::runtime_error("variable ss_s missing");
-        vals_r__ = context__.vals_r("ss_s");
+        if (!(context__.contains_r("sigma_s")))
+            throw std::runtime_error("variable sigma_s missing");
+        vals_r__ = context__.vals_r("sigma_s");
         pos__ = 0U;
-        context__.validate_dims("initialization", "ss_s", "double", context__.to_vec());
-        double ss_s(0);
-        ss_s = vals_r__[pos__++];
+        context__.validate_dims("initialization", "sigma_s", "double", context__.to_vec());
+        double sigma_s(0);
+        sigma_s = vals_r__[pos__++];
         try {
-            writer__.scalar_lb_unconstrain(0,ss_s);
+            writer__.scalar_lb_unconstrain(0,sigma_s);
         } catch (const std::exception& e) { 
-            throw std::runtime_error(std::string("Error transforming variable ss_s: ") + e.what());
+            throw std::runtime_error(std::string("Error transforming variable sigma_s: ") + e.what());
         }
 
         params_r__ = writer__.data_r();
@@ -376,26 +376,26 @@ public:
             else
                 mu_s = in__.scalar_constrain();
 
-            local_scalar_t__ ss_m;
-            (void) ss_m;  // dummy to suppress unused var warning
+            local_scalar_t__ sigma_m;
+            (void) sigma_m;  // dummy to suppress unused var warning
             if (jacobian__)
-                ss_m = in__.scalar_lb_constrain(0,lp__);
+                sigma_m = in__.scalar_lb_constrain(0,lp__);
             else
-                ss_m = in__.scalar_lb_constrain(0);
+                sigma_m = in__.scalar_lb_constrain(0);
 
-            local_scalar_t__ ss_l;
-            (void) ss_l;  // dummy to suppress unused var warning
+            local_scalar_t__ sigma_l;
+            (void) sigma_l;  // dummy to suppress unused var warning
             if (jacobian__)
-                ss_l = in__.scalar_lb_constrain(0,lp__);
+                sigma_l = in__.scalar_lb_constrain(0,lp__);
             else
-                ss_l = in__.scalar_lb_constrain(0);
+                sigma_l = in__.scalar_lb_constrain(0);
 
-            local_scalar_t__ ss_s;
-            (void) ss_s;  // dummy to suppress unused var warning
+            local_scalar_t__ sigma_s;
+            (void) sigma_s;  // dummy to suppress unused var warning
             if (jacobian__)
-                ss_s = in__.scalar_lb_constrain(0,lp__);
+                sigma_s = in__.scalar_lb_constrain(0,lp__);
             else
-                ss_s = in__.scalar_lb_constrain(0);
+                sigma_s = in__.scalar_lb_constrain(0);
 
 
             // transformed parameters
@@ -410,11 +410,11 @@ public:
             // model body
 
             current_statement_begin__ = 24;
-            lp_accum__.add(normal_log<propto__>(mu, mu_m, ss_m));
+            lp_accum__.add(normal_log<propto__>(mu, mu_m, sigma_m));
             current_statement_begin__ = 25;
-            lp_accum__.add(normal_log<propto__>(sigma, mu_s, ss_s));
+            lp_accum__.add(normal_log<propto__>(sigma, mu_s, sigma_s));
             current_statement_begin__ = 26;
-            lp_accum__.add(normal_log<propto__>(lambda, mu_l, ss_l));
+            lp_accum__.add(normal_log<propto__>(lambda, mu_l, sigma_l));
             current_statement_begin__ = 29;
             for (int i = 1; i <= n; ++i) {
 
@@ -453,9 +453,9 @@ public:
         names__.push_back("mu_m");
         names__.push_back("mu_l");
         names__.push_back("mu_s");
-        names__.push_back("ss_m");
-        names__.push_back("ss_l");
-        names__.push_back("ss_s");
+        names__.push_back("sigma_m");
+        names__.push_back("sigma_l");
+        names__.push_back("sigma_s");
     }
 
 
@@ -506,9 +506,9 @@ public:
         double mu_m = in__.scalar_constrain();
         double mu_l = in__.scalar_constrain();
         double mu_s = in__.scalar_constrain();
-        double ss_m = in__.scalar_lb_constrain(0);
-        double ss_l = in__.scalar_lb_constrain(0);
-        double ss_s = in__.scalar_lb_constrain(0);
+        double sigma_m = in__.scalar_lb_constrain(0);
+        double sigma_l = in__.scalar_lb_constrain(0);
+        double sigma_s = in__.scalar_lb_constrain(0);
             for (int k_0__ = 0; k_0__ < m; ++k_0__) {
             vars__.push_back(mu[k_0__]);
             }
@@ -521,9 +521,9 @@ public:
         vars__.push_back(mu_m);
         vars__.push_back(mu_l);
         vars__.push_back(mu_s);
-        vars__.push_back(ss_m);
-        vars__.push_back(ss_l);
-        vars__.push_back(ss_s);
+        vars__.push_back(sigma_m);
+        vars__.push_back(sigma_l);
+        vars__.push_back(sigma_s);
 
         // declare and define transformed parameters
         double lp__ = 0.0;
@@ -609,13 +609,13 @@ public:
         param_name_stream__ << "mu_s";
         param_names__.push_back(param_name_stream__.str());
         param_name_stream__.str(std::string());
-        param_name_stream__ << "ss_m";
+        param_name_stream__ << "sigma_m";
         param_names__.push_back(param_name_stream__.str());
         param_name_stream__.str(std::string());
-        param_name_stream__ << "ss_l";
+        param_name_stream__ << "sigma_l";
         param_names__.push_back(param_name_stream__.str());
         param_name_stream__.str(std::string());
-        param_name_stream__ << "ss_s";
+        param_name_stream__ << "sigma_s";
         param_names__.push_back(param_name_stream__.str());
 
         if (!include_gqs__ && !include_tparams__) return;
@@ -657,13 +657,13 @@ public:
         param_name_stream__ << "mu_s";
         param_names__.push_back(param_name_stream__.str());
         param_name_stream__.str(std::string());
-        param_name_stream__ << "ss_m";
+        param_name_stream__ << "sigma_m";
         param_names__.push_back(param_name_stream__.str());
         param_name_stream__.str(std::string());
-        param_name_stream__ << "ss_l";
+        param_name_stream__ << "sigma_l";
         param_names__.push_back(param_name_stream__.str());
         param_name_stream__.str(std::string());
-        param_name_stream__ << "ss_s";
+        param_name_stream__ << "sigma_s";
         param_names__.push_back(param_name_stream__.str());
 
         if (!include_gqs__ && !include_tparams__) return;

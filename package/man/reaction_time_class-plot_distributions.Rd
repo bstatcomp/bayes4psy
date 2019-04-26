@@ -11,8 +11,8 @@
 \arguments{
 \item{object}{reaction_time_class object.}
 
-\item{...}{fit2 - a second linear_class object.}
+\item{...}{fit2 - a second reaction_time_class object.}
 }
 \description{
-\code{plot_distributions} a visualization of the distribution for the first group, or the first group and the second group.
+\code{plot_distributions} a visualization of the fitted distribution, for one or two fits.
 }

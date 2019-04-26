@@ -20,9 +20,9 @@
 #'
 #' compare_distributions(`success_rate_class`, fit2=`success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #'
-#' plot_distributions(`success_rate_class`): a visualization of the distribution for the first group.
+#' plot_distributions(`success_rate_class`): a visualization of the fitted distribution.
 #'
-#' plot_distributions(`success_rate_class`, fit2=`success_rate_class`): a visualization of the distribution for the first group and the second group.
+#' plot_distributions(`success_rate_class`, fit2=`success_rate_class`): a visualization of the distribution for two fits.
 #'
 #' plot_distributions_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
@@ -51,14 +51,14 @@ success_rate_class <- setClass(
 #' @exportMethod summary
 setMethod(f="summary", signature(object="success_rate_class"), definition=function(object) {
   # get means
-  p <- mean(object@extract$p)
+  p <- mean(object@extract$p0)
 
   # hdi
-  p_hdi <- mcmc_hdi(object@extract$p)
+  p_hdi <- mcmc_hdi(object@extract$p0)
 
   # print
-  cat(sprintf("Success rate: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
-              p, mcmcse::mcse(object@extract$p)$se, p_hdi[1], p_hdi[2]))
+  cat(sprintf("Success rate:\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
+              p, mcmcse::mcse(object@extract$p0)$se, p_hdi[1], p_hdi[2]))
 })
 
 
@@ -96,7 +96,7 @@ setMethod(f="compare", signature(object="success_rate_class"), definition=functi
   rope <- prepare_rope(rope)
 
   # first group data
-  y1 <- rowMeans(object@extract$p)
+  y1 <- object@extract$p0
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
@@ -106,7 +106,7 @@ setMethod(f="compare", signature(object="success_rate_class"), definition=functi
     } else {
       fit2 <- arguments[[1]]
     }
-    y2 <- rowMeans(fit2@extract$p)
+    y2 <- fit2@extract$p0
 
     shared_difference(y1=y1, y2=y2, rope=rope)
   } else {
@@ -140,7 +140,7 @@ setMethod(f="plot_difference", signature(object="success_rate_class"), definitio
   rope <- prepare_rope(rope)
 
   # first group data
-  y1 <- rowMeans(object@extract$p)
+  y1 <- object@extract$p0
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
@@ -150,7 +150,7 @@ setMethod(f="plot_difference", signature(object="success_rate_class"), definitio
     } else {
       fit2 <- arguments[[1]]
     }
-    y2 <- rowMeans(fit2@extract$p)
+    y2 <- fit2@extract$p0
 
     # bins in the histogram
     bins <- 30
@@ -169,17 +169,17 @@ setMethod(f="plot_difference", signature(object="success_rate_class"), definitio
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots density for the first group samples, or the first and the second group samples.
+#' @description \code{plot_samples} plots density of the samples, or the first and the second group samples.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_samples
 #' @aliases plot_samples_success_rate
 setMethod(f="plot_samples", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  value <- NULL
+  group <- value <- NULL
 
   # first group data
-  df <- data.frame(value=rowMeans(object@extract$p), group="1")
+  df <- data.frame(value=object@extract$p0, group="1")
 
   # second group data
   df2 <- NULL
@@ -193,7 +193,7 @@ setMethod(f="plot_samples", signature(object="success_rate_class"), definition=f
         fit2 <- arguments[[1]]
       }
 
-      df <- rbind(df, data.frame(value=rowMeans(fit2@extract$p), group="2"))
+      df <- rbind(df, data.frame(value=fit2@extract$p0, group="2"))
     }
   }
 
@@ -235,8 +235,9 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
   n <- 100000
 
   # first group data
-  p1 <- mean(object@extract$p)
-  y1 <- stats::rbinom(n, 1, p1)
+  p0 <- mean(object@extract$p0)
+  tau <- mean(object@extract$tau)
+  y1 <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
@@ -246,8 +247,9 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
     } else {
       fit2 <- arguments[[1]]
     }
-    p2 <- mean(fit2@extract$p)
-    y2 <- stats::rbinom(n, 1, p2)
+    p0 <- mean(fit2@extract$p0)
+    tau <- mean(fit2@extract$tau)
+    y2 <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
 
     # calculate
     y1_smaller <- round(sum(y1 < y2) / n, 2)
@@ -266,7 +268,7 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
 
 
 #' @title plot_distributions
-#' @description \code{plot_distributions} a visualization of the distribution for the first group, or the first group and the second group.
+#' @description \code{plot_distributions} a visualization of the fitted distribution, for one or two fits.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_distributions
@@ -275,14 +277,13 @@ setMethod(f="plot_distributions", signature(object="success_rate_class"), defini
   # init local varibales for CRAN check
   value <- y <- y_min <- NULL
 
-  n <- nrow(object@extract$p)
-  m <- 10000
+  n <- 10000
 
   # first group data
-  p1 <- mean(object@extract$p)
-  y1 <- stats::rbinom(m, n, p1) / n
-  mu1 <- mean(y1)
-  sd1 <- stats::sd(y1)
+  p0 <- mean(object@extract$p0)
+  tau <- mean(object@extract$tau)
+  alpha1 <- p0*tau
+  beta1 <- (1 - p0)*tau
 
   # second group data
   group2_plot <- NULL
@@ -295,12 +296,12 @@ setMethod(f="plot_distributions", signature(object="success_rate_class"), defini
       } else {
         fit2 <- arguments[[1]]
       }
-      p2 <- mean(fit2@extract$p)
-      y2 <- stats::rbinom(m, n, p2) / n
-      mu2 <- mean(y2)
-      sd2 <- stats::sd(y2)
+      p0 <- mean(fit2@extract$p0)
+      tau <- mean(fit2@extract$tau)
+      alpha2 <- p0*tau
+      beta2 <- (1 - p0)*tau
 
-      group2_plot <- stat_function(fun=stats::dnorm, n=m, args=list(mean=mu2, sd=sd2), geom='area', fill='#ff4e3f', alpha=0.4)
+      group2_plot <- stat_function(fun=stats::dbeta, n=n, args=list(shape1=alpha2, shape2=beta2), geom="area", fill="#ff4e3f", alpha=0.4)
     }
   }
 
@@ -308,7 +309,7 @@ setMethod(f="plot_distributions", signature(object="success_rate_class"), defini
   df_x <- data.frame(value=c(0, 1))
 
   graph <- ggplot(data=df_x, aes(x=value)) +
-    stat_function(fun=stats::dnorm, n=m, args=list(mean=mu1, sd=sd1), geom='area', fill='#3182bd', alpha=0.4) +
+    stat_function(fun=stats::dbeta, n=n, args=list(shape1=alpha1, shape2=beta1), geom="area", fill="#3182bd", alpha=0.4) +
     group2_plot +
     xlab("probability") +
     ylab("density")
@@ -343,14 +344,15 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
   }
   rope <- prepare_rope(rope)
 
-  n <- 10000
-  m <- 1000
+  n <- 100000
 
   # results
   df <- data.frame()
 
   # first group data
-  p1 <- mean(object@extract$p)
+  p0 <- mean(object@extract$p0)
+  tau <- mean(object@extract$tau)
+  y1 <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
@@ -360,16 +362,9 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
     } else {
       fit2 <- arguments[[1]]
     }
-    p2 <- mean(fit2@extract$p)
-
-    for (i in 1:m){
-      y1_draw <- stats::rbinom(n, 1, p1)
-      y2_draw <- stats::rbinom(n, 1, p2)
-
-      # calculate
-      y1[i] <- sum(y1_draw) / n
-      y2[i] <- sum(y2_draw) / n
-    }
+    p0 <- mean(fit2@extract$p0)
+    tau <- mean(fit2@extract$tau)
+    y2 <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
 
     # bins in the histogram
     bins <- 30
@@ -397,7 +392,6 @@ setMethod(f="plot_fit", signature(object="success_rate_class"), definition=funct
   variable<-value<-NULL
 
   df_data <- data.frame(value=object@data$r, variable=object@data$s)
-
   df_data <- df_data %>% group_by(variable) %>% summarize(value=mean(value))
 
   df_fit <- object@extract$p

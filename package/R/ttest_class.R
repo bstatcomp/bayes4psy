@@ -20,7 +20,7 @@
 #'
 #' plot_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_samples(`ttest_class`): plots density for the first group samples.
+#' plot_samples(`ttest_class`): plots density of the samples.
 #'
 #' plot_samples(`ttest_class`, fit2=`ttest_class`): plots density for the first and the second group samples.
 #'
@@ -32,13 +32,13 @@
 #'
 #' compare_distributions(`ttest_class`, mu=`numeric`, sigma=`numeric`): draws samples from distribution of the first group and compares them against samples from a normal distribution with a defined mean value and variance. You can also provide the rope parameter.
 #'
-#' plot_distributions(`ttest_class`): a visualization of the distribution for the first group.
+#' plot_distributions(`ttest_class`): a visualization of the fitted.
 #'
-#' plot_distributions(`ttest_class`, fit2=`ttest_class`): a visualization of the distribution for the first group and the distribution for the second group.
+#' plot_distributions(`ttest_class`, fit2=`ttest_class`): a visualization of two fitted distributions.
 #'
-#' plot_distributions(`ttest_class`, mu=`numeric`): a visualization of the distribution for the first group and a constant value.
+#' plot_distributions(`ttest_class`, mu=`numeric`): a visualization of the fitted distribution and a constant value.
 #'
-#' plot_distributions(`ttest_class`, mu=`numeric`, sigma=`numeric`): a visualization of the distribution for the first group and the normal distribution defined with a mean value and standard deviation.
+#' plot_distributions(`ttest_class`, mu=`numeric`, sigma=`numeric`): a visualization of the fitted distribution and the normal distribution defined with a mean value and a standard deviation.
 #'
 #' plot_distributions_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the distribution of the first group and the distribution of the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
@@ -80,11 +80,11 @@ setMethod(f="summary", signature(object="ttest_class"), definition=function(obje
   nu_hdi <- mcmc_hdi(object@extract$nu)
 
   # print)
-  cat(sprintf("mu: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("mu:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               mu, mcmcse::mcse(object@extract$mu)$se, mu_hdi[1], mu_hdi[2]))
-  cat(sprintf("sigma: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("sigma:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               sigma, mcmcse::mcse(object@extract$sigma)$se, sigma_hdi[1], sigma_hdi[2]))
-  cat(sprintf("nu: %.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n", nu,
+  cat(sprintf("nu:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n", nu,
               mcmcse::mcse(object@extract$nu)$se, nu_hdi[1], nu_hdi[2]))
 })
 
@@ -217,7 +217,7 @@ setMethod(f="plot_difference", signature(object="ttest_class"), definition=funct
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots density for the first group samples, the first and the second group samples, or a mean value in case second group is defined as a normal distribution or as a constant.
+#' @description \code{plot_samples} plots density of the samples, the first and the second group samples, or a mean value in case second group is defined as a normal distribution or as a constant.
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value.
 #' @rdname ttest_class-plot_samples
@@ -263,7 +263,7 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
 
     graph <- graph +
       geom_segment(aes(x=mu2, xend=mu2, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
-      geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4)
+      geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4, vjust="inward", hjust="inward")
   }
 
   # limits
@@ -383,7 +383,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
       x_min <- min(x_min, y2_mu - 4*y2_sigma)
       x_max <- max(x_max, y2_mu + 4*y2_sigma)
 
-      group2_plot <- stat_function(fun=dt.scaled, n=n, args=list(df=nu, mean=y2_mu, sd=y2_sigma), geom='area', fill='#ff4e3f', alpha=0.4)
+      group2_plot <- stat_function(fun=dt.scaled, n=n, args=list(df=nu, mean=y2_mu, sd=y2_sigma), geom="area", fill="#ff4e3f", alpha=0.4)
     } else if (!is.null(arguments$mu)) {
       # provided mu and sigma
       y2_mu <- arguments$mu;
@@ -394,7 +394,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
         x_min <- min(x_min, y2_mu - 4*y2_sigma)
         x_max <- max(x_max, y2_mu + 4*y2_sigma)
 
-        group2_plot <- stat_function(fun=stats::dnorm, n=n, args=list(mean=y2_mu, sd=y2_sigma), geom='area', fill='#ff4e3f', alpha=0.4)
+        group2_plot <- stat_function(fun=stats::dnorm, n=n, args=list(mean=y2_mu, sd=y2_sigma), geom="area", fill="#ff4e3f", alpha=0.4)
       } else {
         x_min <- min(x_min, y2_mu)
         x_max <- max(x_max, y2_mu)
@@ -406,7 +406,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
   df_x <- data.frame(value=c(x_min, x_max))
 
   graph <- ggplot(data=df_x, aes(x=value)) +
-    stat_function(fun=dt.scaled, n=n, args=list(df=nu, mean=y1_mu, sd=y1_sigma), geom='area', fill='#3182bd', alpha=0.4) +
+    stat_function(fun=dt.scaled, n=n, args=list(df=nu, mean=y1_mu, sd=y1_sigma), geom="area", fill="#3182bd", alpha=0.4) +
     group2_plot +
     xlab("value") +
     ylab("density")
@@ -416,7 +416,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
 
     graph <- graph +
       geom_segment(aes(x=y2_mu, xend=y2_mu, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
-      geom_text(aes(label=sprintf("%.2f", y2_mu), x=y2_mu, y=y_max[2]*1.08), size=4)
+      geom_text(aes(label=sprintf("%.2f", y2_mu), x=y2_mu, y=y_max[2]*1.08), size=4, vjust="inward", hjust="inward")
   }
 
   return(graph)

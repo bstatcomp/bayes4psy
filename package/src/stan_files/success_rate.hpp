@@ -36,7 +36,7 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_success_rate");
-    reader.add_event(22, 20, "end", "model_success_rate");
+    reader.add_event(31, 29, "end", "model_success_rate");
     return reader;
 }
 
@@ -141,6 +141,10 @@ public:
             num_params_r__ = 0U;
             param_ranges_i__.clear();
             current_statement_begin__ = 10;
+            ++num_params_r__;
+            current_statement_begin__ = 11;
+            ++num_params_r__;
+            current_statement_begin__ = 14;
             validate_non_negative_index("p", "m", m);
             num_params_r__ += m;
         } catch (const std::exception& e) {
@@ -162,6 +166,32 @@ public:
         (void) pos__; // dummy call to supress warning
         std::vector<double> vals_r__;
         std::vector<int> vals_i__;
+
+        if (!(context__.contains_r("p0")))
+            throw std::runtime_error("variable p0 missing");
+        vals_r__ = context__.vals_r("p0");
+        pos__ = 0U;
+        context__.validate_dims("initialization", "p0", "double", context__.to_vec());
+        double p0(0);
+        p0 = vals_r__[pos__++];
+        try {
+            writer__.scalar_lub_unconstrain(0,1,p0);
+        } catch (const std::exception& e) { 
+            throw std::runtime_error(std::string("Error transforming variable p0: ") + e.what());
+        }
+
+        if (!(context__.contains_r("tau")))
+            throw std::runtime_error("variable tau missing");
+        vals_r__ = context__.vals_r("tau");
+        pos__ = 0U;
+        context__.validate_dims("initialization", "tau", "double", context__.to_vec());
+        double tau(0);
+        tau = vals_r__[pos__++];
+        try {
+            writer__.scalar_lb_unconstrain(0,tau);
+        } catch (const std::exception& e) { 
+            throw std::runtime_error(std::string("Error transforming variable tau: ") + e.what());
+        }
 
         if (!(context__.contains_r("p")))
             throw std::runtime_error("variable p missing");
@@ -211,6 +241,20 @@ public:
             // model parameters
             stan::io::reader<local_scalar_t__> in__(params_r__,params_i__);
 
+            local_scalar_t__ p0;
+            (void) p0;  // dummy to suppress unused var warning
+            if (jacobian__)
+                p0 = in__.scalar_lub_constrain(0,1,lp__);
+            else
+                p0 = in__.scalar_lub_constrain(0,1);
+
+            local_scalar_t__ tau;
+            (void) tau;  // dummy to suppress unused var warning
+            if (jacobian__)
+                tau = in__.scalar_lb_constrain(0,lp__);
+            else
+                tau = in__.scalar_lb_constrain(0);
+
             Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1>  p;
             (void) p;  // dummy to suppress unused var warning
             if (jacobian__)
@@ -230,12 +274,16 @@ public:
 
             // model body
 
-            current_statement_begin__ = 14;
-            lp_accum__.add(beta_log<propto__>(p, 1, 1));
-            current_statement_begin__ = 17;
+            current_statement_begin__ = 19;
+            lp_accum__.add(beta_log<propto__>(p0, 1, 1));
+            current_statement_begin__ = 20;
+            lp_accum__.add(uniform_log<propto__>(tau, 0, 500));
+            current_statement_begin__ = 23;
+            lp_accum__.add(beta_log<propto__>(p, (p0 * tau), ((1 - p0) * tau)));
+            current_statement_begin__ = 26;
             for (int i = 1; i <= n; ++i) {
 
-                current_statement_begin__ = 18;
+                current_statement_begin__ = 27;
                 lp_accum__.add(bernoulli_log<propto__>(get_base1(r,i,"r",1), get_base1(p,get_base1(s,i,"s",1),"p",1)));
             }
 
@@ -264,6 +312,8 @@ public:
 
     void get_param_names(std::vector<std::string>& names__) const {
         names__.resize(0);
+        names__.push_back("p0");
+        names__.push_back("tau");
         names__.push_back("p");
     }
 
@@ -271,6 +321,10 @@ public:
     void get_dims(std::vector<std::vector<size_t> >& dimss__) const {
         dimss__.resize(0);
         std::vector<size_t> dims__;
+        dims__.resize(0);
+        dimss__.push_back(dims__);
+        dims__.resize(0);
+        dimss__.push_back(dims__);
         dims__.resize(0);
         dims__.push_back(m);
         dimss__.push_back(dims__);
@@ -291,7 +345,11 @@ public:
         static const char* function__ = "model_success_rate_namespace::write_array";
         (void) function__;  // dummy to suppress unused var warning
         // read-transform, write parameters
+        double p0 = in__.scalar_lub_constrain(0,1);
+        double tau = in__.scalar_lb_constrain(0);
         vector_d p = in__.vector_lub_constrain(0,1,m);
+        vars__.push_back(p0);
+        vars__.push_back(tau);
             for (int k_0__ = 0; k_0__ < m; ++k_0__) {
             vars__.push_back(p[k_0__]);
             }
@@ -355,6 +413,12 @@ public:
                                  bool include_tparams__ = true,
                                  bool include_gqs__ = true) const {
         std::stringstream param_name_stream__;
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "p0";
+        param_names__.push_back(param_name_stream__.str());
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "tau";
+        param_names__.push_back(param_name_stream__.str());
         for (int k_0__ = 1; k_0__ <= m; ++k_0__) {
             param_name_stream__.str(std::string());
             param_name_stream__ << "p" << '.' << k_0__;
@@ -375,6 +439,12 @@ public:
                                    bool include_tparams__ = true,
                                    bool include_gqs__ = true) const {
         std::stringstream param_name_stream__;
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "p0";
+        param_names__.push_back(param_name_stream__.str());
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "tau";
+        param_names__.push_back(param_name_stream__.str());
         for (int k_0__ = 1; k_0__ <= m; ++k_0__) {
             param_name_stream__.str(std::string());
             param_name_stream__ << "p" << '.' << k_0__;

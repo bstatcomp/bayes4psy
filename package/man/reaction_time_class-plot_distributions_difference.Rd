@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{reaction_time_class object.}
 
-\item{...}{fit2 - a second linear_class object, rope - region of practical equivalence, bins - number of bins in the histogram.}
+\item{...}{fit2 - a second reaction_time_class object, rope - region of practical equivalence, bins - number of bins in the histogram.}
 }
 \description{
 \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group.

@@ -20,15 +20,15 @@ compare(`linear_class`, fit2=`linear_class`): prints difference in slope and int
 
 plot_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
-plot_samples(`linear_class`): plots density for the first group samples.
+plot_samples(`linear_class`): plots density of the samples.
 
 plot_samples(`linear_class`, fit2=`linear_class`): plots density for the first and the second group samples.
 
 compare_distributions(`linear_class`, fit2=`linear_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 
-plot_distributions(`linear_class`): a visualization of the distribution for the first group.
+plot_distributions(`linear_class`): a visualization of the fitted distribution.
 
-plot_distributions(`linear_class`, fit2=`linear_class`): a visualization of the distribution for the first group and the second group.
+plot_distributions(`linear_class`, fit2=`linear_class`): a visualization of two fitted distribution.
 
 plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
