@@ -522,9 +522,15 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         r_x2 <- rgb[1]
         r_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 255 * 0.1
+        hjust = "center"
+        if (r_x2 < hjust_range || r_x2 > (255 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=r_x2, xend=r_x2, y=0, yend=r_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%d", r_x2), x=r_x2, y=r_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%d", r_x2), x=r_x2, y=r_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -554,9 +560,15 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         g_x2 <- rgb[2]
         g_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 255 * 0.1
+        hjust = "center"
+        if (g_x2 < hjust_range || g_x2 > (255 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=g_x2, xend=g_x2, y=0, yend=g_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%d", g_x2), x=g_x2, y=g_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%d", g_x2), x=g_x2, y=g_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -586,9 +598,15 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         b_x2 <- rgb[3]
         b_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 255 * 0.1
+        hjust = "center"
+        if (b_x2 < hjust_range || b_x2 > (255 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=b_x2, xend=b_x2, y=0, yend=b_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%d", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%d", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -628,9 +646,15 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         h_x2 <- hsv[1]
         h_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 2*pi * 0.1
+        hjust = "center"
+        if (h_x2 < (x_min + hjust_range) || h_x2 > (x_max - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=h_x2, xend=h_x2, y=0, yend=h_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%.2f", h_x2), x=h_x2, y=h_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%.2f", h_x2), x=h_x2, y=h_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -660,9 +684,15 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         s_x2 <- hsv[2]
         s_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 1 * 0.1
+        hjust = "center"
+        if (s_x2 < hjust_range || s_x2 > (1 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=s_x2, xend=s_x2, y=0, yend=s_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%.2f", s_x2), x=s_x2, y=s_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%.2f", s_x2), x=s_x2, y=s_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -692,9 +722,15 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         v_x2 <- hsv[3]
         v_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 1 * 0.1
+        hjust = "center"
+        if (v_x2 < hjust_range || v_x2 > (1 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=v_x2, xend=v_x2, y=0, yend=v_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%.2f", v_x2), x=v_x2, y=v_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%.2f", v_x2), x=v_x2, y=v_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -969,9 +1005,15 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         r_x2 <- rgb[1]
         r_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 255 * 0.1
+        hjust = "center"
+        if (r_x2 < hjust_range || r_x2 > (255 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=r_x2, xend=r_x2, y=0, yend=r_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%d", r_x2), x=r_x2, y=r_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%d", r_x2), x=r_x2, y=r_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -1002,9 +1044,15 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         g_x2 <- rgb[2]
         g_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 255 * 0.1
+        hjust = "center"
+        if (g_x2 < hjust_range || g_x2 > (255 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=g_x2, xend=g_x2, y=0, yend=g_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%d", g_x2), x=g_x2, y=g_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%d", g_x2), x=g_x2, y=g_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -1035,9 +1083,15 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         b_x2 <- rgb[3]
         b_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 255 * 0.1
+        hjust = "center"
+        if (b_x2 < hjust_range || b_x2 > (255 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=b_x2, xend=b_x2, y=0, yend=b_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%d", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%d", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -1094,9 +1148,15 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         h_x2 <- hsv[1]
         h_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 2*pi * 0.1
+        hjust = "center"
+        if (h_x2 < (x_min + hjust_range) || h_x2 > (x_max - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=h_x2, xend=h_x2, y=0, yend=h_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%.2f", h_x2), x=h_x2, y=h_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%.2f", h_x2), x=h_x2, y=h_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -1127,42 +1187,54 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         s_x2 <- hsv[2]
         s_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 1 * 0.1
+        hjust = "center"
+        if (s_x2 < hjust_range || s_x2 > (1 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=s_x2, xend=s_x2, y=0, yend=s_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%.2f", s_x2), x=s_x2, y=s_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%.2f", s_x2), x=s_x2, y=s_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "v") {
       # first group data
-      b_mu1 <- mean(object@extract$mu_v)
-      b_sigma1 <- mean(object@extract$sigma_v)
+      v_mu1 <- mean(object@extract$mu_v)
+      v_sigma1 <- mean(object@extract$sigma_v)
 
       # plot
       df_x <- data.frame(value=c(0, 1))
 
       # plot
       graph <- ggplot(data=df_x, aes(x=value)) +
-        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu1, sd=b_sigma1), geom="area", fill="#808080", alpha=0.5) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=v_mu1, sd=v_sigma1), geom="area", fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("v") +
         theme(plot.title=element_text(hjust=0.5))
 
       if (!is.null(fit2)) {
         # second group data
-        b_mu2 <- mean(fit2@extract$mu_v)
-        b_sigma2 <- mean(fit2@extract$sigma_v)
+        v_mu2 <- mean(fit2@extract$mu_v)
+        v_sigma2 <- mean(fit2@extract$sigma_v)
 
-        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu2, sd=b_sigma2), geom="line", color="#000000", size=1)
+        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=v_mu2, sd=v_sigma2), geom="line", color="#000000", size=1)
       } else if (!is.null(hsv)) {
         # predefined color
-        b_x2 <- hsv[3]
-        b_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+        v_x2 <- hsv[3]
+        v_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+
+        hjust_range <- 1 * 0.1
+        hjust = "center"
+        if (v_x2 < hjust_range || v_x2 > (1 - hjust_range)) {
+          hjust = "inward"
+        }
 
         graph <- graph +
-          geom_segment(aes(x=b_x2, xend=b_x2, y=0, yend=b_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%.2f", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_segment(aes(x=v_x2, xend=v_x2, y=0, yend=v_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
+          geom_text(aes(label=sprintf("%.2f", v_x2), x=v_x2, y=v_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph

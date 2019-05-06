@@ -416,7 +416,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
 
     graph <- graph +
       geom_segment(aes(x=y2_mu, xend=y2_mu, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
-      geom_text(aes(label=sprintf("%.2f", y2_mu), x=y2_mu, y=y_max[2]*1.08), size=4, vjust="inward", hjust="inward")
+      geom_text(aes(label=sprintf("%.2f", y2_mu), x=y2_mu, y=y_max[2]*1.08), size=4)
   }
 
   return(graph)

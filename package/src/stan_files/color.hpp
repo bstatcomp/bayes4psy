@@ -544,7 +544,7 @@ public:
             current_statement_begin__ = 41;
             lp_accum__.add(uniform_log<propto__>(mu_h, 0, (2 * stan::math::pi())));
             current_statement_begin__ = 42;
-            lp_accum__.add(uniform_log<propto__>(kappa_h, 0, 50));
+            lp_accum__.add(uniform_log<propto__>(kappa_h, 0, 2));
             current_statement_begin__ = 43;
             lp_accum__.add(uniform_log<propto__>(mu_s, 0, 1));
             current_statement_begin__ = 44;
