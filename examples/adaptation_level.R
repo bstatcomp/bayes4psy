@@ -96,14 +96,12 @@ compare_distributions(al_1b, fit2=al_1a)
 graph_b <- plot_distributions(al_1b, al_2b) +
   xlim(0, 10) +
   ylim(0, 10) +
-  xlab("measurement") +
-  ylab("weight")
+  labs(title="Before", x="measurement", y="weight")
 
 graph_a <- plot_distributions(al_1a, al_2a) +
   xlim(0, 10) +
   ylim(0, 10) +
-  xlab("measurement") +
-  ylab("weight")
+  labs(title="After", x="measurement", y="")
 
 cowplot::plot_grid(graph_b, graph_a, ncol=2, nrow=1, scale=0.9)
 
