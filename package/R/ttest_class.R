@@ -263,7 +263,7 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
 
     graph <- graph +
       geom_segment(aes(x=mu2, xend=mu2, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
-      geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4, vjust="inward", hjust="inward")
+      geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4)
   }
 
   # limits
