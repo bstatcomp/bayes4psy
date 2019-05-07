@@ -4,7 +4,7 @@
 \alias{b_linear}
 \title{b_linear}
 \usage{
-b_linear(x, y, s, warmup = 200, iter = 1200)
+b_linear(x, y, s, warmup = 2000, iter = 3000, chains = 4)
 }
 \arguments{
 \item{x}{a vector containting index of sequence (time).}
@@ -13,9 +13,11 @@ b_linear(x, y, s, warmup = 200, iter = 1200)
 
 \item{s}{a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).}
 
-\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 200).}
+\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 2000).}
 
-\item{iter}{Integer specifying the number of iterations (including warmup, default = 1200).}
+\item{iter}{Integer specifying the number of iterations (including warmup, default = 3000).}
+
+\item{chains}{Integer specifying the number of parallel chains (default = 4).}
 }
 \value{
 An object of class `linear_class`.

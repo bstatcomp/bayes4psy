@@ -10,6 +10,8 @@
 #'
 #' show(`ttest_class`): prints a more detailed summary of the fit.
 #'
+#' get_samples(`ttest_class`): returns a dataframe with values of fitted parameters.
+#'
 #' compare(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
 #'
 #' compare(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
@@ -96,6 +98,20 @@ setMethod(f="summary", signature(object="ttest_class"), definition=function(obje
 setMethod(f="show", signature(object="ttest_class"), definition=function(object) {
   # print
   show(object@fit)
+})
+
+
+#' @title get_samples
+#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @param object ttest_class object.
+#' @exportMethod get_samples
+setMethod(f="get_samples", signature(object="ttest_class"), definition=function(object) {
+  # print
+  df <- data.frame(mu=object@extract$mu,
+                   sigma=object@extract$sigma,
+                   nu=object@extract$nu)
+
+  return(df)
 })
 
 

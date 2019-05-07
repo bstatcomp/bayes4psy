@@ -10,6 +10,13 @@
 #' show(`success_rate_class`): prints a more detailed summary of the fit.
 setClass("b_results")
 
+#' @title get_samples
+#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @param object S4 class object from EasyBayes library.
+#' @rdname b_results-get_samples
+#' @exportMethod get_samples
+setGeneric(name="get_samples", function(object) standardGeneric("get_samples"))
+
 #' @title compare
 #' @description \code{compare} prints difference between two groups.
 #' @param object S4 class object from EasyBayes library.

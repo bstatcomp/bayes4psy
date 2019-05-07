@@ -5,8 +5,9 @@
 #' @param y Numeric vector of values on which the fit will be based.
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 9000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 10000).
+#' @param chains Integer specifying the number of parallel chains (default = 4).
 #' @return An object of class `ttest_class`.
-b_ttest <- function(y, warmup=9000, iter=10000) {
+b_ttest <- function(y, warmup=9000, iter=10000, chains=4) {
 
   # prepare data
   n <- length(y)
@@ -20,10 +21,11 @@ b_ttest <- function(y, warmup=9000, iter=10000) {
                     yMu = yMu,
                     ySd = ySd)
 
-  fit <- sampling(stanmodels$ttest,
-                         data = stan_data,
-                         warmup = warmup,
-                         iter = iter)
+  fit <- suppressWarnings(sampling(stanmodels$ttest,
+                                   data = stan_data,
+                                   warmup = warmup,
+                                   iter = iter,
+                                   chains = chains))
 
   extract <- extract(fit)
 

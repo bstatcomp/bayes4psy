@@ -6,8 +6,9 @@
 #' @param hsv set to TRUE if colors are provided in HSV format (default = FALSE).
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 2000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 3000).
+#' @param chains Integer specifying the number of parallel chains (default = 4).
 #' @return An object of class `color_class`
-b_color <- function(colors, hsv=FALSE, warmup=2000, iter=3000) {
+b_color <- function(colors, hsv=FALSE, warmup=2000, iter=3000, chains=4) {
 
   n <- nrow(colors)
 
@@ -44,10 +45,11 @@ b_color <- function(colors, hsv=FALSE, warmup=2000, iter=3000) {
                     s=s,
                     v=v)
 
-  fit <- sampling(stanmodels$color,
-                        data=stan_data,
-                        iter=iter,
-                        warmup=warmup)
+  fit <- suppressWarnings(sampling(stanmodels$color,
+                                   data=stan_data,
+                                   iter=iter,
+                                   warmup=warmup,
+                                   chains=chains))
 
   extract <- extract(fit)
 

@@ -10,6 +10,8 @@
 #'
 #' show(`linear_class`): prints a more detailed summary of the fit.
 #'
+#' get_samples(`linear_class`): returns a dataframe with values of fitted parameters.
+#'
 #' compare(`linear_class`, fit2=`linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
 #'
 #' plot_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
@@ -77,6 +79,20 @@ setMethod(f="summary", signature(object="linear_class"), definition=function(obj
 setMethod(f="show", signature(object="linear_class"), definition=function(object) {
   # print
   show(object@fit)
+})
+
+
+#' @title get_samples
+#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @param object linear_class object.
+#' @exportMethod get_samples
+setMethod(f="get_samples", signature(object="linear_class"), definition=function(object) {
+  # print
+  df <- data.frame(slope=object@extract$mu_a,
+                   intercept=object@extract$mu_b,
+                   sigma=object@extract$mu_s)
+
+  return(df)
 })
 
 

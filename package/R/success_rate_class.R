@@ -10,6 +10,8 @@
 #'
 #' show(`success_rate_class`): prints a more detailed summary of the fit.
 #'
+#' get_samples(`success_rate_class`): returns a dataframe with values of fitted parameters.
+#'
 #' compare(`success_rate_class`, fit2=`success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
 #'
 #' plot_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
@@ -69,6 +71,19 @@ setMethod(f="summary", signature(object="success_rate_class"), definition=functi
 setMethod(f="show", signature(object="success_rate_class"), definition=function(object) {
   # print
   show(object@fit)
+})
+
+
+#' @title get_samples
+#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @param object success_rate_class object.
+#' @exportMethod get_samples
+setMethod(f="get_samples", signature(object="success_rate_class"), definition=function(object) {
+  # print
+  df <- data.frame(p=object@extract$p0,
+                   tau=object@extract$tau)
+
+  return(df)
 })
 
 

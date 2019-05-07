@@ -5,10 +5,11 @@
 #' @param x a vector containting index of sequence (time).
 #' @param y a vector containting subjet's responses.
 #' @param s a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).
-#' @param warmup Integer specifying the number of warmup iterations per chain (default = 200).
-#' @param iter Integer specifying the number of iterations (including warmup, default = 1200).
+#' @param warmup Integer specifying the number of warmup iterations per chain (default = 2000).
+#' @param iter Integer specifying the number of iterations (including warmup, default = 3000).
+#' @param chains Integer specifying the number of parallel chains (default = 4).
 #' @return An object of class `linear_class`.
-b_linear <- function(x, y, s, warmup=200, iter=1200) {
+b_linear <- function(x, y, s, warmup=2000, iter=3000, chains=4) {
 
   n <- length(y)
   m <- length(unique(s))
@@ -19,11 +20,11 @@ b_linear <- function(x, y, s, warmup=200, iter=1200) {
                     y=y,
                     s=s)
 
-  fit <- sampling(stanmodels$linear,
-                         data=stan_data,
-                         iter=iter,
-                         warmup=warmup,
-                         control=list(adapt_delta=0.99, max_treedepth=15))
+  fit <- suppressWarnings(sampling(stanmodels$linear,
+                                   data=stan_data,
+                                   iter=iter,
+                                   warmup=warmup,
+                                   chains=chains))
 
   extract <- extract(fit)
 

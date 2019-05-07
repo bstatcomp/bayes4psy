@@ -12,9 +12,9 @@ parameters {
   vector<lower=0>[m] lambda;
 
   // global parameters
-  real mu_m;
-  real mu_l;
-  real mu_s;
+  real<lower=0> mu_m;
+  real<lower=0> mu_l;
+  real<lower=0> mu_s;
   real<lower=0> sigma_m;
   real<lower=0> sigma_l;
   real<lower=0> sigma_s;

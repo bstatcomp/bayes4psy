@@ -16,6 +16,8 @@ print(`color_class`): prints a more detailed summary of the fit
 
 show(`color_class`): prints a more detailed summary of the fit.
 
+get_parameters(`color_class`): returns a dataframe with values of fitted parameters.
+
 compare(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 
 compare(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).

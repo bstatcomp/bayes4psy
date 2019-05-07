@@ -10,6 +10,8 @@
 #'
 #' show(`reaction_time_class`): prints a more detailed summary of the fit.
 #'
+#' get_samples(`reaction_time_class`): returns a dataframe with values of fitted parameters.
+#'
 #' compare(`reaction_time_class`, fit2=`reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
 #'
 #' plot_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
@@ -77,6 +79,20 @@ setMethod(f="summary", signature(object="reaction_time_class"), definition=funct
 setMethod(f="show", signature(object="reaction_time_class"), definition=function(object) {
   # print
   show(object@fit)
+})
+
+
+#' @title get_samples
+#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @param object reaction_time_class object.
+#' @exportMethod get_samples
+setMethod(f="get_samples", signature(object="reaction_time_class"), definition=function(object) {
+  # print
+  df <- data.frame(mu=object@extract$mu_m,
+                   sigma=object@extract$mu_s,
+                   lambda=object@extract$mu_l)
+
+  return(df)
 })
 
 

@@ -16,6 +16,8 @@ print(`linear_class`): prints a more detailed summary of the fit
 
 show(`linear_class`): prints a more detailed summary of the fit.
 
+get_parameters(`linear_class`): returns a dataframe with values of fitted parameters.
+
 compare(`linear_class`, fit2=`linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
 
 plot_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.

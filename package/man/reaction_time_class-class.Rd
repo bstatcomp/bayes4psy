@@ -16,6 +16,8 @@ print(`reaction_time_class`): prints a more detailed summary of the fit
 
 show(`reaction_time_class`): prints a more detailed summary of the fit.
 
+get_parameters(`reaction_time_class`): returns a dataframe with values of fitted parameters.
+
 compare(`reaction_time_class`, fit2=`reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
 
 plot_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.

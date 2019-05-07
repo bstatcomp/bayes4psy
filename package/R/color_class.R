@@ -10,6 +10,8 @@
 #'
 #' show(`color_class`): prints a more detailed summary of the fit.
 #'
+#' get_samples(`color_class`): returns a dataframe with values of fitted parameters.
+#'
 #' compare(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #'
 #' compare(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
@@ -145,6 +147,23 @@ setMethod(f="summary", signature(object="color_class"), definition=function(obje
 setMethod(f="show", signature(object="color_class"), definition=function(object) {
   # print
   show(object@fit)
+})
+
+
+#' @title get_samples
+#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @param object color_class object.
+#' @exportMethod get_samples
+setMethod(f="get_samples", signature(object="color_class"), definition=function(object) {
+  # print
+  df <- data.frame(r=object@extract$mu_r,
+                   g=object@extract$mu_g,
+                   b=object@extract$mu_b,
+                   h=object@extract$mu_h,
+                   s=object@extract$mu_s,
+                   v=object@extract$mu_v)
+
+  return(df)
 })
 
 

@@ -15,7 +15,7 @@ parameters {
   // global parameters
   real mu_a;
   real mu_b;
-  real mu_s;
+  real<lower=0> mu_s;
   real<lower=0> sigma_a;
   real<lower=0> sigma_b;
   real<lower=0> sigma_s;
