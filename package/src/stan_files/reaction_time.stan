@@ -1,7 +1,7 @@
 data {
   int<lower=0> n; // total number of measurements
   int<lower=0> m; // number of subjects
-  vector<lower=0>[n] rt; // reaction times
+  vector<lower=0>[n] t; // reaction times
   int<lower=0> s[n]; // subject ids
 }
 
@@ -21,12 +21,24 @@ parameters {
 }
 
 model {
-  mu ~ normal(mu_m, sigma_m);
-  sigma ~ normal(mu_s, sigma_s);
-  lambda ~ normal(mu_l, sigma_l);
+  for (j in 1:m) {
+    mu[j] ~ normal(mu_m, sigma_m) T[0,];
+    sigma[j] ~ normal(mu_s, sigma_s) T[0,];
+    lambda[j] ~ normal(mu_l, sigma_l);
+  }
 
   // iterate over all measurements
   for (i in 1:n) {
-    rt[i] ~ exp_mod_normal(mu[s[i]], sigma[s[i]], lambda[s[i]]);
+    t[i] ~ exp_mod_normal(mu[s[i]], sigma[s[i]], lambda[s[i]]);
+  }
+}
+
+generated quantities {
+  real<lower=0> rt;
+  vector<lower=0>[m] rt_subjects;
+
+  rt = mu_m + 1/mu_l;
+  for (i in 1:m) {
+    rt_subjects[i] = mu[i] + 1/lambda[i];
   }
 }

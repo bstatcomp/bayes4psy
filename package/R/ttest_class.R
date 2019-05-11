@@ -104,9 +104,9 @@ setMethod(f="show", signature(object="ttest_class"), definition=function(object)
 #' @title get_samples
 #' @description \code{get_samples} returns a dataframe with values of fitted parameters.
 #' @param object ttest_class object.
-#' @exportMethod get_samples
+#' @rdname ttest_class-get_samples
+#' @aliases get_samples_ttest_class
 setMethod(f="get_samples", signature(object="ttest_class"), definition=function(object) {
-  # print
   df <- data.frame(mu=object@extract$mu,
                    sigma=object@extract$sigma,
                    nu=object@extract$nu)

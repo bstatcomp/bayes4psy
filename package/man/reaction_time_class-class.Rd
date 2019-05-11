@@ -16,7 +16,9 @@ print(`reaction_time_class`): prints a more detailed summary of the fit
 
 show(`reaction_time_class`): prints a more detailed summary of the fit.
 
-get_parameters(`reaction_time_class`): returns a dataframe with values of fitted parameters.
+get_samples(`reaction_time_class`): returns a dataframe with values of fitted parameters.
+
+get_subject_samples(`reaction_time_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 
 compare(`reaction_time_class`, fit2=`reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
 

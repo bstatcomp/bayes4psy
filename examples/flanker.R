@@ -21,12 +21,12 @@ df_control <- df_correct[df_correct$group == "control", ]
 # subject indexes range on 22..45 cast to 1..23
 df_control$subject <- df_control$subject - 21
 
-rt <- df_control$rt
+t <- df_control$rt
 s <- df_control$subject
 
 # to control the amount of warmup and interation steps use
-# b_reaction_time(rt=rt, s=s, warmup=5000, iter=6000)
-rt_control <- b_reaction_time(rt=rt, s=s)
+# b_reaction_time(t=t, s=s, warmup=5000, iter=6000)
+rt_control <- b_reaction_time(t=t, s=s)
 
 # summary
 summary(rt_control)
@@ -51,10 +51,10 @@ plot_distributions(rt_control)
 ## test group fit --------------------------------------------------------
 df_test <- df_correct[df_correct$group == "test", ]
 
-rt <- df_test$rt
+t <- df_test$rt
 s <- df_test$subject
 
-rt_test <- b_reaction_time(rt=rt, s=s)
+rt_test <- b_reaction_time(t=t, s=s)
 
 # summary
 summary(rt_test)

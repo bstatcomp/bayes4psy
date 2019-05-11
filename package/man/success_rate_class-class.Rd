@@ -16,7 +16,9 @@ print(`success_rate_class`): prints a more detailed summary of the fit
 
 show(`success_rate_class`): prints a more detailed summary of the fit.
 
-get_parameters(`success_rate_class`): returns a dataframe with values of fitted parameters.
+get_samples(`success_rate_class`): returns a dataframe with values of fitted parameters.
+
+get_subject_samples(`success_rate_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 
 compare(`success_rate_class`, fit2=`success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
 

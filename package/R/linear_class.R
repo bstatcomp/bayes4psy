@@ -12,6 +12,8 @@
 #'
 #' get_samples(`linear_class`): returns a dataframe with values of fitted parameters.
 #'
+#' get_subject_samples(`linear_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+#'
 #' compare(`linear_class`, fit2=`linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
 #'
 #' plot_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
@@ -85,12 +87,35 @@ setMethod(f="show", signature(object="linear_class"), definition=function(object
 #' @title get_samples
 #' @description \code{get_samples} returns a dataframe with values of fitted parameters.
 #' @param object linear_class object.
-#' @exportMethod get_samples
+#' @rdname linear_class-get_samples
+#' @aliases get_samples_linear_class
 setMethod(f="get_samples", signature(object="linear_class"), definition=function(object) {
-  # print
   df <- data.frame(slope=object@extract$mu_a,
                    intercept=object@extract$mu_b,
                    sigma=object@extract$mu_s)
+
+  return(df)
+})
+
+
+#' @title get_subject_samples
+#' @description \code{get_subject_samples} returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+#' @param object linear_class object.
+#' @rdname linear_class-get_subject_samples
+#' @aliases get_subject_samples_linear_class
+setMethod(f="get_subject_samples", signature(object="linear_class"), definition=function(object) {
+  df <- data.frame(slope=numeric(), intercept=numeric(), sigma=numeric(), subject=numeric())
+
+  n <- length(unique(object@data$s))
+
+  for (i in 1:n) {
+    df_subject <- data.frame(slope = object@extract$alpha[,i],
+                             intercept = object@extract$beta[,i],
+                             sigma = object@extract$sigma[,i],
+                             subject = i)
+
+    df <- rbind(df, df_subject)
+  }
 
   return(df)
 })
@@ -538,8 +563,9 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
     alpha <- mean(object@extract$alpha[,i])
     beta <- mean(object@extract$beta[,i])
 
-    df <- data.frame(x = seq(x_min, x_max, 0.01),
-                     y = alpha + beta*seq(x_min, x_max, 0.01),
+    step <- (x_max - x_min) / 1000
+    df <- data.frame(x = seq(x_min, x_max, step),
+                     y = alpha + beta*seq(x_min, x_max, step),
                      s = i)
 
     df_fit <- rbind(df_fit, df)

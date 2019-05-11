@@ -10,12 +10,22 @@
 #' show(`success_rate_class`): prints a more detailed summary of the fit.
 setClass("b_results")
 
+
 #' @title get_samples
 #' @description \code{get_samples} returns a dataframe with values of fitted parameters.
 #' @param object S4 class object from EasyBayes library.
 #' @rdname b_results-get_samples
 #' @exportMethod get_samples
 setGeneric(name="get_samples", function(object) standardGeneric("get_samples"))
+
+
+#' @title get_subject_samples
+#' @description \code{get_subject_samples} returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+#' @param object S4 class object from EasyBayes library.
+#' @rdname b_results-get_subject_samples
+#' @exportMethod get_subject_samples
+setGeneric(name="get_subject_samples", function(object) standardGeneric("get_subject_samples"))
+
 
 #' @title compare
 #' @description \code{compare} prints difference between two groups.
@@ -42,6 +52,7 @@ setGeneric(name="plot_difference", function(object, ...) standardGeneric("plot_d
 #' @rdname b_results-plot_samples
 #' @exportMethod plot_samples
 setGeneric(name="plot_samples", function(object, ...) standardGeneric("plot_samples"))
+
 
 #' @title compare_distributions
 #' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group,

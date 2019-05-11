@@ -16,7 +16,7 @@ print(`ttest_class`): prints a more detailed summary of the fit
 
 show(`ttest_class`): prints a more detailed summary of the fit.
 
-get_parameters(`ttest_class`): returns a dataframe with values of fitted parameters.
+get_samples(`ttest_class`): returns a dataframe with values of fitted parameters.
 
 compare(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
 

@@ -153,9 +153,9 @@ setMethod(f="show", signature(object="color_class"), definition=function(object)
 #' @title get_samples
 #' @description \code{get_samples} returns a dataframe with values of fitted parameters.
 #' @param object color_class object.
-#' @exportMethod get_samples
+#' @rdname color_class-get_samples
+#' @aliases get_samples_color_class
 setMethod(f="get_samples", signature(object="color_class"), definition=function(object) {
-  # print
   df <- data.frame(r=object@extract$mu_r,
                    g=object@extract$mu_g,
                    b=object@extract$mu_b,

@@ -8,14 +8,14 @@
 #' @param iter Integer specifying the number of iterations (including warmup, default = 3000).
 #' @param chains Integer specifying the number of parallel chains (default = 4).
 #' @return An object of class `reaction_time_class`.
-b_reaction_time <- function(rt, s, warmup=2000, iter=3000, chains=4) {
+b_reaction_time <- function(t, s, warmup=2000, iter=3000, chains=4) {
 
-  n <- length(rt)
+  n <- length(t)
   m <- length(unique(s))
 
   stan_data <- list(n=n,
                     m=m,
-                    rt=rt,
+                    t=t,
                     s=s)
 
   fit <- suppressWarnings(sampling(stanmodels$reaction_time,
