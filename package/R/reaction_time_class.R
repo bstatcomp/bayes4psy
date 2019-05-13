@@ -68,7 +68,7 @@ setMethod(f="summary", signature(object="reaction_time_class"), definition=funct
 
   # print
   cat(sprintf("rt:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
-              mu, mcmcse::mcse(object@extract$rt)$se, rt_hdi[1], rt_hdi[2]))
+              rt, mcmcse::mcse(object@extract$rt)$se, rt_hdi[1], rt_hdi[2]))
   cat(sprintf("mu:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               mu, mcmcse::mcse(object@extract$mu_m)$se, mu_hdi[1], mu_hdi[2]))
   cat(sprintf("sigma:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
@@ -424,7 +424,8 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
   mu_l1 <- mean(object@extract$mu_l)
 
   # limits
-  x_max <- mu_m1 + 4/mu_l1 + 4*mu_s1
+  x_max <- max(emg::remg(1000, mu=mu_m1, sigma=mu_s1, lambda=mu_l1))
+  x_max <- x_max + 0.1*x_max
 
   # second group data
   group2_plot <- NULL
@@ -441,7 +442,9 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
       mu_s2 <- mean(fit2@extract$mu_s)
       mu_l2 <- mean(fit2@extract$mu_l)
 
-      x_max <- max(x_max, mu_m2 + 1/mu_l2 + 4*mu_s2)
+      x_max2 <- max(emg::remg(1000, mu=mu_m2, sigma=mu_s2, lambda=mu_l2))
+      x_max2 <- x_max2 + 0.1*x_max2
+      x_max <- max(x_max, x_max2)
 
       group2_plot <- stat_function(fun=emg::demg, n=n, args=list(mu=mu_m2, sigma=mu_s2, lambda=mu_l2), geom="area", fill="#ff4e3f", alpha=0.4)
     }
@@ -534,8 +537,9 @@ setMethod(f="plot_fit", signature(object="reaction_time_class"), definition=func
   df_fit <- NULL
   n <- length(unique(object@data$s))
 
-  x_min <- floor(min(object@data$t))
-  x_max <- ceiling(max(object@data$t))
+  x_min <- 0
+  x_max <- max(object@data$t)
+  x_max <- x_max + 0.1*x_max
 
   for (i in 1:n) {
     step <- (x_max - x_min) / 1000

@@ -7,8 +7,9 @@
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 2000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 3000).
 #' @param chains Integer specifying the number of parallel chains (default = 4).
+#' @param control A named list of parameters to control the sampler's behavior (default = NULL).
 #' @return An object of class `color_class`
-b_color <- function(colors, hsv=FALSE, warmup=2000, iter=3000, chains=4) {
+b_color <- function(colors, hsv=FALSE, warmup=2000, iter=3000, chains=4, control=NULL) {
 
   n <- nrow(colors)
 
@@ -45,11 +46,12 @@ b_color <- function(colors, hsv=FALSE, warmup=2000, iter=3000, chains=4) {
                     s=s,
                     v=v)
 
-  fit <- suppressWarnings(sampling(stanmodels$color,
-                                   data=stan_data,
-                                   iter=iter,
-                                   warmup=warmup,
-                                   chains=chains))
+  fit <- sampling(stanmodels$color,
+                  data=stan_data,
+                  iter=iter,
+                  warmup=warmup,
+                  chains=chains,
+                  control=control)
 
   extract <- extract(fit)
 

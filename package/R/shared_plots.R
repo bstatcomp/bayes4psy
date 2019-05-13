@@ -26,6 +26,10 @@ shared_plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, n
   # get x range
   x_min <- min(df_diff)
   x_max <- max(df_diff)
+
+  x_min <- x_min - 0.1*x_min
+  x_max <- x_max + 0.1*x_max
+
   if (!is.null(rope)) {
     x_min <- min(x_min, rope[1])
     x_max <- max(x_max, rope[2])

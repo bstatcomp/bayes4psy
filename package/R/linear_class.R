@@ -442,6 +442,11 @@ setMethod(f="plot_distributions", signature(object="linear_class"), definition=f
     }
   }
 
+  x_min <- x_min - 0.1*x_min
+  x_max <- x_max + 0.1*x_max
+  y_min <- y_min - 0.1*y_min
+  y_max <- y_max + 0.1*y_max
+
   graph <- ggplot() +
     geom_abline(data=df, aes(slope=slope, intercept=intercept, color=group), alpha=0.1, size=1) +
     geom_abline(data=df_mean, aes(slope=slope, intercept=intercept, color=group), size=1.5) +
@@ -553,6 +558,9 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
 
   x_min <- floor(min(df_data$x))
   x_max <- ceiling(max(df_data$x))
+
+  x_min <- x_min - 0.1*x_min
+  x_max <- x_max + 0.1*x_max
 
   # mean per subject
   df_data <- df_data %>% group_by(s, x) %>% summarize(y=mean(y, na.rm=TRUE))

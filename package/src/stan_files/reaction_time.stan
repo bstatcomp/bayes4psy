@@ -21,11 +21,9 @@ parameters {
 }
 
 model {
-  for (j in 1:m) {
-    mu[j] ~ normal(mu_m, sigma_m) T[0,];
-    sigma[j] ~ normal(mu_s, sigma_s) T[0,];
-    lambda[j] ~ normal(mu_l, sigma_l);
-  }
+  mu ~ normal(mu_m, sigma_m);
+  sigma ~ normal(mu_s, sigma_s);
+  lambda ~ normal(mu_l, sigma_l);
 
   // iterate over all measurements
   for (i in 1:n) {

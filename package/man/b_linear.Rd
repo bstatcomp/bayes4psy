@@ -4,7 +4,8 @@
 \alias{b_linear}
 \title{b_linear}
 \usage{
-b_linear(x, y, s, warmup = 2000, iter = 3000, chains = 4)
+b_linear(x, y, s, warmup = 2000, iter = 3000, chains = 4,
+  control = NULL)
 }
 \arguments{
 \item{x}{a vector containting index of sequence (time).}
@@ -18,6 +19,8 @@ b_linear(x, y, s, warmup = 2000, iter = 3000, chains = 4)
 \item{iter}{Integer specifying the number of iterations (including warmup, default = 3000).}
 
 \item{chains}{Integer specifying the number of parallel chains (default = 4).}
+
+\item{control}{A named list of parameters to control the sampler's behavior (default = NULL).}
 }
 \value{
 An object of class `linear_class`.

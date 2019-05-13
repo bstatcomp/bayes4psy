@@ -8,8 +8,9 @@
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 2000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 3000).
 #' @param chains Integer specifying the number of parallel chains (default = 4).
+#' @param control A named list of parameters to control the sampler's behavior (default = NULL).
 #' @return An object of class `linear_class`.
-b_linear <- function(x, y, s, warmup=2000, iter=3000, chains=4) {
+b_linear <- function(x, y, s, warmup=2000, iter=3000, chains=4, control=NULL) {
 
   n <- length(y)
   m <- length(unique(s))
@@ -20,11 +21,12 @@ b_linear <- function(x, y, s, warmup=2000, iter=3000, chains=4) {
                     y=y,
                     s=s)
 
-  fit <- suppressWarnings(sampling(stanmodels$linear,
-                                   data=stan_data,
-                                   iter=iter,
-                                   warmup=warmup,
-                                   chains=chains))
+  fit <- sampling(stanmodels$linear,
+                  data=stan_data,
+                  iter=iter,
+                  warmup=warmup,
+                  chains=chains,
+                  control=control)
 
   extract <- extract(fit)
 

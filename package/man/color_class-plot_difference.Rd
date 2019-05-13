@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{color_class object.}
 
-\item{...}{fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, par - components of comparison, a subset of (r, g, b, h, s, v).}
+\item{...}{fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, pars - components of comparison, a subset of (r, g, b, h, s, v).}
 }
 \description{
 \code{plot_difference} a visualization of the difference between two fits
