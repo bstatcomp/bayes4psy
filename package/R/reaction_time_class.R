@@ -37,7 +37,6 @@
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Data on which the fit is based.
-#' @exportClass reaction_time_class
 reaction_time_class <- setClass(
   "reaction_time_class",
   slots = c(

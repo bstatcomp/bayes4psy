@@ -37,7 +37,6 @@
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Data on which the fit is based.
-#' @exportClass success_rate_class
 success_rate_class <- setClass(
   "success_rate_class",
   slots = c(

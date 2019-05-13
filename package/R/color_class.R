@@ -65,7 +65,6 @@
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Data on which the fit is based.
-#' @exportClass color_class
 color_class <- setClass(
   "color_class",
   slots = c(

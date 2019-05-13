@@ -3,7 +3,7 @@ data {
 	real y[n];
 	// priors
 	int p_mu;
-	real p_mu1; 
+	real p_mu1;
 	real p_mu2;
 	int p_sigma;
 	real<lower=0> p_sigma1;

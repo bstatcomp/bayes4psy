@@ -9,9 +9,9 @@ Parent S4 class for declaring shared function generics.
 
 \strong{Functions}
 
-summary(`success_rate_class`): prints summary of the fit.
+summary(`b_results_class`): prints summary of the fit.
 
-print(`success_rate_class`): prints a more detailed summary of the fit.
+print(`b_results_class`): prints a more detailed summary of the fit.
 
-show(`success_rate_class`): prints a more detailed summary of the fit.
+show(`b_results_class`): prints a more detailed summary of the fit.
 }

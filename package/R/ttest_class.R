@@ -1,5 +1,5 @@
 #' @title ttest_class
-#' @import ggplot2 metRology rstan
+#' @import ggplot2
 #' @description An S4 class for storing results of Bayesian t-test results.
 #'
 #' \strong{Functions}
@@ -55,7 +55,6 @@
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Raw data for the tested group.
-#' @exportClass ttest_class
 ttest_class <- setClass(
   "ttest_class",
   slots = c(
@@ -324,7 +323,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
   nu <- mean(object@extract$nu)
   mu1 <- mean(object@extract$mu)
   sigma1 <- mean(object@extract$sigma)
-  y1 <- rt.scaled(n, df=nu, mean=mu1, sd=sigma1)
+  y1 <- metRology::rt.scaled(n, df=nu, mean=mu1, sd=sigma1)
 
   # second group data
   y2 <- NULL
@@ -339,7 +338,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
     mu2 <- mean(fit2@extract$mu)
     sigma2 <- mean(fit2@extract$sigma)
 
-    y2 <- rt.scaled(n, df=nu, mean=mu2, sd=sigma2)
+    y2 <- metRology::rt.scaled(n, df=nu, mean=mu2, sd=sigma2)
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
     mu2 <- arguments$mu;
@@ -399,7 +398,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
       x_min <- min(x_min, y2_mu - 4*y2_sigma)
       x_max <- max(x_max, y2_mu + 4*y2_sigma)
 
-      group2_plot <- stat_function(fun=dt.scaled, n=n, args=list(df=nu, mean=y2_mu, sd=y2_sigma), geom="area", fill="#ff4e3f", alpha=0.4)
+      group2_plot <- stat_function(fun=metRology::dt.scaled, n=n, args=list(df=nu, mean=y2_mu, sd=y2_sigma), geom="area", fill="#ff4e3f", alpha=0.4)
     } else if (!is.null(arguments$mu)) {
       # provided mu and sigma
       y2_mu <- arguments$mu;
@@ -422,7 +421,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
   df_x <- data.frame(value=c(x_min, x_max))
 
   graph <- ggplot(data=df_x, aes(x=value)) +
-    stat_function(fun=dt.scaled, n=n, args=list(df=nu, mean=y1_mu, sd=y1_sigma), geom="area", fill="#3182bd", alpha=0.4) +
+    stat_function(fun=metRology::dt.scaled, n=n, args=list(df=nu, mean=y1_mu, sd=y1_sigma), geom="area", fill="#3182bd", alpha=0.4) +
     group2_plot +
     xlab("value") +
     ylab("density")
@@ -465,7 +464,7 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
   # first group data
   n <- 100000
   nu <- mean(object@extract$nu)
-  y1 <- rt.scaled(n, df=nu, mean=mean(object@extract$mu), sd=mean(object@extract$sigma))
+  y1 <- metRology::rt.scaled(n, df=nu, mean=mean(object@extract$mu), sd=mean(object@extract$sigma))
 
   # second group data
   y2 <- NULL
@@ -476,7 +475,7 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
     } else {
       fit2 <- arguments[[1]]
     }
-    y2 <- rt.scaled(n, df=nu, mean=mean(fit2@extract$mu), sd=mean(fit2@extract$sigma))
+    y2 <- metRology::rt.scaled(n, df=nu, mean=mean(fit2@extract$mu), sd=mean(fit2@extract$sigma))
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
     mu2 <- arguments$mu;
@@ -521,14 +520,14 @@ setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(obj
   sigma <- mean(object@extract$sigma)
 
   # get x range
-  x_min <- mu - 4*sigma
-  x_max <- mu + 4*sigma
+  x_min <- min(mu - 4*sigma, df_data$value)
+  x_max <- max(mu + 4*sigma, df_data$value)
 
   df_x <- data.frame(x=c(x_min, x_max))
 
   graph <- ggplot(data=df_x) +
     geom_density(data=df_data, aes(x=value), fill="#3182bd", alpha=0.4, color=NA) +
-    stat_function(fun=dt.scaled, n=n, args=list(df=nu, mean=mu, sd=sigma), colour="#3182bd", size=1) +
+    stat_function(fun=metRology::dt.scaled, n=n, args=list(df=nu, mean=mu, sd=sigma), colour="#3182bd", size=1) +
     xlab("value") +
     xlim(x_min, x_max)
 

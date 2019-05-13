@@ -37,7 +37,6 @@
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Raw data for the tested group.
-#' @exportClass linear_class
 linear_class <- setClass(
   "linear_class",
   slots = c(
