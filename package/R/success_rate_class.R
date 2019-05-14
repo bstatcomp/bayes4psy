@@ -14,9 +14,9 @@
 #'
 #' get_subject_samples(`success_rate_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 #'
-#' compare(`success_rate_class`, fit2=`success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
+#' compare_samples(`success_rate_class`, fit2=`success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
 #'
-#' plot_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_samples_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_samples(`success_rate_class`): plots density for the first samples.
 #'
@@ -110,16 +110,16 @@ setMethod(f="get_subject_samples", signature(object="success_rate_class"), defin
 })
 
 
-#' @title compare
-#' @description \code{compare} prints difference in successfulness between two groups.
+#' @title compare_samples
+#' @description \code{compare_samples} prints difference in successfulness between two groups.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, rope - region of practical equivalence.
-#' @rdname success_rate_class-compare
-#' @aliases compare_success_rate
-setMethod(f="compare", signature(object="success_rate_class"), definition=function(object, ...) {
+#' @rdname success_rate_class-compare_samples
+#' @aliases compare_samples_success_rate
+setMethod(f="compare_samples", signature(object="success_rate_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(success_rate_class, fit2=success_rate_class) is required! You can also provide the rope parameter, e.g. compare(success_rate_class, fit2=success_rate_class, rope=numeric)."
+  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(success_rate_class, fit2=success_rate_class) is required! You can also provide the rope parameter, e.g. compare_samples(success_rate_class, fit2=success_rate_class, rope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -154,16 +154,16 @@ setMethod(f="compare", signature(object="success_rate_class"), definition=functi
 })
 
 
-#' @title plot_difference
-#' @description \code{plot_difference} a visualization of the difference between two groups.
+#' @title plot_samples_difference
+#' @description \code{plot_samples_difference} a visualization of the difference between two groups.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, rope - region of practical equivalence, bins - number of bins in the histogram.
-#' @rdname success_rate_class-plot_difference
-#' @aliases plot_difference_success_rate
-setMethod(f="plot_difference", signature(object="success_rate_class"), definition=function(object, ...) {
+#' @rdname success_rate_class-plot_samples_difference
+#' @aliases plot_samples_difference_success_rate
+setMethod(f="plot_samples_difference", signature(object="success_rate_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(success_rate_class, fit2=success_rate_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(success_rate_class, fit2=success_rate_class, rope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(success_rate_class, fit2=success_rate_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(success_rate_class, fit2=success_rate_class, rope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -423,29 +423,49 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
 #' @title plot_fit
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
 #' @param object success_rate_class object.
+#' @param ... subjects - plot fits on a subject level (default = FALSE).
 #' @rdname success_rate_class-plot_fit
 #' @aliases plot_fit_success_rate
-setMethod(f="plot_fit", signature(object="success_rate_class"), definition=function(object) {
+setMethod(f="plot_fit", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   variable<-value<-NULL
 
+  # plot on a subject level?
+  subjects <- FALSE
+  if (!is.null(arguments$subjects)) {
+    subjects <- arguments$subjects
+  }
+
   df_data <- data.frame(value=object@data$r, variable=object@data$s)
-  df_data <- df_data %>% group_by(variable) %>% summarize(value=mean(value))
 
-  df_fit <- object@extract$p
-  colnames(df_fit) <- seq(1:ncol(df_fit))
-  df_fit <- reshape::melt(as.data.frame(df_fit), id=NULL)
+  if (!subjects) {
+    mean_p <- mean(df_data$value)
 
-  # ncol
-  n_col <- ceiling(sqrt(nrow(df_data)))
+    df_fit <- data.frame(value=object@extract$p0)
 
-  # density per subject
-  graph <- ggplot() +
-    geom_vline(data=df_data, aes(xintercept=value), color="#ff4e3f", alpha=0.4) +
-    geom_density(data=df_fit, aes(x=value), fill="#3182bd", alpha=0.4, color=NA) +
-    xlim(0, 1) +
-    facet_wrap(~ variable, ncol=n_col) +
-    xlab("success rate")
+    graph <- ggplot() +
+      geom_vline(xintercept=mean_p, color="#ff4e3f") +
+      geom_density(data=df_fit, aes(x=value), fill="#3182bd", alpha=0.4, color=NA) +
+      xlim(0, 1) +
+      xlab("success rate")
+  } else {
+    df_data <- df_data %>% group_by(variable) %>% summarize(value=mean(value))
+
+    df_fit <- object@extract$p
+    colnames(df_fit) <- seq(1:ncol(df_fit))
+    df_fit <- reshape::melt(as.data.frame(df_fit), id=NULL)
+
+    # ncol
+    n_col <- ceiling(sqrt(nrow(df_data)))
+
+    # density per subject
+    graph <- ggplot() +
+      geom_vline(data=df_data, aes(xintercept=value), color="#ff4e3f") +
+      geom_density(data=df_fit, aes(x=value), fill="#3182bd", alpha=0.4, color=NA) +
+      xlim(0, 1) +
+      facet_wrap(~ variable, ncol=n_col) +
+      xlab("success rate")
+  }
 
   return(graph)
 })

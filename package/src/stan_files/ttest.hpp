@@ -36,7 +36,7 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_ttest");
-    reader.add_event(57, 55, "end", "model_ttest");
+    reader.add_event(59, 57, "end", "model_ttest");
     return reader;
 }
 
@@ -45,12 +45,8 @@ stan::io::program_reader prog_reader__() {
 private:
     int n;
     vector<double> y;
-    int p_mu;
-    double p_mu1;
-    double p_mu2;
-    int p_sigma;
-    double p_sigma1;
-    double p_sigma2;
+    vector<int> p_ids;
+    vector<int> p_values;
     double eLambda;
 public:
     model_ttest(stan::io::var_context& context__,
@@ -105,74 +101,60 @@ public:
             for (size_t i_0__ = 0; i_0__ < y_limit_0__; ++i_0__) {
                 y[i_0__] = vals_r__[pos__++];
             }
-            current_statement_begin__ = 5;
-            context__.validate_dims("data initialization", "p_mu", "int", context__.to_vec());
-            p_mu = int(0);
-            vals_i__ = context__.vals_i("p_mu");
-            pos__ = 0;
-            p_mu = vals_i__[pos__++];
             current_statement_begin__ = 6;
-            context__.validate_dims("data initialization", "p_mu1", "double", context__.to_vec());
-            p_mu1 = double(0);
-            vals_r__ = context__.vals_r("p_mu1");
+            validate_non_negative_index("p_ids", "2", 2);
+            context__.validate_dims("data initialization", "p_ids", "int", context__.to_vec(2));
+            validate_non_negative_index("p_ids", "2", 2);
+            p_ids = std::vector<int>(2,int(0));
+            vals_i__ = context__.vals_i("p_ids");
             pos__ = 0;
-            p_mu1 = vals_r__[pos__++];
+            size_t p_ids_limit_0__ = 2;
+            for (size_t i_0__ = 0; i_0__ < p_ids_limit_0__; ++i_0__) {
+                p_ids[i_0__] = vals_i__[pos__++];
+            }
             current_statement_begin__ = 7;
-            context__.validate_dims("data initialization", "p_mu2", "double", context__.to_vec());
-            p_mu2 = double(0);
-            vals_r__ = context__.vals_r("p_mu2");
+            validate_non_negative_index("p_values", "4", 4);
+            context__.validate_dims("data initialization", "p_values", "int", context__.to_vec(4));
+            validate_non_negative_index("p_values", "4", 4);
+            p_values = std::vector<int>(4,int(0));
+            vals_i__ = context__.vals_i("p_values");
             pos__ = 0;
-            p_mu2 = vals_r__[pos__++];
-            current_statement_begin__ = 8;
-            context__.validate_dims("data initialization", "p_sigma", "int", context__.to_vec());
-            p_sigma = int(0);
-            vals_i__ = context__.vals_i("p_sigma");
-            pos__ = 0;
-            p_sigma = vals_i__[pos__++];
-            current_statement_begin__ = 9;
-            context__.validate_dims("data initialization", "p_sigma1", "double", context__.to_vec());
-            p_sigma1 = double(0);
-            vals_r__ = context__.vals_r("p_sigma1");
-            pos__ = 0;
-            p_sigma1 = vals_r__[pos__++];
-            current_statement_begin__ = 10;
-            context__.validate_dims("data initialization", "p_sigma2", "double", context__.to_vec());
-            p_sigma2 = double(0);
-            vals_r__ = context__.vals_r("p_sigma2");
-            pos__ = 0;
-            p_sigma2 = vals_r__[pos__++];
+            size_t p_values_limit_0__ = 4;
+            for (size_t i_0__ = 0; i_0__ < p_values_limit_0__; ++i_0__) {
+                p_values[i_0__] = vals_i__[pos__++];
+            }
 
             // validate, data variables
             current_statement_begin__ = 2;
             check_greater_or_equal(function__,"n",n,1);
             current_statement_begin__ = 3;
-            current_statement_begin__ = 5;
             current_statement_begin__ = 6;
+            for (int k0__ = 0; k0__ < 2; ++k0__) {
+                check_greater_or_equal(function__,"p_ids[k0__]",p_ids[k0__],0);
+            }
             current_statement_begin__ = 7;
-            current_statement_begin__ = 8;
-            current_statement_begin__ = 9;
-            check_greater_or_equal(function__,"p_sigma1",p_sigma1,0);
-            current_statement_begin__ = 10;
-            check_greater_or_equal(function__,"p_sigma2",p_sigma2,0);
+            for (int k0__ = 0; k0__ < 4; ++k0__) {
+                check_greater_or_equal(function__,"p_values[k0__]",p_values[k0__],0);
+            }
             // initialize data variables
-            current_statement_begin__ = 14;
+            current_statement_begin__ = 11;
             eLambda = double(0);
             stan::math::fill(eLambda,DUMMY_VAR__);
 
-            current_statement_begin__ = 15;
+            current_statement_begin__ = 12;
             stan::math::assign(eLambda, (1 / 29.0));
 
             // validate transformed data
-            current_statement_begin__ = 14;
+            current_statement_begin__ = 11;
 
             // validate, set parameter ranges
             num_params_r__ = 0U;
             param_ranges_i__.clear();
-            current_statement_begin__ = 19;
+            current_statement_begin__ = 16;
             ++num_params_r__;
-            current_statement_begin__ = 20;
+            current_statement_begin__ = 17;
             ++num_params_r__;
-            current_statement_begin__ = 21;
+            current_statement_begin__ = 18;
             ++num_params_r__;
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
@@ -289,7 +271,7 @@ public:
 
 
             // transformed parameters
-            current_statement_begin__ = 25;
+            current_statement_begin__ = 22;
             local_scalar_t__ nu;
             (void) nu;  // dummy to suppress unused var warning
 
@@ -297,7 +279,7 @@ public:
             stan::math::fill(nu,DUMMY_VAR__);
 
 
-            current_statement_begin__ = 26;
+            current_statement_begin__ = 23;
             stan::math::assign(nu, (nuMinusOne + 1));
 
             // validate transformed parameters
@@ -309,54 +291,65 @@ public:
 
             const char* function__ = "validate transformed params";
             (void) function__;  // dummy to suppress unused var warning
-            current_statement_begin__ = 25;
+            current_statement_begin__ = 22;
             check_greater_or_equal(function__,"nu",nu,0);
 
             // model body
+            {
+            current_statement_begin__ = 29;
+            int id(0);
+            (void) id;  // dummy to suppress unused var warning
+
+            stan::math::fill(id, std::numeric_limits<int>::min());
+            stan::math::assign(id,1);
+
 
             current_statement_begin__ = 30;
-            if (as_bool(logical_eq(p_mu,1))) {
+            if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),1))) {
 
                 current_statement_begin__ = 31;
-                lp_accum__.add(uniform_log<propto__>(mu, p_mu1, p_mu2));
-            } else if (as_bool(logical_eq(p_mu,2))) {
+                lp_accum__.add(uniform_log<propto__>(mu, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),2))) {
 
                 current_statement_begin__ = 33;
-                lp_accum__.add(normal_log<propto__>(mu, p_mu1, p_mu2));
-            } else if (as_bool(logical_eq(p_mu,3))) {
+                lp_accum__.add(normal_log<propto__>(mu, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),3))) {
 
                 current_statement_begin__ = 35;
-                lp_accum__.add(gamma_log<propto__>(mu, p_mu1, p_mu2));
-            } else if (as_bool(logical_eq(p_mu,4))) {
+                lp_accum__.add(gamma_log<propto__>(mu, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),4))) {
 
                 current_statement_begin__ = 37;
-                lp_accum__.add(beta_log<propto__>(mu, p_mu1, p_mu2));
+                lp_accum__.add(beta_log<propto__>(mu, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
             }
-            current_statement_begin__ = 40;
-            if (as_bool(logical_eq(p_sigma,1))) {
-
-                current_statement_begin__ = 41;
-                lp_accum__.add(uniform_log<propto__>(sigma, p_sigma1, p_sigma2));
-            } else if (as_bool(logical_eq(p_sigma,2))) {
+            current_statement_begin__ = 41;
+            stan::math::assign(id, 2);
+            current_statement_begin__ = 42;
+            if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),1))) {
 
                 current_statement_begin__ = 43;
-                lp_accum__.add(normal_log<propto__>(sigma, p_sigma1, p_sigma2));
-            } else if (as_bool(logical_eq(p_sigma,3))) {
+                lp_accum__.add(uniform_log<propto__>(sigma, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),2))) {
 
                 current_statement_begin__ = 45;
-                lp_accum__.add(gamma_log<propto__>(sigma, p_sigma1, p_sigma2));
-            } else if (as_bool(logical_eq(p_sigma,4))) {
+                lp_accum__.add(normal_log<propto__>(sigma, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),3))) {
 
                 current_statement_begin__ = 47;
-                lp_accum__.add(beta_log<propto__>(sigma, p_sigma1, p_sigma2));
+                lp_accum__.add(gamma_log<propto__>(sigma, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),4))) {
+
+                current_statement_begin__ = 49;
+                lp_accum__.add(beta_log<propto__>(sigma, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
             }
-            current_statement_begin__ = 50;
-            lp_accum__.add(exponential_log<propto__>(nuMinusOne, eLambda));
             current_statement_begin__ = 52;
+            lp_accum__.add(exponential_log<propto__>(nuMinusOne, eLambda));
+            current_statement_begin__ = 54;
             for (int i = 1; i <= n; ++i) {
 
-                current_statement_begin__ = 53;
+                current_statement_begin__ = 55;
                 lp_accum__.add(student_t_log<propto__>(get_base1(y,i,"y",1), nu, mu, sigma));
+            }
             }
 
         } catch (const std::exception& e) {
@@ -435,7 +428,7 @@ public:
         (void) DUMMY_VAR__;  // suppress unused var warning
 
         try {
-            current_statement_begin__ = 25;
+            current_statement_begin__ = 22;
             local_scalar_t__ nu;
             (void) nu;  // dummy to suppress unused var warning
 
@@ -443,11 +436,11 @@ public:
             stan::math::fill(nu,DUMMY_VAR__);
 
 
-            current_statement_begin__ = 26;
+            current_statement_begin__ = 23;
             stan::math::assign(nu, (nuMinusOne + 1));
 
             // validate transformed parameters
-            current_statement_begin__ = 25;
+            current_statement_begin__ = 22;
             check_greater_or_equal(function__,"nu",nu,0);
 
             // write transformed parameters

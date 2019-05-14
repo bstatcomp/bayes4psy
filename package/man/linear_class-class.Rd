@@ -20,9 +20,9 @@ get_samples(`linear_class`): returns a dataframe with values of fitted parameter
 
 get_subject_samples(`linear_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 
-compare(`linear_class`, fit2=`linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
+compare_samples(`linear_class`, fit2=`linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
 
-plot_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+plot_samples_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_samples(`linear_class`): plots density of the samples.
 

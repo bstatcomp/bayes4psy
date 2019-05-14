@@ -12,15 +12,15 @@
 #'
 #' get_samples(`ttest_class`): returns a dataframe with values of fitted parameters.
 #'
-#' compare(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
+#' compare_samples(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
 #'
-#' compare(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
+#' compare_samples(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
 #'
-#' compare(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohens d calculation. You can also provide the rope parameter.
+#' compare_samples(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohens d calculation. You can also provide the rope parameter.
 #'
-#' plot_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_samples_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_samples_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_samples(`ttest_class`): plots density of the samples.
 #'
@@ -114,16 +114,16 @@ setMethod(f="get_samples", signature(object="ttest_class"), definition=function(
 })
 
 
-#' @title compare
-#' @description \code{compare} prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#' @title compare_samples
+#' @description \code{compare_samples} prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
-#' @rdname ttest_class-compare
-#' @aliases compare_ttest
-setMethod(f="compare", signature(object="ttest_class"), definition=function(object, ...) {
+#' @rdname ttest_class-compare_samples
+#' @aliases compare_samples_ttest
+setMethod(f="compare_samples", signature(object="ttest_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(ttest_class, fit2=ttest_class), compare(fit2=ttest_class, mu=numeric), or compare(fit2=ttest_class, mu=numeric, sigma=numeric) is required! You can also provide the rope parameter, e.g. compare(ttest_class, fit2=ttest_class, rope=numeric)."
+  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(ttest_class, fit2=ttest_class), compare_samples(fit2=ttest_class, mu=numeric), or compare_samples(fit2=ttest_class, mu=numeric, sigma=numeric) is required! You can also provide the rope parameter, e.g. compare_samples(ttest_class, fit2=ttest_class, rope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -175,16 +175,16 @@ setMethod(f="compare", signature(object="ttest_class"), definition=function(obje
 })
 
 
-#' @title plot_difference
-#' @description \code{plot_difference} a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#' @title plot_samples_difference
+#' @description \code{plot_samples_difference} a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram.
-#' @rdname ttest_class-plot_difference
-#' @aliases plot_difference_ttest
-setMethod(f="plot_difference", signature(object="ttest_class"), definition=function(object, ...) {
+#' @rdname ttest_class-plot_samples_difference
+#' @aliases plot_samples_difference_ttest
+setMethod(f="plot_samples_difference", signature(object="ttest_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(ttest_class, fit2=ttest_class) or plot_difference(ttest_class, mu=numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(ttest_class, fit2=ttest_class) or plot_samples_difference(ttest_class, mu=numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -521,7 +521,9 @@ setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(obj
 
   # get x range
   x_min <- min(mu - 4*sigma, df_data$value)
+  x_min <- x_min - 0.1*x_min
   x_max <- max(mu + 4*sigma, df_data$value)
+  x_max <- x_max + 0.1*x_max
 
   df_x <- data.frame(x=c(x_min, x_max))
 

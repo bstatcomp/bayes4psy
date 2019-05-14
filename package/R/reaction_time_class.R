@@ -14,9 +14,9 @@
 #'
 #' get_subject_samples(`reaction_time_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 #'
-#' compare(`reaction_time_class`, fit2=`reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
+#' compare_samples(`reaction_time_class`, fit2=`reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
 #'
-#' plot_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
+#' plot_samples_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
 #'
 #' plot_samples(`reaction_time_class`): plots density of the samples samples. You can also visualize the density only for a chosen parameter - mu or lambda.
 #'
@@ -126,16 +126,16 @@ setMethod(f="get_subject_samples", signature(object="reaction_time_class"), defi
 })
 
 
-#' @title compare
-#' @description \code{compare} prints difference in reaction times between two groups.
+#' @title compare_samples
+#' @description \code{compare_samples} prints difference in reaction times between two groups.
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second reaction_time_class object, rope - region of practical equivalence, par - specific parameter of comparison - mu or lambda.
-#' @rdname reaction_time_class-compare
-#' @aliases compare_reaction_time
-setMethod(f="compare", signature(object="reaction_time_class"), definition=function(object, ...) {
+#' @rdname reaction_time_class-compare_samples
+#' @aliases compare_samples_reaction_time
+setMethod(f="compare_samples", signature(object="reaction_time_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(reaction_time_class, fit2=reaction_time_class) is required! You can optionallly provide the rope parameter, e.g. compare(reaction_time_class, fit2=reaction_time_class, rope=numeric). You can also execute the comparison through only the mu or the lamdba parameter, e.g. compare(reaction_time_class, fit2=reaction_time_class, par=\"mu\")."
+  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(reaction_time_class, fit2=reaction_time_class) is required! You can optionallly provide the rope parameter, e.g. compare_samples(reaction_time_class, fit2=reaction_time_class, rope=numeric). You can also execute the comparison through only the mu or the lamdba parameter, e.g. compare_samples(reaction_time_class, fit2=reaction_time_class, par=\"mu\")."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -197,16 +197,16 @@ setMethod(f="compare", signature(object="reaction_time_class"), definition=funct
 })
 
 
-#' @title plot_difference
-#' @description \code{plot_difference} a visualization of the difference between two groups.
+#' @title plot_samples_difference
+#' @description \code{plot_samples_difference} a visualization of the difference between two groups.
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second reaction_time_class object, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.
-#' @rdname reaction_time_class-plot_difference
-#' @aliases plot_difference_reaction_time
-setMethod(f="plot_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
+#' @rdname reaction_time_class-plot_samples_difference
+#' @aliases plot_samples_difference_reaction_time
+setMethod(f="plot_samples_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(reaction_time_class, fit2=reaction_time_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(reaction_time_class, fit2=reaction_time_class, rope=numeric, bins=numeric). You can also visualize the difference through only the mu or the lamdba parameter, e.g. plot_difference(reaction_time_class, fit2=reaction_time_class, par=\"mu\")."
+  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(reaction_time_class, fit2=reaction_time_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(reaction_time_class, fit2=reaction_time_class, rope=numeric, bins=numeric). You can also visualize the difference through only the mu or the lamdba parameter, e.g. plot_samples_difference(reaction_time_class, fit2=reaction_time_class, par=\"mu\")."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -525,42 +525,71 @@ setMethod(f="plot_distributions_difference", signature(object="reaction_time_cla
 #' @title plot_fit
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
 #' @param object reaction_time_class object.
+#' @param ... subjects - plot fits on a subject level (default = FALSE).
 #' @rdname reaction_time_class-plot_fit
 #' @aliases plot_fit_reaction_time
-setMethod(f="plot_fit", signature(object="reaction_time_class"), definition=function(object) {
+setMethod(f="plot_fit", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   rt <- x <- y <- NULL
 
-  df_data <- data.frame(rt=object@data$t, s=object@data$s)
+  arguments <- list(...)
 
-  df_fit <- NULL
-  n <- length(unique(object@data$s))
-
-  x_min <- 0
-  x_max <- max(object@data$t)
-  x_max <- x_max + 0.1*x_max
-
-  for (i in 1:n) {
-    step <- (x_max - x_min) / 1000
-    df <- data.frame(x = seq(x_min, x_max, step),
-                     s = i,
-                     y = emg::demg(seq(x_min, x_max, step),
-                                   mu = mean(object@extract$mu[,i]),
-                                   sigma = mean(object@extract$sigma[,i]),
-                                   lambda = mean(object@extract$lambda[,i])))
-
-    df_fit <- rbind(df_fit, df)
+  # plot on a subject level?
+  subjects <- FALSE
+  if (!is.null(arguments$subjects)) {
+    subjects <- arguments$subjects
   }
 
-  # ncol
-  n_col <- ceiling(sqrt(n))
+  df_data <- data.frame(rt=object@data$t, s=object@data$s)
+  x_min <- 0
 
-  # density per subject
-  graph <- ggplot(df_data, aes(x=rt)) +
-    geom_density(fill="#3182bd", alpha=0.4, color=NA) +
-    geom_line(data=df_fit, aes(x=x, y=y)) +
-    facet_wrap(~ s, ncol=n_col) +
-    xlab("reaction time")
+  if (!subjects) {
+    mu_m <- mean(object@extract$mu_m)
+    mu_s <- mean(object@extract$mu_s)
+    mu_l <- mean(object@extract$mu_l)
+
+    x_max <- max(emg::remg(1000, mu=mu_m, sigma=mu_s, lambda=mu_l), object@data$t)
+    x_max <- x_max + 0.1*x_max
+
+    df_fit <- data.frame(x = seq(x_min, x_max, step),
+                         y = emg::demg(seq(x_min, x_max, step),
+                                       mu = mu_m,
+                                       sigma = mu_s,
+                                       lambda = mu_l))
+
+    graph <- ggplot(df_data, aes(x=rt)) +
+      geom_density(fill="#3182bd", alpha=0.4, color=NA) +
+      geom_line(data=df_fit, aes(x=x, y=y)) +
+      xlab("reaction time")
+  } else {
+    df_fit <- NULL
+    n <- length(unique(object@data$s))
+
+    x_max <- max(object@data$t)
+    x_max <- x_max + 0.1*x_max
+
+    for (i in 1:n) {
+      step <- (x_max - x_min) / 1000
+      df <- data.frame(x = seq(x_min, x_max, step),
+                       s = i,
+                       y = emg::demg(seq(x_min, x_max, step),
+                                     mu = mean(object@extract$mu[,i]),
+                                     sigma = mean(object@extract$sigma[,i]),
+                                     lambda = mean(object@extract$lambda[,i])))
+
+      df_fit <- rbind(df_fit, df)
+    }
+
+    # ncol
+    n_col <- ceiling(sqrt(n))
+
+    # density per subject
+    graph <- ggplot(df_data, aes(x=rt)) +
+      geom_density(fill="#3182bd", alpha=0.4, color=NA) +
+      geom_line(data=df_fit, aes(x=x, y=y)) +
+      facet_wrap(~ s, ncol=n_col) +
+      xlab("reaction time")
+  }
 
   return(graph)
 })

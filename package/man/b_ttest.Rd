@@ -10,9 +10,9 @@ b_ttest(data, p_mu = NULL, p_sigma = NULL, warmup = 9000,
 \arguments{
 \item{data}{Numeric vector of values on which the fit will be based.}
 
-\item{p_mu}{Prior for the mu (mean value) parameter (default = NULL).}
+\item{p_mu}{Prior for the mu (mean value) parameter (default = NULL/flat improper prior).}
 
-\item{p_sigma}{Prior for the sigma (variance) parameter (default = NULL).}
+\item{p_sigma}{Prior for the sigma (variance) parameter (default = NULL/flat improper prior).}
 
 \item{warmup}{Integer specifying the number of warmup iterations per chain (default = 9000).}
 

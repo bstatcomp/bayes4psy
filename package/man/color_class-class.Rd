@@ -18,17 +18,17 @@ show(`color_class`): prints a more detailed summary of the fit.
 
 get_samples(`color_class`): returns a dataframe with values of fitted parameters.
 
-compare(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
+compare_samples(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 
-compare(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
+compare_samples(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 
-compare(`color_class`, hsv=`vector`): prints color difference between a fit and a color defined with hsv components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
+compare_samples(`color_class`, hsv=`vector`): prints color difference between a fit and a color defined with hsv components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 
-plot_difference(`color_class`, fit2=`color_class`): a visualization of the difference between two fits You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+plot_samples_difference(`color_class`, fit2=`color_class`): a visualization of the difference between two fits You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 
-plot_difference(`color_class`, rgb=`vector`): a visualization of the difference between a fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+plot_samples_difference(`color_class`, rgb=`vector`): a visualization of the difference between a fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 
-plot_difference(`color_class`, hsv=`vector`): a visualization of the difference between a fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+plot_samples_difference(`color_class`, hsv=`vector`): a visualization of the difference between a fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 
 plot_samples(`color_class`): plots density of the samples. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
 
@@ -62,7 +62,7 @@ plot_fit(`color_class`): plots fitted model against the data. Use this function 
 
 plot_fit_hsv(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
 
-plot_difference_hsv(`color_class`): a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
+plot_samples_difference_hsv(`color_class`): a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 
 plot_distributions_difference_hsv(`color_class`): a visualization of the difference between distributions of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 

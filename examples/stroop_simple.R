@@ -37,28 +37,28 @@ plot_fit(fit_naming_incongruent)
 
 
 ## neutral vs incongruent ------------------------------------------------
-# comparisons (compare function works like the usual t-test it compares through fitted means/samples)
-compare(fit_reading_neutral, fit2=fit_reading_incongruent)
-compare(fit_naming_neutral, fit2=fit_naming_incongruent)
+# comparisons (compare_samples function works like the usual t-test it compares through fitted means/samples)
+compare_samples(fit_reading_neutral, fit2=fit_reading_incongruent)
+compare_samples(fit_naming_neutral, fit2=fit_naming_incongruent)
 
 # you can also provide a rope interval
-compare(fit_reading_neutral, fit2=fit_reading_incongruent, rope=2)
+compare_samples(fit_reading_neutral, fit2=fit_reading_incongruent, rope=2)
 
-# compare fitted object with a constant value
-compare(fit_reading_neutral, mu=40)
+# compare samples with a constant value
+compare_samples(fit_reading_neutral, mu=40)
 
-# or compare fitted object with a normal distribution (used here in Cohen's d calculation)
-compare(fit_reading_neutral, mu=40, sigma=5)
+# or compare samples with a normal distribution (used here in Cohen's d calculation)
+compare_samples(fit_reading_neutral, mu=40, sigma=5)
 
 # plot comparison results
-diff_r <- plot_difference(fit_reading_neutral, fit2=fit_reading_incongruent)
+diff_r <- plot_samples_difference(fit_reading_neutral, fit2=fit_reading_incongruent)
 diff_r <- diff_r + labs(title="Reading")
-diff_n <- plot_difference(fit_naming_neutral, fit2=fit_naming_incongruent)
+diff_n <- plot_samples_difference(fit_naming_neutral, fit2=fit_naming_incongruent)
 diff_n <- diff_n + labs(title="Naming", y="")
 cowplot::plot_grid(diff_r, diff_n, nrow=1, ncol=2, scale=0.9)
 
 # you can also provide the rope and bins parameters and compare with a constant value
-plot_difference(fit_reading_neutral, mu=40, rope=2, bins=10)
+plot_samples_difference(fit_reading_neutral, mu=40, rope=2, bins=10)
 
 # plot fitted samples, means in case of t-test
 s_r <- plot_samples(fit_reading_neutral, fit2=fit_reading_incongruent)
@@ -90,14 +90,14 @@ cowplot::plot_grid(dist_r, dist_n, nrow=1, ncol=2, scale=0.9)
 
 
 ## reading vs naming -----------------------------------------------------
-# comparisons (compare function works like the usual t-test it compares through fitted means/samples)
-compare(fit_reading_neutral, fit2=fit_naming_neutral)
-compare(fit_reading_incongruent, fit2=fit_naming_incongruent)
+# comparisons
+compare_samples(fit_reading_neutral, fit2=fit_naming_neutral)
+compare_samples(fit_reading_incongruent, fit2=fit_naming_incongruent)
 
 # plot comparison results
-diff_ne <- plot_difference(fit_reading_neutral, fit2=fit_naming_neutral)
+diff_ne <- plot_samples_difference(fit_reading_neutral, fit2=fit_naming_neutral)
 diff_ne <- diff_ne + labs(title="Neutral")
-diff_i <- plot_difference(fit_reading_incongruent, fit2=fit_naming_incongruent)
+diff_i <- plot_samples_difference(fit_reading_incongruent, fit2=fit_naming_incongruent)
 diff_i <- diff_i + labs(title="Incongruent", y="")
 cowplot::plot_grid(diff_ne, diff_i, nrow=1, ncol=2, scale=0.9)
 

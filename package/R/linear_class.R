@@ -14,9 +14,9 @@
 #'
 #' get_subject_samples(`linear_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 #'
-#' compare(`linear_class`, fit2=`linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
+#' compare_samples(`linear_class`, fit2=`linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
 #'
-#' plot_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_samples_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_samples(`linear_class`): plots density of the samples.
 #'
@@ -120,16 +120,16 @@ setMethod(f="get_subject_samples", signature(object="linear_class"), definition=
 })
 
 
-#' @title compare
-#' @description \code{compare} prints difference in intercept and slope between two groups.
+#' @title compare_samples
+#' @description \code{compare_samples} prints difference in intercept and slope between two groups.
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
-#' @rdname linear_class-compare
-#' @aliases compare_linear
-setMethod(f="compare", signature(object="linear_class"), definition=function(object, ...) {
+#' @rdname linear_class-compare_samples
+#' @aliases compare_sampleslinear
+setMethod(f="compare_samples", signature(object="linear_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(linear_class, fit2=linear_class) is required! You can also provide the rope parameters, e.g. compare(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric)."
+  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(linear_class, fit2=linear_class) is required! You can also provide the rope parameters, e.g. compare_samples(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -176,16 +176,16 @@ setMethod(f="compare", signature(object="linear_class"), definition=function(obj
 })
 
 
-#' @title plot_difference
-#' @description \code{plot_difference} plots difference between two groups.
+#' @title plot_samples_difference
+#' @description \code{plot_samples_difference} plots difference between two groups.
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
-#' @rdname linear_class-plot_difference
-#' @aliases plot_difference_linear
-setMethod(f="plot_difference", signature(object="linear_class"), definition=function(object, ...) {
+#' @rdname linear_class-plot_samples_difference
+#' @aliases plot_samples_difference_linear
+setMethod(f="plot_samples_difference", signature(object="linear_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(linear_class, fit2=linear_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_difference(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(linear_class, fit2=linear_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -545,47 +545,73 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
 #' @title plot_fit
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
 #' @param object linear_class object.
+#' @param ... subjects - plot fits on a subject level (default = FALSE).
 #' @rdname linear_class-plot_fit
 #' @aliases plot_fit_linear
-setMethod(f="plot_fit", signature(object="linear_class"), definition=function(object) {
+setMethod(f="plot_fit", signature(object="linear_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   s <- x <- y <- NULL
 
+  # plot on a subject level?
+  subjects <- FALSE
+  if (!is.null(arguments$subjects)) {
+    subjects <- arguments$subjects
+  }
+
+  # data
   df_data <- data.frame(x=object@data$x, y=object@data$y, s=object@data$s)
 
   n <- length(unique(df_data$s))
 
   x_min <- floor(min(df_data$x))
+  y_min <- floor(min(df_data$y))
   x_max <- ceiling(max(df_data$x))
+  y_max <- ceiling(max(df_data$y))
 
   x_min <- x_min - 0.1*x_min
+  y_min <- y_min - 0.1*y_min
   x_max <- x_max + 0.1*x_max
+  y_max <- y_max + 0.1*y_max
+
+  # steps
+  step <- (x_max - x_min) / 1000
 
   # mean per subject
   df_data <- df_data %>% group_by(s, x) %>% summarize(y=mean(y, na.rm=TRUE))
 
-  # fits
-  df_fit <- data.frame(x=numeric, y=numeric, s=numeric)
-  for (i in 1:n) {
-    alpha <- mean(object@extract$alpha[,i])
-    beta <- mean(object@extract$beta[,i])
+  if (!subjects) {
+    m <- min(100, length(object@extract$mu_a))
+    # fit
+    df_fit <- data.frame(intercept=object@extract$mu_a,
+                         slope=object@extract$mu_b)
+    df_fit <- sample_n(df_fit, m)
 
-    step <- (x_max - x_min) / 1000
-    df <- data.frame(x = seq(x_min, x_max, step),
-                     y = alpha + beta*seq(x_min, x_max, step),
-                     s = i)
+    graph <- ggplot() +
+      geom_point(data=df_data, aes(x=x, y=y), color="#3182bd", alpha=0.4, shape=16) +
+      geom_abline(data=df_fit, aes(slope=slope, intercept=intercept), color="#3182bd", alpha=0.1, size=1) +
+      xlim(x_min, x_max) +
+      ylim(y_min, y_max)
+  } else {
+    m <- min(20, length(object@extract$mu_a))
+    # fits
+    df_fit <- data.frame(x=numeric, y=numeric, s=numeric)
+    for (i in 1:n) {
+      df <- data.frame(intercept=object@extract$alpha[,i],
+                       slope=object@extract$beta[,i],
+                       s = i)
+      df <- sample_n(df, m)
+      df_fit <- rbind(df_fit, df)
+    }
 
-    df_fit <- rbind(df_fit, df)
+    # ncol
+    n_col <- ceiling(sqrt(n))
+
+    # density per subject
+    graph <- ggplot() +
+      geom_point(data=df_data, aes(x=x, y=y), color="#3182bd", shape=16, alpha=0.4) +
+      geom_abline(data=df_fit, aes(slope=slope, intercept=intercept), color="#3182bd", alpha=0.2, size=1) +
+      facet_wrap(. ~ s, ncol=n_col)
   }
-
-  # ncol
-  n_col <- ceiling(sqrt(n))
-
-  # density per subject
-  graph <- ggplot() +
-    geom_point(data=df_data, aes(x=x, y=y), color="#3182bd", alpha=0.4) +
-    geom_line(data=df_fit, aes(x=x, y=y), color="#3182bd") +
-    facet_wrap(. ~ s, ncol=n_col)
 
   return(graph)
 })

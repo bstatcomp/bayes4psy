@@ -27,22 +27,22 @@ setGeneric(name="get_samples", function(object) standardGeneric("get_samples"))
 setGeneric(name="get_subject_samples", function(object) standardGeneric("get_subject_samples"))
 
 
-#' @title compare
-#' @description \code{compare} prints difference between two groups.
+#' @title compare_samples
+#' @description \code{compare_samples} prints difference between two groups.
 #' @param object S4 class object from EasyBayes library.
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?compare_ttest or ?compare_linear.
-#' @rdname b_results-compare
-#' @exportMethod compare
-setGeneric(name="compare", function(object, ...) standardGeneric("compare"))
+#' @rdname b_results-compare_samples
+#' @exportMethod compare_samples
+setGeneric(name="compare_samples", function(object, ...) standardGeneric("compare_samples"))
 
 
-#' @title plot_difference
-#' @description \code{plot_difference} plots difference between two groups.
+#' @title plot_samples_difference
+#' @description \code{plot_samples_difference} plots difference between two groups.
 #' @param object S4 class object from EasyBayes library.
-#' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_difference_ttest or ?plot_difference_linear.
-#' @rdname b_results-plot_difference
-#' @exportMethod plot_difference
-setGeneric(name="plot_difference", function(object, ...) standardGeneric("plot_difference"))
+#' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_samples_difference_ttest or ?plot_samples_difference_linear.
+#' @rdname b_results-plot_samples_difference
+#' @exportMethod plot_samples_difference
+setGeneric(name="plot_samples_difference", function(object, ...) standardGeneric("plot_samples_difference"))
 
 
 #' @title plot_samples

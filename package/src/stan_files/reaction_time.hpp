@@ -36,7 +36,7 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_reaction_time");
-    reader.add_event(44, 42, "end", "model_reaction_time");
+    reader.add_event(118, 116, "end", "model_reaction_time");
     return reader;
 }
 
@@ -47,6 +47,8 @@ private:
     int m;
     vector_d t;
     vector<int> s;
+    vector<int> p_ids;
+    vector<int> p_values;
 public:
     model_reaction_time(stan::io::var_context& context__,
         std::ostream* pstream__ = 0)
@@ -117,6 +119,28 @@ public:
             for (size_t i_0__ = 0; i_0__ < s_limit_0__; ++i_0__) {
                 s[i_0__] = vals_i__[pos__++];
             }
+            current_statement_begin__ = 8;
+            validate_non_negative_index("p_ids", "6", 6);
+            context__.validate_dims("data initialization", "p_ids", "int", context__.to_vec(6));
+            validate_non_negative_index("p_ids", "6", 6);
+            p_ids = std::vector<int>(6,int(0));
+            vals_i__ = context__.vals_i("p_ids");
+            pos__ = 0;
+            size_t p_ids_limit_0__ = 6;
+            for (size_t i_0__ = 0; i_0__ < p_ids_limit_0__; ++i_0__) {
+                p_ids[i_0__] = vals_i__[pos__++];
+            }
+            current_statement_begin__ = 9;
+            validate_non_negative_index("p_values", "12", 12);
+            context__.validate_dims("data initialization", "p_values", "int", context__.to_vec(12));
+            validate_non_negative_index("p_values", "12", 12);
+            p_values = std::vector<int>(12,int(0));
+            vals_i__ = context__.vals_i("p_values");
+            pos__ = 0;
+            size_t p_values_limit_0__ = 12;
+            for (size_t i_0__ = 0; i_0__ < p_values_limit_0__; ++i_0__) {
+                p_values[i_0__] = vals_i__[pos__++];
+            }
 
             // validate, data variables
             current_statement_begin__ = 2;
@@ -129,6 +153,14 @@ public:
             for (int k0__ = 0; k0__ < n; ++k0__) {
                 check_greater_or_equal(function__,"s[k0__]",s[k0__],0);
             }
+            current_statement_begin__ = 8;
+            for (int k0__ = 0; k0__ < 6; ++k0__) {
+                check_greater_or_equal(function__,"p_ids[k0__]",p_ids[k0__],0);
+            }
+            current_statement_begin__ = 9;
+            for (int k0__ = 0; k0__ < 12; ++k0__) {
+                check_greater_or_equal(function__,"p_values[k0__]",p_values[k0__],0);
+            }
             // initialize data variables
 
 
@@ -137,26 +169,26 @@ public:
             // validate, set parameter ranges
             num_params_r__ = 0U;
             param_ranges_i__.clear();
-            current_statement_begin__ = 10;
+            current_statement_begin__ = 14;
             validate_non_negative_index("mu", "m", m);
             num_params_r__ += m;
-            current_statement_begin__ = 11;
+            current_statement_begin__ = 15;
             validate_non_negative_index("sigma", "m", m);
             num_params_r__ += m;
-            current_statement_begin__ = 12;
+            current_statement_begin__ = 16;
             validate_non_negative_index("lambda", "m", m);
             num_params_r__ += m;
-            current_statement_begin__ = 15;
-            ++num_params_r__;
-            current_statement_begin__ = 16;
-            ++num_params_r__;
-            current_statement_begin__ = 17;
-            ++num_params_r__;
-            current_statement_begin__ = 18;
-            ++num_params_r__;
             current_statement_begin__ = 19;
             ++num_params_r__;
             current_statement_begin__ = 20;
+            ++num_params_r__;
+            current_statement_begin__ = 21;
+            ++num_params_r__;
+            current_statement_begin__ = 22;
+            ++num_params_r__;
+            current_statement_begin__ = 23;
+            ++num_params_r__;
+            current_statement_begin__ = 24;
             ++num_params_r__;
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
@@ -408,18 +440,145 @@ public:
             (void) function__;  // dummy to suppress unused var warning
 
             // model body
+            {
+            current_statement_begin__ = 30;
+            int id(0);
+            (void) id;  // dummy to suppress unused var warning
 
-            current_statement_begin__ = 24;
+            stan::math::fill(id, std::numeric_limits<int>::min());
+            stan::math::assign(id,1);
+
+
+            current_statement_begin__ = 31;
+            if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),1))) {
+
+                current_statement_begin__ = 32;
+                lp_accum__.add(uniform_log<propto__>(mu_m, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),2))) {
+
+                current_statement_begin__ = 34;
+                lp_accum__.add(normal_log<propto__>(mu_m, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),3))) {
+
+                current_statement_begin__ = 36;
+                lp_accum__.add(gamma_log<propto__>(mu_m, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),4))) {
+
+                current_statement_begin__ = 38;
+                lp_accum__.add(beta_log<propto__>(mu_m, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            }
+            current_statement_begin__ = 41;
+            stan::math::assign(id, 2);
+            current_statement_begin__ = 42;
+            if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),1))) {
+
+                current_statement_begin__ = 43;
+                lp_accum__.add(uniform_log<propto__>(sigma_m, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),2))) {
+
+                current_statement_begin__ = 45;
+                lp_accum__.add(normal_log<propto__>(sigma_m, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),3))) {
+
+                current_statement_begin__ = 47;
+                lp_accum__.add(gamma_log<propto__>(sigma_m, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),4))) {
+
+                current_statement_begin__ = 49;
+                lp_accum__.add(beta_log<propto__>(sigma_m, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            }
+            current_statement_begin__ = 53;
+            stan::math::assign(id, 3);
+            current_statement_begin__ = 54;
+            if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),1))) {
+
+                current_statement_begin__ = 55;
+                lp_accum__.add(uniform_log<propto__>(mu_s, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),2))) {
+
+                current_statement_begin__ = 57;
+                lp_accum__.add(normal_log<propto__>(mu_s, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),3))) {
+
+                current_statement_begin__ = 59;
+                lp_accum__.add(gamma_log<propto__>(mu_s, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),4))) {
+
+                current_statement_begin__ = 61;
+                lp_accum__.add(beta_log<propto__>(mu_s, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            }
+            current_statement_begin__ = 64;
+            stan::math::assign(id, 4);
+            current_statement_begin__ = 65;
+            if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),1))) {
+
+                current_statement_begin__ = 66;
+                lp_accum__.add(uniform_log<propto__>(sigma_s, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),2))) {
+
+                current_statement_begin__ = 68;
+                lp_accum__.add(normal_log<propto__>(sigma_s, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),3))) {
+
+                current_statement_begin__ = 70;
+                lp_accum__.add(gamma_log<propto__>(sigma_s, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),4))) {
+
+                current_statement_begin__ = 72;
+                lp_accum__.add(beta_log<propto__>(sigma_s, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            }
+            current_statement_begin__ = 76;
+            stan::math::assign(id, 5);
+            current_statement_begin__ = 77;
+            if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),1))) {
+
+                current_statement_begin__ = 78;
+                lp_accum__.add(uniform_log<propto__>(mu_l, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),2))) {
+
+                current_statement_begin__ = 80;
+                lp_accum__.add(normal_log<propto__>(mu_l, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),3))) {
+
+                current_statement_begin__ = 82;
+                lp_accum__.add(gamma_log<propto__>(mu_l, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),4))) {
+
+                current_statement_begin__ = 84;
+                lp_accum__.add(beta_log<propto__>(mu_l, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            }
+            current_statement_begin__ = 87;
+            stan::math::assign(id, 6);
+            current_statement_begin__ = 88;
+            if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),1))) {
+
+                current_statement_begin__ = 89;
+                lp_accum__.add(uniform_log<propto__>(sigma_l, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),2))) {
+
+                current_statement_begin__ = 91;
+                lp_accum__.add(normal_log<propto__>(sigma_l, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),3))) {
+
+                current_statement_begin__ = 93;
+                lp_accum__.add(gamma_log<propto__>(sigma_l, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            } else if (as_bool(logical_eq(get_base1(p_ids,id,"p_ids",1),4))) {
+
+                current_statement_begin__ = 95;
+                lp_accum__.add(beta_log<propto__>(sigma_l, get_base1(p_values,((id * 2) - 1),"p_values",1), get_base1(p_values,(id * 2),"p_values",1)));
+            }
+            current_statement_begin__ = 98;
             lp_accum__.add(normal_log<propto__>(mu, mu_m, sigma_m));
-            current_statement_begin__ = 25;
+            current_statement_begin__ = 99;
             lp_accum__.add(normal_log<propto__>(sigma, mu_s, sigma_s));
-            current_statement_begin__ = 26;
+            current_statement_begin__ = 100;
             lp_accum__.add(normal_log<propto__>(lambda, mu_l, sigma_l));
-            current_statement_begin__ = 29;
+            current_statement_begin__ = 103;
             for (int i = 1; i <= n; ++i) {
 
-                current_statement_begin__ = 30;
+                current_statement_begin__ = 104;
                 lp_accum__.add(exp_mod_normal_log<propto__>(get_base1(t,i,"t",1), get_base1(mu,get_base1(s,i,"s",1),"mu",1), get_base1(sigma,get_base1(s,i,"s",1),"sigma",1), get_base1(lambda,get_base1(s,i,"s",1),"lambda",1)));
+            }
             }
 
         } catch (const std::exception& e) {
@@ -551,13 +710,13 @@ public:
             }
             if (!include_gqs__) return;
             // declare and define generated quantities
-            current_statement_begin__ = 35;
+            current_statement_begin__ = 109;
             local_scalar_t__ rt;
             (void) rt;  // dummy to suppress unused var warning
 
             stan::math::initialize(rt, DUMMY_VAR__);
             stan::math::fill(rt,DUMMY_VAR__);
-            current_statement_begin__ = 36;
+            current_statement_begin__ = 110;
             validate_non_negative_index("rt_subjects", "m", m);
             Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1>  rt_subjects(static_cast<Eigen::VectorXd::Index>(m));
             (void) rt_subjects;  // dummy to suppress unused var warning
@@ -566,12 +725,12 @@ public:
             stan::math::fill(rt_subjects,DUMMY_VAR__);
 
 
-            current_statement_begin__ = 38;
+            current_statement_begin__ = 112;
             stan::math::assign(rt, (mu_m + (1 / mu_l)));
-            current_statement_begin__ = 39;
+            current_statement_begin__ = 113;
             for (int i = 1; i <= m; ++i) {
 
-                current_statement_begin__ = 40;
+                current_statement_begin__ = 114;
                 stan::model::assign(rt_subjects, 
                             stan::model::cons_list(stan::model::index_uni(i), stan::model::nil_index_list()), 
                             (get_base1(mu,i,"mu",1) + (1 / get_base1(lambda,i,"lambda",1))), 
@@ -579,9 +738,9 @@ public:
             }
 
             // validate generated quantities
-            current_statement_begin__ = 35;
+            current_statement_begin__ = 109;
             check_greater_or_equal(function__,"rt",rt,0);
-            current_statement_begin__ = 36;
+            current_statement_begin__ = 110;
             check_greater_or_equal(function__,"rt_subjects",rt_subjects,0);
 
             // write generated quantities

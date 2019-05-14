@@ -80,11 +80,11 @@ al_2a <- b_linear(x = df_2a$sequence,
 
 
 ## compare ---------------------------------------------------------------
-# compare (optional rope parameter)
-compare(al_1b, fit2=al_1a)
+# compare_samples (optional rope parameter)
+compare_samples(al_1b, fit2=al_1a)
 
 # difference (optional rope parameter)
-plot_difference(al_1b, fit2=al_1a)
+plot_samples_difference(al_1b, fit2=al_1a)
 
 # visually compare samples
 plot_samples(al_1b, fit2=al_1a)

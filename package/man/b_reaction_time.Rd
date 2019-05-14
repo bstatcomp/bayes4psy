@@ -4,11 +4,24 @@
 \alias{b_reaction_time}
 \title{b_reaction_time}
 \usage{
-b_reaction_time(t, s, warmup = 2000, iter = 3000, chains = 4,
-  control = NULL)
+b_reaction_time(t, s, p_mu_m = NULL, p_sigma_m = NULL, p_mu_s = NULL,
+  p_sigma_s = NULL, p_mu_l = NULL, p_sigma_l = NULL, warmup = 2000,
+  iter = 3000, chains = 4, control = NULL)
 }
 \arguments{
 \item{s}{a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).}
+
+\item{p_mu_m}{Prior for the mu_m (mean value) parameter (default = NULL/flat improper prior).}
+
+\item{p_sigma_m}{Prior for the sigma_m (mu_m variance) parameter (default = NULL/flat improper prior).}
+
+\item{p_mu_s}{Prior for the mu_s (variance) parameter (default = NULL/flat improper prior).}
+
+\item{p_sigma_s}{Prior for the sigma_s (mu_s variance) parameter (default = NULL/flat improper prior).}
+
+\item{p_mu_l}{Prior for the mu_l (tail) parameter (default = NULL/flat improper prior).}
+
+\item{p_sigma_l}{Prior for the sigma_l (mu_l variance) parameter (default = NULL/flat improper prior).}
 
 \item{warmup}{Integer specifying the number of warmup iterations per chain (default = 2000).}
 
