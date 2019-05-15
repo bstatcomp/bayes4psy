@@ -4,8 +4,9 @@
 \alias{b_linear}
 \title{b_linear}
 \usage{
-b_linear(x, y, s, warmup = 2000, iter = 3000, chains = 4,
-  control = NULL)
+b_linear(x, y, s, p_mu_a = NULL, p_sigma_a = NULL, p_mu_b = NULL,
+  p_sigma_b = NULL, p_mu_s = NULL, p_sigma_s = NULL, warmup = 2000,
+  iter = 3000, chains = 4, control = NULL)
 }
 \arguments{
 \item{x}{a vector containting index of sequence (time).}
@@ -13,6 +14,18 @@ b_linear(x, y, s, warmup = 2000, iter = 3000, chains = 4,
 \item{y}{a vector containting subjet's responses.}
 
 \item{s}{a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).}
+
+\item{p_mu_a}{Prior for the mu_a (mean intercept) parameter (default = NULL/flat improper prior).}
+
+\item{p_sigma_a}{Prior for the sigma_a (mu_a variance) parameter (default = NULL/flat improper prior).}
+
+\item{p_mu_b}{Prior for the mu_b (mean slope) parameter (default = NULL/flat improper prior).}
+
+\item{p_sigma_b}{Prior for the sigma_b (mu_b variance) parameter (default = NULL/flat improper prior).}
+
+\item{p_mu_s}{Prior for the mu_s (variance) parameter (default = NULL/flat improper prior).}
+
+\item{p_sigma_s}{Prior for the sigma_s (mu_s variance) parameter (default = NULL/flat improper prior).}
 
 \item{warmup}{Integer specifying the number of warmup iterations per chain (default = 2000).}
 

@@ -6,10 +6,12 @@
 \alias{plot_fit_linear}
 \title{plot_fit}
 \usage{
-\S4method{plot_fit}{linear_class}(object)
+\S4method{plot_fit}{linear_class}(object, ...)
 }
 \arguments{
 \item{object}{linear_class object.}
+
+\item{...}{subjects - plot fits on a subject level (default = FALSE).}
 }
 \description{
 \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.

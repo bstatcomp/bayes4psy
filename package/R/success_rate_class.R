@@ -430,6 +430,8 @@ setMethod(f="plot_fit", signature(object="success_rate_class"), definition=funct
   # init local varibales for CRAN check
   variable<-value<-NULL
 
+  arguments <- list(...)
+
   # plot on a subject level?
   subjects <- FALSE
   if (!is.null(arguments$subjects)) {

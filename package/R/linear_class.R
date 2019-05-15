@@ -552,6 +552,8 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
   # init local varibales for CRAN check
   s <- x <- y <- NULL
 
+  arguments <- list(...)
+
   # plot on a subject level?
   subjects <- FALSE
   if (!is.null(arguments$subjects)) {

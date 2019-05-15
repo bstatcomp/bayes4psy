@@ -92,7 +92,7 @@ b_reaction_time <- function(t,
     p_values[2*id] <- p_mu_s@pars[2]
   }
   # sigma_s
-  id <- 2
+  id <- 4
   if (!is.null(p_sigma_s)) {
     p_ids[id] <- get_prior_id(p_sigma_s)
     if (p_ids[id] == 0) {
@@ -129,7 +129,7 @@ b_reaction_time <- function(t,
     p_values[2*id] <- p_mu_l@pars[2]
   }
   # sigma_l
-  id <- 2
+  id <- 6
   if (!is.null(p_sigma_l)) {
     p_ids[id] <- get_prior_id(p_sigma_l)
     if (p_ids[id] == 0) {
