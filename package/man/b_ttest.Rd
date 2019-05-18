@@ -4,15 +4,13 @@
 \alias{b_ttest}
 \title{b_ttest}
 \usage{
-b_ttest(data, p_mu = NULL, p_sigma = NULL, warmup = 9000,
-  iter = 10000, chains = 4, control = NULL)
+b_ttest(data, priors = NULL, warmup = 9000, iter = 10000,
+  chains = 4, control = NULL)
 }
 \arguments{
 \item{data}{Numeric vector of values on which the fit will be based.}
 
-\item{p_mu}{Prior for the mu (mean value) parameter (default = NULL/flat improper prior).}
-
-\item{p_sigma}{Prior for the sigma (variance) parameter (default = NULL/flat improper prior).}
+\item{priors}{List of parameters and their priors - b_prior objects. You can put a prior on the mu (mean) and sigma (variance) parameters (default = NULL).}
 
 \item{warmup}{Integer specifying the number of warmup iterations per chain (default = 9000).}
 

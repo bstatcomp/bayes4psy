@@ -122,14 +122,17 @@ df_congruent <- df[df$group == "test" & df$congruency == "congruent", ]
 df_incongruent <- df[df$group == "test" & df$congruency == "incongruent", ]
 
 # priors
-p_p = b_prior(family="beta", pars=c(1, 1))
-p_tau = b_prior(family="uniform", pars=c(0, 500))
+p_prior <- b_prior(family="beta", pars=c(1, 1))
+tau_prior <- b_prior(family="uniform", pars=c(0, 500))
+
+priors <- list(c("p", mu_prior),
+               c("tau", sigma_prior))
 
 ## congruent fit ---------------------------------------------------------
 r <- df_congruent$result_numeric
 s <- df_congruent$subject
 
-s_congruent <- b_success_rate(r=r, s=s, p_p=p_p, p_tau=p_tau)
+s_congruent <- b_success_rate(r=r, s=s, priors=priors)
 
 # summary
 summary(s_congruent)
@@ -154,7 +157,7 @@ plot_distributions(s_congruent)
 r <- df_incongruent$result_numeric
 s <- df_incongruent$subject
 
-s_incongruent <- b_success_rate(r=r, s=s, p_p=p_p, p_tau=p_tau)
+s_incongruent <- b_success_rate(r=r, s=s, priors=priors)
 
 # summary
 summary(s_incongruent)

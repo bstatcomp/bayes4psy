@@ -60,7 +60,7 @@ model {
   } else if (p_ids[id] == 4) {
     mu_s ~ beta(p_values[id*2-1], p_values[id*2]);
   }
-  // sigma_m
+  // sigma_s
   id = 4;
   if (p_ids[id] == 1) {
     sigma_s ~ uniform(p_values[id*2-1], p_values[id*2]);

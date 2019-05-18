@@ -4,8 +4,7 @@
 #' @export
 #' @param r a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).
 #' @param s a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).
-#' @param p_p Prior for the p (mean value) parameter (default = NULL/flat improper prior).
-#' @param p_tau Prior for the tau (variance) parameter (default = NULL/flat improper prior).
+#' @param priors List of parameters and their priors - b_prior objects. You can put a prior on the p (mean probability of success) and tau (variance) parameters (default = NULL).
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 2000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 3000).
 #' @param chains Integer specifying the number of parallel chains (default = 4).
@@ -13,8 +12,7 @@
 #' @return An object of class `success_rate_class`.
 b_success_rate <- function(r,
                            s,
-                           p_p=NULL,
-                           p_tau=NULL,
+                           priors=NULL,
                            warmup=2000,
                            iter=3000,
                            chains=4,
@@ -28,42 +26,42 @@ b_success_rate <- function(r,
   p_ids <- rep(0, 2)
   p_values <- rep(0, 4)
 
-  # p
-  id <- 1
-  if (!is.null(p_p)) {
-    p_ids[id] <- get_prior_id(p_p)
-    if (p_ids[id] == 0) {
-      wrong_prior <- "Provided an unknown prior family, use \"uniform\", \"normal\", \"gamma\" or \"beta\"."
-      warning(wrong_prior)
-      return()
-    }
+  # parameter mapping
+  df_pars <- data.frame(par=c("p", "tau"), index=c(1, 2))
 
-    if (length(p_p@pars) != 2) {
-      wrong_pars <- "Incorrect prior parameters, provide a vector of 2 numerical values, e.g. p_p=b_prior(family=\"beta\", pars=c(1, 1))."
-      warning(wrong_pars)
-      return()
-    }
-    p_values[2*id-1] <- p_p@pars[1]
-    p_values[2*id] <- p_p@pars[2]
-  }
+  # priors
+  if (!is.null(priors)) {
+    for (p in priors) {
+      par <- p[[1]]
+      prior <- p[[2]]
 
-  # tau
-  id <- 2
-  if (!is.null(p_tau)) {
-    p_ids[id] <- get_prior_id(p_tau)
-    if (p_ids[id] == 0) {
-      wrong_prior <- "Provided an unknown prior family, use \"uniform\", \"normal\", \"gamma\" or \"beta\"."
-      warning(wrong_prior)
-      return()
-    }
+      # get parameter index
+      id <- 0
+      par_id <- df_pars[df_pars$par==par,]
+      if (nrow(par_id) > 0) {
+        id <- par_id$index
+      } else {
+        wrong_prior <- "Provided an unknown parameter for prior, use \"p\" or \"tau\"."
+        warning(wrong_prior)
+        return()
+      }
+      # set prior family id
+      p_ids[id] <- get_prior_id(prior)
+      if (p_ids[id] == 0) {
+        wrong_prior <- "Provided an unknown prior family, use \"uniform\", \"normal\", \"gamma\" or \"beta\"."
+        warning(wrong_prior)
+        return()
+      }
 
-    if (length(p_tau@pars) != 2) {
-      wrong_pars <- "Incorrect prior parameters, provide a vector of 2 numerical values, e.g. p_tau=b_prior(family=\"uniform\", pars=c(0, 0.2))."
-      warning(wrong_pars)
-      return()
+      # set parameter values
+      if (length(prior@pars) != 2) {
+        wrong_pars <- "Incorrect prior parameters, provide a vector of 2 numerical values."
+        warning(wrong_pars)
+        return()
+      }
+      p_values[2*id-1] <- prior@pars[1]
+      p_values[2*id] <- prior@pars[2]
     }
-    p_values[2*id-1] <- p_tau@pars[1]
-    p_values[2*id] <- p_tau@pars[2]
   }
 
   stan_data <- list(n=n,

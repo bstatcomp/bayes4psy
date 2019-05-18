@@ -4,17 +4,15 @@
 \alias{b_success_rate}
 \title{b_success_rate}
 \usage{
-b_success_rate(r, s, p_p = NULL, p_tau = NULL, warmup = 2000,
-  iter = 3000, chains = 4, control = NULL)
+b_success_rate(r, s, priors = NULL, warmup = 2000, iter = 3000,
+  chains = 4, control = NULL)
 }
 \arguments{
 \item{r}{a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).}
 
 \item{s}{a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).}
 
-\item{p_p}{Prior for the p (mean value) parameter (default = NULL/flat improper prior).}
-
-\item{p_tau}{Prior for the tau (variance) parameter (default = NULL/flat improper prior).}
+\item{priors}{List of parameters and their priors - b_prior objects. You can put a prior on the p (mean probability of success) and tau (variance) parameters (default = NULL).}
 
 \item{warmup}{Integer specifying the number of warmup iterations per chain (default = 2000).}
 
