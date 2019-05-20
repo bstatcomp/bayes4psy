@@ -146,7 +146,7 @@ setMethod(f="compare_samples", signature(object="success_rate_class"), definitio
     }
     y2 <- fit2@extract$p0
 
-    shared_difference(y1=y1, y2=y2, rope=rope)
+    difference(y1=y1, y2=y2, rope=rope)
   } else {
     warning(wrong_arguments)
     return()
@@ -197,7 +197,7 @@ setMethod(f="plot_samples_difference", signature(object="success_rate_class"), d
     }
 
     # call plot difference from shared plots
-    graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+    graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
     return(graph)
   } else {
     warning(wrong_arguments)
@@ -291,12 +291,12 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
 
     # calculate
     y1_smaller <- round(sum(y1 < y2) / n, 2)
-    y1_greater <- round(sum(y1 > y2) / n, 2)
-    equal <- 1 - y1_smaller - y1_greater
+    y1_larger <- round(sum(y1 > y2) / n, 2)
+    equal <- 1 - y1_smaller - y1_larger
 
     # print
     cat(sprintf("Probabilities:\n  - Group 1 < Group 2: %.2f", y1_smaller))
-    cat(sprintf("\n  - Group 1 > Group 2: %.2f", y1_greater))
+    cat(sprintf("\n  - Group 1 > Group 2: %.2f", y1_larger))
     cat(sprintf("\n  - Equal: %.2f\n", equal))
   } else {
     warning(wrong_arguments)
@@ -411,7 +411,7 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
     }
 
     # call plot difference from shared plots
-    graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+    graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
     return(graph)
   } else {
     warning(wrong_arguments)

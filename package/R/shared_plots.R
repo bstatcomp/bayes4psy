@@ -1,7 +1,7 @@
 #' @import ggplot2
 
 # function for visalizsing the difference between two datasets
-shared_plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, nrow=1) {
+plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, nrow=1) {
   # init local varibales for CRAN check
   value <- NULL
 

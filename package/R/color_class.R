@@ -231,7 +231,7 @@ setMethod(f="compare_samples", signature(object="color_class"), definition=funct
       }
 
       cat("\n------------- R component -------------\n")
-      shared_difference(y1=y1, y2=y2, rope=rope)
+      difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "g") {
       y1 <- object@extract$mu_g
 
@@ -242,7 +242,7 @@ setMethod(f="compare_samples", signature(object="color_class"), definition=funct
       }
 
       cat("\n------------- G component -------------\n")
-      shared_difference(y1=y1, y2=y2, rope=rope)
+      difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "b") {
       y1 <- object@extract$mu_b
 
@@ -253,7 +253,7 @@ setMethod(f="compare_samples", signature(object="color_class"), definition=funct
       }
 
       cat("\n------------- B component -------------\n")
-      shared_difference(y1=y1, y2=y2, rope=rope)
+      difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "h") {
       y1 <- object@extract$mu_h
 
@@ -275,7 +275,7 @@ setMethod(f="compare_samples", signature(object="color_class"), definition=funct
       }
 
       cat("\n------------- S component -------------\n")
-      shared_difference(y1=y1, y2=y2, rope=rope)
+      difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "v") {
       y1 <- object@extract$mu_v
 
@@ -286,7 +286,7 @@ setMethod(f="compare_samples", signature(object="color_class"), definition=funct
       }
 
       cat("\n------------- V component -------------\n")
-      shared_difference(y1=y1, y2=y2, rope=rope)
+      difference(y1=y1, y2=y2, rope=rope)
     }
   }
 })
@@ -378,7 +378,7 @@ setMethod(f="plot_samples_difference", signature(object="color_class"), definiti
         y2 <- rgb[1]
       }
 
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("r") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -391,7 +391,7 @@ setMethod(f="plot_samples_difference", signature(object="color_class"), definiti
         y2 <- rgb[2]
       }
 
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("g") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -404,7 +404,7 @@ setMethod(f="plot_samples_difference", signature(object="color_class"), definiti
         y2 <- rgb[3]
       }
 
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("b") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -417,7 +417,7 @@ setMethod(f="plot_samples_difference", signature(object="color_class"), definiti
         y2 <- hsv[1]
       }
 
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, circular=TRUE, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, circular=TRUE, nrow=nrow)
       graph <- graph + ggtitle("h") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -430,7 +430,7 @@ setMethod(f="plot_samples_difference", signature(object="color_class"), definiti
         y2 <- hsv[2]
       }
 
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("s") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -443,7 +443,7 @@ setMethod(f="plot_samples_difference", signature(object="color_class"), definiti
         y2 <- hsv[3]
       }
 
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("v") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -839,7 +839,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       }
 
       cat("\n------------- R component -------------\n")
-      shared_difference(y1=y1, y2=y2, rope=rope)
+      difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "g") {
       mu1 <- mean(object@extract$mu_g)
       sigma1 <- mean(object@extract$sigma_g)
@@ -858,7 +858,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       }
 
       cat("\n------------- G component -------------\n")
-      shared_difference(y1=y1, y2=y2, rope=rope)
+      difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "b") {
       mu1 <- mean(object@extract$mu_b)
       sigma1 <- mean(object@extract$sigma_b)
@@ -877,7 +877,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       }
 
       cat("\n------------- B component -------------\n")
-      shared_difference(y1=y1, y2=y2, rope=rope)
+      difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "h") {
       mu1 <- mean(preprocess_circular((object@extract$mu_h)))
       kappa1 <- mean(object@extract$kappa_h)
@@ -913,7 +913,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       }
 
       cat("\n------------- S component -------------\n")
-      shared_difference(y1=y1, y2=y2, rope=rope)
+      difference(y1=y1, y2=y2, rope=rope)
     } else if (p == "v") {
       mu1 <- mean(object@extract$mu_v)
       sigma1 <- mean(object@extract$sigma_v)
@@ -932,7 +932,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       }
 
       cat("\n------------- V component -------------\n")
-      shared_difference(y1=y1, y2=y2, rope=rope)
+      difference(y1=y1, y2=y2, rope=rope)
     }
   }
 })
@@ -1363,7 +1363,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
         y2 <- rgb[1]
       }
 
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("r") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -1384,7 +1384,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
         y2 <- rgb[2]
       }
 
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("g") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -1405,7 +1405,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
         y2 <- rgb[3]
       }
 
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("b") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -1424,7 +1424,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
         y2 <- hsv[1]
       }
 
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, circular=TRUE, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, circular=TRUE, nrow=nrow)
       graph <- graph + ggtitle("h") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -1445,7 +1445,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
         y2 <- hsv[2]
       }
 
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("s") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -1464,7 +1464,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
         y2 <- hsv[3]
       }
 
-      graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
       graph <- graph + ggtitle("v") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1

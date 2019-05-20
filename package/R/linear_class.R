@@ -165,10 +165,10 @@ setMethod(f="compare_samples", signature(object="linear_class"), definition=func
     slope2 <- fit2@extract$mu_b
 
     cat("---------- Intercept ----------\n")
-    shared_difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
+    difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
 
     cat("\n---------- Slope ----------\n")
-    shared_difference(y1=slope1, y2=slope2, rope=rope_slope)
+    difference(y1=slope1, y2=slope2, rope=rope_slope)
   } else {
     warning(wrong_arguments)
     return()
@@ -227,12 +227,12 @@ setMethod(f="plot_samples_difference", signature(object="linear_class"), definit
     }
 
     # call plot difference from shared plots
-    graph_intercept <- shared_plot_difference(y1=intercept1, y2=intercept2, rope=rope_intercept, bins=bins)
+    graph_intercept <- plot_difference(y1=intercept1, y2=intercept2, rope=rope_intercept, bins=bins)
     graph_intercept <- graph_intercept +
       ggtitle("Intercept") +
       theme(plot.title=element_text(hjust=0.5))
 
-    graph_slope <- shared_plot_difference(y1=slope1, y2=slope2, rope=rope_slope, bins=bins)
+    graph_slope <- plot_difference(y1=slope1, y2=slope2, rope=rope_slope, bins=bins)
     graph_slope <- graph_slope +
       ggtitle("Slope") +
       theme(plot.title=element_text(hjust=0.5))
@@ -378,10 +378,10 @@ setMethod(f="compare_distributions", signature(object="linear_class"), definitio
     slope2 <- stats::rnorm(n, mean=mu_slope2, sd=sigma_slope2)
 
     cat("---------- Intercept ----------\n")
-    shared_difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
+    difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
 
     cat("\n---------- Slope ----------\n")
-    shared_difference(y1=slope1, y2=slope2, rope=rope_slope)
+    difference(y1=slope1, y2=slope2, rope=rope_slope)
   } else {
     warning(wrong_arguments)
     return()
@@ -523,12 +523,12 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
     }
 
     # call plot difference from shared plots
-    graph_intercept <- shared_plot_difference(y1=intercept1, y2=intercept2, rope=rope_intercept, bins=bins)
+    graph_intercept <- plot_difference(y1=intercept1, y2=intercept2, rope=rope_intercept, bins=bins)
     graph_intercept <- graph_intercept +
       ggtitle("Intercept") +
       theme(plot.title=element_text(hjust=0.5))
 
-    graph_slope <- shared_plot_difference(y1=slope1, y2=slope2, rope=rope_slope, bins=bins)
+    graph_slope <- plot_difference(y1=slope1, y2=slope2, rope=rope_slope, bins=bins)
     graph_slope <- graph_slope +
       ggtitle("Slope") +
       theme(plot.title=element_text(hjust=0.5))
@@ -574,9 +574,6 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
   y_min <- y_min - 0.1*y_min
   x_max <- x_max + 0.1*x_max
   y_max <- y_max + 0.1*y_max
-
-  # steps
-  step <- (x_max - x_min) / 1000
 
   # mean per subject
   df_data <- df_data %>% group_by(s, x) %>% summarize(y=mean(y, na.rm=TRUE))

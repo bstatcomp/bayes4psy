@@ -189,7 +189,7 @@ setMethod(f="compare_samples", signature(object="reaction_time_class"), definiti
       y2 <- fit2@extract$mu_l
     }
 
-    shared_difference(y1=y1, y2=y2, rope=rope)
+    difference(y1=y1, y2=y2, rope=rope)
   } else {
     warning(wrong_arguments)
     return()
@@ -267,7 +267,7 @@ setMethod(f="plot_samples_difference", signature(object="reaction_time_class"), 
     }
 
     # call plot difference from shared plots
-    graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+    graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
     return(graph)
   } else {
     warning(wrong_arguments)
@@ -397,7 +397,7 @@ setMethod(f="compare_distributions", signature(object="reaction_time_class"), de
     mu_l2 <- mean(fit2@extract$mu_l)
     y2 <- emg::remg(n, mu=mu_m2, sigma=mu_s2, lambda=mu_l2)
 
-    shared_difference(y1=y1, y2=y2, rope=rope)
+    difference(y1=y1, y2=y2, rope=rope)
   } else {
     warning(wrong_arguments)
     return()
@@ -513,7 +513,7 @@ setMethod(f="plot_distributions_difference", signature(object="reaction_time_cla
     }
 
     # call plot difference from shared plots
-    graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
+    graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
     return(graph)
   } else {
     warning(wrong_arguments)
