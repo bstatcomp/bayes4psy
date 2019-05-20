@@ -80,11 +80,11 @@ al_2a <- b_linear(x = df_2a$sequence,
 
 
 ## compare ---------------------------------------------------------------
-# compare (optional rope parameter)
-compare(al_1b, fit2=al_1a)
+# compare_samples (optional rope parameter)
+compare_samples(al_1b, fit2=al_1a)
 
 # difference (optional rope parameter)
-plot_difference(al_1b, fit2=al_1a)
+plot_samples_difference(al_1b, fit2=al_1a)
 
 # visually compare samples
 plot_samples(al_1b, fit2=al_1a)
@@ -96,14 +96,12 @@ compare_distributions(al_1b, fit2=al_1a)
 graph_b <- plot_distributions(al_1b, al_2b) +
   xlim(0, 10) +
   ylim(0, 10) +
-  xlab("measurement") +
-  ylab("weight")
+  labs(title="Before", x="measurement", y="weight")
 
 graph_a <- plot_distributions(al_1a, al_2a) +
   xlim(0, 10) +
   ylim(0, 10) +
-  xlab("measurement") +
-  ylab("weight")
+  labs(title="After", x="measurement", y="")
 
 cowplot::plot_grid(graph_b, graph_a, ncol=2, nrow=1, scale=0.9)
 

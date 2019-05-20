@@ -10,17 +10,19 @@
 #'
 #' show(`color_class`): prints a more detailed summary of the fit.
 #'
-#' compare(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' get_samples(`color_class`): returns a dataframe with values of fitted parameters.
 #'
-#' compare(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare_samples(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' compare(`color_class`, hsv=`vector`): prints color difference between a fit and a color defined with hsv components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare_samples(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' plot_difference(`color_class`, fit2=`color_class`): a visualization of the difference between two fits You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare_samples(`color_class`, hsv=`vector`): prints color difference between a fit and a color defined with hsv components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' plot_difference(`color_class`, rgb=`vector`): a visualization of the difference between a fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#' plot_samples_difference(`color_class`, fit2=`color_class`): a visualization of the difference between two fits You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' plot_difference(`color_class`, hsv=`vector`): a visualization of the difference between a fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#' plot_samples_difference(`color_class`, rgb=`vector`): a visualization of the difference between a fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#'
+#' plot_samples_difference(`color_class`, hsv=`vector`): a visualization of the difference between a fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 #'
 #' plot_samples(`color_class`): plots density of the samples. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
 #'
@@ -54,7 +56,7 @@
 #'
 #' plot_fit_hsv(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
 #'
-#' plot_difference_hsv(`color_class`): a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
+#' plot_samples_difference_hsv(`color_class`): a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #'
 #' plot_distributions_difference_hsv(`color_class`): a visualization of the difference between distributions of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #'
@@ -63,7 +65,6 @@
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Data on which the fit is based.
-#' @exportClass color_class
 color_class <- setClass(
   "color_class",
   slots = c(
@@ -148,16 +149,33 @@ setMethod(f="show", signature(object="color_class"), definition=function(object)
 })
 
 
-#' @title compare
-#' @description \code{compare} prints difference in colors between two fits, or a fit and a color.
+#' @title get_samples
+#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
 #' @param object color_class object.
-#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, par - components of comparison, a subset of (r, g, b, h, s, v).
-#' @rdname color_class-compare
-#' @aliases compare_color
-setMethod(f="compare", signature(object="color_class"), definition=function(object, ...) {
+#' @rdname color_class-get_samples
+#' @aliases get_samples_color_class
+setMethod(f="get_samples", signature(object="color_class"), definition=function(object) {
+  df <- data.frame(r=object@extract$mu_r,
+                   g=object@extract$mu_g,
+                   b=object@extract$mu_b,
+                   h=object@extract$mu_h,
+                   s=object@extract$mu_s,
+                   v=object@extract$mu_v)
+
+  return(df)
+})
+
+
+#' @title compare_samples
+#' @description \code{compare_samples} prints difference in colors between two fits, or a fit and a color.
+#' @param object color_class object.
+#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, pars - components of comparison, a subset of (r, g, b, h, s, v).
+#' @rdname color_class-compare_samples
+#' @aliases compare_samples_color
+setMethod(f="compare_samples", signature(object="color_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare function are invalid, compare(color_class, fit2=color_class), compare(color_class, rgb=vector) or compare(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. compare(color_class, fit2=color_class, rope=numeric). You can also execute the comparison through a subset of color components, e.g. compare(color_class, fit2=color_class, par=c(\"h\", \"s\", \"v\"))."
+  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(color_class, fit2=color_class), compare(color_class, rgb=vector) or compare_samples(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. compare_samples(color_class, fit2=color_class, rope=numeric). You can also execute the comparison through a subset of color components, e.g. compare_samples(color_class, fit2=color_class, pars=c(\"h\", \"s\", \"v\"))."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -197,12 +215,12 @@ setMethod(f="compare", signature(object="color_class"), definition=function(obje
   rope <- prepare_rope(rope)
 
   # compare through all components or through a subset
-  par <- c("r", "g", "b", "h", "s", "v")
-  if (!is.null(arguments$par)) {
-    par <- arguments$par
+  pars <- c("r", "g", "b", "h", "s", "v")
+  if (!is.null(arguments$pars)) {
+    pars <- arguments$pars
   }
 
-  for (p in par) {
+  for (p in pars) {
     if (p == "r") {
       y1 <- object@extract$mu_r
 
@@ -274,17 +292,17 @@ setMethod(f="compare", signature(object="color_class"), definition=function(obje
 })
 
 
-#' @title plot_difference
-#' @description \code{plot_difference} a visualization of the difference between two fits
+#' @title plot_samples_difference
+#' @description \code{plot_samples_difference} a visualization of the difference between two fits
 #' @param object color_class object.
-#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, par - components of comparison, a subset of (r, g, b, h, s, v).
-#' @rdname color_class-plot_difference
-#' @aliases plot_difference_color
-setMethod(f="plot_difference", signature(object="color_class"), definition=function(object, ...) {
+#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, pars - components of comparison, a subset of (r, g, b, h, s, v).
+#' @rdname color_class-plot_samples_difference
+#' @aliases plot_samples_difference_color
+setMethod(f="plot_samples_difference", signature(object="color_class"), definition=function(object, ...) {
   # get arguments
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_difference function are invalid, plot_difference(color_class, fit2=color_class), plot_difference(color_class, rgb=vector) or plot_difference(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. plot_difference(color_class, fit2=color_class, rope=numeric), or the bins parameter plot_difference(color_class, fit2=color_class, bins=numeric). You can also execute the comparison through a subset of color components, e.g. plot_difference(color_class, fit2=color_class, par=c(\"h\", \"s\", \"v\"))."
+  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(color_class, fit2=color_class), plot_samples_difference(color_class, rgb=vector) or plot_samples_difference(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. plot_samples_difference(color_class, fit2=color_class, rope=numeric), or the bins parameter plot_samples_difference(color_class, fit2=color_class, bins=numeric). You can also execute the comparison through a subset of color components, e.g. plot_samples_difference(color_class, fit2=color_class, pars=c(\"h\", \"s\", \"v\"))."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -330,13 +348,13 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
   }
 
   # compare through all components or through a subset
-  par <- c("r", "g", "b", "h", "s", "v")
-  if (!is.null(arguments$par)) {
-    par <- arguments$par
+  pars <- c("r", "g", "b", "h", "s", "v")
+  if (!is.null(arguments$pars)) {
+    pars <- arguments$pars
   }
 
   # calculate number of columns and rows
-  n_graph <- length(par)
+  n_graph <- length(pars)
   nrow <- 1
   ncol <- 1
   if (n_graph > 1) {
@@ -350,7 +368,7 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
   # plot
   graphs <- list()
   i <- 1
-  for (p in par) {
+  for (p in pars) {
     if (p == "r") {
       y1 <- object@extract$mu_r
 
@@ -443,7 +461,7 @@ setMethod(f="plot_difference", signature(object="color_class"), definition=funct
 #' @title plot_samples
 #' @description \code{plot_samples} lots density of the samples, the first and the second group samples, or a constant values in case second group is defined as rgb or hsv color..
 #' @param object color_class object.
-#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, par - components of comparison, a subset of (r, g, b, h, s, v).
+#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_samples
 #' @aliases plot_samples_color
 setMethod(f="plot_samples", signature(object="color_class"), definition=function(object, ...) {
@@ -476,13 +494,13 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
   }
 
   # plot all components or a subset
-  par <- c("r", "g", "b", "h", "s", "v")
-  if (!is.null(arguments$par)) {
-    par <- arguments$par
+  pars <- c("r", "g", "b", "h", "s", "v")
+  if (!is.null(arguments$pars)) {
+    pars <- arguments$pars
   }
 
   # calculate number of columns and rows
-  n_graph <- length(par)
+  n_graph <- length(pars)
   nrow <- 1
   ncol <- 1
   if (n_graph > 1) {
@@ -496,7 +514,7 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
   # plot
   graphs <- list()
   i <- 1
-  for (p in par) {
+  for (p in pars) {
     if (p == "r") {
       # first group data
       r_mu1 <- object@extract$mu_r
@@ -522,9 +540,15 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         r_x2 <- rgb[1]
         r_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 255 * 0.1
+        hjust = "center"
+        if (r_x2 < hjust_range || r_x2 > (255 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=r_x2, xend=r_x2, y=0, yend=r_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%d", r_x2), x=r_x2, y=r_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%d", r_x2), x=r_x2, y=r_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -554,9 +578,15 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         g_x2 <- rgb[2]
         g_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 255 * 0.1
+        hjust = "center"
+        if (g_x2 < hjust_range || g_x2 > (255 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=g_x2, xend=g_x2, y=0, yend=g_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%d", g_x2), x=g_x2, y=g_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%d", g_x2), x=g_x2, y=g_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -586,9 +616,15 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         b_x2 <- rgb[3]
         b_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 255 * 0.1
+        hjust = "center"
+        if (b_x2 < hjust_range || b_x2 > (255 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=b_x2, xend=b_x2, y=0, yend=b_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%d", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%d", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -628,9 +664,15 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         h_x2 <- hsv[1]
         h_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 2*pi * 0.1
+        hjust = "center"
+        if (h_x2 < (x_min + hjust_range) || h_x2 > (x_max - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=h_x2, xend=h_x2, y=0, yend=h_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%.2f", h_x2), x=h_x2, y=h_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%.2f", h_x2), x=h_x2, y=h_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -660,9 +702,15 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         s_x2 <- hsv[2]
         s_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 1 * 0.1
+        hjust = "center"
+        if (s_x2 < hjust_range || s_x2 > (1 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=s_x2, xend=s_x2, y=0, yend=s_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%.2f", s_x2), x=s_x2, y=s_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%.2f", s_x2), x=s_x2, y=s_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -692,9 +740,15 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
         v_x2 <- hsv[3]
         v_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 1 * 0.1
+        hjust = "center"
+        if (v_x2 < hjust_range || v_x2 > (1 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=v_x2, xend=v_x2, y=0, yend=v_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%.2f", v_x2), x=v_x2, y=v_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%.2f", v_x2), x=v_x2, y=v_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -713,13 +767,13 @@ setMethod(f="plot_samples", signature(object="color_class"), definition=function
 #' @title compare_distributions
 #' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group or aagainst a color defined with rgb or hsv components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #' @param object color_class object.
-#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, par - components of comparison, a subset of (r, g, b, h, s, v).
+#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-compare_distributions
 #' @aliases compare_distributions_color
 setMethod(f="compare_distributions", signature(object="color_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(color_class, fit2=color_class), compare_distributions(color_class, rgb=vector) or compare_distributions(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. compare_distributions(color_class, fit2=color_class, rope=numeric). You can also execute the comparison through a subset of color components, e.g. compare_distributions(color_class, fit2=color_class, par=c(\"h\", \"s\", \"v\"))."
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(color_class, fit2=color_class), compare_distributions(color_class, rgb=vector) or compare_distributions(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. compare_distributions(color_class, fit2=color_class, rope=numeric). You can also execute the comparison through a subset of color components, e.g. compare_distributions(color_class, fit2=color_class, pars=c(\"h\", \"s\", \"v\"))."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -759,14 +813,14 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
   rope <- prepare_rope(rope)
 
   # compare through all components or through a subset
-  par <- c("r", "g", "b", "h", "s", "v")
-  if (!is.null(arguments$par)) {
-    par <- arguments$par
+  pars <- c("r", "g", "b", "h", "s", "v")
+  if (!is.null(arguments$pars)) {
+    pars <- arguments$pars
   }
 
   # compare
   n <- 100000
-  for (p in par) {
+  for (p in pars) {
     if (p == "r") {
       mu1 <- mean(object@extract$mu_r)
       sigma1 <- mean(object@extract$sigma_r)
@@ -887,7 +941,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
 #' @title plot_distributions
 #' @description \code{plot_distributions} a visualization of the fitted distributions or constant colors.
 #' @param object color_class object.
-#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, par - components of comparison, a subset of (r, g, b, h, s, v).
+#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_distributions
 #' @aliases plot_distributions_color
 setMethod(f="plot_distributions", signature(object="color_class"), definition=function(object, ...) {
@@ -920,13 +974,13 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
   }
 
   # plot all components or a subset
-  par <- c("r", "g", "b", "h", "s", "v")
-  if (!is.null(arguments$par)) {
-    par <- arguments$par
+  pars <- c("r", "g", "b", "h", "s", "v")
+  if (!is.null(arguments$pars)) {
+    pars <- arguments$pars
   }
 
   # calculate number of columns and rows
-  n_graph <- length(par)
+  n_graph <- length(pars)
   nrow <- 1
   ncol <- 1
   if (n_graph > 1) {
@@ -942,7 +996,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
   # plot
   graphs <- list()
   i <- 1
-  for (p in par) {
+  for (p in pars) {
     if (p == "r") {
       # first group data
       r_mu1 <- mean(object@extract$mu_r)
@@ -969,9 +1023,15 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         r_x2 <- rgb[1]
         r_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 255 * 0.1
+        hjust = "center"
+        if (r_x2 < hjust_range || r_x2 > (255 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=r_x2, xend=r_x2, y=0, yend=r_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%d", r_x2), x=r_x2, y=r_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%d", r_x2), x=r_x2, y=r_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -1002,9 +1062,15 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         g_x2 <- rgb[2]
         g_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 255 * 0.1
+        hjust = "center"
+        if (g_x2 < hjust_range || g_x2 > (255 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=g_x2, xend=g_x2, y=0, yend=g_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%d", g_x2), x=g_x2, y=g_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%d", g_x2), x=g_x2, y=g_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -1035,9 +1101,15 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         b_x2 <- rgb[3]
         b_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 255 * 0.1
+        hjust = "center"
+        if (b_x2 < hjust_range || b_x2 > (255 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=b_x2, xend=b_x2, y=0, yend=b_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%d", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%d", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -1094,9 +1166,15 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         h_x2 <- hsv[1]
         h_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 2*pi * 0.1
+        hjust = "center"
+        if (h_x2 < (x_min + hjust_range) || h_x2 > (x_max - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=h_x2, xend=h_x2, y=0, yend=h_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%.2f", h_x2), x=h_x2, y=h_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%.2f", h_x2), x=h_x2, y=h_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -1127,42 +1205,54 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
         s_x2 <- hsv[2]
         s_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
+        hjust_range <- 1 * 0.1
+        hjust = "center"
+        if (s_x2 < hjust_range || s_x2 > (1 - hjust_range)) {
+          hjust = "inward"
+        }
+
         graph <- graph +
           geom_segment(aes(x=s_x2, xend=s_x2, y=0, yend=s_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%.2f", s_x2), x=s_x2, y=s_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_text(aes(label=sprintf("%.2f", s_x2), x=s_x2, y=s_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
       i <- i + 1
     } else if (p == "v") {
       # first group data
-      b_mu1 <- mean(object@extract$mu_v)
-      b_sigma1 <- mean(object@extract$sigma_v)
+      v_mu1 <- mean(object@extract$mu_v)
+      v_sigma1 <- mean(object@extract$sigma_v)
 
       # plot
       df_x <- data.frame(value=c(0, 1))
 
       # plot
       graph <- ggplot(data=df_x, aes(x=value)) +
-        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu1, sd=b_sigma1), geom="area", fill="#808080", alpha=0.5) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=v_mu1, sd=v_sigma1), geom="area", fill="#808080", alpha=0.5) +
         xlab("value") +
         ggtitle("v") +
         theme(plot.title=element_text(hjust=0.5))
 
       if (!is.null(fit2)) {
         # second group data
-        b_mu2 <- mean(fit2@extract$mu_v)
-        b_sigma2 <- mean(fit2@extract$sigma_v)
+        v_mu2 <- mean(fit2@extract$mu_v)
+        v_sigma2 <- mean(fit2@extract$sigma_v)
 
-        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu2, sd=b_sigma2), geom="line", color="#000000", size=1)
+        graph <- graph + stat_function(fun=stats::dnorm, n=n, args=list(mean=v_mu2, sd=v_sigma2), geom="line", color="#000000", size=1)
       } else if (!is.null(hsv)) {
         # predefined color
-        b_x2 <- hsv[3]
-        b_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+        v_x2 <- hsv[3]
+        v_y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
+
+        hjust_range <- 1 * 0.1
+        hjust = "center"
+        if (v_x2 < hjust_range || v_x2 > (1 - hjust_range)) {
+          hjust = "inward"
+        }
 
         graph <- graph +
-          geom_segment(aes(x=b_x2, xend=b_x2, y=0, yend=b_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
-          geom_text(aes(label=sprintf("%.2f", b_x2), x=b_x2, y=b_y_max[2] * (1.05 + (nrow * 0.05))), size=4, vjust="inward", hjust="inward")
+          geom_segment(aes(x=v_x2, xend=v_x2, y=0, yend=v_y_max[2] * 1.05), size=1, color="#000000", na.rm=T) +
+          geom_text(aes(label=sprintf("%.2f", v_x2), x=v_x2, y=v_y_max[2] * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
       }
 
       graphs[[i]] <- graph
@@ -1181,14 +1271,14 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
 #' @title plot_distributions_difference
 #' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group.
 #' @param object color_class object.
-#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, par - components of comparison, a subset of (r, g, b, h, s, v).
+#' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_color
 setMethod(f="plot_distributions_difference", signature(object="color_class"), definition=function(object, ...) {
   # get arguments
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(color_class, fit2=color_class), plot_distributions_difference(color_class, rgb=vector) or plot_distributions_difference(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. plot_distributions_difference(color_class, fit2=color_class, rope=numeric), or the bins parameter plot_distributions_difference(color_class, fit2=color_class, bins=numeric). You can also execute the comparison through a subset of color components, e.g. plot_distributions_difference(color_class, fit2=color_class, par=c(\"h\", \"s\", \"v\"))."
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(color_class, fit2=color_class), plot_distributions_difference(color_class, rgb=vector) or plot_distributions_difference(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. plot_distributions_difference(color_class, fit2=color_class, rope=numeric), or the bins parameter plot_distributions_difference(color_class, fit2=color_class, bins=numeric). You can also execute the comparison through a subset of color components, e.g. plot_distributions_difference(color_class, fit2=color_class, pars=c(\"h\", \"s\", \"v\"))."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -1234,13 +1324,13 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
   }
 
   # compare through all components or through a subset
-  par <- c("r", "g", "b", "h", "s", "v")
-  if (!is.null(arguments$par)) {
-    par <- arguments$par
+  pars <- c("r", "g", "b", "h", "s", "v")
+  if (!is.null(arguments$pars)) {
+    pars <- arguments$pars
   }
 
   # calculate number of columns and rows
-  n_graph <- length(par)
+  n_graph <- length(pars)
   nrow <- 1
   ncol <- 1
   if (n_graph > 1) {
@@ -1255,7 +1345,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
   n <- 100000
   graphs <- list()
   i <- 1
-  for (p in par) {
+  for (p in pars) {
     if (p == "r") {
       mu1 <- mean(object@extract$mu_r)
       sigma1 <- mean(object@extract$sigma_r)
@@ -1392,7 +1482,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
 #' @title plot_fit
 #' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
 #' @param object color_class object.
-#' @param ... par - components of comparison, a subset of (r, g, b, h, s, v).
+#' @param ... pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_fit
 #' @aliases plot_fit_color
 setMethod(f="plot_fit", signature(object="color_class"), definition=function(object, ...) {
@@ -1403,13 +1493,13 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
   arguments <- list(...)
 
   # compare through all components or through a subset
-  par <- c("r", "g", "b", "h", "s", "v")
-  if (length(arguments) != 0 && !is.null(arguments$par)) {
-    par <- arguments$par
+  pars <- c("r", "g", "b", "h", "s", "v")
+  if (length(arguments) != 0 && !is.null(arguments$pars)) {
+    pars <- arguments$pars
   }
 
   # calculate number of columns and rows
-  n_graph <- length(par)
+  n_graph <- length(pars)
   nrow <- 1
   ncol <- 1
   if (n_graph > 1) {
@@ -1425,7 +1515,7 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
   # plot
   graphs <- list()
   i <- 1
-  for (p in par) {
+  for (p in pars) {
     if (p == "r") {
       # first group data
       r_data <- data.frame(x=object@data$r)
@@ -1651,17 +1741,17 @@ setMethod(f="plot_fit_hsv", signature(object="color_class"), definition=function
 })
 
 
-#' @rdname color_class-plot_difference_hsv
-#' @exportMethod plot_difference_hsv
-setGeneric(name="plot_difference_hsv", function(object, ...) standardGeneric("plot_difference_hsv"))
+#' @rdname color_class-plot_samples_difference_hsv
+#' @exportMethod plot_samples_difference_hsv
+setGeneric(name="plot_samples_difference_hsv", function(object, ...) standardGeneric("plot_samples_difference_hsv"))
 
-#' @title plot_difference_hsv
-#' @description \code{plot_difference_hsv} a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
+#' @title plot_samples_difference_hsv
+#' @description \code{plot_samples_difference_hsv} a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #' @param object color_class object.
 #' @param ... fit2 - a second color_class object, points - points to plot defined through rgb or hsv, lines - lines to plot defined through rgb or hsv, hsv - are points and lines defined in hsv format (default = FALSE).
-#' @rdname color_class-plot_difference_hsv
-#' @aliases plot_difference_hsv_color
-setMethod(f="plot_difference_hsv", signature(object="color_class"), definition=function(object, ...) {
+#' @rdname color_class-plot_samples_difference_hsv
+#' @aliases plot_samples_difference_hsv_hsv_color
+setMethod(f="plot_samples_difference_hsv", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   points <- lines <- r <- g <- b <- h <- s <- v <- sv <- NULL
 

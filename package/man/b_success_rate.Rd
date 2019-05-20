@@ -4,16 +4,23 @@
 \alias{b_success_rate}
 \title{b_success_rate}
 \usage{
-b_success_rate(r, s, warmup = 200, iter = 1200)
+b_success_rate(r, s, priors = NULL, warmup = 2000, iter = 3000,
+  chains = 4, control = NULL)
 }
 \arguments{
 \item{r}{a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).}
 
 \item{s}{a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).}
 
-\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 200).}
+\item{priors}{List of parameters and their priors - b_prior objects. You can put a prior on the p (mean probability of success) and tau (variance) parameters (default = NULL).}
 
-\item{iter}{Integer specifying the number of iterations (including warmup, default = 1200).}
+\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 2000).}
+
+\item{iter}{Integer specifying the number of iterations (including warmup, default = 3000).}
+
+\item{chains}{Integer specifying the number of parallel chains (default = 4).}
+
+\item{control}{A named list of parameters to control the sampler's behavior (default = NULL).}
 }
 \value{
 An object of class `success_rate_class`.

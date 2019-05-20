@@ -202,7 +202,13 @@ clamp <- function(y, min, max) {
   return(y)
 }
 
-# author: John Kruschke
+#' @title mcmc_hdi
+#' @author John Kruschke
+#' @description A function for calculating the HDI of samples (high density interval).
+#' @export
+#' @param samples vector of samples.
+#' @param cred_mass credibility mass that the interval should include (default = 0.95).
+#' @return Boundaries of the HDI.
 mcmc_hdi <- function(samples, cred_mass=0.95) {
   samples <- sort(samples)
   ci_ceil <- ceiling(cred_mass * length(samples))

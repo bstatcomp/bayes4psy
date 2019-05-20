@@ -1,5 +1,5 @@
 Package: EasyBayes
-Version: 0.5
+Version: 0.6
 Title: Bayesian applied modelling for social sciences
 Description: A user-friendly implementation of Bayesian statistical methods commonly used in social sciences. All used models are precompiled, meaning that users only need to call appropriate functions using their data.
 Authors@R:

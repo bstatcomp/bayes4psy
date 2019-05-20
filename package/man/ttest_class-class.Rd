@@ -16,15 +16,17 @@ print(`ttest_class`): prints a more detailed summary of the fit
 
 show(`ttest_class`): prints a more detailed summary of the fit.
 
-compare(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
+get_samples(`ttest_class`): returns a dataframe with values of fitted parameters.
 
-compare(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
+compare_samples(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
 
-compare(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohens d calculation. You can also provide the rope parameter.
+compare_samples(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
 
-plot_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
+compare_samples(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohens d calculation. You can also provide the rope parameter.
 
-plot_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
+plot_samples_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
+
+plot_samples_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_samples(`ttest_class`): plots density of the samples.
 

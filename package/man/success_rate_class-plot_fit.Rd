@@ -6,10 +6,12 @@
 \alias{plot_fit_success_rate}
 \title{plot_fit}
 \usage{
-\S4method{plot_fit}{success_rate_class}(object)
+\S4method{plot_fit}{success_rate_class}(object, ...)
 }
 \arguments{
 \item{object}{success_rate_class object.}
+
+\item{...}{subjects - plot fits on a subject level (default = FALSE).}
 }
 \description{
 \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.

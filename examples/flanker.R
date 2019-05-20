@@ -21,12 +21,12 @@ df_control <- df_correct[df_correct$group == "control", ]
 # subject indexes range on 22..45 cast to 1..23
 df_control$subject <- df_control$subject - 21
 
-rt <- df_control$rt
+t <- df_control$rt
 s <- df_control$subject
 
 # to control the amount of warmup and interation steps use
-# b_reaction_time(rt=rt, s=s, warmup=5000, iter=6000)
-rt_control <- b_reaction_time(rt=rt, s=s)
+# b_reaction_time(t=t, s=s, warmup=5000, iter=6000)
+rt_control <- b_reaction_time(t=t, s=s)
 
 # summary
 summary(rt_control)
@@ -37,6 +37,8 @@ print(rt_control)
 
 # check fits
 plot_fit(rt_control)
+# fit per each subject
+plot_fit(rt_control, subjects=TRUE)
 
 # plot trace
 plot_trace(rt_control)
@@ -51,10 +53,10 @@ plot_distributions(rt_control)
 ## test group fit --------------------------------------------------------
 df_test <- df_correct[df_correct$group == "test", ]
 
-rt <- df_test$rt
+t <- df_test$rt
 s <- df_test$subject
 
-rt_test <- b_reaction_time(rt=rt, s=s)
+rt_test <- b_reaction_time(t=t, s=s)
 
 # summary
 summary(rt_test)
@@ -74,19 +76,19 @@ plot_distributions(rt_test)
 
 ## compare two groups  ---------------------------------------------------
 # difference summary
-compare(rt_control, fit2=rt_test)
+compare_samples(rt_control, fit2=rt_test)
 
 # difference summary, compare only mu parameter (or lambda)
-compare(rt_control, fit2=rt_test, par="mu")
+compare_samples(rt_control, fit2=rt_test, par="mu")
 
 # difference summary with rope
-compare(rt_control, fit2=rt_test, rope=0.1)
+compare_samples(rt_control, fit2=rt_test, rope=0.1)
 
 # difference plot
-plot_difference(rt_control, fit2=rt_test)
+plot_samples_difference(rt_control, fit2=rt_test)
 
 # difference plot with rope, custom bins of mu parameter
-plot_difference(rt_control, fit2=rt_test, rope=0.1, bins=10, par="mu")
+plot_samples_difference(rt_control, fit2=rt_test, rope=0.1, bins=10, par="mu")
 
 # samples plot
 plot_samples(rt_control, fit2=rt_test)
@@ -119,11 +121,18 @@ df_congruent <- df[df$group == "test" & df$congruency == "congruent", ]
 
 df_incongruent <- df[df$group == "test" & df$congruency == "incongruent", ]
 
+# priors
+p_prior <- b_prior(family="beta", pars=c(1, 1))
+tau_prior <- b_prior(family="uniform", pars=c(0, 500))
+
+priors <- list(c("p", mu_prior),
+               c("tau", sigma_prior))
+
 ## congruent fit ---------------------------------------------------------
 r <- df_congruent$result_numeric
 s <- df_congruent$subject
 
-s_congruent <- b_success_rate(r=r, s=s)
+s_congruent <- b_success_rate(r=r, s=s, priors=priors)
 
 # summary
 summary(s_congruent)
@@ -148,7 +157,7 @@ plot_distributions(s_congruent)
 r <- df_incongruent$result_numeric
 s <- df_incongruent$subject
 
-s_incongruent <- b_success_rate(r=r, s=s)
+s_incongruent <- b_success_rate(r=r, s=s, priors=priors)
 
 # summary
 summary(s_incongruent)
@@ -167,17 +176,17 @@ plot_distributions(s_incongruent)
 
 
 ## comparison ------------------------------------------------------------
-# compare
-compare(s_congruent, fit2=s_incongruent)
+# compare samples
+compare_samples(s_congruent, fit2=s_incongruent)
 
-# compare with rope
-compare(s_congruent, fit2=s_incongruent, rope=0.05)
+# compare samples with rope
+compare_samples(s_congruent, fit2=s_incongruent, rope=0.05)
 
 # difference plot
-plot_difference(s_congruent, fit2=s_incongruent)
+plot_samples_difference(s_congruent, fit2=s_incongruent)
 
 # difference plot with rope and custom bins
-plot_difference(s_congruent, fit2=s_incongruent, rope=0.05, bins=20)
+plot_samples_difference(s_congruent, fit2=s_incongruent, rope=0.05, bins=20)
 
 # plot samples for both groups
 plot_samples(s_congruent, fit2=s_incongruent)

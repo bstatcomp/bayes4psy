@@ -16,9 +16,13 @@ print(`reaction_time_class`): prints a more detailed summary of the fit
 
 show(`reaction_time_class`): prints a more detailed summary of the fit.
 
-compare(`reaction_time_class`, fit2=`reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
+get_samples(`reaction_time_class`): returns a dataframe with values of fitted parameters.
 
-plot_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
+get_subject_samples(`reaction_time_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+
+compare_samples(`reaction_time_class`, fit2=`reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
+
+plot_samples_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
 
 plot_samples(`reaction_time_class`): plots density of the samples samples. You can also visualize the density only for a chosen parameter - mu or lambda.
 

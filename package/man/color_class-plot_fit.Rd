@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{color_class object.}
 
-\item{...}{par - components of comparison, a subset of (r, g, b, h, s, v).}
+\item{...}{pars - components of comparison, a subset of (r, g, b, h, s, v).}
 }
 \description{
 \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).

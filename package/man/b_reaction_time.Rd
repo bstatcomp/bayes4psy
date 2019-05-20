@@ -4,16 +4,23 @@
 \alias{b_reaction_time}
 \title{b_reaction_time}
 \usage{
-b_reaction_time(rt, s, warmup = 200, iter = 1200)
+b_reaction_time(t, s, priors = NULL, warmup = 2000, iter = 3000,
+  chains = 4, control = NULL)
 }
 \arguments{
-\item{rt}{a vector containing reaction times for each measurement.}
-
 \item{s}{a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).}
 
-\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 200).}
+\item{priors}{List of parameters and their priors - b_prior objects. You can put a prior on the mu_m (mean), sigma_m (variance of mu_m), mu_s (variance), sigma_s (variance of mu_s), mu_l (mean of the exponent factor) and sigma_l (variance of mu_l) parameters (default = NULL).}
 
-\item{iter}{Integer specifying the number of iterations (including warmup, default = 1200).}
+\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 2000).}
+
+\item{iter}{Integer specifying the number of iterations (including warmup, default = 3000).}
+
+\item{chains}{Integer specifying the number of parallel chains (default = 4).}
+
+\item{control}{A named list of parameters to control the sampler's behavior (default = NULL).}
+
+\item{rt}{a vector containing reaction times for each measurement.}
 }
 \value{
 An object of class `reaction_time_class`.

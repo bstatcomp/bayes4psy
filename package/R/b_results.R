@@ -3,29 +3,46 @@
 #'
 #' \strong{Functions}
 #'
-#' summary(`success_rate_class`): prints summary of the fit.
+#' summary(`b_results_class`): prints summary of the fit.
 #'
-#' print(`success_rate_class`): prints a more detailed summary of the fit.
+#' print(`b_results_class`): prints a more detailed summary of the fit.
 #'
-#' show(`success_rate_class`): prints a more detailed summary of the fit.
+#' show(`b_results_class`): prints a more detailed summary of the fit.
 setClass("b_results")
 
-#' @title compare
-#' @description \code{compare} prints difference between two groups.
+
+#' @title get_samples
+#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @param object S4 class object from EasyBayes library.
+#' @rdname b_results-get_samples
+#' @exportMethod get_samples
+setGeneric(name="get_samples", function(object) standardGeneric("get_samples"))
+
+
+#' @title get_subject_samples
+#' @description \code{get_subject_samples} returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+#' @param object S4 class object from EasyBayes library.
+#' @rdname b_results-get_subject_samples
+#' @exportMethod get_subject_samples
+setGeneric(name="get_subject_samples", function(object) standardGeneric("get_subject_samples"))
+
+
+#' @title compare_samples
+#' @description \code{compare_samples} prints difference between two groups.
 #' @param object S4 class object from EasyBayes library.
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?compare_ttest or ?compare_linear.
-#' @rdname b_results-compare
-#' @exportMethod compare
-setGeneric(name="compare", function(object, ...) standardGeneric("compare"))
+#' @rdname b_results-compare_samples
+#' @exportMethod compare_samples
+setGeneric(name="compare_samples", function(object, ...) standardGeneric("compare_samples"))
 
 
-#' @title plot_difference
-#' @description \code{plot_difference} plots difference between two groups.
+#' @title plot_samples_difference
+#' @description \code{plot_samples_difference} plots difference between two groups.
 #' @param object S4 class object from EasyBayes library.
-#' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_difference_ttest or ?plot_difference_linear.
-#' @rdname b_results-plot_difference
-#' @exportMethod plot_difference
-setGeneric(name="plot_difference", function(object, ...) standardGeneric("plot_difference"))
+#' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_samples_difference_ttest or ?plot_samples_difference_linear.
+#' @rdname b_results-plot_samples_difference
+#' @exportMethod plot_samples_difference
+setGeneric(name="plot_samples_difference", function(object, ...) standardGeneric("plot_samples_difference"))
 
 
 #' @title plot_samples
@@ -35,6 +52,7 @@ setGeneric(name="plot_difference", function(object, ...) standardGeneric("plot_d
 #' @rdname b_results-plot_samples
 #' @exportMethod plot_samples
 setGeneric(name="plot_samples", function(object, ...) standardGeneric("plot_samples"))
+
 
 #' @title compare_distributions
 #' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group,
