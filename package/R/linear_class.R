@@ -247,7 +247,7 @@ setMethod(f="plot_samples_difference", signature(object="linear_class"), definit
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots samples, or the first and the second group samples.
+#' @description \code{plot_samples} plots samples or the first and the second group samples.
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_samples
@@ -441,10 +441,12 @@ setMethod(f="plot_distributions", signature(object="linear_class"), definition=f
     }
   }
 
-  x_min <- x_min - 0.1*x_min
-  x_max <- x_max + 0.1*x_max
-  y_min <- y_min - 0.1*y_min
-  y_max <- y_max + 0.1*y_max
+  diff_x <- x_max - x_min
+  x_min <- x_min - 0.1*diff_x
+  x_max <- x_max + 0.1*diff_x
+  diff_y <- y_max - y_min
+  y_min <- y_min - 0.1*diff_y
+  y_max <- y_max + 0.1*diff_y
 
   graph <- ggplot() +
     geom_abline(data=df, aes(slope=slope, intercept=intercept, color=group), alpha=0.1, size=1) +
@@ -570,10 +572,12 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
   x_max <- ceiling(max(df_data$x))
   y_max <- ceiling(max(df_data$y))
 
-  x_min <- x_min - 0.1*x_min
-  y_min <- y_min - 0.1*y_min
-  x_max <- x_max + 0.1*x_max
-  y_max <- y_max + 0.1*y_max
+  diff_x <- x_max - x_min
+  x_min <- x_min - 0.1*diff_x
+  x_max <- x_max + 0.1*diff_x
+  diff_y <- y_max - y_min
+  y_min <- y_min - 0.1*diff_y
+  y_max <- y_max + 0.1*diff_y
 
   # mean per subject
   df_data <- df_data %>% group_by(s, x) %>% summarize(y=mean(y, na.rm=TRUE))

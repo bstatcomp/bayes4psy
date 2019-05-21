@@ -277,7 +277,7 @@ setMethod(f="plot_samples_difference", signature(object="reaction_time_class"), 
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots density of the samples, or the first and the second group samples.
+#' @description \code{plot_samples} plots density of the samples or the first and the second group samples.
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second reaction_time_class object, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_samples
@@ -424,7 +424,7 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
 
   # limits
   x_max <- max(emg::remg(1000, mu=mu_m1, sigma=mu_s1, lambda=mu_l1))
-  x_max <- x_max + 0.1*x_max
+  x_max <- x_max + 0.1*abs(x_max)
 
   # second group data
   group2_plot <- NULL
@@ -442,7 +442,7 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
       mu_l2 <- mean(fit2@extract$mu_l)
 
       x_max2 <- max(emg::remg(1000, mu=mu_m2, sigma=mu_s2, lambda=mu_l2))
-      x_max2 <- x_max2 + 0.1*x_max2
+      x_max2 <- x_max2 + 0.1*abs(x_max2)
       x_max <- max(x_max, x_max2)
 
       group2_plot <- stat_function(fun=emg::demg, n=n, args=list(mu=mu_m2, sigma=mu_s2, lambda=mu_l2), geom="area", fill="#ff4e3f", alpha=0.4)
@@ -549,7 +549,7 @@ setMethod(f="plot_fit", signature(object="reaction_time_class"), definition=func
     mu_l <- mean(object@extract$mu_l)
 
     x_max <- max(emg::remg(1000, mu=mu_m, sigma=mu_s, lambda=mu_l), object@data$t)
-    x_max <- x_max + 0.1*x_max
+    x_max <- x_max + 0.1*abs(x_max)
 
     df_fit <- data.frame(x = seq(x_min, x_max, step),
                          y = emg::demg(seq(x_min, x_max, step),
@@ -566,7 +566,7 @@ setMethod(f="plot_fit", signature(object="reaction_time_class"), definition=func
     n <- length(unique(object@data$s))
 
     x_max <- max(object@data$t)
-    x_max <- x_max + 0.1*x_max
+    x_max <- x_max + 0.1*abs(x_max)
 
     for (i in 1:n) {
       step <- (x_max - x_min) / 1000

@@ -207,7 +207,7 @@ setMethod(f="plot_samples_difference", signature(object="success_rate_class"), d
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots density of the samples, or the first and the second group samples.
+#' @description \code{plot_samples} plots density of the samples or the first and the second group samples.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object.
 #' @rdname success_rate_class-plot_samples
