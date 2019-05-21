@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{success_rate_class object.}
 
-\item{...}{fit2 - a second success_rate_class object, rope - region of practical equivalence, bins - number of bins in the histogram.}
+\item{...}{fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence, bins - number of bins in the histogram.}
 }
 \description{
 \code{plot_samples_difference} a visualization of the difference between two groups.

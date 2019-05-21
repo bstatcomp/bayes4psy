@@ -125,8 +125,8 @@ df_incongruent <- df[df$group == "test" & df$congruency == "incongruent", ]
 p_prior <- b_prior(family="beta", pars=c(1, 1))
 tau_prior <- b_prior(family="uniform", pars=c(0, 500))
 
-priors <- list(c("p", mu_prior),
-               c("tau", sigma_prior))
+priors <- list(c("p", p_prior),
+               c("tau", tau_prior))
 
 ## congruent fit ---------------------------------------------------------
 r <- df_congruent$result_numeric

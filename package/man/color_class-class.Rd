@@ -18,17 +18,17 @@ show(`color_class`): prints a more detailed summary of the fit.
 
 get_samples(`color_class`): returns a dataframe with values of fitted parameters.
 
-compare_samples(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
+compare_samples(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
 
-compare_samples(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
+compare_samples(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
 
-compare_samples(`color_class`, hsv=`vector`): prints color difference between a fit and a color defined with hsv components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
+compare_samples(`color_class`, hsv=`vector`): prints color difference between a fit and a color defined with hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
 
-plot_samples_difference(`color_class`, fit2=`color_class`): a visualization of the difference between two fits You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+plot_samples_difference(`color_class`, fit2=`color_class`): a visualization of the difference between two fits You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 
-plot_samples_difference(`color_class`, rgb=`vector`): a visualization of the difference between a fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+plot_samples_difference(`color_class`, rgb=`vector`): a visualization of the difference between a fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 
-plot_samples_difference(`color_class`, hsv=`vector`): a visualization of the difference between a fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+plot_samples_difference(`color_class`, hsv=`vector`): a visualization of the difference between a fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 
 plot_samples(`color_class`): plots density of the samples. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
 
@@ -40,9 +40,9 @@ plot_samples(`color_class`, hsv=`vector`): plots density for the first and a col
 
 compare_distributions(`color_class`, fit2=`color_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 
-compare_distributions(`color_class`, rgb=`vector`): draws samples from distribution of the first group and compares them againsta color defined with rgb components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
+compare_distributions(`color_class`, rgb=`vector`): draws samples from distribution of the first group and compares them againsta color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
 
-compare_distributions(`color_class`, hsv=`vector`): draws samples from distribution of the first group and compares them against a color defined with hsv components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
+compare_distributions(`color_class`, hsv=`vector`): draws samples from distribution of the first group and compares them against a color defined with hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
 
 plot_distributions(`color_class`): a visualization of the fitted distribution.
 
@@ -52,11 +52,11 @@ plot_distributions(`color_class`, rgb=`vector`): a visualization of the fitted d
 
 plot_distributions(`color_class`, hsv=`vector`): a visualization of the fitted distribution and a color defined with hsv components.
 
-plot_distributions_difference(`color_class`, fit2=`color_class`): a visualization of the difference between the distribution of the first fit and the second fit. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+plot_distributions_difference(`color_class`, fit2=`color_class`): a visualization of the difference between the distribution of the first fit and the second fit. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 
-plot_distributions_difference(`color_class`, rgb=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+plot_distributions_difference(`color_class`, rgb=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 
-plot_distributions_difference(`color_class`, hsv=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters, or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+plot_distributions_difference(`color_class`, hsv=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 
 plot_fit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
 

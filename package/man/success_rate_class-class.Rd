@@ -20,9 +20,13 @@ get_samples(`success_rate_class`): returns a dataframe with values of fitted par
 
 get_subject_samples(`success_rate_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 
-compare_samples(`success_rate_class`, fit2=`success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
+compare_samples(`success_rate_class`, fit2=`success_rate_class`): returns difference in successfulness between two groups. You can also provide the rope parameter.
+
+compare_samples(`success_rate_class`, fits=`list`): returns difference in successfulness between multiple groups. You can also provide the rope parameter.
 
 plot_samples_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+
+plot_samples_difference(`success_rate_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_samples(`success_rate_class`): plots density for the first samples.
 

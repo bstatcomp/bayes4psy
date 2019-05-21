@@ -14,5 +14,5 @@
 \item{...}{fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, pars - components of comparison, a subset of (r, g, b, h, s, v).}
 }
 \description{
-\code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group or aagainst a color defined with rgb or hsv components. You can also provide the rope parameter, or execute the comparison only through chosen color components (r, g, b, h, s, v).
+\code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group or aagainst a color defined with rgb or hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
 }

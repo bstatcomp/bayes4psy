@@ -30,7 +30,7 @@ difference <- function(y1, y2, rope=NULL, group1=1, group2=2) {
 
     # 2 > 1
     diff_larger <- y_diff > rope[2]
-    y1_larger <- round(sum(y_diff > diff_larger) / n, 2)
+    y1_larger <- round(sum(diff_larger) / n, 2)
     cat(sprintf("\n  - Group %d > Group %d: %.2f +/- %.5f",
                 group1, group2,
                 y1_larger, mcmcse::mcse(diff_larger)$se))

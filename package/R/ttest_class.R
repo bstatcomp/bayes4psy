@@ -265,7 +265,12 @@ setMethod(f="plot_samples_difference", signature(object="ttest_class"), definiti
     y[[2]] <- arguments$mu;
   } else if (!is.null(arguments$fits)) {
     i <- 2
-    for (fit in fits) {
+    for (fit in arguments$fits) {
+      if (class(fit) != "ttest_class") {
+        warning("One of the fits in the fits list is not a valid ttest_class object.")
+        return()
+      }
+
       y[[i]] <- fit@extract$mu
 
       # limits
@@ -335,13 +340,7 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
   value <- NULL
 
   # first group data
-  n_groups <- 1
-  mu <- object@extract$mu
-  df <- data.frame(value=mu, group=as.factor(1))
-
-  # limits
-  x_min <- min(mu)
-  x_max <- max(mu)
+  df <- data.frame(value= object@extract$mu, group=as.factor(1))
 
   # second group data
   mu2 <- NULL
@@ -354,27 +353,21 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
       } else {
         fit2 <- arguments[[1]]
       }
-      n_groups = 2
-      mu <- fit2@extract$mu
-      df <- rbind(df, data.frame(value=mu, group=as.factor(2)))
 
-      # limits
-      x_min <- min(x_min, mu)
-      x_max <- max(x_max, mu)
+      df <- rbind(df, data.frame(value=fit2@extract$mu, group=as.factor(2)))
     } else if (!is.null(arguments$mu)) {
       # provided mu and sigma
       mu2 <- arguments$mu;
     } else if (!is.null(arguments$fits)) {
       i <- 2
       for (fit in arguments$fits) {
-        mu <- fit@extract$mu
-        df <- rbind(df, data.frame(value=mu, group=as.factor(i)))
-        n_groups <- i
-        i <- i + 1
+        if (class(fit) != "ttest_class") {
+          warning("One of the fits in the fits list is not a valid ttest_class object.")
+          return()
+        }
 
-        # limits
-        x_min <- min(x_min, mu)
-        x_max <- max(x_max, mu)
+        df <- rbind(df, data.frame(value=fit@extract$mu, group=as.factor(i)))
+        i <- i + 1
       }
     }
   }
@@ -384,6 +377,7 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
     geom_density(data=df, aes(x=value, fill=group), color=NA, alpha=0.4) +
     xlab("value")
 
+  n_groups <- max(as.numeric(df$group))
   if (n_groups == 2) {
     graph <- graph +
       scale_fill_manual(values=c("#3182bd", "#ff4e3f"))
@@ -393,10 +387,6 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
   } else if (n_groups == 1 & !is.null(mu2)) {
     y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
-    # limits
-    x_min <- min(x_min, mu2)
-    x_max <- max(x_max, mu2)
-
     graph <- graph +
       geom_segment(aes(x=mu2, xend=mu2, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
       geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4) +
@@ -404,12 +394,14 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
       theme(legend.position="none")
   } else {
     graph <- graph +
-      scale_fill_manual(values=c("#3182bd"))
+      scale_fill_manual(values=c("#3182bd")) +
+      theme(legend.position="none")
   }
 
   # limits
+  x_min <- min(df$value)
+  x_max <- max(df$value)
   diff <- x_max - x_min
-
   x_min <- x_min - 0.1*diff
   x_max <- x_max + 0.1*diff
 
@@ -475,7 +467,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
     }
   } else if (!is.null(arguments$fits)) {
     i <- 2
-    for (fit in fits) {
+    for (fit in arguments$fits) {
       if (class(fit) != "ttest_class") {
         warning("One of the fits in the fits list is not a valid ttest_class object.")
         return()
@@ -533,7 +525,6 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
   value <- NULL
 
   # first group data
-  n_groups <- 1
   nus <- vector()
   nus[1] <- mean(object@extract$nu)
   mus <- vector()
@@ -556,8 +547,6 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
       nus[2] <- mean(fit2@extract$nu)
       mus[2] <- mean(fit2@extract$mu)
       sigmas[2] <- mean(fit2@extract$sigma)
-
-      n_groups <- 2
     } else if (!is.null(arguments$mu)) {
       # provided mu and/or sigma
       mu2 <- arguments$mu;
@@ -568,10 +557,14 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
     } else if (!is.null(arguments$fits)) {
       i <- 2
       for (fit in arguments$fits) {
+        if (class(fit) != "ttest_class") {
+          warning("One of the fits in the fits list is not a valid ttest_class object.")
+          return()
+        }
+
         nus[i] <- mean(fit@extract$nu)
         mus[i] <- mean(fit@extract$mu)
         sigmas[i] <- mean(fit@extract$sigma)
-        n_groups <- i
         i <- i + 1
       }
     }
@@ -597,6 +590,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
   # calculate data points
   step <- (x_max - x_min) / 10000
   df <- data.frame(x=numeric(), y=numeric(), group=factor())
+  n_groups <- length(mus)
   for (i in 1:n_groups) {
     df_group <- data.frame(x = seq(x_min, x_max, step),
                            y = metRology::dt.scaled(seq(x_min, x_max, step),
@@ -637,6 +631,10 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
     graph <- graph +
       geom_segment(aes(x=mu2, xend=mu2, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
       geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4) +
+      scale_fill_manual(values=c("#3182bd")) +
+      theme(legend.position="none")
+  } else {
+    graph <- graph +
       scale_fill_manual(values=c("#3182bd")) +
       theme(legend.position="none")
   }
@@ -703,7 +701,12 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
     y[[2]] <- stats::rnorm(n, arguments$mu, sigma2)
   } else if (!is.null(arguments$fits)) {
     i <- 2
-    for (fit in fits) {
+    for (fit in arguments$fits) {
+      if (class(fit) != "ttest_class") {
+        warning("One of the fits in the fits list is not a valid ttest_class object.")
+        return()
+      }
+
       y[[i]] <- metRology::rt.scaled(n,
                                      df=mean(fit@extract$nu),
                                      mean=mean(fit@extract$mu),

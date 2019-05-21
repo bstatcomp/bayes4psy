@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{ttest_class object.}
 
-\item{...}{fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation.}
+\item{...}{fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation.}
 }
 \description{
 \code{plot_distributions} visualizes distributions underlying tested groups.

@@ -14,5 +14,5 @@
 \item{...}{fit2 - a second reaction_time_class object, par - specific parameter of comparison - mu or lambda.}
 }
 \description{
-\code{plot_samples} plots density of the samples, or the first and the second group samples.
+\code{plot_samples} plots density of the samples or the first and the second group samples.
 }

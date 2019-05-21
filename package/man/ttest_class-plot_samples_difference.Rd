@@ -11,8 +11,8 @@
 \arguments{
 \item{object}{ttest_class object.}
 
-\item{...}{fit2 - a second ttest_class object, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram.}
+\item{...}{fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram.}
 }
 \description{
-\code{plot_samples_difference} a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+\code{plot_samples_difference} a visualization of the difference of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
 }
