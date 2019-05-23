@@ -11,8 +11,8 @@
 \arguments{
 \item{object}{reaction_time_class object.}
 
-\item{...}{fit2 - a second reaction_time_class object, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.}
+\item{...}{fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.}
 }
 \description{
-\code{plot_samples_difference} a visualization of the difference between two groups.
+\code{plot_samples_difference} a visualization of the difference between two groups or multiple groups.
 }

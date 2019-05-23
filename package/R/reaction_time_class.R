@@ -254,6 +254,9 @@ setMethod(f="compare_samples", signature(object="reaction_time_class"), definiti
 #' @rdname reaction_time_class-plot_samples_difference
 #' @aliases plot_samples_difference_reaction_time
 setMethod(f="plot_samples_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  value <- NULL
+
   arguments <- list(...)
 
   wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(reaction_time_class, fit2=reaction_time_class) or plot_samples_difference(reaction_time_class, fits=list) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(reaction_time_class, fit2=reaction_time_class, rope=numeric, bins=numeric). You can also visualize the difference through only the mu or the lamdba parameter, e.g. plot_samples_difference(reaction_time_class, fit2=reaction_time_class, par=\"mu\")."
@@ -579,7 +582,7 @@ setMethod(f="compare_distributions", signature(object="reaction_time_class"), de
 #' @aliases plot_distributions_reaction_time
 setMethod(f="plot_distributions", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  value <- NULL
+  group <- x <- y <- NULL
 
   # first group data
   mus <- vector()
@@ -675,6 +678,9 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
 #' @rdname reaction_time_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_reaction_time
 setMethod(f="plot_distributions_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  value <- NULL
+
   arguments <- list(...)
 
   wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(reaction_time_class, fit2=reaction_time_class) or plot_distributions_difference(reaction_time_class, fits=list) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(reaction_time_class, fit2=reaction_time_class, rope=numeric, bins=numeric)."
@@ -776,6 +782,7 @@ setMethod(f="plot_distributions_difference", signature(object="reaction_time_cla
     # cowplot
     graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
     return(graph)
+  }
 })
 
 

@@ -205,6 +205,9 @@ setMethod(f="compare_samples", signature(object="success_rate_class"), definitio
 #' @rdname success_rate_class-plot_samples_difference
 #' @aliases plot_samples_difference_success_rate
 setMethod(f="plot_samples_difference", signature(object="success_rate_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  value <- NULL
+
   arguments <- list(...)
 
   wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(success_rate_class, fit2=success_rate_class) or plot_samples_difference(success_rate_class, fits=list) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(success_rate_class, fit2=success_rate_class, rope=numeric, bins=numeric)."
@@ -441,7 +444,7 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
 #' @aliases plot_distributions_success_rate
 setMethod(f="plot_distributions", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  value <- y <- y_min <- NULL
+  group <- x <- y <- NULL
 
   # first group data
   alphas <- vector()
@@ -525,7 +528,7 @@ setMethod(f="plot_distributions", signature(object="success_rate_class"), defini
 #' @aliases plot_distributions_difference_success_rate
 setMethod(f="plot_distributions_difference", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  x <- value <- variable <- NULL
+  value <- NULL
 
   arguments <- list(...)
 
@@ -627,7 +630,7 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
 #' @aliases plot_fit_success_rate
 setMethod(f="plot_fit", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  variable<-value<-NULL
+  variable <- value <- NULL
 
   arguments <- list(...)
 

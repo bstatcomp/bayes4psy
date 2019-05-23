@@ -14,5 +14,5 @@
 \item{...}{fit2 - a second success_rate_class object, fits - a list of success_rate_class objects.}
 }
 \description{
-\code{plot_distributions} a visualization of the fitted distribution, for one or two fits.
+\code{plot_distributions} a visualization of the fitted distribution, for one, two or multiple fits.
 }

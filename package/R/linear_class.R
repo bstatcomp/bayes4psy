@@ -552,7 +552,7 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
 #' @aliases plot_fit_linear
 setMethod(f="plot_fit", signature(object="linear_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  s <- x <- y <- NULL
+  slope <- intercept <- s <- x <- y <- NULL
 
   arguments <- list(...)
 

@@ -155,7 +155,7 @@ setMethod(f="compare_samples", signature(object="ttest_class"), definition=funct
   # first group data
   y[[1]] <- object@extract$mu
   sigma1 <- mean(object@extract$sigma)
-  n <- length(y1)
+  n <- length(y[[1]])
 
   # second group data
   sigma2 <- NULL
@@ -211,7 +211,7 @@ setMethod(f="compare_samples", signature(object="ttest_class"), definition=funct
 
   # add Cohen's d if 2 groups are provided
   if (!is.null(sigma2)) {
-    diff <- mean(y1) - mean(y2)
+    diff <- mean(y[[1]]) - mean(y[[2]])
     cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
     cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
   }
@@ -227,6 +227,9 @@ setMethod(f="compare_samples", signature(object="ttest_class"), definition=funct
 #' @rdname ttest_class-plot_samples_difference
 #' @aliases plot_samples_difference_ttest
 setMethod(f="plot_samples_difference", signature(object="ttest_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  value <- NULL
+
   arguments <- list(...)
 
   wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(ttest_class, fit2=ttest_class), plot_samples_difference(ttest_class, fits=list) or plot_samples_difference(ttest_class, mu=numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric)."
@@ -337,7 +340,7 @@ setMethod(f="plot_samples_difference", signature(object="ttest_class"), definiti
 #' @aliases plot_samples_ttest
 setMethod(f="plot_samples", signature(object="ttest_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  value <- NULL
+  group <- value <- NULL
 
   # first group data
   df <- data.frame(value= object@extract$mu, group="1")
@@ -505,7 +508,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
 
   # add Cohen's d if 2 groups are provided
   if (!is.null(sigma2)) {
-    diff <- mean(y1) - mean(y2)
+    diff <- mean(y[[1]]) - mean(y[[2]])
     cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
     cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
   }
@@ -522,7 +525,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
 #' @aliases plot_distributions_ttest
 setMethod(f="plot_distributions", signature(object="ttest_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  value <- NULL
+  x <- y <- group <- NULL
 
   # first group data
   nus <- vector()
@@ -651,6 +654,9 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
 #' @rdname ttest_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_ttest
 setMethod(f="plot_distributions_difference", signature(object="ttest_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  value <- NULL
+
   arguments <- list(...)
 
   wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(ttest_class, fit2=ttest_class), plot_distributions_difference(ttest_class, mu=numeric), plot_distributions_difference(ttest_class, mu=numeric, sigma=numeric) or plot_distributions_difference(ttest_class, fits=list) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric)."
