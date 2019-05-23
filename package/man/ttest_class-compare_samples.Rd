@@ -14,5 +14,5 @@
 \item{...}{fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence.}
 }
 \description{
-\code{compare_samples} prints difference/equality of the first group against the second group, against a mean value or against a normal distribution with a defined mean value and variance.
+\code{compare_samples} prints difference/equality of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
 }

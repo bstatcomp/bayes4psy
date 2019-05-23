@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{success_rate_class object.}
 
-\item{...}{fit2 - a second success_rate_class object.}
+\item{...}{fit2 - a second success_rate_class object, fits - a list of success_rate_class objects.}
 }
 \description{
 \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group.

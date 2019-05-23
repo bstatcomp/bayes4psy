@@ -20,7 +20,9 @@ get_samples(`reaction_time_class`): returns a dataframe with values of fitted pa
 
 get_subject_samples(`reaction_time_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 
-compare_samples(`reaction_time_class`, fit2=`reaction_time_class`): prints difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
+compare_samples(`reaction_time_class`, fit2=`reaction_time_class`): returns difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
+
+compare_samples(`reaction_time_class`, fits=`list`): returns difference in reaction times between multiple groups. You can also provide the rope parameter.
 
 plot_samples_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
 

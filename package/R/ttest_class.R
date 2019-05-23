@@ -127,7 +127,7 @@ setMethod(f="get_samples", signature(object="ttest_class"), definition=function(
 
 
 #' @title compare_samples
-#' @description \code{compare_samples} prints difference/equality of the first group against the second group, against a mean value or against a normal distribution with a defined mean value and variance.
+#' @description \code{compare_samples} prints difference/equality of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence.
 #' @rdname ttest_class-compare_samples
@@ -340,7 +340,7 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
   value <- NULL
 
   # first group data
-  df <- data.frame(value= object@extract$mu, group=as.factor(1))
+  df <- data.frame(value= object@extract$mu, group="1")
 
   # second group data
   mu2 <- NULL
@@ -354,7 +354,7 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
         fit2 <- arguments[[1]]
       }
 
-      df <- rbind(df, data.frame(value=fit2@extract$mu, group=as.factor(2)))
+      df <- rbind(df, data.frame(value=fit2@extract$mu, group="2"))
     } else if (!is.null(arguments$mu)) {
       # provided mu and sigma
       mu2 <- arguments$mu;
@@ -412,7 +412,7 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
 
 
 #' @title compare_distributions
-#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group, against samples drawn from multiple groups, against a mean value or against samples from a normal distribution with a defined mean value and variance.
+#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group, against samples drawn from distributions of multiple groups, against a mean value or against samples from a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
 #' @rdname ttest_class-compare_distributions
@@ -588,7 +588,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
   }
 
   # calculate data points
-  step <- (x_max - x_min) / 10000
+  step <- (x_max - x_min) / 1000
   df <- data.frame(x=numeric(), y=numeric(), group=factor())
   n_groups <- length(mus)
   for (i in 1:n_groups) {
@@ -607,7 +607,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
                            y = stats::dnorm(seq(x_min, x_max, step),
                                                     mean = mu2,
                                                     sd = sigma2),
-                           group=as.factor(2))
+                           group="2")
 
     df <- rbind(df, df_group)
 
@@ -616,8 +616,9 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
 
   # plot
   graph <- ggplot() +
-    geom_area(data=df, aes(x=x, y=y, fill=group), alpha=0.4) +
-    xlab("value")
+    geom_area(data=df, aes(x=x, y=y, fill=group), alpha=0.4, position="identity") +
+    xlab("value") +
+    ylab("density")
 
   if (n_groups == 2) {
     graph <- graph +
@@ -777,7 +778,6 @@ setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(obj
   # init local varibales for CRAN check
   value <- NULL
 
-  n <- 10000
   df_data <- data.frame(value=object@data)
 
   nu <- mean(object@extract$nu)
@@ -796,7 +796,7 @@ setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(obj
 
   graph <- ggplot(data=df_x) +
     geom_density(data=df_data, aes(x=value), fill="#3182bd", alpha=0.4, color=NA) +
-    stat_function(fun=metRology::dt.scaled, n=n, args=list(df=nu, mean=mu, sd=sigma), colour="#3182bd", size=1) +
+    stat_function(fun=metRology::dt.scaled, n=10000, args=list(df=nu, mean=mu, sd=sigma), colour="#3182bd", size=1) +
     xlab("value") +
     xlim(x_min, x_max)
 

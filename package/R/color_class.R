@@ -2061,7 +2061,7 @@ setMethod(f="plot_distributions_difference_hsv", signature(object="color_class")
   h <- suppressWarnings(circular::as.circular(h))
   kappa <- suppressWarnings(circular::as.circular(kappa))
 
-  # draW from distribution
+  # draw from distribution
   n <- 10000
   y <- circular::rvonmises(n, h, kappa)
   y <- preprocess_circular(y, base=h)

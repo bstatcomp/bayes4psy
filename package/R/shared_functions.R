@@ -99,10 +99,10 @@ is_smallest_or_largest <- function(data, rope=NULL) {
   equal <- equal / n_min
 
   # save to df
-  result <- data.frame(id=numeric(), largest=numeric(), smallest=numeric(), equal=numeric())
+  result <- data.frame(largest=numeric(), smallest=numeric(), equal=numeric())
   i <- 1
   for (i in 1:n) {
-    result <- rbind(result, data.frame(id=i, largest=largest[i], smallest=smallest[i], equal=equal))
+    result <- rbind(result, data.frame(largest=largest[i], smallest=smallest[i], equal=equal))
   }
 
   return(result)

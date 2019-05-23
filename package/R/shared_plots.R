@@ -83,7 +83,7 @@ plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, nrow=1) 
 
   # style and labels
   graph <- graph +
-    xlab("value")
+    xlab("difference")
 
   return(graph)
 }

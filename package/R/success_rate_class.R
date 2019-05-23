@@ -123,7 +123,7 @@ setMethod(f="get_subject_samples", signature(object="success_rate_class"), defin
 
 
 #' @title compare_samples
-#' @description \code{compare_samples} prints difference in successfulness between two groups.
+#' @description \code{compare_samples} prints difference in successfulness between two groups or multiple groups.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence.
 #' @rdname success_rate_class-compare_samples
@@ -199,7 +199,7 @@ setMethod(f="compare_samples", signature(object="success_rate_class"), definitio
 
 
 #' @title plot_samples_difference
-#' @description \code{plot_samples_difference} a visualization of the difference between two groups.
+#' @description \code{plot_samples_difference} a visualization of the difference between two groups or multiple groups.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname success_rate_class-plot_samples_difference
@@ -292,7 +292,7 @@ setMethod(f="plot_samples_difference", signature(object="success_rate_class"), d
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots density of the samples or the first and the second group samples.
+#' @description \code{plot_samples} plots density of the samples for one, two or multiple groups.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects.
 #' @rdname success_rate_class-plot_samples
@@ -353,7 +353,7 @@ setMethod(f="plot_samples", signature(object="success_rate_class"), definition=f
 
 
 #' @title compare_distributions
-#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group or from samples drawn from distributions of multiple groups.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence.
 #' @rdname success_rate_class-compare_distributions
@@ -434,7 +434,7 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
 
 
 #' @title plot_distributions
-#' @description \code{plot_distributions} a visualization of the fitted distribution, for one or two fits.
+#' @description \code{plot_distributions} a visualization of the fitted distribution, for one, two or multiple fits.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects.
 #' @rdname success_rate_class-plot_distributions
@@ -482,7 +482,7 @@ setMethod(f="plot_distributions", signature(object="success_rate_class"), defini
   }
 
   # calculate data points
-  step <- 1 / 10000
+  step <- 1 / 1000
   df <- data.frame(x=numeric(), y=numeric(), group=factor())
   n_groups <- length(alphas)
   for (i in 1:n_groups) {
@@ -497,8 +497,9 @@ setMethod(f="plot_distributions", signature(object="success_rate_class"), defini
 
   # plot
   graph <- ggplot() +
-    geom_area(data=df, aes(x=x, y=y, fill=group), alpha=0.4) +
-    xlab("value")
+    geom_area(data=df, aes(x=x, y=y, fill=group), alpha=0.4, position="identity") +
+    xlab("probability") +
+    ylab("density")
 
   if (n_groups == 2) {
     graph <- graph +
@@ -517,9 +518,9 @@ setMethod(f="plot_distributions", signature(object="success_rate_class"), defini
 
 
 #' @title plot_distributions_difference
-#' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group.
+#' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group or between multiple groups.
 #' @param object success_rate_class object.
-#' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects.
+#' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname success_rate_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_success_rate
 setMethod(f="plot_distributions_difference", signature(object="success_rate_class"), definition=function(object, ...) {
@@ -528,7 +529,7 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
 
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(success_rate_class, fit2=success_rate_class) or plot_distributions_difference(success_rate_class, fits=list) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(success_rate_class, fit2=success_rate_class, rope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(success_rate_class, fit2=success_rate_class) or plot_distributions_difference(success_rate_class, fits=list) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(success_rate_class, fit2=success_rate_class, rope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -599,7 +600,7 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
           index <- (i-1)*n + i
           graphs[[index]] <- ggplot() +
             geom_density(data=df, aes(x=value), fill="#3182bd", color=NA, alpha=0.4) +
-            xlab("value") +
+            xlab("probability") +
             xlim(0, 1)
         } else {
           index1 <- (i-1)*n + j

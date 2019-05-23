@@ -2,7 +2,7 @@
 #' @description Bayesian model for comparing reaction times.
 #' @import rstan
 #' @export
-#' @param rt a vector containing reaction times for each measurement.
+#' @param t a vector containing reaction times for each measurement.
 #' @param s a vector contaiting subject indexes. Starting index should be 1 and the largest subject index equals m (number of subjects).
 #' @param priors List of parameters and their priors - b_prior objects. You can put a prior on the mu_m (mean), sigma_m (variance of mu_m), mu_s (variance), sigma_s (variance of mu_s), mu_l (mean of the exponent factor) and sigma_l (variance of mu_l) parameters (default = NULL).
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 2000).
