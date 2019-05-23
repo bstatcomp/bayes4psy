@@ -288,7 +288,7 @@ setMethod(f="plot_samples_difference", signature(object="success_rate_class"), d
     }
 
     # cowplot
-    graph <- cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9)
+    graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
     return(graph)
   }
 })
@@ -351,7 +351,7 @@ setMethod(f="plot_samples", signature(object="success_rate_class"), definition=f
       theme(legend.position="none")
   }
 
-  return(graph)
+  return(suppressWarnings(graph))
 })
 
 
@@ -516,7 +516,7 @@ setMethod(f="plot_distributions", signature(object="success_rate_class"), defini
       theme(legend.position="none")
   }
 
-  return(graph)
+  return(suppressWarnings(graph))
 })
 
 
@@ -616,7 +616,7 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
     }
 
     # cowplot
-    graph <- cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9)
+    graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
     return(graph)
   }
 })

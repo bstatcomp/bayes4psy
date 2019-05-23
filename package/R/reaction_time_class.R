@@ -379,7 +379,7 @@ setMethod(f="plot_samples_difference", signature(object="reaction_time_class"), 
     }
 
     # cowplot
-    graph <- cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9)
+    graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
     return(graph)
   }
 })
@@ -483,7 +483,7 @@ setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=
       theme(legend.position="none")
   }
 
-  return(graph)
+  return(suppressWarnings(graph))
 })
 
 
@@ -613,24 +613,24 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
       x_max2 <- max(emg::remg(10000, mu=mus[[2]], sigma=sigmas[[2]], lambda=lambdas[[2]]))
       x_max2 <- x_max2 + 0.1*abs(x_max2)
       x_max <- max(x_max, x_max2)
-    }
-  } else if (!is.null(arguments$fits)) {
-    i <- 2
-    for (fit in arguments$fits) {
-      if (class(fit) != "reaction_time_class") {
-        warning("One of the fits in the fits list is not a valid reaction_time_class object.")
-        return()
+    } else if (!is.null(arguments$fits)) {
+      i <- 2
+      for (fit in arguments$fits) {
+        if (class(fit) != "reaction_time_class") {
+          warning("One of the fits in the fits list is not a valid reaction_time_class object.")
+          return()
+        }
+
+        mus[[i]] <- mean(fit@extract$mu_m)
+        sigmas[[i]] <- mean(fit@extract$mu_s)
+        lambdas[[i]] <- mean(fit@extract$mu_l)
+
+        x_max2 <- max(emg::remg(10000, mu=mus[[2]], sigma=sigmas[[2]], lambda=lambdas[[2]]))
+        x_max2 <- x_max2 + 0.1*abs(x_max2)
+        x_max <- max(x_max, x_max2)
+
+        i <- i + 1
       }
-
-      mus[[i]] <- mean(fit@extract$mu_m)
-      sigmas[[i]] <- mean(fit@extract$mu_s)
-      lambdas[[i]] <- mean(fit@extract$mu_l)
-
-      x_max2 <- max(emg::remg(10000, mu=mus[[2]], sigma=sigmas[[2]], lambda=lambdas[[2]]))
-      x_max2 <- x_max2 + 0.1*abs(x_max2)
-      x_max <- max(x_max, x_max2)
-
-      i <- i + 1
     }
   }
 
@@ -667,7 +667,7 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
       theme(legend.position="none")
   }
 
-  return(graph)
+  return(suppressWarnings(graph))
 })
 
 

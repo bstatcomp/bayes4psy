@@ -326,7 +326,7 @@ setMethod(f="plot_samples_difference", signature(object="ttest_class"), definiti
     }
 
     # cowplot
-    graph <- cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9)
+    graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
     return(graph)
   }
 })
@@ -410,7 +410,7 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
 
   graph <- graph + xlim(x_min, x_max)
 
-  return(graph)
+  return(suppressWarnings(graph))
 })
 
 
@@ -643,7 +643,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
       theme(legend.position="none")
   }
 
-  return(graph)
+  return(suppressWarnings(graph))
 })
 
 
@@ -769,7 +769,7 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
     }
 
     # cowplot
-    graph <- cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9)
+    graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
     return(graph)
   }
 })
