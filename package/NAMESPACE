@@ -3,6 +3,7 @@
 export(b_bootstrap)
 export(b_color)
 export(b_linear)
+export(b_prior)
 export(b_reaction_time)
 export(b_success_rate)
 export(b_ttest)
