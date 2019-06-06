@@ -1,4 +1,4 @@
-# EasyBayes
+# bayes4psy
 A library intended to simplify the use of Bayesian statistics in R.
 
 # 0.1

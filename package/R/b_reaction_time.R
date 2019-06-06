@@ -3,7 +3,7 @@
 #' @import rstan
 #' @export
 #' @param t a vector containing reaction times for each measurement.
-#' @param s a vector contaiting subject indexes. Starting index should be 1 and the largest subject index equals m (number of subjects).
+#' @param s a vector contaiting subject indexes. Starting index should be 1 and the largest subject index should equal the number of subjects.
 #' @param priors List of parameters and their priors - b_prior objects. You can put a prior on the mu_m (mean), sigma_m (variance of mu_m), mu_s (variance), sigma_s (variance of mu_s), mu_l (mean of the exponent factor) and sigma_l (variance of mu_l) parameters (default = NULL).
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 2000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 3000).
@@ -71,14 +71,80 @@ b_reaction_time <- function(t,
                     p_ids = p_ids,
                     p_values = p_values)
 
-  fit <- sampling(stanmodels$reaction_time,
-                  data=stan_data,
-                  iter=iter,
-                  warmup=warmup,
-                  chains=chains,
-                  control=control)
+  fit <- suppressWarnings(sampling(stanmodels$reaction_time,
+                                   data=stan_data,
+                                   iter=iter,
+                                   warmup=warmup,
+                                   chains=chains,
+                                   control=control))
 
-  extract <- extract(fit)
+  # extract and parse into list
+  extract_raw <- extract(fit, permuted=FALSE)
+
+  # mu
+  i <- 1
+  j <- m
+  mu <- extract_raw[, 1, i:j]
+
+  # sigma
+  i <- i + m
+  j <- i + m - 1
+  sigma <- extract_raw[, 1, i:j]
+
+  # lambda
+  i <- i + m
+  j <- i + m - 1
+  lambda <- extract_raw[, 1, i:j]
+
+  # mu_m
+  i <- i + m
+  mu_m <- extract_raw[, 1, i]
+
+  # mu_l
+  i <- i + 1
+  mu_l <- extract_raw[, 1, i]
+
+  # mu_s
+  i <- i + 1
+  mu_s <- extract_raw[, 1, i]
+
+  # sigma_m
+  i <- i + 1
+  sigma_m <- extract_raw[, 1, i]
+
+  # sigma_l
+  i <- i + 1
+  sigma_l <- extract_raw[, 1, i]
+
+  # sigma_s
+  i <- i + 1
+  sigma_s <- extract_raw[, 1, i]
+
+  # rt
+  i <- i + 1
+  rt <- extract_raw[, 1, i]
+
+  # rt_subjects
+  i <- i + 1
+  j <- i + m - 1
+  rt_subjects <- extract_raw[, 1, i:j]
+
+  # lp__
+  i <- i + m
+  lp__ <- extract_raw[, 1, i]
+
+  extract <- list(mu=mu,
+                  sigma=sigma,
+                  lambda=lambda,
+                  mu_m=mu_m,
+                  mu_l=mu_l,
+                  mu_s=mu_s,
+                  sigma_m=sigma_m,
+                  sigma_l=sigma_l,
+                  sigma_s=sigma_s,
+                  rt=rt,
+                  rt_subjects=rt_subjects,
+                  lp__=lp__)
 
   # create output class
   out <- reaction_time_class(extract=extract, data=stan_data, fit=fit)

@@ -7,7 +7,7 @@
 plot_distributions(object, ...)
 }
 \arguments{
-\item{object}{S4 class object from EasyBayes library.}
+\item{object}{S4 class object from bayes4psy library.}
 
 \item{...}{see documentation for specific class for the description of available parameters, e.g. ?plot_distributions_ttest or ?plot_distributions_linear.}
 }

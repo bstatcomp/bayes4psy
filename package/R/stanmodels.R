@@ -1,4 +1,4 @@
-# Part of the EasyBayes package for estimating model parameters
+# Part of the bayes4psy package for estimating model parameters
 # Copyright (C) 2015, 2016, 2017 Trustees of Columbia University
 #
 # This program is free software; you can redistribute it and/or

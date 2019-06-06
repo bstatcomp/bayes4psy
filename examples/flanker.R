@@ -1,5 +1,5 @@
 # libs
-library(EasyBayes)
+library(bayes4psy)
 
 ## data wrangling --------------------------------------------------------
 # load data

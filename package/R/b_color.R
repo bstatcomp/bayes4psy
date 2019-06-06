@@ -2,7 +2,7 @@
 #' @description Bayesian model for comparing colors.
 #' @import rstan
 #' @export
-#' @param colors a data frame of colors either in RGB or HSV format. The first column should be the R (or H) component, the second column should be the G (or S) component and the third columne should be the B (or V) component.
+#' @param colors a data frame of colors either in RGB or HSV format. The first column should be the R (or H) component, the second column should be the G (or S) component and the third column should be the B (or V) component.
 #' @param hsv set to TRUE if colors are provided in HSV format (default = FALSE).
 #' @param priors List of parameters and their priors - b_prior objects. You can put a prior on the mu_r (mean r component), sigma_r (variance of mu_r), mu_g (mean g component), sigma_g (variance of mu_g), mu_b (mean b component), sigma_b (variance of mu_b), mu_h (mean h component), kappa_h (variance of mu_h), mu_s (mean s component), sigma_s (variance of mu_s), mu_v (mean v component) and sigma_v (variance of mu_v) parameters (default = NULL).
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 2000).
@@ -104,14 +104,21 @@ b_color <- function(colors,
                     p_ids = p_ids,
                     p_values = p_values)
 
-  fit <- sampling(stanmodels$color,
-                  data=stan_data,
-                  iter=iter,
-                  warmup=warmup,
-                  chains=chains,
-                  control=control)
+  fit <- suppressWarnings(sampling(stanmodels$color,
+                                   data=stan_data,
+                                   iter=iter,
+                                   warmup=warmup,
+                                   chains=chains,
+                                   control=control))
 
-  extract <- extract(fit)
+  # extract and parse into data frame
+  extract_raw <- extract(fit, permuted=FALSE)
+  extract <- NULL
+  samples <- iter - warmup
+  for (i in 1:samples) {
+    extract <- rbind(extract, extract_raw[i, 1,])
+  }
+  extract <- data.frame(extract)
 
   # create output class
   out <- color_class(extract=extract, data=stan_data, fit=fit)
