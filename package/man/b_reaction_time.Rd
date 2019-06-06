@@ -10,7 +10,7 @@ b_reaction_time(t, s, priors = NULL, warmup = 2000, iter = 3000,
 \arguments{
 \item{t}{a vector containing reaction times for each measurement.}
 
-\item{s}{a vector contaiting subject indexes. Starting index should be 1 and the largest subject index equals m (number of subjects).}
+\item{s}{a vector contaiting subject indexes. Starting index should be 1 and the largest subject index should equal the number of subjects.}
 
 \item{priors}{List of parameters and their priors - b_prior objects. You can put a prior on the mu_m (mean), sigma_m (variance of mu_m), mu_s (variance), sigma_s (variance of mu_s), mu_l (mean of the exponent factor) and sigma_l (variance of mu_l) parameters (default = NULL).}
 

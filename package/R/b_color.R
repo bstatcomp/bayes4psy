@@ -118,7 +118,7 @@ b_color <- function(colors,
   for (i in 1:samples) {
     extract <- rbind(extract, extract_raw[i, 1,])
   }
-  extract <- data.frame(extract)
+  extract <- as.list(data.frame(extract))
 
   # create output class
   out <- color_class(extract=extract, data=stan_data, fit=fit)

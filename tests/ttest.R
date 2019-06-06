@@ -12,4 +12,3 @@ priors <- list(c("mu", mu_prior),
 # generate data and fit
 data1 <- rnorm(20, mean=150, sd=20)
 fit1 <- b_ttest(data=data1, priors=priors, chains=1)
-

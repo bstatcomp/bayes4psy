@@ -73,14 +73,14 @@ b_ttest <- function(data,
                                    chains = chains,
                                    control=control))
 
-  # extract and parse into data frame
+  # extract and parse into a list
   extract_raw <- extract(fit, permuted=FALSE)
   extract <- NULL
   samples <- iter - warmup
   for (i in 1:samples) {
     extract <- rbind(extract, extract_raw[i, 1,])
   }
-  extract <- data.frame(extract)
+  extract <- as.list(data.frame(extract))
 
   # create output class
   out <- ttest_class(extract=extract, fit=fit, data=data)
