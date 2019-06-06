@@ -43,5 +43,5 @@ Multiple chains support.
 
 # v 0.6
 Flexible setting of priors on all of the model's parameters.
-The plot_fit functionf for hierarchical models now allows visual inspection of a fit on top and bottom levels.
+The plot_fit function for hierarchical models now allows visual inspection of a fit on top and bottom levels.
 Added functions for easy extraction of parameter values.
