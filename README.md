@@ -49,3 +49,7 @@ Added functions for easy extraction of parameter values.
 # 0.7
 Functions for comparing multiple fits at the same time.
 Revised prior system so it is now more user friendly.
+
+# 0.8
+Renamed package from EasyBayes to bayes4psy.
+Parameters are no longer permuted when extracted from a Stan fit.
