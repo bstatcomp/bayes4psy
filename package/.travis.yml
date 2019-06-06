@@ -38,14 +38,14 @@ before_install:
 script: 
   - |
     travis_wait 42 R CMD build .
-    travis_wait 59 R CMD check EasyBayes*tar.gz
+    travis_wait 59 R CMD check bayes4psy*tar.gz
 
 after_script:
-  - tar -ztvf EasyBayes_*.tar.gz
+  - tar -ztvf bayes4psy_*.tar.gz
   - echo ${NOT_CRAN}
 
 after_success:
   - travis_wait 40 tar -C .. -xf $PKG_TARBALL
 
 after_failure:
-  - cat EasyBayes.Rcheck/00*
+  - cat bayes4psy.Rcheck/00*

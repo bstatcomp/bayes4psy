@@ -3,7 +3,7 @@
 #' @import rstan
 #' @export
 #' @param r a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).
-#' @param s a vector contaiting subject indexes. Starting index should be 1 and the largest subject index equals m (number of subjects).
+#' @param s a vector contaiting subject indexes. Starting index should be 1 and the largest subject index should equal the number of subjects.
 #' @param priors List of parameters and their priors - b_prior objects. You can put a prior on the p (mean probability of success) and tau (variance) parameters (default = NULL).
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 2000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 3000).
@@ -71,14 +71,37 @@ b_success_rate <- function(r,
                     p_ids = p_ids,
                     p_values = p_values)
 
-  fit <- sampling(stanmodels$success_rate,
-                  data=stan_data,
-                  iter=iter,
-                  warmup=warmup,
-                  chains = chains,
-                  control=control)
+  fit <- suppressWarnings(sampling(stanmodels$success_rate,
+                                   data=stan_data,
+                                   iter=iter,
+                                   warmup=warmup,
+                                   chains = chains,
+                                   control=control))
 
-  extract <- extract(fit)
+  # extract and parse into list
+  extract_raw <- extract(fit, permuted=FALSE)
+
+  # p0
+  i <- 1
+  p0 <- extract_raw[, 1, i]
+
+  # tau
+  i <- i + 1
+  tau <- extract_raw[, 1, i]
+
+  # p
+  i <- i + 1
+  j <- i + m - 1
+  p <- extract_raw[, 1, i:j]
+
+  # lp__
+  i <- i + m
+  lp__ <- extract_raw[, 1, i]
+
+  extract <- list(p0=p0,
+                  tau=tau,
+                  p=p,
+                  lp__=lp__)
 
   # create output class
   out <- success_rate_class(extract=extract, data=stan_data, fit=fit)

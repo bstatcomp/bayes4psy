@@ -7,7 +7,7 @@
 plot_trace(object)
 }
 \arguments{
-\item{object}{S4 class object from EasyBayes library.}
+\item{object}{S4 class object from bayes4psy library.}
 }
 \description{
 \code{plot_trace} traceplot for main fitted model parameters.

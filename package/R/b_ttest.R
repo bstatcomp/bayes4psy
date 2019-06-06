@@ -66,14 +66,21 @@ b_ttest <- function(data,
                     p_ids = p_ids,
                     p_values = p_values)
 
-  fit <- sampling(stanmodels$ttest,
-                  data = stan_data,
-                  warmup = warmup,
-                  iter = iter,
-                  chains = chains,
-                  control=control)
+  fit <- suppressWarnings(sampling(stanmodels$ttest,
+                                   data = stan_data,
+                                   warmup = warmup,
+                                   iter = iter,
+                                   chains = chains,
+                                   control=control))
 
-  extract <- extract(fit)
+  # extract and parse into data frame
+  extract_raw <- extract(fit, permuted=FALSE)
+  extract <- NULL
+  samples <- iter - warmup
+  for (i in 1:samples) {
+    extract <- rbind(extract, extract_raw[i, 1,])
+  }
+  extract <- data.frame(extract)
 
   # create output class
   out <- ttest_class(extract=extract, fit=fit, data=data)

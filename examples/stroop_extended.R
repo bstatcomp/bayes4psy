@@ -1,4 +1,4 @@
-library(EasyBayes)
+library(bayes4psy)
 library(plyr)
 library(dplyr)
 library(ggplot2)

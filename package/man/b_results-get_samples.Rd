@@ -7,7 +7,7 @@
 get_samples(object)
 }
 \arguments{
-\item{object}{S4 class object from EasyBayes library.}
+\item{object}{S4 class object from bayes4psy library.}
 }
 \description{
 \code{get_samples} returns a dataframe with values of fitted parameters.

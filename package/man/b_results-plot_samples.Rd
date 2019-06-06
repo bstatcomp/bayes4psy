@@ -7,7 +7,7 @@
 plot_samples(object, ...)
 }
 \arguments{
-\item{object}{S4 class object from EasyBayes library.}
+\item{object}{S4 class object from bayes4psy library.}
 
 \item{...}{see documentation for specific class for the description of available parameters, e.g. ?plot_samples_ttest or ?plot_samples_linear.}
 }

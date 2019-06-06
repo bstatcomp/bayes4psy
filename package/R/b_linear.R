@@ -2,9 +2,9 @@
 #' @description Bayesian model for fitting a linear normal model to data.
 #' @import rstan
 #' @export
-#' @param x a vector containting index of sequence (time).
-#' @param y a vector containting subjet's responses.
-#' @param s a vector contaiting subject indexes. Starting index should be 1 and the largest subject index equals m (number of subjects).
+#' @param x a vector containting sequence indexes (time).
+#' @param y a vector containting responses of subjects.
+#' @param s a vector contaiting subject indexes. Starting index should be 1 and the largest subject index should equal the number of subjects.
 #' @param priors List of parameters and their priors - b_prior objects. You can put a prior on the mu_a (mean intercept), sigma_a (variance of mu_a), mu_b (mean slope), sigma_s (variance of mu_b), mu_s (variance) and sigma_s (variance of mu_s) parameters (default = NULL).
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 2000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 3000).
@@ -74,14 +74,69 @@ b_linear <- function(x,
                     p_ids = p_ids,
                     p_values = p_values)
 
-  fit <- sampling(stanmodels$linear,
-                  data=stan_data,
-                  iter=iter,
-                  warmup=warmup,
-                  chains=chains,
-                  control=control)
+  fit <- suppressWarnings(sampling(stanmodels$linear,
+                                   data=stan_data,
+                                   iter=iter,
+                                   warmup=warmup,
+                                   chains=chains,
+                                   control=control))
 
-  extract <- extract(fit)
+  # extract and parse into list
+  extract_raw <- extract(fit, permuted=FALSE)
+
+  # alpha
+  i <- 1
+  j <- m
+  alpha <- extract_raw[, 1, i:j]
+
+  # beta
+  i <- i + m
+  j <- i + m - 1
+  beta <- extract_raw[, 1, i:j]
+
+  # sigma
+  i <- i + m
+  j <- i + m - 1
+  sigma <- extract_raw[, 1, i:j]
+
+  # mu_a
+  i <- i + m
+  mu_a <- extract_raw[, 1, i]
+
+  # mu_b
+  i <- i + 1
+  mu_b <- extract_raw[, 1, i]
+
+  # mu_s
+  i <- i + 1
+  mu_s <- extract_raw[, 1, i]
+
+  # sigma_a
+  i <- i + 1
+  sigma_a <- extract_raw[, 1, i]
+
+  # sigma_b
+  i <- i + 1
+  sigma_b <- extract_raw[, 1, i]
+
+  # sigma_s
+  i <- i + 1
+  sigma_s <- extract_raw[, 1, i]
+
+  # lp__
+  i <- i + 1
+  lp__ <- extract_raw[, 1, i]
+
+  extract <- list(alpha=alpha,
+                  beta=beta,
+                  sigma=sigma,
+                  mu_a=mu_a,
+                  mu_b=mu_b,
+                  mu_s=mu_s,
+                  sigma_a=sigma_a,
+                  sigma_b=sigma_b,
+                  sigma_s=sigma_s,
+                  lp__=lp__)
 
   # create output class
   out <- linear_class(extract=extract, data=stan_data, fit=fit)

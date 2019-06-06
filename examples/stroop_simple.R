@@ -1,5 +1,5 @@
 # libs
-library(EasyBayes)
+library(bayes4psy)
 library(ggplot2)
 
 ## load data -------------------------------------------------------------
