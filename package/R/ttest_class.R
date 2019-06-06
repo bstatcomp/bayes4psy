@@ -18,9 +18,13 @@
 #'
 #' compare_samples(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohens d calculation. You can also provide the rope parameter.
 #'
+#' compare_samples(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups.
+#'
 #' plot_samples_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_samples_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#'
+#' plot_samples_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_samples(`ttest_class`): plots density of the samples.
 #'
@@ -28,11 +32,15 @@
 #'
 #' plot_samples(`ttest_class`, mu=`numeric`): plots density for the first group samples and a mean value in case second group is defined as a normal distribution or as a constant.
 #'
+#' plot_samples(`ttest_class`, fits=`list`): plots density for the first group samples and samples for multiple other groups.
+#'
 #' compare_distributions(`ttest_class`, fit2=`ttest_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
 #' compare_distributions(`ttest_class`, mu=`numeric`): draws samples from distribution of the first group and compares them against a mean value. You can also provide the rope parameter.
 #'
 #' compare_distributions(`ttest_class`, mu=`numeric`, sigma=`numeric`): draws samples from distribution of the first group and compares them against samples from a normal distribution with a defined mean value and variance. You can also provide the rope parameter.
+#'
+#' compare_distributions(`ttest_class`, fits=`list`): draws samples from distribution of the first group and compares them against samples drawn from multiple other groups.
 #'
 #' plot_distributions(`ttest_class`): a visualization of the fitted.
 #'
@@ -42,11 +50,15 @@
 #'
 #' plot_distributions(`ttest_class`, mu=`numeric`, sigma=`numeric`): a visualization of the fitted distribution and the normal distribution defined with a mean value and a standard deviation.
 #'
+#' plot_distributions(`ttest_class`, fits=`list`): a visualization of multiple fitted distributions.
+#'
 #' plot_distributions_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the distribution of the first group and the distribution of the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_distributions_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the distribution of the first group and a constant value. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_distributions_difference(`ttest_class`, mu=`numeric`, sigma=`numeric`): a visualization of the difference between the distribution of the first group and the normal distribution defined with a mean value and standard deviation. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#'
+#' plot_distributions_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_fit(`ttest_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
@@ -115,15 +127,15 @@ setMethod(f="get_samples", signature(object="ttest_class"), definition=function(
 
 
 #' @title compare_samples
-#' @description \code{compare_samples} prints difference/equality of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#' @description \code{compare_samples} prints difference/equality of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
-#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
+#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence.
 #' @rdname ttest_class-compare_samples
 #' @aliases compare_samples_ttest
 setMethod(f="compare_samples", signature(object="ttest_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(ttest_class, fit2=ttest_class), compare_samples(fit2=ttest_class, mu=numeric), or compare_samples(fit2=ttest_class, mu=numeric, sigma=numeric) is required! You can also provide the rope parameter, e.g. compare_samples(ttest_class, fit2=ttest_class, rope=numeric)."
+  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(ttest_class, fit2=ttest_class), compare_samples(ttest_class, mu=numeric), compare_samples(ttest_class, mu=numeric, sigma=numeric) or compare_samples(ttest_class, fits=list) is required! You can also provide the rope parameter, e.g. compare_samples(ttest_class, fit2=ttest_class, rope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -137,14 +149,16 @@ setMethod(f="compare_samples", signature(object="ttest_class"), definition=funct
   }
   rope <- prepare_rope(rope)
 
+  # data
+  y <- list()
+
   # first group data
-  y1 <- object@extract$mu
+  y[[1]] <- object@extract$mu
   sigma1 <- mean(object@extract$sigma)
-  n <- length(y1)
+  n <- length(y[[1]])
 
   # second group data
-  y2 <- NULL
-  sigma2 <- 0
+  sigma2 <- NULL
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
     # provided another fit
     if (!is.null(arguments$fit2)) {
@@ -152,39 +166,73 @@ setMethod(f="compare_samples", signature(object="ttest_class"), definition=funct
     } else {
       fit2 <- arguments[[1]]
     }
-    y2 <- fit2@extract$mu
+    y[[2]] <- fit2@extract$mu
     sigma2 <- mean(fit2@extract$sigma)
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
-    y2 <- arguments$mu;
+    y[[2]] <- arguments$mu;
 
     if (!is.null(arguments$sigma)) {
       sigma2 <- arguments$sigma
+    }
+  } else if (!is.null(arguments$fits)) {
+    # provided a list of fits
+    i <- 2
+    for (fit in arguments$fits) {
+      if (class(fit) != "ttest_class") {
+        warning("One of the fits in the fits list is not a valid ttest_class object.")
+        return()
+      }
+      y[[i]] <- fit@extract$mu
+      i <- i + 1
     }
   } else {
     warning(wrong_arguments)
     return()
   }
 
-  shared_difference(y1=y1, y2=y2, rope=rope)
+  n <- length(y)
+  comparison_matrix <- matrix(nrow = n, ncol = n)
+  for (i in 1:(n-1)) {
+    for (j in (i+1):n) {
+      cat(sprintf("\n---------- Group %d vs Group %d ----------\n", i, j))
+      result <- difference(y1=y[[i]], y2=y[[j]], rope=rope, group1=i, group2=j)
+      comparison_matrix[j,i] <- result[1]
+      comparison_matrix[i,j] <- result[2]
+      cat("\n")
+    }
+  }
 
-  diff <- mean(y1) - mean(y2)
+  # largest/smallest probabilities
+  if (n > 2) {
+    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n")
+    print(is_smallest_or_largest(data=y, rope=rope))
+  }
 
-  cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
-  cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
+  # add Cohen's d if 2 groups are provided
+  if (!is.null(sigma2)) {
+    diff <- mean(y[[1]]) - mean(y[[2]])
+    cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
+    cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
+  }
+
+  return(comparison_matrix)
 })
 
 
 #' @title plot_samples_difference
-#' @description \code{plot_samples_difference} a visualization of the difference of the first group against the second group, against a mean value, or against a normal distribution with a defined mean value and variance.
+#' @description \code{plot_samples_difference} a visualization of the difference of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
-#' @param ... fit2 - a second ttest_class object, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram.
+#' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname ttest_class-plot_samples_difference
 #' @aliases plot_samples_difference_ttest
 setMethod(f="plot_samples_difference", signature(object="ttest_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  value <- NULL
+
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(ttest_class, fit2=ttest_class) or plot_samples_difference(ttest_class, mu=numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(ttest_class, fit2=ttest_class), plot_samples_difference(ttest_class, fits=list) or plot_samples_difference(ttest_class, mu=numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -199,10 +247,14 @@ setMethod(f="plot_samples_difference", signature(object="ttest_class"), definiti
   rope <- prepare_rope(rope)
 
   # first group data
-  y1 <- object@extract$mu
+  y <- list()
+  y[[1]] <- object@extract$mu
+
+  # limits
+  x_min <- min(y[[1]])
+  x_max <- max(y[[1]])
 
   # second group data
-  y2 <- NULL
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
     # provided another fit
     if (!is.null(arguments$fit2)) {
@@ -210,10 +262,26 @@ setMethod(f="plot_samples_difference", signature(object="ttest_class"), definiti
     } else {
       fit2 <- arguments[[1]]
     }
-    y2 <- fit2@extract$mu
+    y[[2]] <- fit2@extract$mu
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
-    y2 <- arguments$mu;
+    y[[2]] <- arguments$mu;
+  } else if (!is.null(arguments$fits)) {
+    i <- 2
+    for (fit in arguments$fits) {
+      if (class(fit) != "ttest_class") {
+        warning("One of the fits in the fits list is not a valid ttest_class object.")
+        return()
+      }
+
+      y[[i]] <- fit@extract$mu
+
+      # limits
+      x_min <- min(x_min, y[[i]])
+      x_max <- max(x_max, y[[i]])
+
+      i <- i + 1
+    }
   } else {
     warning(wrong_arguments)
     return()
@@ -225,33 +293,59 @@ setMethod(f="plot_samples_difference", signature(object="ttest_class"), definiti
     bins <- arguments$bins
   }
 
-  # call plot difference shared function from shared plots
-  graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
-  return(graph)
+  # if no list is provided
+  if (is.null(arguments$fits)) {
+    # call plot difference shared function
+    graph <- plot_difference(y1=y[[1]], y2=y[[2]], rope=rope, bins=bins)
+    return(graph)
+  } else {
+    diff <- x_max - x_min
+    x_min <- x_min - 0.1*diff
+    x_max <- x_max + 0.1*diff
+
+    graphs <- list()
+    n <- length(y)
+    for (i in 1:n) {
+      for (j in i:n) {
+        # if both are equal plot samples, else plot difference
+        if (i == j) {
+          df <- data.frame(value=y[[i]])
+          index <- (i-1)*n + i
+          graphs[[index]] <- ggplot() +
+            geom_density(data=df, aes(x=value), fill="#3182bd", color=NA, alpha=0.4) +
+            xlab("value") +
+            xlim(x_min, x_max)
+        } else {
+          index1 <- (i-1)*n + j
+          graphs[[index1]] <- plot_difference(y1=y[[i]], y2=y[[j]], rope=rope, bins=bins, nrow=n)
+
+          index2 <- (j-1)*n + i
+          graphs[[index2]] <- plot_difference(y1=y[[j]], y2=y[[i]], rope=rope, bins=bins, nrow=n)
+        }
+      }
+    }
+
+    # cowplot
+    graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
+    return(graph)
+  }
 })
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots density of the samples, the first and the second group samples, or a mean value in case second group is defined as a normal distribution or as a constant.
+#' @description \code{plot_samples} plots density of the samples, the first and the second group samples, samples of multiple groups or a mean value in case second group is defined as a constant.
 #' @param object ttest_class object.
-#' @param ... fit2 - a second ttest_class object, mu - mean value.
+#' @param ... fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects.
 #' @rdname ttest_class-plot_samples
 #' @aliases plot_samples_ttest
 setMethod(f="plot_samples", signature(object="ttest_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  value <- NULL
+  group <- value <- NULL
 
   # first group data
-  mu1 <- object@extract$mu
-  df1 <- data.frame(value=mu1)
-
-  # plot
-  graph <- ggplot() +
-    geom_density(data=df1, aes(x=value), fill="#3182bd", alpha=0.4, color=NA) +
-    xlab("value")
+  df <- data.frame(value= object@extract$mu, group="1")
 
   # second group data
-  df2 <- NULL
   mu2 <- NULL
   arguments <- list(...)
   if (length(arguments) > 0) {
@@ -262,49 +356,74 @@ setMethod(f="plot_samples", signature(object="ttest_class"), definition=function
       } else {
         fit2 <- arguments[[1]]
       }
-      mu2 <- fit2@extract$mu
-      df2 <- data.frame(value=mu2)
+
+      df <- rbind(df, data.frame(value=fit2@extract$mu, group="2"))
     } else if (!is.null(arguments$mu)) {
       # provided mu and sigma
       mu2 <- arguments$mu;
+    } else if (!is.null(arguments$fits)) {
+      i <- 2
+      for (fit in arguments$fits) {
+        if (class(fit) != "ttest_class") {
+          warning("One of the fits in the fits list is not a valid ttest_class object.")
+          return()
+        }
+
+        df <- rbind(df, data.frame(value=fit@extract$mu, group=as.factor(i)))
+        i <- i + 1
+      }
     }
   }
 
-  if (!is.null(df2)) {
+  # plot
+  graph <- ggplot() +
+    geom_density(data=df, aes(x=value, fill=group), color=NA, alpha=0.4) +
+    xlab("value")
+
+  n_groups <- max(as.numeric(df$group))
+  if (n_groups == 2) {
     graph <- graph +
-      geom_density(data=df2, aes(x=value), fill="#ff4e3f", alpha=0.4, color=NA)
-  } else if (!is.null(mu2)) {
+      scale_fill_manual(values=c("#3182bd", "#ff4e3f"))
+  } else if (n_groups > 2) {
+    graph <- graph +
+      scale_fill_hue()
+  } else if (n_groups == 1 & !is.null(mu2)) {
     y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
     graph <- graph +
       geom_segment(aes(x=mu2, xend=mu2, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
-      geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4)
+      geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4) +
+      scale_fill_manual(values=c("#3182bd")) +
+      theme(legend.position="none")
+  } else {
+    graph <- graph +
+      scale_fill_manual(values=c("#3182bd")) +
+      theme(legend.position="none")
   }
 
   # limits
-  x_min <- min(mu1, mu2)
-  x_max <- max(mu1, mu2)
+  x_min <- min(df$value)
+  x_max <- max(df$value)
   diff <- x_max - x_min
-
   x_min <- x_min - 0.1*diff
   x_max <- x_max + 0.1*diff
 
   graph <- graph + xlim(x_min, x_max)
 
-  return(graph)
+  return(suppressWarnings(graph))
 })
 
 
 #' @title compare_distributions
-#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group, against a mean value, or against samples from a normal distribution with a defined mean value and variance.
+#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group, against samples drawn from distributions of multiple groups, against a mean value or against samples from a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
-#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
+#' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
 #' @rdname ttest_class-compare_distributions
 #' @aliases compare_distributions_ttest
 setMethod(f="compare_distributions", signature(object="ttest_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(ttest_class, fit2=ttest_class), compare_distributions(ttest_class, mu=numeric), or compare_distributions(ttest_class, mu=numeric, sigma=numeric) is required! You can also provide the rope parameter, e.g. compare_distributions(ttest_class, fit2=ttest_class, rope=numeric)."
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(ttest_class, fit2=ttest_class), compare_distributions(ttest_class, fits=list), compare_distributions(ttest_class, mu=numeric) or compare_distributions(ttest_class, mu=numeric, sigma=numeric) is required! You can also provide the rope parameter, e.g. compare_distributions(ttest_class, fit2=ttest_class, rope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -320,13 +439,13 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
 
   # first group data
   n <- 100000
-  nu <- mean(object@extract$nu)
-  mu1 <- mean(object@extract$mu)
   sigma1 <- mean(object@extract$sigma)
-  y1 <- metRology::rt.scaled(n, df=nu, mean=mu1, sd=sigma1)
+  y[[1]] <- metRology::rt.scaled(n,
+                                 df=mean(object@extract$nu),
+                                 mean=mean(object@extract$mu),
+                                 sd=sigma1)
 
   # second group data
-  y2 <- NULL
   sigma2 <- 0
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
     # provided another fit
@@ -335,54 +454,90 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
     } else {
       fit2 <- arguments[[1]]
     }
-    mu2 <- mean(fit2@extract$mu)
     sigma2 <- mean(fit2@extract$sigma)
 
-    y2 <- metRology::rt.scaled(n, df=nu, mean=mu2, sd=sigma2)
+    y[[2]] <- metRology::rt.scaled(n,
+                                   df=mean(fit2@extract$nu),
+                                   mean=mean(fit2@extract$mu),
+                                   sd=sigma2)
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
-    mu2 <- arguments$mu;
-
-    if (!is.null(arguments$sigma))
+    if (!is.null(arguments$sigma)) {
       sigma2 <- arguments$sigma;
+      y[[2]] <- stats::rnorm(n, arguments$mu, sigma2)
+    } else {
+      y[[2]] <- stats::rnorm(n, arguments$mu, 0)
+    }
+  } else if (!is.null(arguments$fits)) {
+    i <- 2
+    for (fit in arguments$fits) {
+      if (class(fit) != "ttest_class") {
+        warning("One of the fits in the fits list is not a valid ttest_class object.")
+        return()
+      }
 
-    y2 <- stats::rnorm(n, mu2, sigma2)
+      y[[i]] <- metRology::rt.scaled(n,
+                                     df=mean(fit@extract$nu),
+                                     mean=mean(fit@extract$mu),
+                                     sd=mean(fit@extract$sigma))
+
+      i <- i + 1
+    }
   } else {
     warning(wrong_arguments)
     return()
   }
 
-  shared_difference(y1=y1, y2=y2, rope=rope)
+  n <- length(y)
+  comparison_matrix <- matrix(nrow = n, ncol = n)
+  for (i in 1:(n-1)) {
+    for (j in (i+1):n) {
+      cat(sprintf("\n---------- Group %d vs Group %d ----------\n", i, j))
+      result <- difference(y1=y[[i]], y2=y[[j]], rope=rope, group1=i, group2=j)
+      comparison_matrix[j,i] <- result[1]
+      comparison_matrix[i,j] <- result[2]
+      cat("\n")
+    }
+  }
 
-  diff <- mean(y1) - mean(y2)
+  # largest/smallest probabilities
+  if (n > 2) {
+    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n")
+    print(is_smallest_or_largest(data=y, rope=rope))
+  }
 
-  cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
-  cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
+  # add Cohen's d if 2 groups are provided
+  if (!is.null(sigma2)) {
+    diff <- mean(y[[1]]) - mean(y[[2]])
+    cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
+    cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
+  }
+
+  return(comparison_matrix)
 })
 
 
 #' @title plot_distributions
 #' @description \code{plot_distributions} visualizes distributions underlying tested groups.
 #' @param object ttest_class object.
-#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation.
+#' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation.
 #' @rdname ttest_class-plot_distributions
 #' @aliases plot_distributions_ttest
 setMethod(f="plot_distributions", signature(object="ttest_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  value <- NULL
+  x <- y <- group <- NULL
 
   # first group data
-  n <- 10000
-  nu <- mean(object@extract$nu)
-  y1_mu <- mean(object@extract$mu)
-  y1_sigma <- mean(object@extract$sigma)
-
-  # get x range
-  x_min <- y1_mu - 4*y1_sigma
-  x_max <- y1_mu + 4*y1_sigma
+  nus <- vector()
+  nus[1] <- mean(object@extract$nu)
+  mus <- vector()
+  mus[1] <- mean(object@extract$mu)
+  sigmas <- vector()
+  sigmas[1] <- mean(object@extract$sigma)
 
   # second group data
-  group2_plot <- NULL
+  mu2 <- NULL
+  sigma2 <- NULL
   arguments <- list(...)
   if (length(arguments) > 0) {
     if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
@@ -392,62 +547,119 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
       } else {
         fit2 <- arguments[[1]]
       }
-      y2_mu <- mean(fit2@extract$mu)
-      y2_sigma <- mean(fit2@extract$sigma)
-
-      x_min <- min(x_min, y2_mu - 4*y2_sigma)
-      x_max <- max(x_max, y2_mu + 4*y2_sigma)
-
-      group2_plot <- stat_function(fun=metRology::dt.scaled, n=n, args=list(df=nu, mean=y2_mu, sd=y2_sigma), geom="area", fill="#ff4e3f", alpha=0.4)
+      nus[2] <- mean(fit2@extract$nu)
+      mus[2] <- mean(fit2@extract$mu)
+      sigmas[2] <- mean(fit2@extract$sigma)
     } else if (!is.null(arguments$mu)) {
-      # provided mu and sigma
-      y2_mu <- arguments$mu;
+      # provided mu and/or sigma
+      mu2 <- arguments$mu;
 
       if (!is.null(arguments$sigma)) {
-        y2_sigma <- arguments$sigma;
+        sigma2 <- arguments$sigma;
+      }
+    } else if (!is.null(arguments$fits)) {
+      i <- 2
+      for (fit in arguments$fits) {
+        if (class(fit) != "ttest_class") {
+          warning("One of the fits in the fits list is not a valid ttest_class object.")
+          return()
+        }
 
-        x_min <- min(x_min, y2_mu - 4*y2_sigma)
-        x_max <- max(x_max, y2_mu + 4*y2_sigma)
-
-        group2_plot <- stat_function(fun=stats::dnorm, n=n, args=list(mean=y2_mu, sd=y2_sigma), geom="area", fill="#ff4e3f", alpha=0.4)
-      } else {
-        x_min <- min(x_min, y2_mu)
-        x_max <- max(x_max, y2_mu)
+        nus[i] <- mean(fit@extract$nu)
+        mus[i] <- mean(fit@extract$mu)
+        sigmas[i] <- mean(fit@extract$sigma)
+        i <- i + 1
       }
     }
   }
 
-  # plot
-  df_x <- data.frame(value=c(x_min, x_max))
+  # get boundaries
+  x_min <- min(mus - 4*sigmas)
+  x_max <- max(mus + 4*sigmas)
 
-  graph <- ggplot(data=df_x, aes(x=value)) +
-    stat_function(fun=metRology::dt.scaled, n=n, args=list(df=nu, mean=y1_mu, sd=y1_sigma), geom="area", fill="#3182bd", alpha=0.4) +
-    group2_plot +
+  if (!is.null(mu2) & !is.null(sigma2)) {
+    x_min <- min(x_min, mu2 - 4*sigma2)
+    x_max <- max(x_max, mu2 + 4*sigma2)
+  } else if (!is.null(mu2)) {
+    if (mu2 < x_min) {
+      x_min <- mu2
+      x_min <- x_min - (0.1*(x_max-x_min))
+    } else if (mu2 > x_max) {
+      x_max <- mu2
+      x_max <- x_max + (0.1*(x_max-x_min))
+    }
+  }
+
+  # calculate data points
+  step <- (x_max - x_min) / 1000
+  df <- data.frame(x=numeric(), y=numeric(), group=factor())
+  n_groups <- length(mus)
+  for (i in 1:n_groups) {
+    df_group <- data.frame(x = seq(x_min, x_max, step),
+                           y = metRology::dt.scaled(seq(x_min, x_max, step),
+                                                   df = nus[i],
+                                                   mean = mus[i],
+                                                   sd = sigmas[i]),
+                           group=as.factor(i))
+
+    df <- rbind(df, df_group)
+  }
+
+  if (!is.null(mu2) & !is.null(sigma2)) {
+    df_group <- data.frame(x = seq(x_min, x_max, step),
+                           y = stats::dnorm(seq(x_min, x_max, step),
+                                                    mean = mu2,
+                                                    sd = sigma2),
+                           group="2")
+
+    df <- rbind(df, df_group)
+
+    n_groups <- 2
+  }
+
+  # plot
+  graph <- ggplot() +
+    geom_area(data=df, aes(x=x, y=y, fill=group), alpha=0.4, position="identity") +
     xlab("value") +
     ylab("density")
 
-  if (!is.null(arguments$mu) && is.null(arguments$sigma)) {
+  if (n_groups == 2) {
+    graph <- graph +
+      scale_fill_manual(values=c("#3182bd", "#ff4e3f"))
+  } else if (n_groups > 2) {
+    graph <- graph +
+      scale_fill_hue()
+  } else if (n_groups == 1 & !is.null(mu2)) {
     y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
     graph <- graph +
-      geom_segment(aes(x=y2_mu, xend=y2_mu, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
-      geom_text(aes(label=sprintf("%.2f", y2_mu), x=y2_mu, y=y_max[2]*1.08), size=4)
+      geom_segment(aes(x=mu2, xend=mu2, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
+      geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4) +
+      scale_fill_manual(values=c("#3182bd")) +
+      theme(legend.position="none")
+  } else {
+    graph <- graph +
+      scale_fill_manual(values=c("#3182bd")) +
+      theme(legend.position="none")
   }
 
-  return(graph)
+  return(suppressWarnings(graph))
 })
 
 
 #' @title plot_distributions_difference
-#' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the distribution or a constant value for the second group.
+#' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group, the distribution or a constant value for the second group or between multiple distributions.
 #' @param object ttest_class object.
-#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, rope - region of practical equivalence, bins - number of bins in the histogram.
+#' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname ttest_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_ttest
 setMethod(f="plot_distributions_difference", signature(object="ttest_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  value <- NULL
+
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(ttest_class, fit2=ttest_class), plot_distributions_difference(ttest_class, mu=numeric), or plot_distributions_difference(ttest_class, mu=numeric, sigma=numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(ttest_class, fit2=ttest_class), plot_distributions_difference(ttest_class, mu=numeric), plot_distributions_difference(ttest_class, mu=numeric, sigma=numeric) or plot_distributions_difference(ttest_class, fits=list) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -462,12 +674,18 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
   rope <- prepare_rope(rope)
 
   # first group data
+  y <- list()
   n <- 100000
-  nu <- mean(object@extract$nu)
-  y1 <- metRology::rt.scaled(n, df=nu, mean=mean(object@extract$mu), sd=mean(object@extract$sigma))
+  y[[1]] <- metRology::rt.scaled(n,
+                                 df=mean(object@extract$nu),
+                                 mean=mean(object@extract$mu),
+                                 sd=mean(object@extract$sigma))
+
+  # limits
+  x_min <- min(y[[1]])
+  x_max <- max(y[[1]])
 
   # second group data
-  y2 <- NULL
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
     # provided another fit
     if (!is.null(arguments$fit2)) {
@@ -475,17 +693,38 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
     } else {
       fit2 <- arguments[[1]]
     }
-    y2 <- metRology::rt.scaled(n, df=nu, mean=mean(fit2@extract$mu), sd=mean(fit2@extract$sigma))
+    y[[2]] <- metRology::rt.scaled(n,
+                                   df=mean(fit2@extract$nu),
+                                   mean=mean(fit2@extract$mu),
+                                   sd=mean(fit2@extract$sigma))
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
-    mu2 <- arguments$mu;
     sigma2 <- 0
 
     if (!is.null(arguments$sigma)) {
       sigma2 <- arguments$sigma
     }
 
-    y2 <- stats::rnorm(n, mu2, sigma2)
+    y[[2]] <- stats::rnorm(n, arguments$mu, sigma2)
+  } else if (!is.null(arguments$fits)) {
+    i <- 2
+    for (fit in arguments$fits) {
+      if (class(fit) != "ttest_class") {
+        warning("One of the fits in the fits list is not a valid ttest_class object.")
+        return()
+      }
+
+      y[[i]] <- metRology::rt.scaled(n,
+                                     df=mean(fit@extract$nu),
+                                     mean=mean(fit@extract$mu),
+                                     sd=mean(fit@extract$sigma))
+
+      # limits
+      x_min <- min(x_min, y[[i]])
+      x_max <- max(x_max, y[[i]])
+
+      i <- i + 1
+    }
   } else {
     warning(wrong_arguments)
     return()
@@ -497,9 +736,42 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
     bins <- arguments$bins
   }
 
-  # call plot difference shared function from shared plots
-  graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
-  return(graph)
+  # if no list is provided
+  if (is.null(arguments$fits)) {
+    # call plot difference shared function
+    graph <- plot_difference(y1=y[[1]], y2=y[[2]], rope=rope, bins=bins)
+    return(graph)
+  } else {
+    diff <- x_max - x_min
+    x_min <- x_min - 0.1*diff
+    x_max <- x_max + 0.1*diff
+
+    graphs <- list()
+    n <- length(y)
+    for (i in 1:n) {
+      for (j in i:n) {
+        # if both are equal plot samples, else plot difference
+        if (i == j) {
+          df <- data.frame(value=y[[i]])
+          index <- (i-1)*n + i
+          graphs[[index]] <- ggplot() +
+            geom_density(data=df, aes(x=value), fill="#3182bd", color=NA, alpha=0.4) +
+            xlab("value") +
+            xlim(x_min, x_max)
+        } else {
+          index1 <- (i-1)*n + j
+          graphs[[index1]] <- plot_difference(y1=y[[i]], y2=y[[j]], rope=rope, bins=bins, nrow=n)
+
+          index2 <- (j-1)*n + i
+          graphs[[index2]] <- plot_difference(y1=y[[j]], y2=y[[i]], rope=rope, bins=bins, nrow=n)
+        }
+      }
+    }
+
+    # cowplot
+    graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
+    return(graph)
+  }
 })
 
 
@@ -512,7 +784,6 @@ setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(obj
   # init local varibales for CRAN check
   value <- NULL
 
-  n <- 10000
   df_data <- data.frame(value=object@data)
 
   nu <- mean(object@extract$nu)
@@ -521,15 +792,17 @@ setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(obj
 
   # get x range
   x_min <- min(mu - 4*sigma, df_data$value)
-  x_min <- x_min - 0.1*x_min
   x_max <- max(mu + 4*sigma, df_data$value)
-  x_max <- x_max + 0.1*x_max
+
+  diff <- x_max - x_min
+  x_min <- x_min - 0.1*diff
+  x_max <- x_max + 0.1*diff
 
   df_x <- data.frame(x=c(x_min, x_max))
 
   graph <- ggplot(data=df_x) +
     geom_density(data=df_data, aes(x=value), fill="#3182bd", alpha=0.4, color=NA) +
-    stat_function(fun=metRology::dt.scaled, n=n, args=list(df=nu, mean=mu, sd=sigma), colour="#3182bd", size=1) +
+    stat_function(fun=metRology::dt.scaled, n=10000, args=list(df=nu, mean=mu, sd=sigma), colour="#3182bd", size=1) +
     xlab("value") +
     xlim(x_min, x_max)
 

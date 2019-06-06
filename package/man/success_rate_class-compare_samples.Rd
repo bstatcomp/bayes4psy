@@ -11,8 +11,8 @@
 \arguments{
 \item{object}{success_rate_class object.}
 
-\item{...}{fit2 - a second success_rate_class object, rope - region of practical equivalence.}
+\item{...}{fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence.}
 }
 \description{
-\code{compare_samples} prints difference in successfulness between two groups.
+\code{compare_samples} prints difference in successfulness between two groups or multiple groups.
 }

@@ -8,7 +8,7 @@ b_color(colors, priors = NULL, hsv = FALSE, warmup = 2000,
   iter = 3000, chains = 4, control = NULL)
 }
 \arguments{
-\item{colors}{a data frame of colors either in RGB or HSV format. The first column should be the R (or H) component, the second column should be the G (or S) component, and the third columne should be the B (or V) component.}
+\item{colors}{a data frame of colors either in RGB or HSV format. The first column should be the R (or H) component, the second column should be the G (or S) component and the third columne should be the B (or V) component.}
 
 \item{priors}{List of parameters and their priors - b_prior objects. You can put a prior on the mu_r (mean r component), sigma_r (variance of mu_r), mu_g (mean g component), sigma_g (variance of mu_g), mu_b (mean b component), sigma_b (variance of mu_b), mu_h (mean h component), kappa_h (variance of mu_h), mu_s (mean s component), sigma_s (variance of mu_s), mu_v (mean v component) and sigma_v (variance of mu_v) parameters (default = NULL).}
 

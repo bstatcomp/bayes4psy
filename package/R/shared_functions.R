@@ -1,43 +1,111 @@
 # function for printing the difference between two datasets
-shared_difference <- function(y1, y2, rope=NULL) {
+difference <- function(y1, y2, rope=NULL, group1=1, group2=2) {
   y_diff <- y1 - y2
 
   n <- length(y_diff)
+
+  result <- vector()
 
   if (is.null(rope)) {
     # 1 > 2
     diff_smaller <- y_diff < 0
     y1_smaller <- round(sum(diff_smaller) / n, 2)
-    diff_greater <- y_diff > 0
-    y1_greater <- round(sum(diff_greater) / n, 2)
-    cat(sprintf("Probabilities:\n  - Group 1 < Group 2: %.2f +/- %.5f",
+    diff_larger <- y_diff > 0
+    y1_larger <- round(sum(diff_larger) / n, 2)
+    cat(sprintf("Probabilities:\n  - Group %d < Group %d: %.2f +/- %.5f",
+                group1, group2,
                 y1_smaller, mcmcse::mcse(diff_smaller)$se))
-    cat(sprintf("\n  - Group 1 > Group 2: %.2f +/- %.5f",
-                y1_greater, mcmcse::mcse(diff_greater)$se))
+    cat(sprintf("\n  - Group %d > Group %d: %.2f +/- %.5f",
+                group1, group2,
+                y1_larger, mcmcse::mcse(diff_larger)$se))
+
+    result <- c(y1_smaller, y1_larger, NA)
   } else {
     # 1 > 2
     diff_smaller <- y_diff < rope[1]
     y1_smaller <- round(sum(diff_smaller) / n, 2)
-    cat(sprintf("Probabilities:\n  - Group 1 < Group 2: %.2f +/- %.5f",
+    cat(sprintf("Probabilities:\n  - Group %d < Group %d: %.2f +/- %.5f",
+                group1, group2,
                 y1_smaller, mcmcse::mcse(diff_smaller)$se))
 
     # 2 > 1
-    diff_greater <- y_diff > rope[2]
-    y1_greater <- round(sum(y_diff > diff_greater) / n, 2)
-    cat(sprintf("\n  - Group 1 > Group 2: %.2f +/- %.5f",
-                y1_greater, mcmcse::mcse(diff_greater)$se))
+    diff_larger <- y_diff > rope[2]
+    y1_larger <- round(sum(diff_larger) / n, 2)
+    cat(sprintf("\n  - Group %d > Group %d: %.2f +/- %.5f",
+                group1, group2,
+                y1_larger, mcmcse::mcse(diff_larger)$se))
 
     # equal
     diff_equal <- y_diff > rope[1] & y_diff < rope[2]
-    equal <- 1 - y1_smaller - y1_greater
+    equal <- 1 - y1_smaller - y1_larger
     cat(sprintf("\n  - Equal: %.2f +/- %.5f",
                 equal, mcmcse::mcse(diff_equal)$se))
+
+    result <- c(y1_smaller, y1_larger, equal)
   }
 
   hdi <- mcmc_hdi(y_diff)
   y_diff_l <- stats::quantile(hdi[1], 0.025)
   y_diff_h <- stats::quantile(hdi[2], 0.975)
   cat(sprintf("\n95%% HDI:\n  - Group 1 - Group 2: [%.2f, %.2f]\n", y_diff_l, y_diff_h))
+
+  return(result)
+}
+
+# function for determining probability that a particular vector of data is the smallest/largest
+is_smallest_or_largest <- function(data, rope=NULL) {
+  # get length of the shortest vector
+  n_min <- .Machine$integer.max
+  for (y in data) {
+    if (length(y) < n_min)
+      n_min <- length(y)
+  }
+
+  # calculate probabilities
+  n <- length(data)
+  largest <- rep(0, times=n)
+  smallest <- rep(0, times=n)
+  equal <- 0
+  for (i in 1:n_min) {
+    y <- vector()
+    for (j in 1:n) {
+      y <- c(y, data[[j]][i])
+    }
+
+    if (is.null(rope)) {
+      # find the smallest/largest one
+      largest_group <- which(y == max(y))
+      largest[largest_group] <- largest[largest_group] + 1
+      smallest_group <- which(y == min(y))
+      smallest[smallest_group] <- smallest[smallest_group] + 1
+    }
+    else {
+      max_diff <- max(y) - min(y)
+      # are all equal?
+      if (max_diff > rope[1] & max_diff < rope[2]) {
+        equal <- equal + 1
+      } else {
+        largest_group <- which(y == max(y))
+        largest[largest_group] <- largest[largest_group] + 1
+        smallest_group <- which(y == min(y))
+        smallest[smallest_group] <- smallest[smallest_group] + 1
+      }
+    }
+  }
+
+  # normalize
+  largest <- largest / n_min
+  smallest <- smallest / n_min
+  equal <- equal / n_min
+
+  # save to df
+  result <- data.frame(largest=numeric(), smallest=numeric(), equal=numeric())
+  i <- 1
+  for (i in 1:n) {
+    result <- rbind(result, data.frame(largest=largest[i], smallest=smallest[i], equal=equal))
+  }
+
+  return(result)
 }
 
 # shift circular data, shift according to base if provided

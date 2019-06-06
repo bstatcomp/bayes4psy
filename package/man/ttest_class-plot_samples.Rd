@@ -11,8 +11,8 @@
 \arguments{
 \item{object}{ttest_class object.}
 
-\item{...}{fit2 - a second ttest_class object, mu - mean value.}
+\item{...}{fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects.}
 }
 \description{
-\code{plot_samples} plots density of the samples, the first and the second group samples, or a mean value in case second group is defined as a normal distribution or as a constant.
+\code{plot_samples} plots density of the samples, the first and the second group samples, samples of multiple groups or a mean value in case second group is defined as a constant.
 }

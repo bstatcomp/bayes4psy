@@ -2,7 +2,8 @@
 #' @description An S4 class for defining priors for Bayesian models.
 #' @slot family Prior family - \"uniform\", \"normal\", \"gamma\" or \"beta\".
 #' @slot pars Parameters of the prior - a vector of two numerical values.
-#' @export
+#' @export b_prior
+#' @exportClass b_prior
 b_prior <- setClass(
   "b_prior",
   slots = c(

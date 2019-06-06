@@ -11,8 +11,8 @@
 \arguments{
 \item{object}{reaction_time_class object.}
 
-\item{...}{fit2 - a second reaction_time_class object, par - specific parameter of comparison - mu or lambda.}
+\item{...}{fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, par - specific parameter of comparison - mu or lambda.}
 }
 \description{
-\code{plot_samples} plots density of the samples, or the first and the second group samples.
+\code{plot_samples} plots density of the samples for one, two or multiple groups.
 }

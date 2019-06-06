@@ -11,8 +11,8 @@
 \arguments{
 \item{object}{success_rate_class object.}
 
-\item{...}{fit2 - a second success_rate_class object.}
+\item{...}{fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence.}
 }
 \description{
-\code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+\code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group or from samples drawn from distributions of multiple groups.
 }

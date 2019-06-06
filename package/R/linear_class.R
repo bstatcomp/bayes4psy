@@ -165,10 +165,10 @@ setMethod(f="compare_samples", signature(object="linear_class"), definition=func
     slope2 <- fit2@extract$mu_b
 
     cat("---------- Intercept ----------\n")
-    shared_difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
+    difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
 
     cat("\n---------- Slope ----------\n")
-    shared_difference(y1=slope1, y2=slope2, rope=rope_slope)
+    difference(y1=slope1, y2=slope2, rope=rope_slope)
   } else {
     warning(wrong_arguments)
     return()
@@ -227,12 +227,12 @@ setMethod(f="plot_samples_difference", signature(object="linear_class"), definit
     }
 
     # call plot difference from shared plots
-    graph_intercept <- shared_plot_difference(y1=intercept1, y2=intercept2, rope=rope_intercept, bins=bins)
+    graph_intercept <- plot_difference(y1=intercept1, y2=intercept2, rope=rope_intercept, bins=bins)
     graph_intercept <- graph_intercept +
       ggtitle("Intercept") +
       theme(plot.title=element_text(hjust=0.5))
 
-    graph_slope <- shared_plot_difference(y1=slope1, y2=slope2, rope=rope_slope, bins=bins)
+    graph_slope <- plot_difference(y1=slope1, y2=slope2, rope=rope_slope, bins=bins)
     graph_slope <- graph_slope +
       ggtitle("Slope") +
       theme(plot.title=element_text(hjust=0.5))
@@ -247,7 +247,7 @@ setMethod(f="plot_samples_difference", signature(object="linear_class"), definit
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots samples, or the first and the second group samples.
+#' @description \code{plot_samples} plots samples or the first and the second group samples.
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_samples
@@ -378,10 +378,10 @@ setMethod(f="compare_distributions", signature(object="linear_class"), definitio
     slope2 <- stats::rnorm(n, mean=mu_slope2, sd=sigma_slope2)
 
     cat("---------- Intercept ----------\n")
-    shared_difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
+    difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
 
     cat("\n---------- Slope ----------\n")
-    shared_difference(y1=slope1, y2=slope2, rope=rope_slope)
+    difference(y1=slope1, y2=slope2, rope=rope_slope)
   } else {
     warning(wrong_arguments)
     return()
@@ -441,10 +441,12 @@ setMethod(f="plot_distributions", signature(object="linear_class"), definition=f
     }
   }
 
-  x_min <- x_min - 0.1*x_min
-  x_max <- x_max + 0.1*x_max
-  y_min <- y_min - 0.1*y_min
-  y_max <- y_max + 0.1*y_max
+  diff_x <- x_max - x_min
+  x_min <- x_min - 0.1*diff_x
+  x_max <- x_max + 0.1*diff_x
+  diff_y <- y_max - y_min
+  y_min <- y_min - 0.1*diff_y
+  y_max <- y_max + 0.1*diff_y
 
   graph <- ggplot() +
     geom_abline(data=df, aes(slope=slope, intercept=intercept, color=group), alpha=0.1, size=1) +
@@ -469,7 +471,7 @@ setMethod(f="plot_distributions", signature(object="linear_class"), definition=f
 setMethod(f="plot_distributions_difference", signature(object="linear_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(linear_class, fit2=linear_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(linear_class, fit2=linear_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -523,12 +525,12 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
     }
 
     # call plot difference from shared plots
-    graph_intercept <- shared_plot_difference(y1=intercept1, y2=intercept2, rope=rope_intercept, bins=bins)
+    graph_intercept <- plot_difference(y1=intercept1, y2=intercept2, rope=rope_intercept, bins=bins)
     graph_intercept <- graph_intercept +
       ggtitle("Intercept") +
       theme(plot.title=element_text(hjust=0.5))
 
-    graph_slope <- shared_plot_difference(y1=slope1, y2=slope2, rope=rope_slope, bins=bins)
+    graph_slope <- plot_difference(y1=slope1, y2=slope2, rope=rope_slope, bins=bins)
     graph_slope <- graph_slope +
       ggtitle("Slope") +
       theme(plot.title=element_text(hjust=0.5))
@@ -550,7 +552,7 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
 #' @aliases plot_fit_linear
 setMethod(f="plot_fit", signature(object="linear_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  s <- x <- y <- NULL
+  slope <- intercept <- s <- x <- y <- NULL
 
   arguments <- list(...)
 
@@ -570,13 +572,12 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
   x_max <- ceiling(max(df_data$x))
   y_max <- ceiling(max(df_data$y))
 
-  x_min <- x_min - 0.1*x_min
-  y_min <- y_min - 0.1*y_min
-  x_max <- x_max + 0.1*x_max
-  y_max <- y_max + 0.1*y_max
-
-  # steps
-  step <- (x_max - x_min) / 1000
+  diff_x <- x_max - x_min
+  x_min <- x_min - 0.1*diff_x
+  x_max <- x_max + 0.1*diff_x
+  diff_y <- y_max - y_min
+  y_min <- y_min - 0.1*diff_y
+  y_max <- y_max + 0.1*diff_y
 
   # mean per subject
   df_data <- df_data %>% group_by(s, x) %>% summarize(y=mean(y, na.rm=TRUE))

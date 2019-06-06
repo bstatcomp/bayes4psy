@@ -1,7 +1,7 @@
 #' @import ggplot2
 
 # function for visalizsing the difference between two datasets
-shared_plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, nrow=1) {
+plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, nrow=1) {
   # init local varibales for CRAN check
   value <- NULL
 
@@ -27,8 +27,10 @@ shared_plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, n
   x_min <- min(df_diff)
   x_max <- max(df_diff)
 
-  x_min <- x_min - 0.1*x_min
-  x_max <- x_max + 0.1*x_max
+  diff <- x_max - x_min
+
+  x_min <- x_min - 0.1*diff
+  x_max <- x_max + 0.1*diff
 
   if (!is.null(rope)) {
     x_min <- min(x_min, rope[1])
@@ -52,11 +54,11 @@ shared_plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, n
 
   graph <- graph +
     geom_segment(aes(x=mean_diff, xend=mean_diff, y=0, yend=y_max * 1.05), size=1.5, color="#3182bd", na.rm=T) +
-    geom_text(aes(label=sprintf("%.2f", mean_diff), x=mean_diff, y=y_max * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
+    geom_text(aes(label=sprintf("%.2f", mean_diff), x=mean_diff, y=y_max * (1.05 + (nrow * 0.03))), size=4, hjust=hjust)
 
   # add HDI
   graph <- graph +
-    geom_segment(aes(x=hdi[1], xend=hdi[2], y=-(y_max * 0.01 * nrow), yend=-(y_max * 0.01 * nrow)), size=3, color="black", na.rm=T)
+    geom_segment(aes(x=hdi[1], xend=hdi[2], y=y_max * 0.01 * nrow, yend=y_max * 0.01 * nrow), size=2.5, color="black", na.rm=T)
 
   hjust = "center"
   if (hdi[1] < (x_min + hjust_range)) {
@@ -64,24 +66,24 @@ shared_plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, n
   }
 
   graph <- graph +
-    geom_text(aes(label=sprintf("%.2f", hdi[1]), x=hdi[1], y=-(y_max * (0.05 * nrow))), size=4, hjust=hjust)
+    geom_text(aes(label=sprintf("%.2f", hdi[1]), x=hdi[1], y=y_max * (0.04 * nrow)), size=3.5, hjust=hjust)
 
   if (hdi[2] > (x_max - hjust_range)) {
     hjust = "inward"
   }
 
   graph <- graph +
-    geom_text(aes(label=sprintf("%.2f", hdi[2]), x=hdi[2], y=-(y_max * (0.05 * nrow))), size=4, hjust=hjust)
+    geom_text(aes(label=sprintf("%.2f", hdi[2]), x=hdi[2], y=y_max * (0.04 * nrow)), size=3.5, hjust=hjust)
 
   # add ROPE interval?
   if (!is.null(rope)) {
     graph <- graph +
-      geom_segment(aes(x=rope[1], xend=rope[2], y=y_max * 0.01 * nrow, yend=y_max * 0.01 * nrow), size=3, color="grey50", na.rm=T)
+      geom_segment(aes(x=rope[1], xend=rope[2], y=-(y_max * 0.01 * nrow), yend=-(y_max * 0.01 * nrow)), size=2.5, color="grey50", na.rm=T)
   }
 
   # style and labels
   graph <- graph +
-    xlab("value")
+    xlab("difference")
 
   return(graph)
 }

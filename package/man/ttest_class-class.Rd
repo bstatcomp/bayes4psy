@@ -24,9 +24,13 @@ compare_samples(`ttest_class`, mu=`numeric`): prints difference/equality of the 
 
 compare_samples(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohens d calculation. You can also provide the rope parameter.
 
+compare_samples(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups.
+
 plot_samples_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_samples_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
+
+plot_samples_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_samples(`ttest_class`): plots density of the samples.
 
@@ -34,11 +38,15 @@ plot_samples(`ttest_class`, fit2=`ttest_class`): plots density for the first and
 
 plot_samples(`ttest_class`, mu=`numeric`): plots density for the first group samples and a mean value in case second group is defined as a normal distribution or as a constant.
 
+plot_samples(`ttest_class`, fits=`list`): plots density for the first group samples and samples for multiple other groups.
+
 compare_distributions(`ttest_class`, fit2=`ttest_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 
 compare_distributions(`ttest_class`, mu=`numeric`): draws samples from distribution of the first group and compares them against a mean value. You can also provide the rope parameter.
 
 compare_distributions(`ttest_class`, mu=`numeric`, sigma=`numeric`): draws samples from distribution of the first group and compares them against samples from a normal distribution with a defined mean value and variance. You can also provide the rope parameter.
+
+compare_distributions(`ttest_class`, fits=`list`): draws samples from distribution of the first group and compares them against samples drawn from multiple other groups.
 
 plot_distributions(`ttest_class`): a visualization of the fitted.
 
@@ -48,11 +56,15 @@ plot_distributions(`ttest_class`, mu=`numeric`): a visualization of the fitted d
 
 plot_distributions(`ttest_class`, mu=`numeric`, sigma=`numeric`): a visualization of the fitted distribution and the normal distribution defined with a mean value and a standard deviation.
 
+plot_distributions(`ttest_class`, fits=`list`): a visualization of multiple fitted distributions.
+
 plot_distributions_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the distribution of the first group and the distribution of the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_distributions_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the distribution of the first group and a constant value. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_distributions_difference(`ttest_class`, mu=`numeric`, sigma=`numeric`): a visualization of the difference between the distribution of the first group and the normal distribution defined with a mean value and standard deviation. You can also provide the rope and bins (number of bins in the histogram) parameters.
+
+plot_distributions_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_fit(`ttest_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 

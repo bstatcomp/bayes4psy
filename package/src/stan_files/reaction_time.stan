@@ -5,19 +5,19 @@ data {
   int<lower=0> s[n]; // subject ids
 
   // priors
-  int<lower=0> p_ids[6];
-  int<lower=0> p_values[12];
+  int p_ids[6];
+  int p_values[12];
 }
 
 parameters {
   // per subject parameters
-  vector<lower=0>[m] mu;
+  vector[m] mu;
   vector<lower=0>[m] sigma;
   vector<lower=0>[m] lambda;
 
   // global parameters
-  real<lower=0> mu_m;
-  real<lower=0> mu_l;
+  real mu_m;
+  real mu_l;
   real<lower=0> mu_s;
   real<lower=0> sigma_m;
   real<lower=0> sigma_l;
@@ -106,8 +106,8 @@ model {
 }
 
 generated quantities {
-  real<lower=0> rt;
-  vector<lower=0>[m] rt_subjects;
+  real rt;
+  vector[m] rt_subjects;
 
   rt = mu_m + 1/mu_l;
   for (i in 1:m) {

@@ -20,21 +20,33 @@ get_samples(`success_rate_class`): returns a dataframe with values of fitted par
 
 get_subject_samples(`success_rate_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 
-compare_samples(`success_rate_class`, fit2=`success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
+compare_samples(`success_rate_class`, fit2=`success_rate_class`): returns difference in successfulness between two groups. You can also provide the rope parameter.
+
+compare_samples(`success_rate_class`, fits=`list`): returns difference in successfulness between multiple groups. You can also provide the rope parameter.
 
 plot_samples_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
-plot_samples(`success_rate_class`): plots density for the first samples.
+plot_samples_difference(`success_rate_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+
+plot_samples(`success_rate_class`): plots density for the first group samples.
 
 plot_samples(`success_rate_class`, fit2=`success_rate_class`): plots density for the first and the second group samples.
 
-compare_distributions(`success_rate_class`, fit2=`success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+plot_samples(`success_rate_class`, fits=`list`): plots density for multiple
+
+compare_distributions(`success_rate_class`, fit2=`success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
+
+compare_distributions(`success_rate_class`, fits=`list`): draws and compares samples from distributions of multiple groups. You can also provide the rope parameter.
 
 plot_distributions(`success_rate_class`): a visualization of the fitted distribution.
 
 plot_distributions(`success_rate_class`, fit2=`success_rate_class`): a visualization of the distribution for two fits.
 
+plot_distributions(`success_rate_class`, fits=`list`): a visualization of the distribution for multiple fits.
+
 plot_distributions_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
+
+plot_distributions_difference(`success_rate_class`, fits=`list`): a visualization of the difference between the distributions of multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 

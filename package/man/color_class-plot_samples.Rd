@@ -14,5 +14,5 @@
 \item{...}{fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, pars - components of comparison, a subset of (r, g, b, h, s, v).}
 }
 \description{
-\code{plot_samples} lots density of the samples, the first and the second group samples, or a constant values in case second group is defined as rgb or hsv color..
+\code{plot_samples} lots density of the samples, the first and the second group samples or a constant values in case second group is defined as rgb or hsv color..
 }

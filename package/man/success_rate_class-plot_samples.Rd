@@ -11,8 +11,8 @@
 \arguments{
 \item{object}{success_rate_class object.}
 
-\item{...}{fit2 - a second success_rate_class object.}
+\item{...}{fit2 - a second success_rate_class object, fits - a list of success_rate_class objects.}
 }
 \description{
-\code{plot_samples} plots density of the samples, or the first and the second group samples.
+\code{plot_samples} plots density of the samples for one, two or multiple groups.
 }

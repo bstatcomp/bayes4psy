@@ -4,7 +4,7 @@
 #' @export
 #' @param x a vector containting index of sequence (time).
 #' @param y a vector containting subjet's responses.
-#' @param s a vector contaiting subject indexes. Starting index should be 1, and the largest subject index equals m (number of subjects).
+#' @param s a vector contaiting subject indexes. Starting index should be 1 and the largest subject index equals m (number of subjects).
 #' @param priors List of parameters and their priors - b_prior objects. You can put a prior on the mu_a (mean intercept), sigma_a (variance of mu_a), mu_b (mean slope), sigma_s (variance of mu_b), mu_s (variance) and sigma_s (variance of mu_s) parameters (default = NULL).
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 2000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 3000).
@@ -43,7 +43,7 @@ b_linear <- function(x,
       if (nrow(par_id) > 0) {
         id <- par_id$index
       } else {
-        wrong_prior <- "Provided an unknown parameter for prior, use \"mu_m\", \"sigma_m\", \"mu_s\", \"sigma_s\", \"mu_l\", or \"sigma_l\"."
+        wrong_prior <- "Provided an unknown parameter for prior, use \"mu_m\", \"sigma_m\", \"mu_s\", \"sigma_s\", \"mu_l\" or \"sigma_l\"."
         warning(wrong_prior)
         return()
       }

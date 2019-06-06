@@ -14,21 +14,33 @@
 #'
 #' get_subject_samples(`success_rate_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 #'
-#' compare_samples(`success_rate_class`, fit2=`success_rate_class`): prints difference in successfulness of two groups. You can also provide the rope parameter.
+#' compare_samples(`success_rate_class`, fit2=`success_rate_class`): returns difference in successfulness between two groups. You can also provide the rope parameter.
+#'
+#' compare_samples(`success_rate_class`, fits=`list`): returns difference in successfulness between multiple groups. You can also provide the rope parameter.
 #'
 #' plot_samples_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_samples(`success_rate_class`): plots density for the first samples.
+#' plot_samples_difference(`success_rate_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#'
+#' plot_samples(`success_rate_class`): plots density for the first group samples.
 #'
 #' plot_samples(`success_rate_class`, fit2=`success_rate_class`): plots density for the first and the second group samples.
 #'
-#' compare_distributions(`success_rate_class`, fit2=`success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+#' plot_samples(`success_rate_class`, fits=`list`): plots density for multiple
+#'
+#' compare_distributions(`success_rate_class`, fit2=`success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
+#'
+#' compare_distributions(`success_rate_class`, fits=`list`): draws and compares samples from distributions of multiple groups. You can also provide the rope parameter.
 #'
 #' plot_distributions(`success_rate_class`): a visualization of the fitted distribution.
 #'
 #' plot_distributions(`success_rate_class`, fit2=`success_rate_class`): a visualization of the distribution for two fits.
 #'
+#' plot_distributions(`success_rate_class`, fits=`list`): a visualization of the distribution for multiple fits.
+#'
 #' plot_distributions_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#'
+#' plot_distributions_difference(`success_rate_class`, fits=`list`): a visualization of the difference between the distributions of multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
@@ -111,15 +123,15 @@ setMethod(f="get_subject_samples", signature(object="success_rate_class"), defin
 
 
 #' @title compare_samples
-#' @description \code{compare_samples} prints difference in successfulness between two groups.
+#' @description \code{compare_samples} prints difference in successfulness between two groups or multiple groups.
 #' @param object success_rate_class object.
-#' @param ... fit2 - a second success_rate_class object, rope - region of practical equivalence.
+#' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence.
 #' @rdname success_rate_class-compare_samples
 #' @aliases compare_samples_success_rate
 setMethod(f="compare_samples", signature(object="success_rate_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(success_rate_class, fit2=success_rate_class) is required! You can also provide the rope parameter, e.g. compare_samples(success_rate_class, fit2=success_rate_class, rope=numeric)."
+  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(success_rate_class, fit2=success_rate_class) or compare_samples(success_rate_class, fits=list) is required! You can also provide the rope parameter, e.g. compare_samples(success_rate_class, fit2=success_rate_class, rope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -133,8 +145,11 @@ setMethod(f="compare_samples", signature(object="success_rate_class"), definitio
   }
   rope <- prepare_rope(rope)
 
+  # data
+  y <- list()
+
   # first group data
-  y1 <- object@extract$p0
+  y[[1]] <- object@extract$p0
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
@@ -144,26 +159,58 @@ setMethod(f="compare_samples", signature(object="success_rate_class"), definitio
     } else {
       fit2 <- arguments[[1]]
     }
-    y2 <- fit2@extract$p0
-
-    shared_difference(y1=y1, y2=y2, rope=rope)
+    y[[2]] <- fit2@extract$p0
+  } else if (!is.null(arguments$fits)) {
+    # provided a list of fits
+    i <- 2
+    for (fit in arguments$fits) {
+      if (class(fit) != "success_rate_class") {
+        warning("One of the fits in the fits list is not a valid success_rate_class object.")
+        return()
+      }
+      y[[i]] <- fit@extract$p0
+      i <- i + 1
+    }
   } else {
     warning(wrong_arguments)
     return()
   }
+
+  n <- length(y)
+  comparison_matrix <- matrix(nrow = n, ncol = n)
+  for (i in 1:(n-1)) {
+    for (j in (i+1):n) {
+      cat(sprintf("\n---------- Group %d vs Group %d ----------\n", i, j))
+      result <- difference(y1=y[[i]], y2=y[[j]], rope=rope, group1=i, group2=j)
+      comparison_matrix[j,i] <- result[1]
+      comparison_matrix[i,j] <- result[2]
+      cat("\n")
+    }
+  }
+
+  # largest/smallest probabilities
+  if (n > 2) {
+    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n")
+    print(is_smallest_or_largest(data=y, rope=rope))
+  }
+
+  return(comparison_matrix)
 })
 
 
 #' @title plot_samples_difference
-#' @description \code{plot_samples_difference} a visualization of the difference between two groups.
+#' @description \code{plot_samples_difference} a visualization of the difference between two groups or multiple groups.
 #' @param object success_rate_class object.
-#' @param ... fit2 - a second success_rate_class object, rope - region of practical equivalence, bins - number of bins in the histogram.
+#' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname success_rate_class-plot_samples_difference
 #' @aliases plot_samples_difference_success_rate
 setMethod(f="plot_samples_difference", signature(object="success_rate_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  value <- NULL
+
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(success_rate_class, fit2=success_rate_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(success_rate_class, fit2=success_rate_class, rope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(success_rate_class, fit2=success_rate_class) or plot_samples_difference(success_rate_class, fits=list) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(success_rate_class, fit2=success_rate_class, rope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -178,7 +225,8 @@ setMethod(f="plot_samples_difference", signature(object="success_rate_class"), d
   rope <- prepare_rope(rope)
 
   # first group data
-  y1 <- object@extract$p0
+  y <- list()
+  y[[1]] <- object@extract$p0
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
@@ -188,28 +236,68 @@ setMethod(f="plot_samples_difference", signature(object="success_rate_class"), d
     } else {
       fit2 <- arguments[[1]]
     }
-    y2 <- fit2@extract$p0
+    y[[2]] <- fit2@extract$p0
+  } else if (!is.null(arguments$fits)) {
+    i <- 2
+    for (fit in arguments$fits) {
+      if (class(fit) != "success_rate_class") {
+        warning("One of the fits in the fits list is not a valid success_rate_class object.")
+        return()
+      }
+      y[[i]] <- fit@extract$p0
 
-    # bins in the histogram
-    bins <- 30
-    if (!is.null(arguments$bins)) {
-      bins <- arguments$bins
+      i <- i + 1
     }
-
-    # call plot difference from shared plots
-    graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
-    return(graph)
   } else {
     warning(wrong_arguments)
     return()
+  }
+
+  # bins in the histogram
+  bins <- 30
+  if (!is.null(arguments$bins)) {
+    bins <- arguments$bins
+  }
+
+  # if no list is provided
+  if (is.null(arguments$fits)) {
+    # call plot difference shared function
+    graph <- plot_difference(y1=y[[1]], y2=y[[2]], rope=rope, bins=bins)
+    return(graph)
+  } else {
+    graphs <- list()
+    n <- length(y)
+    for (i in 1:n) {
+      for (j in i:n) {
+        # if both are equal plot samples, else plot difference
+        if (i == j) {
+          df <- data.frame(value=y[[i]])
+          index <- (i-1)*n + i
+          graphs[[index]] <- ggplot() +
+            geom_density(data=df, aes(x=value), fill="#3182bd", color=NA, alpha=0.4) +
+            xlab("probability") +
+            xlim(0, 1)
+        } else {
+          index1 <- (i-1)*n + j
+          graphs[[index1]] <- plot_difference(y1=y[[i]], y2=y[[j]], rope=rope, bins=bins, nrow=n)
+
+          index2 <- (j-1)*n + i
+          graphs[[index2]] <- plot_difference(y1=y[[j]], y2=y[[i]], rope=rope, bins=bins, nrow=n)
+        }
+      }
+    }
+
+    # cowplot
+    graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
+    return(graph)
   }
 })
 
 
 #' @title plot_samples
-#' @description \code{plot_samples} plots density of the samples, or the first and the second group samples.
+#' @description \code{plot_samples} plots density of the samples for one, two or multiple groups.
 #' @param object success_rate_class object.
-#' @param ... fit2 - a second success_rate_class object.
+#' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects.
 #' @rdname success_rate_class-plot_samples
 #' @aliases plot_samples_success_rate
 setMethod(f="plot_samples", signature(object="success_rate_class"), definition=function(object, ...) {
@@ -220,7 +308,6 @@ setMethod(f="plot_samples", signature(object="success_rate_class"), definition=f
   df <- data.frame(value=object@extract$p0, group="1")
 
   # second group data
-  df2 <- NULL
   arguments <- list(...)
   if (length(arguments) > 0) {
     if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
@@ -232,143 +319,52 @@ setMethod(f="plot_samples", signature(object="success_rate_class"), definition=f
       }
 
       df <- rbind(df, data.frame(value=fit2@extract$p0, group="2"))
+    } else if (!is.null(arguments$fits)) {
+      i <- 2
+      for (fit in arguments$fits) {
+        if (class(fit) != "success_rate_class") {
+          warning("One of the fits in the fits list is not a valid success_rate_class object.")
+          return()
+        }
+        df <- rbind(df, data.frame(value=fit@extract$p0, group=as.factor(i)))
+        i <- i + 1
+      }
     }
   }
 
-  # limits
-  x_min <- min(df$value)
-  x_max <- max(df$value)
-  diff <- x_max - x_min
-  x_min <- x_min - 0.1*diff
-  x_max <- x_max + 0.1*diff
-
   # plot
   graph <- ggplot() +
-    geom_density(data=df, aes(x=value, fill=group), alpha=0.4, color=NA) +
-    scale_fill_manual(values=c("#3182bd", "#ff4e3f")) +
-    xlab("value") +
-    xlim(x_min, x_max) +
-    theme(legend.position="none")
+    geom_density(data=df, aes(x=value, fill=group), color=NA, alpha=0.4) +
+    xlab("probability") +
+    xlim(0, 1)
 
-  return(graph)
+  n_groups <- max(as.numeric(df$group))
+  if (n_groups == 2) {
+    graph <- graph +
+      scale_fill_manual(values=c("#3182bd", "#ff4e3f"))
+  } else if (n_groups > 2) {
+    graph <- graph +
+      scale_fill_hue()
+  } else {
+    graph <- graph +
+      scale_fill_manual(values=c("#3182bd")) +
+      theme(legend.position="none")
+  }
+
+  return(suppressWarnings(graph))
 })
 
 
 #' @title compare_distributions
-#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
+#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group or from samples drawn from distributions of multiple groups.
 #' @param object success_rate_class object.
-#' @param ... fit2 - a second success_rate_class object.
+#' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence.
 #' @rdname success_rate_class-compare_distributions
 #' @aliases compare_distributions_success_rate
 setMethod(f="compare_distributions", signature(object="success_rate_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(success_rate_class, fit2=success_rate_class) is required!)."
-
-  if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
-  }
-
-  n <- 100000
-
-  # first group data
-  p0 <- mean(object@extract$p0)
-  tau <- mean(object@extract$tau)
-  y1 <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
-
-  # second group data
-  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
-    # provided another fit
-    if (!is.null(arguments$fit2)) {
-      fit2 <- arguments$fit2
-    } else {
-      fit2 <- arguments[[1]]
-    }
-    p0 <- mean(fit2@extract$p0)
-    tau <- mean(fit2@extract$tau)
-    y2 <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
-
-    # calculate
-    y1_smaller <- round(sum(y1 < y2) / n, 2)
-    y1_greater <- round(sum(y1 > y2) / n, 2)
-    equal <- 1 - y1_smaller - y1_greater
-
-    # print
-    cat(sprintf("Probabilities:\n  - Group 1 < Group 2: %.2f", y1_smaller))
-    cat(sprintf("\n  - Group 1 > Group 2: %.2f", y1_greater))
-    cat(sprintf("\n  - Equal: %.2f\n", equal))
-  } else {
-    warning(wrong_arguments)
-    return()
-  }
-})
-
-
-#' @title plot_distributions
-#' @description \code{plot_distributions} a visualization of the fitted distribution, for one or two fits.
-#' @param object success_rate_class object.
-#' @param ... fit2 - a second success_rate_class object.
-#' @rdname success_rate_class-plot_distributions
-#' @aliases plot_distributions_success_rate
-setMethod(f="plot_distributions", signature(object="success_rate_class"), definition=function(object, ...) {
-  # init local varibales for CRAN check
-  value <- y <- y_min <- NULL
-
-  n <- 10000
-
-  # first group data
-  p0 <- mean(object@extract$p0)
-  tau <- mean(object@extract$tau)
-  alpha1 <- p0*tau
-  beta1 <- (1 - p0)*tau
-
-  # second group data
-  group2_plot <- NULL
-  arguments <- list(...)
-  if (length(arguments) > 0) {
-    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
-      # provided another fit
-      if (!is.null(arguments$fit2)) {
-        fit2 <- arguments$fit2
-      } else {
-        fit2 <- arguments[[1]]
-      }
-      p0 <- mean(fit2@extract$p0)
-      tau <- mean(fit2@extract$tau)
-      alpha2 <- p0*tau
-      beta2 <- (1 - p0)*tau
-
-      group2_plot <- stat_function(fun=stats::dbeta, n=n, args=list(shape1=alpha2, shape2=beta2), geom="area", fill="#ff4e3f", alpha=0.4)
-    }
-  }
-
-  # plot
-  df_x <- data.frame(value=c(0, 1))
-
-  graph <- ggplot(data=df_x, aes(x=value)) +
-    stat_function(fun=stats::dbeta, n=n, args=list(shape1=alpha1, shape2=beta1), geom="area", fill="#3182bd", alpha=0.4) +
-    group2_plot +
-    xlab("probability") +
-    ylab("density")
-
-  return(graph)
-})
-
-
-#' @title plot_distributions_difference
-#' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group.
-#' @param object success_rate_class object.
-#' @param ... fit2 - a second success_rate_class object.
-#' @rdname success_rate_class-plot_distributions_difference
-#' @aliases plot_distributions_difference_success_rate
-setMethod(f="plot_distributions_difference", signature(object="success_rate_class"), definition=function(object, ...) {
-  # init local varibales for CRAN check
-  x <- value <- variable <- NULL
-
-  arguments <- list(...)
-
-  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(success_rate_class, fit2=success_rate_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameter, e.g. plot_distributions_difference(success_rate_class, fit2=success_rate_class, rope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(success_rate_class, fit2=success_rate_class) or compare_distributions(success_rate_class, fits=list) is required!. You can also provide the rope parameter, e.g. compare_distributions(success_rate_class, fit2=success_rate_class, rope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -382,15 +378,12 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
   }
   rope <- prepare_rope(rope)
 
-  n <- 100000
-
-  # results
-  df <- data.frame()
-
   # first group data
+  y <- list()
+  n <- 100000
   p0 <- mean(object@extract$p0)
   tau <- mean(object@extract$tau)
-  y1 <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
+  y[[1]] <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
 
   # second group data
   if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
@@ -402,20 +395,229 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
     }
     p0 <- mean(fit2@extract$p0)
     tau <- mean(fit2@extract$tau)
-    y2 <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
-
-    # bins in the histogram
-    bins <- 30
-    if (!is.null(arguments$bins)) {
-      bins <- arguments$bins
+    y[[2]] <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
+  } else if (!is.null(arguments$fits)) {
+    # provided a list of fits
+    i <- 2
+    for (fit in arguments$fits) {
+      if (class(fit) != "success_rate_class") {
+        warning("One of the fits in the fits list is not a valid success_rate_class object.")
+        return()
+      }
+      p0 <- mean(fit@extract$p0)
+      tau <- mean(fit@extract$tau)
+      y[[i]] <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
+      i <- i + 1
     }
-
-    # call plot difference from shared plots
-    graph <- shared_plot_difference(y1=y1, y2=y2, rope=rope, bins=bins)
-    return(graph)
   } else {
     warning(wrong_arguments)
     return()
+  }
+
+  n <- length(y)
+  comparison_matrix <- matrix(nrow = n, ncol = n)
+  for (i in 1:(n-1)) {
+    for (j in (i+1):n) {
+      cat(sprintf("\n---------- Group %d vs Group %d ----------\n", i, j))
+      result <- difference(y1=y[[i]], y2=y[[j]], rope=rope, group1=i, group2=j)
+      comparison_matrix[j,i] <- result[1]
+      comparison_matrix[i,j] <- result[2]
+      cat("\n")
+    }
+  }
+
+  # largest/smallest probabilities
+  if (n > 2) {
+    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n")
+    print(is_smallest_or_largest(data=y, rope=rope))
+  }
+
+  return(comparison_matrix)
+})
+
+
+#' @title plot_distributions
+#' @description \code{plot_distributions} a visualization of the fitted distribution, for one, two or multiple fits.
+#' @param object success_rate_class object.
+#' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects.
+#' @rdname success_rate_class-plot_distributions
+#' @aliases plot_distributions_success_rate
+setMethod(f="plot_distributions", signature(object="success_rate_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  group <- x <- y <- NULL
+
+  # first group data
+  alphas <- vector()
+  betas <- vector()
+  p0 <- mean(object@extract$p0)
+  tau <- mean(object@extract$tau)
+  alphas[[1]] <- p0*tau
+  betas[[1]] <- (1 - p0)*tau
+
+  # second group data
+  arguments <- list(...)
+  if (length(arguments) > 0) {
+    if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
+      # provided another fit
+      if (!is.null(arguments$fit2)) {
+        fit2 <- arguments$fit2
+      } else {
+        fit2 <- arguments[[1]]
+      }
+      p0 <- mean(fit2@extract$p0)
+      tau <- mean(fit2@extract$tau)
+      alphas[[2]] <- p0*tau
+      betas[[2]] <- (1 - p0)*tau
+    } else if (!is.null(arguments$fits)) {
+      i <- 2
+      for (fit in arguments$fits) {
+        if (class(fit) != "success_rate_class") {
+          warning("One of the fits in the fits list is not a valid success_rate_class object.")
+          return()
+        }
+        p0 <- mean(fit@extract$p0)
+        tau <- mean(fit@extract$tau)
+        alphas[[i]] <- p0*tau
+        betas[[i]] <- (1 - p0)*tau
+        i <- i + 1
+      }
+    }
+  }
+
+  # calculate data points
+  step <- 1 / 1000
+  df <- data.frame(x=numeric(), y=numeric(), group=factor())
+  n_groups <- length(alphas)
+  for (i in 1:n_groups) {
+    df_group <- data.frame(x = seq(0, 1, step),
+                           y = stats::dbeta(seq(0, 1, step),
+                                            shape1 = alphas[i],
+                                            shape2 = betas[i]),
+                           group=as.factor(i))
+
+    df <- rbind(df, df_group)
+  }
+
+  # plot
+  graph <- ggplot() +
+    geom_area(data=df, aes(x=x, y=y, fill=group), alpha=0.4, position="identity") +
+    xlab("probability") +
+    ylab("density")
+
+  if (n_groups == 2) {
+    graph <- graph +
+      scale_fill_manual(values=c("#3182bd", "#ff4e3f"))
+  } else if (n_groups > 2) {
+    graph <- graph +
+      scale_fill_hue()
+  } else {
+    graph <- graph +
+      scale_fill_manual(values=c("#3182bd")) +
+      theme(legend.position="none")
+  }
+
+  return(suppressWarnings(graph))
+})
+
+
+#' @title plot_distributions_difference
+#' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group or between multiple groups.
+#' @param object success_rate_class object.
+#' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence, bins - number of bins in the histogram.
+#' @rdname success_rate_class-plot_distributions_difference
+#' @aliases plot_distributions_difference_success_rate
+setMethod(f="plot_distributions_difference", signature(object="success_rate_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  value <- NULL
+
+  arguments <- list(...)
+
+  wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(success_rate_class, fit2=success_rate_class) or plot_distributions_difference(success_rate_class, fits=list) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(success_rate_class, fit2=success_rate_class, rope=numeric, bins=numeric)."
+
+  if (length(arguments) == 0) {
+    warning(wrong_arguments)
+    return()
+  }
+
+  # prepare rope
+  rope <- NULL
+  if (!is.null(arguments$rope)) {
+    rope <- arguments$rope
+  }
+  rope <- prepare_rope(rope)
+
+  # first group data
+  y <- list()
+  n <- 100000
+  p0 <- mean(object@extract$p0)
+  tau <- mean(object@extract$tau)
+  y[[1]] <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
+
+  # second group data
+  if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "success_rate_class") {
+    # provided another fit
+    if (!is.null(arguments$fit2)) {
+      fit2 <- arguments$fit2
+    } else {
+      fit2 <- arguments[[1]]
+    }
+    p0 <- mean(fit2@extract$p0)
+    tau <- mean(fit2@extract$tau)
+    y[[2]] <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
+  } else if (!is.null(arguments$fits)) {
+    i <- 2
+    for (fit in arguments$fits) {
+      if (class(fit) != "success_rate_class") {
+        warning("One of the fits in the fits list is not a valid success_rate_class object.")
+        return()
+      }
+      p0 <- mean(fit@extract$p0)
+      tau <- mean(fit@extract$tau)
+      y[[i]] <- stats::rbeta(n, p0*tau, (1 - p0)*tau)
+      i <- i + 1
+    }
+  } else {
+    warning(wrong_arguments)
+    return()
+  }
+
+  # bins in the histogram
+  bins <- 30
+  if (!is.null(arguments$bins)) {
+    bins <- arguments$bins
+  }
+
+  # if no list is provided
+  if (is.null(arguments$fits)) {
+    # call plot difference shared function
+    graph <- plot_difference(y1=y[[1]], y2=y[[2]], rope=rope, bins=bins)
+    return(graph)
+  } else {
+    graphs <- list()
+    n <- length(y)
+    for (i in 1:n) {
+      for (j in i:n) {
+        # if both are equal plot samples, else plot difference
+        if (i == j) {
+          df <- data.frame(value=y[[i]])
+          index <- (i-1)*n + i
+          graphs[[index]] <- ggplot() +
+            geom_density(data=df, aes(x=value), fill="#3182bd", color=NA, alpha=0.4) +
+            xlab("probability") +
+            xlim(0, 1)
+        } else {
+          index1 <- (i-1)*n + j
+          graphs[[index1]] <- plot_difference(y1=y[[i]], y2=y[[j]], rope=rope, bins=bins, nrow=n)
+
+          index2 <- (j-1)*n + i
+          graphs[[index2]] <- plot_difference(y1=y[[j]], y2=y[[i]], rope=rope, bins=bins, nrow=n)
+        }
+      }
+    }
+
+    # cowplot
+    graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
+    return(graph)
   }
 })
 
@@ -428,7 +630,7 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
 #' @aliases plot_fit_success_rate
 setMethod(f="plot_fit", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
-  variable<-value<-NULL
+  variable <- value <- NULL
 
   arguments <- list(...)
 
