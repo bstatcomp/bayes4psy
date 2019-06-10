@@ -10,29 +10,29 @@
 #'
 #' show(`ttest_class`): prints a more detailed summary of the fit.
 #'
-#' get_samples(`ttest_class`): returns a dataframe with values of fitted parameters.
+#' get_parameters(`ttest_class`): returns a dataframe with values of fitted parameters.
 #'
-#' compare_samples(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
+#' compare_means(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
 #'
-#' compare_samples(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
+#' compare_means(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
 #'
-#' compare_samples(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohens d calculation. You can also provide the rope parameter.
+#' compare_means(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohens d calculation. You can also provide the rope parameter.
 #'
-#' compare_samples(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups.
+#' compare_means(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups.
 #'
-#' plot_samples_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_means_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_samples_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_means_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_samples_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_means_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_samples(`ttest_class`): plots density of the samples.
+#' plot_means(`ttest_class`): plots density of means.
 #'
-#' plot_samples(`ttest_class`, fit2=`ttest_class`): plots density for the first and the second group samples.
+#' plot_means(`ttest_class`, fit2=`ttest_class`): plots density for the first and the second group means.
 #'
-#' plot_samples(`ttest_class`, mu=`numeric`): plots density for the first group samples and a mean value in case second group is defined as a normal distribution or as a constant.
+#' plot_means(`ttest_class`, mu=`numeric`): plots density for the first group means and a mean value in case second group is defined as a normal distribution or as a constant.
 #'
-#' plot_samples(`ttest_class`, fits=`list`): plots density for the first group samples and samples for multiple other groups.
+#' plot_means(`ttest_class`, fits=`list`): plots density for the first group means and means for multiple other groups.
 #'
 #' compare_distributions(`ttest_class`, fit2=`ttest_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
@@ -112,12 +112,12 @@ setMethod(f="show", signature(object="ttest_class"), definition=function(object)
 })
 
 
-#' @title get_samples
-#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @title get_parameters
+#' @description \code{get_parameters} returns a dataframe with values of fitted parameters.
 #' @param object ttest_class object.
-#' @rdname ttest_class-get_samples
-#' @aliases get_samples_ttest_class
-setMethod(f="get_samples", signature(object="ttest_class"), definition=function(object) {
+#' @rdname ttest_class-get_parameters
+#' @aliases get_parameters_ttest_class
+setMethod(f="get_parameters", signature(object="ttest_class"), definition=function(object) {
   df <- data.frame(mu=object@extract$mu,
                    sigma=object@extract$sigma,
                    nu=object@extract$nu)
@@ -126,16 +126,16 @@ setMethod(f="get_samples", signature(object="ttest_class"), definition=function(
 })
 
 
-#' @title compare_samples
-#' @description \code{compare_samples} prints difference/equality of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
+#' @title compare_means
+#' @description \code{compare_means} prints difference/equality of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence.
-#' @rdname ttest_class-compare_samples
-#' @aliases compare_samples_ttest
-setMethod(f="compare_samples", signature(object="ttest_class"), definition=function(object, ...) {
+#' @rdname ttest_class-compare_means
+#' @aliases compare_means_ttest
+setMethod(f="compare_means", signature(object="ttest_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(ttest_class, fit2=ttest_class), compare_samples(ttest_class, mu=numeric), compare_samples(ttest_class, mu=numeric, sigma=numeric) or compare_samples(ttest_class, fits=list) is required! You can also provide the rope parameter, e.g. compare_samples(ttest_class, fit2=ttest_class, rope=numeric)."
+  wrong_arguments <- "The provided arguments for the compare_means function are invalid, compare_means(ttest_class, fit2=ttest_class), compare_means(ttest_class, mu=numeric), compare_means(ttest_class, mu=numeric, sigma=numeric) or compare_means(ttest_class, fits=list) is required! You can also provide the rope parameter, e.g. compare_means(ttest_class, fit2=ttest_class, rope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -220,19 +220,19 @@ setMethod(f="compare_samples", signature(object="ttest_class"), definition=funct
 })
 
 
-#' @title plot_samples_difference
-#' @description \code{plot_samples_difference} a visualization of the difference of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
+#' @title plot_means_difference
+#' @description \code{plot_means_difference} a visualization of the difference of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram.
-#' @rdname ttest_class-plot_samples_difference
-#' @aliases plot_samples_difference_ttest
-setMethod(f="plot_samples_difference", signature(object="ttest_class"), definition=function(object, ...) {
+#' @rdname ttest_class-plot_means_difference
+#' @aliases plot_means_difference_ttest
+setMethod(f="plot_means_difference", signature(object="ttest_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
 
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(ttest_class, fit2=ttest_class), plot_samples_difference(ttest_class, fits=list) or plot_samples_difference(ttest_class, mu=numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_means_difference function are invalid, plot_means_difference(ttest_class, fit2=ttest_class), plot_means_difference(ttest_class, fits=list) or plot_means_difference(ttest_class, mu=numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_means_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -307,7 +307,7 @@ setMethod(f="plot_samples_difference", signature(object="ttest_class"), definiti
     n <- length(y)
     for (i in 1:n) {
       for (j in i:n) {
-        # if both are equal plot samples, else plot difference
+        # if both are equal plot means, else plot difference
         if (i == j) {
           df <- data.frame(value=y[[i]])
           index <- (i-1)*n + i
@@ -332,13 +332,13 @@ setMethod(f="plot_samples_difference", signature(object="ttest_class"), definiti
 })
 
 
-#' @title plot_samples
-#' @description \code{plot_samples} plots density of the samples, the first and the second group samples, samples of multiple groups or a mean value in case second group is defined as a constant.
+#' @title plot_means
+#' @description \code{plot_means} plots density of means, the first and the second group means, means of multiple groups or a mean value in case second group is defined as a constant.
 #' @param object ttest_class object.
 #' @param ... fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects.
-#' @rdname ttest_class-plot_samples
-#' @aliases plot_samples_ttest
-setMethod(f="plot_samples", signature(object="ttest_class"), definition=function(object, ...) {
+#' @rdname ttest_class-plot_means
+#' @aliases plot_means_ttest
+setMethod(f="plot_means", signature(object="ttest_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   group <- value <- NULL
 

@@ -43,8 +43,8 @@ plot_fit(rt_control, subjects=TRUE)
 # plot trace
 plot_trace(rt_control)
 
-# plot samples
-plot_samples(rt_control)
+# plot means
+plot_means(rt_control)
 
 # plot distribution
 plot_distributions(rt_control)
@@ -67,8 +67,8 @@ plot_fit(rt_test)
 # plot trace
 plot_trace(rt_test)
 
-# plot samples
-plot_samples(rt_test)
+# plot means
+plot_means(rt_test)
 
 # plot distribution
 plot_distributions(rt_test)
@@ -76,25 +76,25 @@ plot_distributions(rt_test)
 
 ## compare two groups  ---------------------------------------------------
 # difference summary
-compare_samples(rt_control, fit2=rt_test)
+compare_means(rt_control, fit2=rt_test)
 
 # difference summary, compare only mu parameter (or lambda)
-compare_samples(rt_control, fit2=rt_test, par="mu")
+compare_means(rt_control, fit2=rt_test, par="mu")
 
 # difference summary with rope
-compare_samples(rt_control, fit2=rt_test, rope=0.1)
+compare_means(rt_control, fit2=rt_test, rope=0.1)
 
 # difference plot
-plot_samples_difference(rt_control, fit2=rt_test)
+plot_means_difference(rt_control, fit2=rt_test)
 
 # difference plot with rope, custom bins of mu parameter
-plot_samples_difference(rt_control, fit2=rt_test, rope=0.1, bins=10, par="mu")
+plot_means_difference(rt_control, fit2=rt_test, rope=0.1, bins=10, par="mu")
 
-# samples plot
-plot_samples(rt_control, fit2=rt_test)
+# means plot
+plot_means(rt_control, fit2=rt_test)
 
-# plot samples only for lambda prameter (or mu)
-plot_samples(rt_control, fit2=rt_test, par="lambda")
+# plot means only for lambda prameter (or mu)
+plot_means(rt_control, fit2=rt_test, par="lambda")
 
 # compare distributions
 compare_distributions(rt_control, fit2=rt_test)
@@ -147,8 +147,8 @@ plot_fit(s_congruent)
 # plot trace
 plot_trace(s_congruent)
 
-# plot samples
-plot_samples(s_congruent)
+# plot means
+plot_means(s_congruent)
 
 # plot distribution
 plot_distributions(s_congruent)
@@ -169,28 +169,28 @@ plot_fit(s_incongruent)
 # plot trace
 plot_trace(s_incongruent)
 
-# plot samples
-plot_samples(s_incongruent)
+# plot means
+plot_means(s_incongruent)
 
 # plot distribution
 plot_distributions(s_incongruent)
 
 
 ## comparison ------------------------------------------------------------
-# compare samples
-compare_samples(s_congruent, fit2=s_incongruent)
+# compare means
+compare_means(s_congruent, fit2=s_incongruent)
 
-# compare samples with rope
-compare_samples(s_congruent, fit2=s_incongruent, rope=0.05)
+# compare means with rope
+compare_means(s_congruent, fit2=s_incongruent, rope=0.05)
 
 # difference plot
-plot_samples_difference(s_congruent, fit2=s_incongruent)
+plot_means_difference(s_congruent, fit2=s_incongruent)
 
 # difference plot with rope and custom bins
-plot_samples_difference(s_congruent, fit2=s_incongruent, rope=0.05, bins=20)
+plot_means_difference(s_congruent, fit2=s_incongruent, rope=0.05, bins=20)
 
-# plot samples for both groups
-plot_samples(s_congruent, fit2=s_incongruent)
+# plot means for both groups
+plot_means(s_congruent, fit2=s_incongruent)
 
 # compare distributions
 compare_distributions(s_congruent, fit2=s_incongruent)

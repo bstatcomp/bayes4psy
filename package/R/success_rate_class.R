@@ -10,23 +10,23 @@
 #'
 #' show(`success_rate_class`): prints a more detailed summary of the fit.
 #'
-#' get_samples(`success_rate_class`): returns a dataframe with values of fitted parameters.
+#' get_parameters(`success_rate_class`): returns a dataframe with values of fitted parameters.
 #'
-#' get_subject_samples(`success_rate_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+#' get_subject_parameters(`success_rate_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 #'
-#' compare_samples(`success_rate_class`, fit2=`success_rate_class`): returns difference in successfulness between two groups. You can also provide the rope parameter.
+#' compare_means(`success_rate_class`, fit2=`success_rate_class`): returns difference in successfulness between two groups. You can also provide the rope parameter.
 #'
-#' compare_samples(`success_rate_class`, fits=`list`): returns difference in successfulness between multiple groups. You can also provide the rope parameter.
+#' compare_means(`success_rate_class`, fits=`list`): returns difference in successfulness between multiple groups. You can also provide the rope parameter.
 #'
-#' plot_samples_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_means_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_samples_difference(`success_rate_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_means_difference(`success_rate_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_samples(`success_rate_class`): plots density for the first group samples.
+#' plot_means(`success_rate_class`): plots density for the first group means.
 #'
-#' plot_samples(`success_rate_class`, fit2=`success_rate_class`): plots density for the first and the second group samples.
+#' plot_means(`success_rate_class`, fit2=`success_rate_class`): plots density for the first and the second group means.
 #'
-#' plot_samples(`success_rate_class`, fits=`list`): plots density for multiple
+#' plot_means(`success_rate_class`, fits=`list`): plots density for multiple
 #'
 #' compare_distributions(`success_rate_class`, fit2=`success_rate_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
@@ -87,12 +87,12 @@ setMethod(f="show", signature(object="success_rate_class"), definition=function(
 })
 
 
-#' @title get_samples
-#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @title get_parameters
+#' @description \code{get_parameters} returns a dataframe with values of fitted parameters.
 #' @param object success_rate_class object.
-#' @rdname success_rate_class-get_samples
-#' @aliases get_samples_success_rate_class
-setMethod(f="get_samples", signature(object="success_rate_class"), definition=function(object) {
+#' @rdname success_rate_class-get_parameters
+#' @aliases get_parameters_success_rate_class
+setMethod(f="get_parameters", signature(object="success_rate_class"), definition=function(object) {
   df <- data.frame(p=object@extract$p0,
                    tau=object@extract$tau)
 
@@ -100,12 +100,12 @@ setMethod(f="get_samples", signature(object="success_rate_class"), definition=fu
 })
 
 
-#' @title get_subject_samples
-#' @description \code{get_subject_samples} returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+#' @title get_subject_parameters
+#' @description \code{get_subject_parameters} returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 #' @param object success_rate_class object.
-#' @rdname success_rate_class-get_subject_samples
-#' @aliases get_subject_samples_success_rate_class
-setMethod(f="get_subject_samples", signature(object="success_rate_class"), definition=function(object) {
+#' @rdname success_rate_class-get_subject_parameters
+#' @aliases get_subject_parameters_success_rate_class
+setMethod(f="get_subject_parameters", signature(object="success_rate_class"), definition=function(object) {
   df <- data.frame(p=numeric(), tau=numeric(), subject=numeric())
 
   n <- length(unique(object@data$s))
@@ -122,16 +122,16 @@ setMethod(f="get_subject_samples", signature(object="success_rate_class"), defin
 })
 
 
-#' @title compare_samples
-#' @description \code{compare_samples} prints difference in successfulness between two groups or multiple groups.
+#' @title compare_means
+#' @description \code{compare_means} prints difference in successfulness between two groups or multiple groups.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence.
-#' @rdname success_rate_class-compare_samples
-#' @aliases compare_samples_success_rate
-setMethod(f="compare_samples", signature(object="success_rate_class"), definition=function(object, ...) {
+#' @rdname success_rate_class-compare_means
+#' @aliases compare_means_success_rate
+setMethod(f="compare_means", signature(object="success_rate_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(success_rate_class, fit2=success_rate_class) or compare_samples(success_rate_class, fits=list) is required! You can also provide the rope parameter, e.g. compare_samples(success_rate_class, fit2=success_rate_class, rope=numeric)."
+  wrong_arguments <- "The provided arguments for the compare_means function are invalid, compare_means(success_rate_class, fit2=success_rate_class) or compare_means(success_rate_class, fits=list) is required! You can also provide the rope parameter, e.g. compare_means(success_rate_class, fit2=success_rate_class, rope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -198,19 +198,19 @@ setMethod(f="compare_samples", signature(object="success_rate_class"), definitio
 })
 
 
-#' @title plot_samples_difference
-#' @description \code{plot_samples_difference} a visualization of the difference between two groups or multiple groups.
+#' @title plot_means_difference
+#' @description \code{plot_means_difference} a visualization of the difference between two groups or multiple groups.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence, bins - number of bins in the histogram.
-#' @rdname success_rate_class-plot_samples_difference
-#' @aliases plot_samples_difference_success_rate
-setMethod(f="plot_samples_difference", signature(object="success_rate_class"), definition=function(object, ...) {
+#' @rdname success_rate_class-plot_means_difference
+#' @aliases plot_means_difference_success_rate
+setMethod(f="plot_means_difference", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
 
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(success_rate_class, fit2=success_rate_class) or plot_samples_difference(success_rate_class, fits=list) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(success_rate_class, fit2=success_rate_class, rope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_means_difference function are invalid, plot_means_difference(success_rate_class, fit2=success_rate_class) or plot_means_difference(success_rate_class, fits=list) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_means_difference(success_rate_class, fit2=success_rate_class, rope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -269,7 +269,7 @@ setMethod(f="plot_samples_difference", signature(object="success_rate_class"), d
     n <- length(y)
     for (i in 1:n) {
       for (j in i:n) {
-        # if both are equal plot samples, else plot difference
+        # if both are equal plot means, else plot difference
         if (i == j) {
           df <- data.frame(value=y[[i]])
           index <- (i-1)*n + i
@@ -294,13 +294,13 @@ setMethod(f="plot_samples_difference", signature(object="success_rate_class"), d
 })
 
 
-#' @title plot_samples
-#' @description \code{plot_samples} plots density of the samples for one, two or multiple groups.
+#' @title plot_means
+#' @description \code{plot_means} plots density of means for one, two or multiple groups.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects.
-#' @rdname success_rate_class-plot_samples
-#' @aliases plot_samples_success_rate
-setMethod(f="plot_samples", signature(object="success_rate_class"), definition=function(object, ...) {
+#' @rdname success_rate_class-plot_means
+#' @aliases plot_means_success_rate
+setMethod(f="plot_means", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   group <- value <- NULL
 

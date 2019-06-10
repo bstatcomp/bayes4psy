@@ -10,27 +10,27 @@
 #'
 #' show(`color_class`): prints a more detailed summary of the fit.
 #'
-#' get_samples(`color_class`): returns a dataframe with values of fitted parameters.
+#' get_parameters(`color_class`): returns a dataframe with values of fitted parameters.
 #'
-#' compare_samples(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare_means(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' compare_samples(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare_means(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' compare_samples(`color_class`, hsv=`vector`): prints color difference between a fit and a color defined with hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare_means(`color_class`, hsv=`vector`): prints color difference between a fit and a color defined with hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' plot_samples_difference(`color_class`, fit2=`color_class`): a visualization of the difference between two fits You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#' plot_means_difference(`color_class`, fit2=`color_class`): a visualization of the difference between two fits You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' plot_samples_difference(`color_class`, rgb=`vector`): a visualization of the difference between a fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#' plot_means_difference(`color_class`, rgb=`vector`): a visualization of the difference between a fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' plot_samples_difference(`color_class`, hsv=`vector`): a visualization of the difference between a fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#' plot_means_difference(`color_class`, hsv=`vector`): a visualization of the difference between a fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
 #'
-#' plot_samples(`color_class`): plots density of the samples. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
+#' plot_means(`color_class`): plots density of means. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
 #'
-#' plot_samples(`color_class`, fit2=`color_class`): plots density for the first and the second group samples. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
+#' plot_means(`color_class`, fit2=`color_class`): plots density for the first and the second group means. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
 #'
-#' plot_samples(`color_class`, rgb=`vector`): plots density for the first and a color defined with rgb components. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
+#' plot_means(`color_class`, rgb=`vector`): plots density for the first and a color defined with rgb components. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
 #'
-#' plot_samples(`color_class`, hsv=`vector`): plots density for the first and a color defined with hsv components. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
+#' plot_means(`color_class`, hsv=`vector`): plots density for the first and a color defined with hsv components. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
 #'
 #' compare_distributions(`color_class`, fit2=`color_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
@@ -56,7 +56,7 @@
 #'
 #' plot_fit_hsv(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
 #'
-#' plot_samples_difference_hsv(`color_class`): a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
+#' plot_means_difference_hsv(`color_class`): a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #'
 #' plot_distributions_difference_hsv(`color_class`): a visualization of the difference between distributions of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #'
@@ -149,12 +149,12 @@ setMethod(f="show", signature(object="color_class"), definition=function(object)
 })
 
 
-#' @title get_samples
-#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @title get_parameters
+#' @description \code{get_parameters} returns a dataframe with values of fitted parameters.
 #' @param object color_class object.
-#' @rdname color_class-get_samples
-#' @aliases get_samples_color_class
-setMethod(f="get_samples", signature(object="color_class"), definition=function(object) {
+#' @rdname color_class-get_parameters
+#' @aliases get_parameters_color_class
+setMethod(f="get_parameters", signature(object="color_class"), definition=function(object) {
   df <- data.frame(r=object@extract$mu_r,
                    g=object@extract$mu_g,
                    b=object@extract$mu_b,
@@ -166,16 +166,16 @@ setMethod(f="get_samples", signature(object="color_class"), definition=function(
 })
 
 
-#' @title compare_samples
-#' @description \code{compare_samples} prints difference in colors between two fits or a fit and a color.
+#' @title compare_means
+#' @description \code{compare_means} prints difference in colors between two fits or a fit and a color.
 #' @param object color_class object.
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, pars - components of comparison, a subset of (r, g, b, h, s, v).
-#' @rdname color_class-compare_samples
-#' @aliases compare_samples_color
-setMethod(f="compare_samples", signature(object="color_class"), definition=function(object, ...) {
+#' @rdname color_class-compare_means
+#' @aliases compare_means_color
+setMethod(f="compare_means", signature(object="color_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(color_class, fit2=color_class), compare(color_class, rgb=vector) or compare_samples(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. compare_samples(color_class, fit2=color_class, rope=numeric). You can also execute the comparison through a subset of color components, e.g. compare_samples(color_class, fit2=color_class, pars=c(\"h\", \"s\", \"v\"))."
+  wrong_arguments <- "The provided arguments for the compare_means function are invalid, compare_means(color_class, fit2=color_class), compare(color_class, rgb=vector) or compare_means(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. compare_means(color_class, fit2=color_class, rope=numeric). You can also execute the comparison through a subset of color components, e.g. compare_means(color_class, fit2=color_class, pars=c(\"h\", \"s\", \"v\"))."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -292,17 +292,17 @@ setMethod(f="compare_samples", signature(object="color_class"), definition=funct
 })
 
 
-#' @title plot_samples_difference
-#' @description \code{plot_samples_difference} a visualization of the difference between two fits
+#' @title plot_means_difference
+#' @description \code{plot_means_difference} a visualization of the difference between two fits
 #' @param object color_class object.
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, pars - components of comparison, a subset of (r, g, b, h, s, v).
-#' @rdname color_class-plot_samples_difference
-#' @aliases plot_samples_difference_color
-setMethod(f="plot_samples_difference", signature(object="color_class"), definition=function(object, ...) {
+#' @rdname color_class-plot_means_difference
+#' @aliases plot_means_difference_color
+setMethod(f="plot_means_difference", signature(object="color_class"), definition=function(object, ...) {
   # get arguments
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(color_class, fit2=color_class), plot_samples_difference(color_class, rgb=vector) or plot_samples_difference(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. plot_samples_difference(color_class, fit2=color_class, rope=numeric) or the bins parameter plot_samples_difference(color_class, fit2=color_class, bins=numeric). You can also execute the comparison through a subset of color components, e.g. plot_samples_difference(color_class, fit2=color_class, pars=c(\"h\", \"s\", \"v\"))."
+  wrong_arguments <- "The provided arguments for the plot_means_difference function are invalid, plot_means_difference(color_class, fit2=color_class), plot_means_difference(color_class, rgb=vector) or plot_means_difference(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. plot_means_difference(color_class, fit2=color_class, rope=numeric) or the bins parameter plot_means_difference(color_class, fit2=color_class, bins=numeric). You can also execute the comparison through a subset of color components, e.g. plot_means_difference(color_class, fit2=color_class, pars=c(\"h\", \"s\", \"v\"))."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -458,13 +458,13 @@ setMethod(f="plot_samples_difference", signature(object="color_class"), definiti
 })
 
 
-#' @title plot_samples
-#' @description \code{plot_samples} lots density of the samples, the first and the second group samples or a constant values in case second group is defined as rgb or hsv color..
+#' @title plot_means
+#' @description \code{plot_means} plots density of means, the first and the second group means or a constant values in case second group is defined as rgb or hsv color.
 #' @param object color_class object.
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, pars - components of comparison, a subset of (r, g, b, h, s, v).
-#' @rdname color_class-plot_samples
-#' @aliases plot_samples_color
-setMethod(f="plot_samples", signature(object="color_class"), definition=function(object, ...) {
+#' @rdname color_class-plot_means
+#' @aliases plot_means_color
+setMethod(f="plot_means", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
 
@@ -1741,17 +1741,17 @@ setMethod(f="plot_fit_hsv", signature(object="color_class"), definition=function
 })
 
 
-#' @rdname color_class-plot_samples_difference_hsv
-#' @exportMethod plot_samples_difference_hsv
-setGeneric(name="plot_samples_difference_hsv", function(object, ...) standardGeneric("plot_samples_difference_hsv"))
+#' @rdname color_class-plot_means_difference_hsv
+#' @exportMethod plot_means_difference_hsv
+setGeneric(name="plot_means_difference_hsv", function(object, ...) standardGeneric("plot_means_difference_hsv"))
 
-#' @title plot_samples_difference_hsv
-#' @description \code{plot_samples_difference_hsv} a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
+#' @title plot_means_difference_hsv
+#' @description \code{plot_means_difference_hsv} a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #' @param object color_class object.
 #' @param ... fit2 - a second color_class object, points - points to plot defined through rgb or hsv, lines - lines to plot defined through rgb or hsv, hsv - are points and lines defined in hsv format (default = FALSE).
-#' @rdname color_class-plot_samples_difference_hsv
-#' @aliases plot_samples_difference_hsv_hsv_color
-setMethod(f="plot_samples_difference_hsv", signature(object="color_class"), definition=function(object, ...) {
+#' @rdname color_class-plot_means_difference_hsv
+#' @aliases plot_means_difference_hsv_color
+setMethod(f="plot_means_difference_hsv", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   points <- lines <- r <- g <- b <- h <- s <- v <- sv <- NULL
 

@@ -10,23 +10,23 @@
 #'
 #' show(`reaction_time_class`): prints a more detailed summary of the fit.
 #'
-#' get_samples(`reaction_time_class`): returns a dataframe with values of fitted parameters.
+#' get_parameters(`reaction_time_class`): returns a dataframe with values of fitted parameters.
 #'
-#' get_subject_samples(`reaction_time_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+#' get_subject_parameters(`reaction_time_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 #'
-#' compare_samples(`reaction_time_class`, fit2=`reaction_time_class`): returns difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
+#' compare_means(`reaction_time_class`, fit2=`reaction_time_class`): returns difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
 #'
-#' compare_samples(`reaction_time_class`, fits=`list`): returns difference in reaction times between multiple groups. You can also provide the rope parameter.
+#' compare_means(`reaction_time_class`, fits=`list`): returns difference in reaction times between multiple groups. You can also provide the rope parameter.
 #'
-#' plot_samples_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
+#' plot_means_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
 #'
-#' plot_samples_difference(`reaction_time_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
+#' plot_means_difference(`reaction_time_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
 #'
-#' plot_samples(`reaction_time_class`): plots density of the samples samples. You can also visualize the density only for a chosen parameter - mu or lambda.
+#' plot_means(`reaction_time_class`): plots density of the means. You can also visualize the density only for a chosen parameter - mu or lambda.
 #'
-#' plot_samples(`reaction_time_class`, fit2=`reaction_time_class`): plots density for the first and the second group samples. You can also visualize the density only for a chosen parameter - mu or lambda.
+#' plot_means(`reaction_time_class`, fit2=`reaction_time_class`): plots density for the first and the second group means. You can also visualize the density only for a chosen parameter - mu or lambda.
 #'
-#' plot_samples(`reaction_time_class`, fits=`list`): plots density for samples of multiple groups. You can also visualize the density only for a chosen parameter - mu or lambda.
+#' plot_means(`reaction_time_class`, fits=`list`): plots density for means of multiple groups. You can also visualize the density only for a chosen parameter - mu or lambda.
 #'
 #' compare_distributions(`reaction_time_class`, fit2=`reaction_time_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
@@ -99,12 +99,12 @@ setMethod(f="show", signature(object="reaction_time_class"), definition=function
 })
 
 
-#' @title get_samples
-#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @title get_parameters
+#' @description \code{get_parameters} returns a dataframe with values of fitted parameters.
 #' @param object reaction_time_class object.
-#' @rdname reaction_time_class-get_samples
-#' @aliases get_samples_reaction_time
-setMethod(f="get_samples", signature(object="reaction_time_class"), definition=function(object) {
+#' @rdname reaction_time_class-get_parameters
+#' @aliases get_parameters_reaction_time
+setMethod(f="get_parameters", signature(object="reaction_time_class"), definition=function(object) {
   df <- data.frame(rt=object@extract$rt,
                    mu=object@extract$mu_m,
                    sigma=object@extract$mu_s,
@@ -114,12 +114,12 @@ setMethod(f="get_samples", signature(object="reaction_time_class"), definition=f
 })
 
 
-#' @title get_subject_samples
-#' @description \code{get_subject_samples} returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+#' @title get_subject_parameters
+#' @description \code{get_subject_parameters} returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 #' @param object reaction_time_class object.
-#' @rdname reaction_time_class-get_subject_samples
-#' @aliases get_subject_samples_reaction_time
-setMethod(f="get_subject_samples", signature(object="reaction_time_class"), definition=function(object) {
+#' @rdname reaction_time_class-get_subject_parameters
+#' @aliases get_subject_parameters_reaction_time
+setMethod(f="get_subject_parameters", signature(object="reaction_time_class"), definition=function(object) {
   df <- data.frame(rt=numeric(), mu=numeric(), sigma=numeric(), lambda=numeric(), subject=numeric())
 
   n <- length(unique(object@data$s))
@@ -138,16 +138,16 @@ setMethod(f="get_subject_samples", signature(object="reaction_time_class"), defi
 })
 
 
-#' @title compare_samples
-#' @description \code{compare_samples} prints difference in reaction times between two groups or multiple groups.
+#' @title compare_means
+#' @description \code{compare_means} prints difference in reaction times between two groups or multiple groups.
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence, par - specific parameter of comparison - mu or lambda.
-#' @rdname reaction_time_class-compare_samples
-#' @aliases compare_samples_reaction_time
-setMethod(f="compare_samples", signature(object="reaction_time_class"), definition=function(object, ...) {
+#' @rdname reaction_time_class-compare_means
+#' @aliases compare_means_reaction_time
+setMethod(f="compare_means", signature(object="reaction_time_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(reaction_time_class, fit2=reaction_time_class) or compare_samples(reaction_time_class, fits=list) is required! You can optionallly provide the rope parameter, e.g. compare_samples(reaction_time_class, fit2=reaction_time_class, rope=numeric). You can also execute the comparison through only the mu or the lamdba parameter, e.g. compare_samples(reaction_time_class, fit2=reaction_time_class, par=\"mu\")."
+  wrong_arguments <- "The provided arguments for the compare_means function are invalid, compare_means(reaction_time_class, fit2=reaction_time_class) or compare_means(reaction_time_class, fits=list) is required! You can optionallly provide the rope parameter, e.g. compare_means(reaction_time_class, fit2=reaction_time_class, rope=numeric). You can also execute the comparison through only the mu or the lamdba parameter, e.g. compare_means(reaction_time_class, fit2=reaction_time_class, par=\"mu\")."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -247,19 +247,19 @@ setMethod(f="compare_samples", signature(object="reaction_time_class"), definiti
 })
 
 
-#' @title plot_samples_difference
-#' @description \code{plot_samples_difference} a visualization of the difference between two groups or multiple groups.
+#' @title plot_means_difference
+#' @description \code{plot_means_difference} a visualization of the difference between two groups or multiple groups.
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.
-#' @rdname reaction_time_class-plot_samples_difference
-#' @aliases plot_samples_difference_reaction_time
-setMethod(f="plot_samples_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
+#' @rdname reaction_time_class-plot_means_difference
+#' @aliases plot_means_difference_reaction_time
+setMethod(f="plot_means_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
 
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(reaction_time_class, fit2=reaction_time_class) or plot_samples_difference(reaction_time_class, fits=list) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(reaction_time_class, fit2=reaction_time_class, rope=numeric, bins=numeric). You can also visualize the difference through only the mu or the lamdba parameter, e.g. plot_samples_difference(reaction_time_class, fit2=reaction_time_class, par=\"mu\")."
+  wrong_arguments <- "The provided arguments for the plot_means_difference function are invalid, plot_means_difference(reaction_time_class, fit2=reaction_time_class) or plot_means_difference(reaction_time_class, fits=list) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_means_difference(reaction_time_class, fit2=reaction_time_class, rope=numeric, bins=numeric). You can also visualize the difference through only the mu or the lamdba parameter, e.g. plot_means_difference(reaction_time_class, fit2=reaction_time_class, par=\"mu\")."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -360,7 +360,7 @@ setMethod(f="plot_samples_difference", signature(object="reaction_time_class"), 
     n <- length(y)
     for (i in 1:n) {
       for (j in i:n) {
-        # if both are equal plot samples, else plot difference
+        # if both are equal plot means, else plot difference
         if (i == j) {
           df <- data.frame(value=y[[i]])
           index <- (i-1)*n + i
@@ -385,13 +385,13 @@ setMethod(f="plot_samples_difference", signature(object="reaction_time_class"), 
 })
 
 
-#' @title plot_samples
-#' @description \code{plot_samples} plots density of the samples for one, two or multiple groups.
+#' @title plot_means
+#' @description \code{plot_means} plots density of means for one, two or multiple groups.
 #' @param object reaction_time_class object.
 #' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, par - specific parameter of comparison - mu or lambda.
-#' @rdname reaction_time_class-plot_samples
-#' @aliases plot_samples_reaction_time
-setMethod(f="plot_samples", signature(object="reaction_time_class"), definition=function(object, ...) {
+#' @rdname reaction_time_class-plot_means
+#' @aliases plot_means_reaction_time
+setMethod(f="plot_means", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   group <- value <- NULL
 

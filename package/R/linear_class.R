@@ -10,17 +10,17 @@
 #'
 #' show(`linear_class`): prints a more detailed summary of the fit.
 #'
-#' get_samples(`linear_class`): returns a dataframe with values of fitted parameters.
+#' get_parameters(`linear_class`): returns a dataframe with values of fitted parameters.
 #'
-#' get_subject_samples(`linear_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+#' get_subject_parameters(`linear_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 #'
-#' compare_samples(`linear_class`, fit2=`linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
+#' compare_means(`linear_class`, fit2=`linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
 #'
-#' plot_samples_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_means_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_samples(`linear_class`): plots density of the samples.
+#' plot_means(`linear_class`): plots density of means.
 #'
-#' plot_samples(`linear_class`, fit2=`linear_class`): plots density for the first and the second group samples.
+#' plot_means(`linear_class`, fit2=`linear_class`): plots density for the first and the second group means.
 #'
 #' compare_distributions(`linear_class`, fit2=`linear_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #'
@@ -83,12 +83,12 @@ setMethod(f="show", signature(object="linear_class"), definition=function(object
 })
 
 
-#' @title get_samples
-#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @title get_parameters
+#' @description \code{get_parameters} returns a dataframe with values of fitted parameters.
 #' @param object linear_class object.
-#' @rdname linear_class-get_samples
-#' @aliases get_samples_linear_class
-setMethod(f="get_samples", signature(object="linear_class"), definition=function(object) {
+#' @rdname linear_class-get_parameters
+#' @aliases get_parameters_linear_class
+setMethod(f="get_parameters", signature(object="linear_class"), definition=function(object) {
   df <- data.frame(slope=object@extract$mu_a,
                    intercept=object@extract$mu_b,
                    sigma=object@extract$mu_s)
@@ -97,12 +97,12 @@ setMethod(f="get_samples", signature(object="linear_class"), definition=function
 })
 
 
-#' @title get_subject_samples
-#' @description \code{get_subject_samples} returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+#' @title get_subject_parameters
+#' @description \code{get_subject_parameters} returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 #' @param object linear_class object.
-#' @rdname linear_class-get_subject_samples
-#' @aliases get_subject_samples_linear_class
-setMethod(f="get_subject_samples", signature(object="linear_class"), definition=function(object) {
+#' @rdname linear_class-get_subject_parameters
+#' @aliases get_subject_parameters_linear_class
+setMethod(f="get_subject_parameters", signature(object="linear_class"), definition=function(object) {
   df <- data.frame(slope=numeric(), intercept=numeric(), sigma=numeric(), subject=numeric())
 
   n <- length(unique(object@data$s))
@@ -120,16 +120,16 @@ setMethod(f="get_subject_samples", signature(object="linear_class"), definition=
 })
 
 
-#' @title compare_samples
-#' @description \code{compare_samples} prints difference in intercept and slope between two groups.
+#' @title compare_means
+#' @description \code{compare_means} prints difference in intercept and slope between two groups.
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
-#' @rdname linear_class-compare_samples
-#' @aliases compare_sampleslinear
-setMethod(f="compare_samples", signature(object="linear_class"), definition=function(object, ...) {
+#' @rdname linear_class-compare_means
+#' @aliases compare_meanslinear
+setMethod(f="compare_means", signature(object="linear_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_samples function are invalid, compare_samples(linear_class, fit2=linear_class) is required! You can also provide the rope parameters, e.g. compare_samples(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric)."
+  wrong_arguments <- "The provided arguments for the compare_means function are invalid, compare_means(linear_class, fit2=linear_class) is required! You can also provide the rope parameters, e.g. compare_means(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -176,16 +176,16 @@ setMethod(f="compare_samples", signature(object="linear_class"), definition=func
 })
 
 
-#' @title plot_samples_difference
-#' @description \code{plot_samples_difference} plots difference between two groups.
+#' @title plot_means_difference
+#' @description \code{plot_means_difference} plots difference between two groups.
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
-#' @rdname linear_class-plot_samples_difference
-#' @aliases plot_samples_difference_linear
-setMethod(f="plot_samples_difference", signature(object="linear_class"), definition=function(object, ...) {
+#' @rdname linear_class-plot_means_difference
+#' @aliases plot_means_difference_linear
+setMethod(f="plot_means_difference", signature(object="linear_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_samples_difference function are invalid, plot_samples_difference(linear_class, fit2=linear_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_samples_difference(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_means_difference function are invalid, plot_means_difference(linear_class, fit2=linear_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_means_difference(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -246,13 +246,13 @@ setMethod(f="plot_samples_difference", signature(object="linear_class"), definit
 })
 
 
-#' @title plot_samples
-#' @description \code{plot_samples} plots samples or the first and the second group samples.
+#' @title plot_means
+#' @description \code{plot_means} plots means or the first and the second group means.
 #' @param object linear_class object.
 #' @param ... fit2 - a second linear_class object.
-#' @rdname linear_class-plot_samples
-#' @aliases plot_samples_linear
-setMethod(f="plot_samples", signature(object="linear_class"), definition=function(object, ...) {
+#' @rdname linear_class-plot_means
+#' @aliases plot_means_linear
+setMethod(f="plot_means", signature(object="linear_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   intercept <- slope <- NULL
 

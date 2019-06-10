@@ -40,7 +40,7 @@ summary(fit_test)
 print(fit_test)
 plot_trace(fit_test)
 plot_fit(fit_test)
-df_subject <- get_samples(fit_test)
+df_subject <- get_parameters(fit_test)
 
 # analysis for neutral condition -----------------------------------------
 df_neutral <- df %>% filter(cond == "neutral")
@@ -80,7 +80,7 @@ i <- 1
 for (f in fit_list) {
   means[i] <- mean(f@extract$rt)
 
-  df_fit <- get_samples(f)
+  df_fit <- get_parameters(f)
   df_fit$age_group <- age_groups[[i]]
   i <- i + 1
 

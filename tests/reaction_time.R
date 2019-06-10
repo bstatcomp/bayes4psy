@@ -38,9 +38,9 @@ arguments <- list()
 arguments$fits <- fits
 
 
-plot_samples(fit1)
-plot_samples(fit1, fit2=fit2)
-plot_samples(fit1, fits=fits)
+plot_means(fit1)
+plot_means(fit1, fit2=fit2)
+plot_means(fit1, fits=fits)
 
-plot_samples_difference(fit1, fits=fits)
+plot_means_difference(fit1, fits=fits)
 plot_distributions_difference(fit1, fits=fits)

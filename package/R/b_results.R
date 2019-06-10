@@ -11,47 +11,47 @@
 setClass("b_results")
 
 
-#' @title get_samples
-#' @description \code{get_samples} returns a dataframe with values of fitted parameters.
+#' @title get_parameters
+#' @description \code{get_parameters} returns a dataframe with values of fitted parameters.
 #' @param object S4 class object from bayes4psy library.
-#' @rdname b_results-get_samples
-#' @exportMethod get_samples
-setGeneric(name="get_samples", function(object) standardGeneric("get_samples"))
+#' @rdname b_results-get_parameters
+#' @exportMethod get_parameters
+setGeneric(name="get_parameters", function(object) standardGeneric("get_parameters"))
 
 
-#' @title get_subject_samples
-#' @description \code{get_subject_samples} returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+#' @title get_subject_parameters
+#' @description \code{get_subject_parameters} returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 #' @param object S4 class object from bayes4psy library.
-#' @rdname b_results-get_subject_samples
-#' @exportMethod get_subject_samples
-setGeneric(name="get_subject_samples", function(object) standardGeneric("get_subject_samples"))
+#' @rdname b_results-get_subject_parameters
+#' @exportMethod get_subject_parameters
+setGeneric(name="get_subject_parameters", function(object) standardGeneric("get_subject_parameters"))
 
 
-#' @title compare_samples
-#' @description \code{compare_samples} prints difference between two groups.
+#' @title compare_means
+#' @description \code{compare_means} prints difference between two groups.
 #' @param object S4 class object from bayes4psy library.
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?compare_ttest or ?compare_linear.
-#' @rdname b_results-compare_samples
-#' @exportMethod compare_samples
-setGeneric(name="compare_samples", function(object, ...) standardGeneric("compare_samples"))
+#' @rdname b_results-compare_means
+#' @exportMethod compare_means
+setGeneric(name="compare_means", function(object, ...) standardGeneric("compare_means"))
 
 
-#' @title plot_samples_difference
-#' @description \code{plot_samples_difference} plots difference between two groups.
+#' @title plot_means_difference
+#' @description \code{plot_means_difference} plots difference between two groups.
 #' @param object S4 class object from bayes4psy library.
-#' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_samples_difference_ttest or ?plot_samples_difference_linear.
-#' @rdname b_results-plot_samples_difference
-#' @exportMethod plot_samples_difference
-setGeneric(name="plot_samples_difference", function(object, ...) standardGeneric("plot_samples_difference"))
+#' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_means_difference_ttest or ?plot_means_difference_linear.
+#' @rdname b_results-plot_means_difference
+#' @exportMethod plot_means_difference
+setGeneric(name="plot_means_difference", function(object, ...) standardGeneric("plot_means_difference"))
 
 
-#' @title plot_samples
-#' @description \code{plot_samples} plots samples for one or two groups.
+#' @title plot_means
+#' @description \code{plot_means} plots means for one or two groups.
 #' @param object S4 class object from bayes4psy library.
-#' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_samples_ttest or ?plot_samples_linear.
-#' @rdname b_results-plot_samples
-#' @exportMethod plot_samples
-setGeneric(name="plot_samples", function(object, ...) standardGeneric("plot_samples"))
+#' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_means_ttest or ?plot_means_linear.
+#' @rdname b_results-plot_means
+#' @exportMethod plot_means
+setGeneric(name="plot_means", function(object, ...) standardGeneric("plot_means"))
 
 
 #' @title compare_distributions

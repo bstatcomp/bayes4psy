@@ -44,8 +44,8 @@ plot_fit_hsv(fit_blue)
 # plot trace
 plot_trace(fit_blue)
 
-# samples for single fit
-plot_samples(fit_blue)
+# means for single fit
+plot_means(fit_blue)
 
 # distribution for single fit
 plot_distributions(fit_blue)
@@ -60,17 +60,17 @@ fit_red <- b_color(df)
 # visualize fit quality through hsv plot
 plot_fit_hsv(fit_red)
 
-# compare_samples
-compare_samples(fit_blue, fit_red)
+# compare_means
+compare_means(fit_blue, fit_red)
 
-# plot_samples_difference
-plot_samples_difference(fit_blue, fit_red)
+# plot_means_difference
+plot_means_difference(fit_blue, fit_red)
 
-# plot_samples_difference_hsv
-plot_samples_difference_hsv(fit_blue, fit_red)
+# plot_means_difference_hsv
+plot_means_difference_hsv(fit_blue, fit_red)
 
-# plot_samples
-plot_samples(fit_blue, fit_red)
+# plot_means
+plot_means(fit_blue, fit_red)
 
 # compare_distributions
 compare_distributions(fit_blue, fit_red)
@@ -141,7 +141,7 @@ points[[1]] <- c(df_stimuli[df_stimuli$stimuli == stimuli, ]$h_s,
                  df_stimuli[df_stimuli$stimuli == stimuli, ]$s_s,
                  df_stimuli[df_stimuli$stimuli == stimuli, ]$v_s)
 
-plot_red <- plot_samples_difference_hsv(fit_red, points=points, lines=lines, hsv=TRUE)
+plot_red <- plot_means_difference_hsv(fit_red, points=points, lines=lines, hsv=TRUE)
 plot_red <- plot_red + ggtitle("Red") + theme(plot.title = element_text(hjust = 0.5))
 
 plot_red_d <- plot_distributions_difference_hsv(fit_red, points=points, lines=lines, hsv=TRUE)
@@ -163,7 +163,7 @@ points[[1]] <- c(df_stimuli[df_stimuli$stimuli == stimuli, ]$h_s,
                  df_stimuli[df_stimuli$stimuli == stimuli, ]$s_s,
                  df_stimuli[df_stimuli$stimuli == stimuli, ]$v_s)
 
-plot_blue <- plot_samples_difference_hsv(fit_blue, points=points, lines=lines, hsv=TRUE)
+plot_blue <- plot_means_difference_hsv(fit_blue, points=points, lines=lines, hsv=TRUE)
 plot_blue <- plot_blue + ggtitle("Blue") + theme(plot.title = element_text(hjust = 0.5))
 
 plot_blue_d <- plot_distributions_difference_hsv(fit_blue, points=points, lines=lines, hsv=TRUE)
@@ -185,7 +185,7 @@ points[[1]] <- c(df_stimuli[df_stimuli$stimuli == stimuli, ]$h_s,
                  df_stimuli[df_stimuli$stimuli == stimuli, ]$s_s,
                  df_stimuli[df_stimuli$stimuli == stimuli, ]$v_s)
 
-plot_green <- plot_samples_difference_hsv(fit_green, points=points, lines=lines, hsv=TRUE)
+plot_green <- plot_means_difference_hsv(fit_green, points=points, lines=lines, hsv=TRUE)
 plot_green <- plot_green + ggtitle("Green") + theme(plot.title = element_text(hjust = 0.5))
 
 plot_green_d <- plot_distributions_difference_hsv(fit_green, points=points, lines=lines, hsv=TRUE)
@@ -207,7 +207,7 @@ points[[1]] <- c(df_stimuli[df_stimuli$stimuli == stimuli, ]$h_s,
                  df_stimuli[df_stimuli$stimuli == stimuli, ]$s_s,
                  df_stimuli[df_stimuli$stimuli == stimuli, ]$v_s)
 
-plot_yellow <- plot_samples_difference_hsv(fit_yellow, points=points, lines=lines, hsv=TRUE)
+plot_yellow <- plot_means_difference_hsv(fit_yellow, points=points, lines=lines, hsv=TRUE)
 plot_yellow <- plot_yellow + ggtitle("Yellow") + theme(plot.title = element_text(hjust = 0.5))
 
 plot_yellow_d <- plot_distributions_difference_hsv(fit_yellow, points=points, lines=lines, hsv=TRUE)
@@ -229,7 +229,7 @@ points[[1]] <- c(df_stimuli[df_stimuli$stimuli == stimuli, ]$h_s,
                  df_stimuli[df_stimuli$stimuli == stimuli, ]$s_s,
                  df_stimuli[df_stimuli$stimuli == stimuli, ]$v_s)
 
-plot_cyan <- plot_samples_difference_hsv(fit_cyan, points=points, lines=lines, hsv=TRUE)
+plot_cyan <- plot_means_difference_hsv(fit_cyan, points=points, lines=lines, hsv=TRUE)
 plot_cyan <- plot_cyan + ggtitle("Cyan") + theme(plot.title = element_text(hjust = 0.5))
 
 plot_cyan_d <- plot_distributions_difference_hsv(fit_cyan, points=points, lines=lines, hsv=TRUE)
@@ -251,7 +251,7 @@ points[[1]] <- c(df_stimuli[df_stimuli$stimuli == stimuli, ]$h_s,
                  df_stimuli[df_stimuli$stimuli == stimuli, ]$s_s,
                  df_stimuli[df_stimuli$stimuli == stimuli, ]$v_s)
 
-plot_magenta <- plot_samples_difference_hsv(fit_magenta, points=points, lines=lines, hsv=TRUE)
+plot_magenta <- plot_means_difference_hsv(fit_magenta, points=points, lines=lines, hsv=TRUE)
 plot_magenta <- plot_magenta + ggtitle("Magenta") + theme(plot.title = element_text(hjust = 0.5))
 
 plot_magenta_d <- plot_distributions_difference_hsv(fit_magenta, points=points, lines=lines, hsv=TRUE)

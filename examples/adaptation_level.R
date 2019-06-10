@@ -41,8 +41,8 @@ plot_fit(al_1b)
 # plot trace
 plot_trace(al_1b)
 
-# plot samples
-plot_samples(al_1b)
+# plot means
+plot_means(al_1b)
 
 # after - 2nd part
 df_1a <- df_1[df_1$part == 2, ]
@@ -80,14 +80,14 @@ al_2a <- b_linear(x = df_2a$sequence,
 
 
 ## compare ---------------------------------------------------------------
-# compare_samples (optional rope parameter)
-compare_samples(al_1b, fit2=al_1a)
+# compare_means (optional rope parameter)
+compare_means(al_1b, fit2=al_1a)
 
 # difference (optional rope parameter)
-plot_samples_difference(al_1b, fit2=al_1a)
+plot_means_difference(al_1b, fit2=al_1a)
 
-# visually compare samples
-plot_samples(al_1b, fit2=al_1a)
+# visually compare means
+plot_means(al_1b, fit2=al_1a)
 
 # compare distributions (optional rope parameter)
 compare_distributions(al_1b, fit2=al_1a)
