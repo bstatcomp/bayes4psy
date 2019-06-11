@@ -42,7 +42,9 @@
 #'
 #' plot_distributions_difference(`success_rate_class`, fits=`list`): a visualization of the difference between the distributions of multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
+#' plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the group level.
+#'
+#' plot_fit(`success_rate_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
 #'
 #' plot_trace(`success_rate_class`): traceplot for main fitted model parameters.
 #'
@@ -106,13 +108,12 @@ setMethod(f="get_parameters", signature(object="success_rate_class"), definition
 #' @rdname success_rate_class-get_subject_parameters
 #' @aliases get_subject_parameters_success_rate_class
 setMethod(f="get_subject_parameters", signature(object="success_rate_class"), definition=function(object) {
-  df <- data.frame(p=numeric(), tau=numeric(), subject=numeric())
+  df <- data.frame(p=numeric(), subject=numeric())
 
   n <- length(unique(object@data$s))
 
   for (i in 1:n) {
     df_subject <- data.frame(p = object@extract$p[,i],
-                             tau = object@extract$tau[,i],
                              subject = i)
 
     df <- rbind(df, df_subject)
@@ -190,8 +191,9 @@ setMethod(f="compare_means", signature(object="success_rate_class"), definition=
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n")
+    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
     print(is_smallest_or_largest(data=y, rope=rope))
+    cat("\n\n")
   }
 
   return(comparison_matrix)
@@ -428,8 +430,9 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n")
+    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
     print(is_smallest_or_largest(data=y, rope=rope))
+    cat("\n\n")
   }
 
   return(comparison_matrix)
@@ -623,7 +626,7 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
 
 
 #' @title plot_fit
-#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
+#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
 #' @param object success_rate_class object.
 #' @param ... subjects - plot fits on a subject level (default = FALSE).
 #' @rdname success_rate_class-plot_fit

@@ -16,7 +16,7 @@
 #'
 #' compare_means(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
 #'
-#' compare_means(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohens d calculation. You can also provide the rope parameter.
+#' compare_means(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohen's d calculation. You can also provide the rope parameter.
 #'
 #' compare_means(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups.
 #'
@@ -42,7 +42,7 @@
 #'
 #' compare_distributions(`ttest_class`, fits=`list`): draws samples from distribution of the first group and compares them against samples drawn from multiple other groups.
 #'
-#' plot_distributions(`ttest_class`): a visualization of the fitted.
+#' plot_distributions(`ttest_class`): a visualization of the fitted distribution.
 #'
 #' plot_distributions(`ttest_class`, fit2=`ttest_class`): a visualization of two fitted distributions.
 #'
@@ -205,15 +205,16 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n")
+    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
     print(is_smallest_or_largest(data=y, rope=rope))
+    cat("\n\n")
   }
 
   # add Cohen's d if 2 groups are provided
   if (!is.null(sigma2)) {
     diff <- mean(y[[1]]) - mean(y[[2]])
     cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
-    cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
+    cat(sprintf("\nCohen's d: %.2f\n\n", cohens_d))
   }
 
   return(comparison_matrix)
@@ -439,6 +440,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
 
   # first group data
   n <- 100000
+  y <- NULL
   sigma1 <- mean(object@extract$sigma)
   y[[1]] <- metRology::rt.scaled(n,
                                  df=mean(object@extract$nu),
@@ -502,15 +504,16 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n")
+    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
     print(is_smallest_or_largest(data=y, rope=rope))
+    cat("\n\n")
   }
 
   # add Cohen's d if 2 groups are provided
   if (!is.null(sigma2)) {
     diff <- mean(y[[1]]) - mean(y[[2]])
     cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
-    cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
+    cat(sprintf("\nCohen's d: %.2f\n\n", cohens_d))
   }
 
   return(comparison_matrix)

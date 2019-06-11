@@ -239,8 +239,9 @@ setMethod(f="compare_means", signature(object="reaction_time_class"), definition
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n")
+    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
     print(is_smallest_or_largest(data=y, rope=rope))
+    cat("\n\n")
   }
 
   return(comparison_matrix)
@@ -566,8 +567,9 @@ setMethod(f="compare_distributions", signature(object="reaction_time_class"), de
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n")
+    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
     print(is_smallest_or_largest(data=y, rope=rope))
+    cat("\n\n")
   }
 
   return(comparison_matrix)
