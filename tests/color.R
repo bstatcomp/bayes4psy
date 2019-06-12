@@ -34,18 +34,20 @@ fit1 <- b_color(colors=colors, priors=priors_rgb, chains=1)
 # priors for hsv
 h_prior <- b_prior(family="uniform", pars=c(0, 2*pi))
 sv_prior <- b_prior(family="uniform", pars=c(0, 1))
-sigma_prior <- b_prior(family="uniform", pars=c(0, 10))
+variance_prior <- b_prior(family="uniform", pars=c(0, 2))
 
 # attach priors to relevant parameters
-priors_rgb <- list(c("mu_r", mu_prior),
-                   c("sigma_r", sigma_prior),
-                   c("mu_g", mu_prior),
-                   c("sigma_g", sigma_prior),
-                   c("mu_b", mu_prior),
-                   c("sigma_b", sigma_prior))
+priors_hsv <- list(c("mu_h", h_prior),
+                   c("kappa_h", variance_prior),
+                   c("mu_s", sv_prior),
+                   c("sigma_s", variance_prior),
+                   c("mu_v", sv_prior),
+                   c("sigma_v", variance_prior))
 
 # generate data (hsv) and fit
-h <- rnorm(50, mean=2*pi/3, sd=20)
+h <- rnorm(50, mean=2*pi/3, sd=0.5)
+h[h > 2*pi] <- 2*pi
+h[h < 0] <- 0
 
 s <- rnorm(50, mean=0.9, sd=0.05)
 s[s > 1] <- 1
@@ -57,7 +59,7 @@ v[b < 0] <- 0
 
 colors <- data.frame(h=h, s=s, v=v)
 
-fit1 <- b_color(colors=colors, hsv=TRUE, priors=priors, chains=1)
+fit2 <- b_color(colors=colors, hsv=TRUE, priors=priors_hsv, chains=1)
 
 
 # summary
@@ -72,9 +74,6 @@ show(fit1)
 
 # get_parameters(`color_class`)
 parameters <- get_parameters(fit1)
-
-# get_subject_parameters(`color_class`)
-subject_parameters <- get_subject_parameters(fit1)
 
 # compare_means(`color_class`, fit2=`color_class`)
 compare_means(fit1, fit2=fit2)
@@ -102,9 +101,6 @@ plot_distributions_difference(fit1, fit2=fit2)
 
 # plot_fit(`color_class`)
 plot_fit(fit1)
-
-# plot_fit(`color_class`, subjects='boolean')
-plot_fit(fit1, subjects=TRUE)
 
 # plot_trace(`color_class`)
 plot_trace(fit1)
