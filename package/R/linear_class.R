@@ -4,7 +4,7 @@
 #'
 #' \strong{Functions}
 #'
-#' summary(`linear_class`): prints summary od the fit.
+#' summary(`linear_class`): prints summary of the fit.
 #'
 #' print(`linear_class`): prints a more detailed summary of the fit
 #'
@@ -30,7 +30,9 @@
 #'
 #' plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
+#' plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the group level.
+#'
+#' plot_fit(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
 #'
 #' plot_trace(`linear_class`): traceplot for main fitted model parameters.
 #'
@@ -165,10 +167,12 @@ setMethod(f="compare_means", signature(object="linear_class"), definition=functi
     slope2 <- fit2@extract$mu_b
 
     cat("---------- Intercept ----------\n")
-    difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
+    intercept <- difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
 
     cat("\n---------- Slope ----------\n")
-    difference(y1=slope1, y2=slope2, rope=rope_slope)
+    slope <- difference(y1=slope1, y2=slope2, rope=rope_slope)
+
+    return(rbind(intercept, slope))
   } else {
     warning(wrong_arguments)
     return()
@@ -378,10 +382,12 @@ setMethod(f="compare_distributions", signature(object="linear_class"), definitio
     slope2 <- stats::rnorm(n, mean=mu_slope2, sd=sigma_slope2)
 
     cat("---------- Intercept ----------\n")
-    difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
+    intercept <- difference(y1=intercept1, y2=intercept2, rope=rope_intercept)
 
     cat("\n---------- Slope ----------\n")
-    difference(y1=slope1, y2=slope2, rope=rope_slope)
+    slope <- difference(y1=slope1, y2=slope2, rope=rope_slope)
+
+    return(rbind(intercept, slope))
   } else {
     warning(wrong_arguments)
     return()
@@ -545,7 +551,7 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
 
 
 #' @title plot_fit
-#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
+#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
 #' @param object linear_class object.
 #' @param ... subjects - plot fits on a subject level (default = FALSE).
 #' @rdname linear_class-plot_fit

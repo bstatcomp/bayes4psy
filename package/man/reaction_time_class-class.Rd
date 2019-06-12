@@ -10,7 +10,7 @@ An S4 class for storing results of reaction time Bayesian model.
 
 \strong{Functions}
 
-summary(`reaction_time_class`): prints summary od the fit.
+summary(`reaction_time_class`): prints summary of the fit.
 
 print(`reaction_time_class`): prints a more detailed summary of the fit
 
@@ -22,7 +22,7 @@ get_subject_parameters(`reaction_time_class`): returns a dataframe with values o
 
 compare_means(`reaction_time_class`, fit2=`reaction_time_class`): returns difference in reaction times between two groups. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
 
-compare_means(`reaction_time_class`, fits=`list`): returns difference in reaction times between multiple groups. You can also provide the rope parameter.
+compare_means(`reaction_time_class`, fits=`list`): returns difference in reaction times between multiple groups. You can also provide the rope parameter. You can also provide the rope parameter or execute the comparison only through a chosen parameter - mu or lambda.
 
 plot_means_difference(`reaction_time_class`, fit2=`reaction_time_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through a chosen parameter - mu or lambda.
 
@@ -49,6 +49,8 @@ plot_distributions_difference(`reaction_time_class`, fit2=`reaction_time_class`)
 plot_distributions_difference(`reaction_time_class`, fits=`list`): a visualization of the difference between the distributions of multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_fit(`reaction_time_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
+
+plot_fit(`reaction_time_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
 
 plot_trace(`reaction_time_class`): traceplot for main fitted model parameters.
 }

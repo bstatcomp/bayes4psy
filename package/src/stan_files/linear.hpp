@@ -170,9 +170,6 @@ public:
                 check_greater_or_equal(function__,"p_ids[k0__]",p_ids[k0__],0);
             }
             current_statement_begin__ = 10;
-            for (int k0__ = 0; k0__ < 12; ++k0__) {
-                check_greater_or_equal(function__,"p_values[k0__]",p_values[k0__],0);
-            }
             // initialize data variables
 
 

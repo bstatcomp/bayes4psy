@@ -7,7 +7,7 @@ data {
 
   // priors
   int<lower=0> p_ids[6];
-  real<lower=0> p_values[12];
+  real p_values[12];
 }
 
 parameters {

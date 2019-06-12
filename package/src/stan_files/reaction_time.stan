@@ -6,7 +6,7 @@ data {
 
   // priors
   int p_ids[6];
-  int p_values[12];
+  real p_values[12];
 }
 
 parameters {
@@ -17,7 +17,7 @@ parameters {
 
   // global parameters
   real mu_m;
-  real mu_l;
+  real<lower=0.05> mu_l;
   real<lower=0> mu_s;
   real<lower=0> sigma_m;
   real<lower=0> sigma_l;

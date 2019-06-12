@@ -10,7 +10,7 @@ An S4 class for storing results of successes (true/false) Bayesian model.
 
 \strong{Functions}
 
-summary(`success_rate_class`): prints summary od the fit.
+summary(`success_rate_class`): prints summary of the fit.
 
 print(`success_rate_class`): prints a more detailed summary of the fit
 
@@ -50,7 +50,7 @@ plot_distributions_difference(`success_rate_class`, fits=`list`): a visualizatio
 
 plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the group level.
 
-plot_fit(`success_rate_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+plot_fit(`success_rate_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
 
 plot_trace(`success_rate_class`): traceplot for main fitted model parameters.
 }

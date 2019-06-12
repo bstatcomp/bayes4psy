@@ -24,3 +24,54 @@ for (i in 1:5) {
 }
 
 fit1 <- b_linear(x=x, y=y, s=s, priors=priors, chains=1)
+
+fit2 <- b_linear(x=x, y=-2*y, s=s, priors=priors, chains=1)
+
+# summary
+summary(fit1)
+
+# print(`linear_class`)
+print(fit1)
+fit1
+
+# show(`linear_class`)
+show(fit1)
+
+# get_parameters(`linear_class`)
+parameters <- get_parameters(fit1)
+
+# get_subject_parameters(`linear_class`)
+subject_parameters <- get_subject_parameters(fit1)
+
+# compare_means(`linear_class`, fit2=`linear_class`)
+compare_means(fit1, fit2=fit2)
+
+# plot_means_difference(`linear_class`, fit2=`linear_class`)
+plot_means_difference(fit1, fit2=fit2)
+
+# plot_means(`linear_class`)
+plot_means(fit1)
+
+# plot_means(`linear_class`, fit2=`linear_class`)
+plot_means(fit1, fit2=fit2)
+
+# compare_distributions(`linear_class`, fit2=`linear_class`)
+compare_distributions(fit1, fit2=fit2)
+
+# plot_distributions(`linear_class`)
+plot_distributions(fit1)
+
+# plot_distributions(`linear_class`, fit2=`linear_class`)
+plot_distributions(fit1, fit2=fit2)
+
+# plot_distributions_difference(`linear_class`, fit2=`linear_class`)
+plot_distributions_difference(fit1, fit2=fit2)
+
+# plot_fit(`linear_class`)
+plot_fit(fit1)
+
+# plot_fit(`linear_class`, subjects='boolean')
+plot_fit(fit1, subjects=TRUE)
+
+# plot_trace(`linear_class`)
+plot_trace(fit1)

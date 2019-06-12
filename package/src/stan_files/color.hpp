@@ -51,7 +51,7 @@ private:
     vector<double> s;
     vector<double> v;
     vector<int> p_ids;
-    vector<int> p_values;
+    vector<double> p_values;
 public:
     model_color(stan::io::var_context& context__,
         std::ostream* pstream__ = 0)
@@ -173,14 +173,14 @@ public:
             }
             current_statement_begin__ = 14;
             validate_non_negative_index("p_values", "24", 24);
-            context__.validate_dims("data initialization", "p_values", "int", context__.to_vec(24));
+            context__.validate_dims("data initialization", "p_values", "double", context__.to_vec(24));
             validate_non_negative_index("p_values", "24", 24);
-            p_values = std::vector<int>(24,int(0));
-            vals_i__ = context__.vals_i("p_values");
+            p_values = std::vector<double>(24,double(0));
+            vals_r__ = context__.vals_r("p_values");
             pos__ = 0;
             size_t p_values_limit_0__ = 24;
             for (size_t i_0__ = 0; i_0__ < p_values_limit_0__; ++i_0__) {
-                p_values[i_0__] = vals_i__[pos__++];
+                p_values[i_0__] = vals_r__[pos__++];
             }
 
             // validate, data variables
@@ -221,9 +221,6 @@ public:
                 check_greater_or_equal(function__,"p_ids[k0__]",p_ids[k0__],0);
             }
             current_statement_begin__ = 14;
-            for (int k0__ = 0; k0__ < 24; ++k0__) {
-                check_greater_or_equal(function__,"p_values[k0__]",p_values[k0__],0);
-            }
             // initialize data variables
 
 

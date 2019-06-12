@@ -48,7 +48,7 @@ private:
     vector_d t;
     vector<int> s;
     vector<int> p_ids;
-    vector<int> p_values;
+    vector<double> p_values;
 public:
     model_reaction_time(stan::io::var_context& context__,
         std::ostream* pstream__ = 0)
@@ -132,14 +132,14 @@ public:
             }
             current_statement_begin__ = 9;
             validate_non_negative_index("p_values", "12", 12);
-            context__.validate_dims("data initialization", "p_values", "int", context__.to_vec(12));
+            context__.validate_dims("data initialization", "p_values", "double", context__.to_vec(12));
             validate_non_negative_index("p_values", "12", 12);
-            p_values = std::vector<int>(12,int(0));
-            vals_i__ = context__.vals_i("p_values");
+            p_values = std::vector<double>(12,double(0));
+            vals_r__ = context__.vals_r("p_values");
             pos__ = 0;
             size_t p_values_limit_0__ = 12;
             for (size_t i_0__ = 0; i_0__ < p_values_limit_0__; ++i_0__) {
-                p_values[i_0__] = vals_i__[pos__++];
+                p_values[i_0__] = vals_r__[pos__++];
             }
 
             // validate, data variables
@@ -270,7 +270,7 @@ public:
         double mu_l(0);
         mu_l = vals_r__[pos__++];
         try {
-            writer__.scalar_unconstrain(mu_l);
+            writer__.scalar_lb_unconstrain(0.050000000000000003,mu_l);
         } catch (const std::exception& e) { 
             throw std::runtime_error(std::string("Error transforming variable mu_l: ") + e.what());
         }
@@ -391,9 +391,9 @@ public:
             local_scalar_t__ mu_l;
             (void) mu_l;  // dummy to suppress unused var warning
             if (jacobian__)
-                mu_l = in__.scalar_constrain(lp__);
+                mu_l = in__.scalar_lb_constrain(0.050000000000000003,lp__);
             else
-                mu_l = in__.scalar_constrain();
+                mu_l = in__.scalar_lb_constrain(0.050000000000000003);
 
             local_scalar_t__ mu_s;
             (void) mu_s;  // dummy to suppress unused var warning
@@ -664,7 +664,7 @@ public:
         vector_d sigma = in__.vector_lb_constrain(0,m);
         vector_d lambda = in__.vector_lb_constrain(0,m);
         double mu_m = in__.scalar_constrain();
-        double mu_l = in__.scalar_constrain();
+        double mu_l = in__.scalar_lb_constrain(0.050000000000000003);
         double mu_s = in__.scalar_lb_constrain(0);
         double sigma_m = in__.scalar_lb_constrain(0);
         double sigma_l = in__.scalar_lb_constrain(0);

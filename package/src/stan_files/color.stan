@@ -11,7 +11,7 @@ data {
 
 	// priors
 	int<lower=0> p_ids[12];
-	int<lower=0> p_values[24];
+	real p_values[24];
 }
 
 parameters {

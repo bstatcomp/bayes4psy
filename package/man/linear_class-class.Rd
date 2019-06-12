@@ -10,7 +10,7 @@ An S4 class for storing results of normal linear model.
 
 \strong{Functions}
 
-summary(`linear_class`): prints summary od the fit.
+summary(`linear_class`): prints summary of the fit.
 
 print(`linear_class`): prints a more detailed summary of the fit
 
@@ -36,7 +36,9 @@ plot_distributions(`linear_class`, fit2=`linear_class`): a visualization of two 
 
 plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
-plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
+plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the group level.
+
+plot_fit(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
 
 plot_trace(`linear_class`): traceplot for main fitted model parameters.
 }

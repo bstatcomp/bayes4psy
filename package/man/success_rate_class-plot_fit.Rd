@@ -14,5 +14,5 @@
 \item{...}{subjects - plot fits on a subject level (default = FALSE).}
 }
 \description{
-\code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+\code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
 }

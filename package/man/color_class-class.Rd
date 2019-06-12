@@ -10,7 +10,7 @@ An S4 class for storing results of Bayesian color model.
 
 \strong{Functions}
 
-summary(`color_class`): prints summary od the fit.
+summary(`color_class`): prints summary of the fit.
 
 print(`color_class`): prints a more detailed summary of the fit
 
