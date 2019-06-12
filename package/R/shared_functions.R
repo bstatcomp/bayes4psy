@@ -1,6 +1,14 @@
 # function for printing the difference between two datasets
-difference <- function(y1, y2, rope=NULL, group1=1, group2=2) {
-  y_diff <- y1 - y2
+difference <- function(y1=NULL, y2=NULL, rope=NULL, group1=1, group2=2, y_diff=NULL, max_diff=NULL) {
+  if (is.null(y_diff)) {
+    y_diff <- y1 - y2
+  }
+
+  # max diff
+  if (!is.null(max_diff)) {
+    y_diff[y_diff > max_diff] <- max_diff
+    y_diff[y_diff < -max_diff] <- -max_diff
+  }
 
   n <- length(y_diff)
 
@@ -117,14 +125,13 @@ preprocess_circular <- function(y, base=NULL) {
     suppressWarnings(mean_y <- mean(circular::as.circular(base)))
   }
 
-  small_y = FALSE
-  if (abs(mean_y) < pi/2) {
-    small_y = TRUE
-  }
+  mean_y <- as.numeric(mean_y)
 
-  if (small_y) {
+  if (mean_y < pi/2 & mean_y > -pi/2) {
     y[y > pi] <- y[y > pi] - 2*pi
     y[y < -pi] <- y[y < -pi] + 2*pi
+  } else if (mean_y < -pi/2) {
+    y[y > 0] <- y[y > 0] - 2*pi
   } else {
     y[y < 0] <- y[y < 0] + 2*pi
   }
@@ -138,26 +145,13 @@ circular_difference <- function(y1, y2, rope=NULL) {
 
   y_diff <- as.numeric(preprocess_circular(y_diff))
 
-  n <- length(y_diff)
+  # cast to -pi .. pi interval
+  y_diff[y_diff > pi] <- pi - y_diff[y_diff > pi]
+  y_diff[y_diff < -pi] <- y_diff[y_diff < -pi] + pi
 
-  # circular distance
-  cat(sprintf("Average difference:\n  |Group 1 - Group 2|: %.2f +/- %.5f",
-              mean(y_diff), mcmcse::mcse(y_diff)$se))
+  result <- difference(y_diff=y_diff, rope=rope)
 
-  hdi <- mcmc_hdi(y_diff)
-  y_diff_l <- stats::quantile(hdi[1], 0.025)
-  y_diff_h <- stats::quantile(hdi[2], 0.975)
-  cat(sprintf("\n95%% HDI:\n  - Group 1 - Group 2: [%.2f, %.2f]", y_diff_l, y_diff_h))
-
-  if (!is.null(rope)) {
-    # circular distance
-    diff_equal <- y_diff > rope[1] & y_diff < rope[2]
-    equal <- round(sum(diff_equal) / n, 2)
-    cat(sprintf("\nEquality probability:\n  -  %.2f +/- %.5f",
-                equal, mcmcse::mcse(diff_equal)$se))
-  }
-
-  cat("\n")
+  return(result)
 }
 
 

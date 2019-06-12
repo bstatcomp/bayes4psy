@@ -12,53 +12,53 @@
 #'
 #' get_parameters(`color_class`): returns a dataframe with values of fitted parameters.
 #'
-#' compare_means(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare_means(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' compare_means(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare_means(`color_class`, rgb=`vector`): prints color difference between a fit and a color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' compare_means(`color_class`, hsv=`vector`): prints color difference between a fit and a color defined with hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare_means(`color_class`, hsv=`vector`): prints color difference between a fit and a color defined with hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_means_difference(`color_class`, fit2=`color_class`): a visualization of the difference between two fits You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#' plot_means_difference(`color_class`, fit2=`color_class`): a visualization of the difference between two fits You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_means_difference(`color_class`, rgb=`vector`): a visualization of the difference between a fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#' plot_means_difference(`color_class`, rgb=`vector`): a visualization of the difference between a fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_means_difference(`color_class`, hsv=`vector`): a visualization of the difference between a fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#' plot_means_difference(`color_class`, hsv=`vector`): a visualization of the difference between a fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_means(`color_class`): plots density of means. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
+#' plot_means(`color_class`): plots density of means. You can also visualize the density only for chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_means(`color_class`, fit2=`color_class`): plots density for the first and the second group means. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
+#' plot_means(`color_class`, fit2=`color_class`): plots density for the first and the second group means. You can also visualize the density only for chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_means(`color_class`, rgb=`vector`): plots density for the first and a color defined with rgb components. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
+#' plot_means(`color_class`, rgb=`vector`): plots density for the first and a color defined with rgb components. You can also visualize the density only for chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_means(`color_class`, hsv=`vector`): plots density for the first and a color defined with hsv components. You can also visualize the density only for chosen color components (r, g, b, h, s, v).
+#' plot_means(`color_class`, hsv=`vector`): plots density for the first and a color defined with hsv components. You can also visualize the density only for chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' compare_distributions(`color_class`, fit2=`color_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
+#' compare_distributions(`color_class`, fit2=`color_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' compare_distributions(`color_class`, rgb=`vector`): draws samples from distribution of the first group and compares them againsta color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare_distributions(`color_class`, rgb=`vector`): draws samples from distribution of the first group and compares them againsta color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' compare_distributions(`color_class`, hsv=`vector`): draws samples from distribution of the first group and compares them against a color defined with hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' compare_distributions(`color_class`, hsv=`vector`): draws samples from distribution of the first group and compares them against a color defined with hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_distributions(`color_class`): a visualization of the fitted distribution.
+#' plot_distributions(`color_class`): a visualization of the fitted distribution. You can visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_distributions(`color_class`, fit2=`color_class`): a visualization of two fitted distributions.
+#' plot_distributions(`color_class`, fit2=`color_class`): a visualization of two fitted distributions. You can visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_distributions(`color_class`, rgb=`vector`): a visualization of the fitted distribution and a color defined with rgb components.
+#' plot_distributions(`color_class`, rgb=`vector`): a visualization of the fitted distribution and a color defined with rgb components. You can visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_distributions(`color_class`, hsv=`vector`): a visualization of the fitted distribution and a color defined with hsv components.
+#' plot_distributions(`color_class`, hsv=`vector`): a visualization of the fitted distribution and a color defined with hsv components. You can visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_distributions_difference(`color_class`, fit2=`color_class`): a visualization of the difference between the distribution of the first fit and the second fit. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#' plot_distributions_difference(`color_class`, fit2=`color_class`): a visualization of the difference between the distribution of the first fit and the second fit. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_distributions_difference(`color_class`, rgb=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#' plot_distributions_difference(`color_class`, rgb=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with rgb components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_distributions_difference(`color_class`, hsv=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v).
+#' plot_distributions_difference(`color_class`, hsv=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_fit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
+#' plot_fit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
 #' plot_fit_hsv(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
 #'
-#' plot_means_difference_hsv(`color_class`): a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
+#' plot_means_hsv(`color_class`): a visualization of the difference between means of two fits through a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #'
-#' plot_distributions_difference_hsv(`color_class`): a visualization of the difference between distributions of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
+#' plot_distributions_hsv(`color_class`): a visualization of distributions of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #'
 #' plot_trace(`color_class`): traceplot for main fitted model parameters.
 #'
@@ -220,6 +220,7 @@ setMethod(f="compare_means", signature(object="color_class"), definition=functio
     pars <- arguments$pars
   }
 
+  result <- NULL
   for (p in pars) {
     if (p == "r") {
       y1 <- object@extract$mu_r
@@ -231,7 +232,8 @@ setMethod(f="compare_means", signature(object="color_class"), definition=functio
       }
 
       cat("\n------------- R component -------------\n")
-      difference(y1=y1, y2=y2, rope=rope)
+      r <- difference(y1=y1, y2=y2, rope=rope)
+      result <- rbind(result, r)
     } else if (p == "g") {
       y1 <- object@extract$mu_g
 
@@ -242,7 +244,8 @@ setMethod(f="compare_means", signature(object="color_class"), definition=functio
       }
 
       cat("\n------------- G component -------------\n")
-      difference(y1=y1, y2=y2, rope=rope)
+      g <- difference(y1=y1, y2=y2, rope=rope)
+      result <- rbind(result, g)
     } else if (p == "b") {
       y1 <- object@extract$mu_b
 
@@ -253,7 +256,8 @@ setMethod(f="compare_means", signature(object="color_class"), definition=functio
       }
 
       cat("\n------------- B component -------------\n")
-      difference(y1=y1, y2=y2, rope=rope)
+      b <- difference(y1=y1, y2=y2, rope=rope)
+      result <- rbind(result, b)
     } else if (p == "h") {
       y1 <- object@extract$mu_h
 
@@ -264,7 +268,8 @@ setMethod(f="compare_means", signature(object="color_class"), definition=functio
       }
 
       cat("\n------------- H component -------------\n")
-      circular_difference(y1=y1, y2=y2, rope=rope)
+      h <- circular_difference(y1=y1, y2=y2, rope=rope)
+      result <- rbind(result, h)
     } else if (p == "s") {
       y1 <- object@extract$mu_s
 
@@ -275,7 +280,8 @@ setMethod(f="compare_means", signature(object="color_class"), definition=functio
       }
 
       cat("\n------------- S component -------------\n")
-      difference(y1=y1, y2=y2, rope=rope)
+      s <- difference(y1=y1, y2=y2, rope=rope)
+      result <- rbind(result, s)
     } else if (p == "v") {
       y1 <- object@extract$mu_v
 
@@ -286,9 +292,13 @@ setMethod(f="compare_means", signature(object="color_class"), definition=functio
       }
 
       cat("\n------------- V component -------------\n")
-      difference(y1=y1, y2=y2, rope=rope)
+      v <- difference(y1=y1, y2=y2, rope=rope)
+      result <- rbind(result, v)
     }
   }
+
+  cat("\n")
+  return(result)
 })
 
 
@@ -819,6 +829,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
   }
 
   # compare
+  result <- NULL
   n <- 100000
   for (p in pars) {
     if (p == "r") {
@@ -826,58 +837,55 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       sigma1 <- mean(object@extract$sigma_r)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      y1 <- clamp(y1, 0, 255)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_r)
         sigma2 <- mean(fit2@extract$sigma_r)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
-        y2 <- clamp(y2, 0, 255)
       } else {
         y2 <- rgb[1]
       }
 
       cat("\n------------- R component -------------\n")
-      difference(y1=y1, y2=y2, rope=rope)
+      r <- difference(y1=y1, y2=y2, rope=rope, max_diff=255)
+      result <- rbind(result, r)
     } else if (p == "g") {
       mu1 <- mean(object@extract$mu_g)
       sigma1 <- mean(object@extract$sigma_g)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      y1 <- clamp(y1, 0, 255)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_g)
         sigma2 <- mean(fit2@extract$sigma_g)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
-        y2 <- clamp(y2, 0, 255)
       } else {
         y2 <- rgb[2]
       }
 
       cat("\n------------- G component -------------\n")
-      difference(y1=y1, y2=y2, rope=rope)
+      g <- difference(y1=y1, y2=y2, rope=rope, max_diff=255)
+      result <- rbind(result, g)
     } else if (p == "b") {
       mu1 <- mean(object@extract$mu_b)
       sigma1 <- mean(object@extract$sigma_b)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      y1 <- clamp(y1, 0, 255)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_b)
         sigma2 <- mean(fit2@extract$sigma_b)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
-        y2 <- clamp(y2, 0, 255)
       } else {
         y2 <- rgb[3]
       }
 
       cat("\n------------- B component -------------\n")
-      difference(y1=y1, y2=y2, rope=rope)
+      b <- difference(y1=y1, y2=y2, rope=rope, max_diff=255)
+      result <- rbind(result, b)
     } else if (p == "h") {
       mu1 <- mean(preprocess_circular((object@extract$mu_h)))
       kappa1 <- mean(object@extract$kappa_h)
@@ -894,47 +902,49 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
       }
 
       cat("\n------------- H component -------------\n")
-      circular_difference(y1=y1, y2=y2, rope=rope)
+      h <- circular_difference(y1=y1, y2=y2, rope=rope)
+      result <- rbind(result, h)
     } else if (p == "s") {
       mu1 <- mean(object@extract$mu_s)
       sigma1 <- mean(object@extract$sigma_s)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      y1 <- clamp(y1, 0, 1)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_s)
         sigma2 <- mean(fit2@extract$sigma_s)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
-        y2 <- clamp(y2, 0, 1)
       } else {
         y2 <- hsv[2]
       }
 
       cat("\n------------- S component -------------\n")
-      difference(y1=y1, y2=y2, rope=rope)
+      s <- difference(y1=y1, y2=y2, rope=rope, max_diff=1)
+      result <- rbind(result, s)
     } else if (p == "v") {
       mu1 <- mean(object@extract$mu_v)
       sigma1 <- mean(object@extract$sigma_v)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      y1 <- clamp(y1, 0, 1)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_v)
         sigma2 <- mean(fit2@extract$sigma_v)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
-        y2 <- clamp(y2, 0, 1)
       } else {
         y2 <- hsv[3]
       }
 
       cat("\n------------- V component -------------\n")
-      difference(y1=y1, y2=y2, rope=rope)
+      v <- difference(y1=y1, y2=y2, rope=rope, max_diff=1)
+      result <- rbind(result, v)
     }
   }
+
+  cat("\n")
+  return(result)
 })
 
 
@@ -1351,19 +1361,17 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
       sigma1 <- mean(object@extract$sigma_r)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      y1 <- clamp(y1, 0, 255)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_r)
         sigma2 <- mean(fit2@extract$sigma_r)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
-        y2 <- clamp(y2, 0, 255)
       } else {
         y2 <- rgb[1]
       }
 
-      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow, max_diff=255)
       graph <- graph + ggtitle("r") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -1372,19 +1380,17 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
       sigma1 <- mean(object@extract$sigma_g)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      y1 <- clamp(y1, 0, 255)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_g)
         sigma2 <- mean(fit2@extract$sigma_g)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
-        y2 <- clamp(y2, 0, 255)
       } else {
         y2 <- rgb[2]
       }
 
-      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow, max_diff=255)
       graph <- graph + ggtitle("g") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -1393,19 +1399,17 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
       sigma1 <- mean(object@extract$sigma_b)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      y1 <- clamp(y1, 0, 255)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_b)
         sigma2 <- mean(fit2@extract$sigma_b)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
-        y2 <- clamp(y2, 0, 255)
       } else {
         y2 <- rgb[3]
       }
 
-      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow, max_diff=255)
       graph <- graph + ggtitle("b") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -1433,19 +1437,17 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
       sigma1 <- mean(object@extract$sigma_s)
 
       y1 <- stats::rnorm(n, mean=mu1, sd=sigma1)
-      y1 <- clamp(y1, 0, 1)
 
       if (!is.null(fit2)) {
         mu2 <- mean(fit2@extract$mu_s)
         sigma2 <- mean(fit2@extract$sigma_s)
 
         y2 <- stats::rnorm(n, mean=mu2, sd=sigma2)
-        y2 <- clamp(y2, 0, 1)
       } else {
         y2 <- hsv[2]
       }
 
-      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow, max_diff=1)
       graph <- graph + ggtitle("s") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -1464,7 +1466,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
         y2 <- hsv[3]
       }
 
-      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow)
+      graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow, max_diff=1)
       graph <- graph + ggtitle("v") + theme(plot.title=element_text(hjust=0.5))
       graphs[[i]] <- graph
       i <- i + 1
@@ -1741,17 +1743,17 @@ setMethod(f="plot_fit_hsv", signature(object="color_class"), definition=function
 })
 
 
-#' @rdname color_class-plot_means_difference_hsv
-#' @exportMethod plot_means_difference_hsv
-setGeneric(name="plot_means_difference_hsv", function(object, ...) standardGeneric("plot_means_difference_hsv"))
+#' @rdname color_class-plot_means_hsv
+#' @exportMethod plot_means_hsv
+setGeneric(name="plot_means_hsv", function(object, ...) standardGeneric("plot_means_hsv"))
 
-#' @title plot_means_difference_hsv
-#' @description \code{plot_means_difference_hsv} a visualization of the difference between means of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
+#' @title plot_means_hsv
+#' @description \code{plot_means_hsv} a visualization of the difference between means of two fits through a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #' @param object color_class object.
 #' @param ... fit2 - a second color_class object, points - points to plot defined through rgb or hsv, lines - lines to plot defined through rgb or hsv, hsv - are points and lines defined in hsv format (default = FALSE).
-#' @rdname color_class-plot_means_difference_hsv
-#' @aliases plot_means_difference_hsv_color
-setMethod(f="plot_means_difference_hsv", signature(object="color_class"), definition=function(object, ...) {
+#' @rdname color_class-plot_means_hsv
+#' @aliases plot_means_hsv_color
+setMethod(f="plot_means_hsv", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   points <- lines <- r <- g <- b <- h <- s <- v <- sv <- NULL
 
@@ -1971,17 +1973,17 @@ setMethod(f="plot_means_difference_hsv", signature(object="color_class"), defini
 })
 
 
-#' @rdname color_class-plot_distributions_difference_hsv
-#' @exportMethod plot_distributions_difference_hsv
-setGeneric(name="plot_distributions_difference_hsv", function(object, ...) standardGeneric("plot_distributions_difference_hsv"))
+#' @rdname color_class-plot_distributions_hsv
+#' @exportMethod plot_distributions_hsv
+setGeneric(name="plot_distributions_hsv", function(object, ...) standardGeneric("plot_distributions_hsv"))
 
-#' @title plot_distributions_difference_hsv
-#' @description \code{plot_distributions_difference_hsv} a visualization of the difference between distributions of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
+#' @title plot_distributions_hsv
+#' @description \code{plot_distributions_hsv} a visualization of distributions of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #' @param object color_class object.
 #' @param ... fit2 - a second color_class object, points - points to plot defined through rgb or hsv, lines - lines to plot defined through rgb or hsv, hsv - are points and lines defined in hsv format (default = FALSE).
-#' @rdname color_class-plot_distributions_difference_hsv
-#' @aliases plot_distributions_difference_hsv_color
-setMethod(f="plot_distributions_difference_hsv", signature(object="color_class"), definition=function(object, ...) {
+#' @rdname color_class-plot_distributions_hsv
+#' @aliases plot_distributions_hsv_color
+setMethod(f="plot_distributions_hsv", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   points <- lines <- r <- g <- b <- h <- s <- v <- sv <- NULL
 

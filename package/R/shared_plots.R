@@ -1,31 +1,34 @@
 #' @import ggplot2
 
 # function for visalizsing the difference between two datasets
-plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, nrow=1) {
+plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, nrow=1, max_diff=NULL) {
   # init local varibales for CRAN check
   value <- NULL
 
   # difference
   y_diff <- y1 - y2
 
-  # if circular cast differences to a -pi..pi interval or 0..2pi interval
+  # if circular cast differences to a -pi..pi, 0..2pi or -2pi..0 interval
   if (circular) {
     y_diff <- preprocess_circular(y_diff)
     y_diff <- as.numeric(y_diff)
   }
 
-  # create df
-  df_diff <- data.frame(value=y_diff)
+  # max diff
+  if (!is.null(max_diff)) {
+    y_diff[y_diff > max_diff] <- max_diff
+    y_diff[y_diff < -max_diff] <- -max_diff
+  }
 
   # get 95% hdi
-  hdi <- mcmc_hdi(df_diff$value)
+  hdi <- mcmc_hdi(y_diff)
 
   # mean difference
-  mean_diff <- mean(df_diff$value)
+  mean_diff <- mean(y_diff)
 
   # get x range
-  x_min <- min(df_diff)
-  x_max <- max(df_diff)
+  x_min <- min(y_diff)
+  x_max <- max(y_diff)
 
   diff <- x_max - x_min
 
@@ -36,6 +39,9 @@ plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, nrow=1) 
     x_min <- min(x_min, rope[1])
     x_max <- max(x_max, rope[2])
   }
+
+  # create df
+  df_diff <- data.frame(value=y_diff)
 
   # basic histogram chart
   graph <- ggplot() +
@@ -66,14 +72,14 @@ plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, nrow=1) 
   }
 
   graph <- graph +
-    geom_text(aes(label=sprintf("%.2f", hdi[1]), x=hdi[1], y=y_max * (0.04 * nrow)), size=3.5, hjust=hjust)
+    geom_text(aes(label=sprintf("%.2f", hdi[1]), x=hdi[1], y=y_max * (0.05 * nrow)), size=3.5, hjust=hjust)
 
   if (hdi[2] > (x_max - hjust_range)) {
     hjust = "inward"
   }
 
   graph <- graph +
-    geom_text(aes(label=sprintf("%.2f", hdi[2]), x=hdi[2], y=y_max * (0.04 * nrow)), size=3.5, hjust=hjust)
+    geom_text(aes(label=sprintf("%.2f", hdi[2]), x=hdi[2], y=y_max * (0.05 * nrow)), size=3.5, hjust=hjust)
 
   # add ROPE interval?
   if (!is.null(rope)) {

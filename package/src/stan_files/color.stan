@@ -24,7 +24,7 @@ parameters {
 	real<lower=0> sigma_b;
 	
 	// hsv
-	real<lower=0,upper=2*pi()> mu_h;
+	real mu_h;
 	real<lower=0> kappa_h;
 	real<lower=0,upper=1> mu_s;
 	real<lower=0> sigma_s;
