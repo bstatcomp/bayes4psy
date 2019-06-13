@@ -20,14 +20,16 @@ group1$subject <- plyr::mapvalues(group1$subject, from=unique(group1$subject), t
 group1_part1 <- group1 %>% filter(part == 1)
 group1_part2 <- group1 %>% filter(part == 2)
 
-# fit
+# fit (increase the amount of steps to get n_eff 10000+ on relevant parameters)
 fit1_part1 <- b_linear(x = group1_part1$sequence,
                        y = group1_part1$response,
-                       s = group1_part1$subject)
+                       s = group1_part1$subject,
+                       iter=10000, warmup=500)
 
 fit1_part2 <- b_linear(x = group1_part2$sequence,
                        y = group1_part2$response,
-                       s = group1_part2$subject)
+                       s = group1_part2$subject,
+                       iter=10000, warmup=500)
 
 ## diagnose group 1 fits ------------------------------------------------------
 # plot trace
@@ -61,11 +63,13 @@ group2_part2 <- group2 %>% filter(part == 2)
 # fit
 fit2_part1 <- b_linear(x = group2_part1$sequence,
                        y = group2_part1$response,
-                       s = group2_part1$subject)
+                       s = group2_part1$subject,
+                       iter=10000, warmup=500)
 
 fit2_part2 <- b_linear(x = group2_part2$sequence,
                        y = group2_part2$response,
-                       s = group2_part2$subject)
+                       s = group2_part2$subject,
+                       iter=10000, warmup=500)
 
 
 ## diagnose group 2 fits ------------------------------------------------------
@@ -132,8 +136,10 @@ group1_start <- group1_part2 %>% filter(sequence == 1 | sequence == 2)
 group2_start <- group2_part2 %>% filter(sequence == 1 | sequence == 2)
 
 # fit
-ttest_group1_start <- b_ttest(data=group1_start$response)
-ttest_group2_start <- b_ttest(data=group2_start$response)
+ttest_group1_start <- b_ttest(data=group1_start$response,
+                              iter = 5000, warmup = 500)
+ttest_group2_start <- b_ttest(data=group2_start$response,
+                              iter = 5000, warmup = 500)
 
 ## diagnose ttest fits --------------------------------------------------------
 # plot trace
@@ -167,8 +173,10 @@ group1_end <- group1_part2 %>% filter(sequence == 9 | sequence == 10)
 group2_end <- group2_part2 %>% filter(sequence == 9 | sequence == 10)
 
 # fit
-ttest_group1_end <- b_ttest(data=group1_end$response)
-ttest_group2_end <- b_ttest(data=group2_end$response)
+ttest_group1_end <- b_ttest(data=group1_end$response,
+                            iter = 5000, warmup = 500)
+ttest_group2_end <- b_ttest(data=group2_end$response,
+                            iter = 5000, warmup = 500)
 
 ## diagnose ttest fits --------------------------------------------------------
 # plot trace

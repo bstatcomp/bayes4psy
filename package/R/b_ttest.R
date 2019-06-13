@@ -4,15 +4,15 @@
 #' @export
 #' @param data Numeric vector of values on which the fit will be based.
 #' @param priors List of parameters and their priors - b_prior objects. You can put a prior on the mu (mean) and sigma (variance) parameters (default = NULL).
-#' @param warmup Integer specifying the number of warmup iterations per chain (default = 9000).
-#' @param iter Integer specifying the number of iterations (including warmup, default = 10000).
+#' @param warmup Integer specifying the number of warmup iterations per chain (default = 1000).
+#' @param iter Integer specifying the number of iterations (including warmup, default = 2000).
 #' @param chains Integer specifying the number of parallel chains (default = 4).
 #' @param control A named list of parameters to control the sampler's behavior (default = NULL).
 #' @return An object of class `ttest_class`.
 b_ttest <- function(data,
                     priors=NULL,
-                    warmup=9000,
-                    iter=10000,
+                    warmup=1000,
+                    iter=2000,
                     chains=4,
                     control=NULL) {
 
