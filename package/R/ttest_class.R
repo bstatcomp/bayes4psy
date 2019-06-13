@@ -214,7 +214,7 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
   if (!is.null(sigma2)) {
     diff <- mean(y[[1]]) - mean(y[[2]])
     cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
-    cat(sprintf("\nCohen's d: %.2f\n\n", cohens_d))
+    cat(sprintf("Cohen's d: %.2f\n\n", cohens_d))
   }
 
   return(comparison_matrix)
@@ -513,7 +513,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
   if (!is.null(sigma2)) {
     diff <- mean(y[[1]]) - mean(y[[2]])
     cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
-    cat(sprintf("\nCohen's d: %.2f\n\n", cohens_d))
+    cat(sprintf("Cohen's d: %.2f\n\n", cohens_d))
   }
 
   return(comparison_matrix)

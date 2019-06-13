@@ -125,37 +125,73 @@ distributions_part2 <- plot_distributions(fit1_part2, fit2_part2) +
 cowplot::plot_grid(distributions_part1, distributions_part2, ncol=2, nrow=1, scale=0.9)
 
 
-## t-test ---------------------------------------------------------------------
-## t-test for comparison of adaptation immediately after switching the weights
-group1_sequence1 <- group1_part2 %>% filter(sequence == 1)
-group2_sequence1 <- group2_part2 %>% filter(sequence == 1)
+## t-tests --------------------------------------------------------------------
+
+## comparison of adaptation immediately after switching the weights -----------
+group1_start <- group1_part2 %>% filter(sequence == 1 | sequence == 2)
+group2_start <- group2_part2 %>% filter(sequence == 1 | sequence == 2)
 
 # fit
-ttest_group1 <- b_ttest(data=group1_sequence1$response)
-ttest_group2 <- b_ttest(data=group2_sequence1$response)
+ttest_group1_start <- b_ttest(data=group1_start$response)
+ttest_group2_start <- b_ttest(data=group2_start$response)
 
 ## diagnose ttest fits --------------------------------------------------------
 # plot trace
-plot_trace(ttest_group1)
-plot_trace(ttest_group2)
+plot_trace(ttest_group1_start)
+plot_trace(ttest_group2_start)
 
 # check fits
-plot_fit(ttest_group1)
-plot_fit(ttest_group2)
+plot_fit(ttest_group1_start)
+plot_fit(ttest_group2_start)
 
 # check n_eff and RHat
-print(ttest_group1)
-print(ttest_group2)
+print(ttest_group1_start)
+print(ttest_group2_start)
 
-# compare
-ttest_comparison <- compare_means(ttest_group1, fit2=ttest_group2)
+# compare use +/- 1 weight grade as rope interval
+ttest_comparison_start <- compare_means(ttest_group1_start, fit2=ttest_group2_start, rope=1)
 
 # plot difference use +/- 1 weight grade as rope interval
-plot_means_difference(ttest_group1, fit2=ttest_group2, rope=1)
+plot_means_difference(ttest_group1_start, fit2=ttest_group2_start, rope=1)
 
 # plot means
-plot_means(ttest_group1, fit2=ttest_group2)
+plot_means(ttest_group1_start, fit2=ttest_group2_start)
 
 # get values
-summary(ttest_group1)
-summary(ttest_group2)
+summary(ttest_group1_start)
+summary(ttest_group2_start)
+
+
+## comparison of adaptation at the end of experiment --------------------------
+group1_end <- group1_part2 %>% filter(sequence == 9 | sequence == 10)
+group2_end <- group2_part2 %>% filter(sequence == 9 | sequence == 10)
+
+# fit
+ttest_group1_end <- b_ttest(data=group1_end$response)
+ttest_group2_end <- b_ttest(data=group2_end$response)
+
+## diagnose ttest fits --------------------------------------------------------
+# plot trace
+plot_trace(ttest_group1_end)
+plot_trace(ttest_group2_end)
+
+# check fits
+plot_fit(ttest_group1_end)
+plot_fit(ttest_group2_end)
+
+.# check n_eff and RHat
+print(ttest_group1_end)
+print(ttest_group2_end)
+
+# compare use +/- 1 weight grade as rope interval
+ttest_comparison_end <- compare_means(ttest_group1_end, fit2=ttest_group2_end, rope=1)
+
+# plot difference use +/- 1 weight grade as rope interval
+plot_means_difference(ttest_group1_end, fit2=ttest_group2_end, rope=1)
+
+# plot means
+plot_means(ttest_group1_end, fit2=ttest_group2_end)
+
+# get values
+summary(ttest_group1_end)
+summary(ttest_group2_end)
