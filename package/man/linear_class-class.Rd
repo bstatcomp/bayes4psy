@@ -22,11 +22,11 @@ get_subject_parameters(`linear_class`): returns a dataframe with values of fitte
 
 compare_means(`linear_class`, fit2=`linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
 
-plot_means_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+plot_means_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can plot only slope or intercept by using the par parameter. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
-plot_means(`linear_class`): plots density of means.
+plot_means(`linear_class`): plots density of means. You can plot only slope or intercept by using the par parameter.
 
-plot_means(`linear_class`, fit2=`linear_class`): plots density for the first and the second group means.
+plot_means(`linear_class`, fit2=`linear_class`): plots density for the first and the second group means. You can plot only slope or intercept by using the par parameter.
 
 compare_distributions(`linear_class`, fit2=`linear_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 
@@ -34,7 +34,7 @@ plot_distributions(`linear_class`): a visualization of the fitted distribution.
 
 plot_distributions(`linear_class`, fit2=`linear_class`): a visualization of two fitted distribution.
 
-plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
+plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can plot only slope or intercept by using the par parameter. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the group level.
 

@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{linear_class object.}
 
-\item{...}{fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.}
+\item{...}{fit2 - a second linear_class object,  par - specific parameter of comparison (slope or intercept), rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.}
 }
 \description{
 \code{plot_distributions_difference} visualizes the difference between two groups.

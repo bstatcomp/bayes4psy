@@ -16,11 +16,11 @@
 #'
 #' compare_means(`linear_class`, fit2=`linear_class`): prints difference in slope and intercept between two groups. You can also provide the rope parameter.
 #'
-#' plot_means_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_means_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between two groups. You can plot only slope or intercept by using the par parameter. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_means(`linear_class`): plots density of means.
+#' plot_means(`linear_class`): plots density of means. You can plot only slope or intercept by using the par parameter.
 #'
-#' plot_means(`linear_class`, fit2=`linear_class`): plots density for the first and the second group means.
+#' plot_means(`linear_class`, fit2=`linear_class`): plots density for the first and the second group means. You can plot only slope or intercept by using the par parameter.
 #'
 #' compare_distributions(`linear_class`, fit2=`linear_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group.
 #'
@@ -28,7 +28,7 @@
 #'
 #' plot_distributions(`linear_class`, fit2=`linear_class`): a visualization of two fitted distribution.
 #'
-#' plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can plot only slope or intercept by using the par parameter. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
 #' plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the group level.
 #'
@@ -172,6 +172,7 @@ setMethod(f="compare_means", signature(object="linear_class"), definition=functi
     cat("\n---------- Slope ----------\n")
     slope <- difference(y1=slope1, y2=slope2, rope=rope_slope)
 
+    cat("\n")
     return(rbind(intercept, slope))
   } else {
     warning(wrong_arguments)
@@ -183,10 +184,11 @@ setMethod(f="compare_means", signature(object="linear_class"), definition=functi
 #' @title plot_means_difference
 #' @description \code{plot_means_difference} plots difference between two groups.
 #' @param object linear_class object.
-#' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
+#' @param ... fit2 - a second linear_class object, par - specific parameter of comparison (slope or intercept), rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
 #' @rdname linear_class-plot_means_difference
 #' @aliases plot_means_difference_linear
 setMethod(f="plot_means_difference", signature(object="linear_class"), definition=function(object, ...) {
+  # extract additional parameters
   arguments <- list(...)
 
   wrong_arguments <- "The provided arguments for the plot_means_difference function are invalid, plot_means_difference(linear_class, fit2=linear_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_means_difference(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric, bins=numeric)."
@@ -194,6 +196,20 @@ setMethod(f="plot_means_difference", signature(object="linear_class"), definitio
   if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
+  }
+
+  # compare through slope or intercept only
+  par <- NULL
+  if (!is.null(arguments$par)) {
+    par <- arguments$par
+
+    if (!(par == "slope" || par == "intercept")) {
+      w <- sprintf("Parameter %s not recognized, parameters used in this model are slope and intercept! Using the default setting for comparison.", par)
+      warning(w)
+      par <- NULL
+    } else {
+      cat(sprintf("\n---------- Using only the %s parameter. ----------\n\n", par))
+    }
   }
 
   # prepare rope
@@ -241,7 +257,14 @@ setMethod(f="plot_means_difference", signature(object="linear_class"), definitio
       ggtitle("Slope") +
       theme(plot.title=element_text(hjust=0.5))
 
-    graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol=2, nrow=1, scale=0.9)
+    if (is.null(par)) {
+      graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol=2, nrow=1, scale=0.9)
+    } else if (par == "slope") {
+      graph <- graph_slope
+    } else if (par == "intercept") {
+      graph <- graph_intercept
+    }
+
     return(graph)
   } else {
     warning(wrong_arguments)
@@ -253,12 +276,29 @@ setMethod(f="plot_means_difference", signature(object="linear_class"), definitio
 #' @title plot_means
 #' @description \code{plot_means} plots means or the first and the second group means.
 #' @param object linear_class object.
-#' @param ... fit2 - a second linear_class object.
+#' @param ... fit2 - a second linear_class object, par - specific parameter of comparison (slope or intercept).
 #' @rdname linear_class-plot_means
 #' @aliases plot_means_linear
 setMethod(f="plot_means", signature(object="linear_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   intercept <- slope <- NULL
+
+  # extract additional parameters
+  arguments <- list(...)
+
+  # compare through slope or intercept only
+  par <- NULL
+  if (!is.null(arguments$par)) {
+    par <- arguments$par
+
+    if (!(par == "slope" || par == "intercept")) {
+      w <- sprintf("Parameter %s not recognized, parameters used in this model are slope and intercept! Using the default setting for comparison.", par)
+      warning(w)
+      par <- NULL
+    } else {
+      cat(sprintf("\n---------- Using only the %s parameter. ----------\n\n", par))
+    }
+  }
 
   # first group data
   df1 <- data.frame(intercept=object@extract$mu_a, slope=object@extract$mu_b)
@@ -277,7 +317,6 @@ setMethod(f="plot_means", signature(object="linear_class"), definition=function(
 
   # second group data
   df2 <- NULL
-  arguments <- list(...)
   if (length(arguments) > 0) {
     if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "linear_class") {
       # provided another fit
@@ -319,7 +358,13 @@ setMethod(f="plot_means", signature(object="linear_class"), definition=function(
     xlab("slope") +
     xlim(x_min_slope, x_max_slope)
 
-  graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol=2, nrow=1, scale=0.9)
+  if (is.null(par)) {
+    graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol=2, nrow=1, scale=0.9)
+  } else if (par == "slope") {
+    graph <- graph_slope
+  } else if (par == "intercept") {
+    graph <- graph_intercept
+  }
 
   return(graph)
 })
@@ -387,6 +432,7 @@ setMethod(f="compare_distributions", signature(object="linear_class"), definitio
     cat("\n---------- Slope ----------\n")
     slope <- difference(y1=slope1, y2=slope2, rope=rope_slope)
 
+    cat("\n")
     return(rbind(intercept, slope))
   } else {
     warning(wrong_arguments)
@@ -461,8 +507,7 @@ setMethod(f="plot_distributions", signature(object="linear_class"), definition=f
     xlim(x_min, x_max) +
     ylim(y_min, y_max) +
     xlab("") +
-    ylab("") +
-    theme(legend.position="none")
+    ylab("")
 
   return(graph)
 })
@@ -471,10 +516,11 @@ setMethod(f="plot_distributions", signature(object="linear_class"), definition=f
 #' @title plot_distributions_difference
 #' @description \code{plot_distributions_difference} visualizes the difference between two groups.
 #' @param object linear_class object.
-#' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
+#' @param ... fit2 - a second linear_class object,  par - specific parameter of comparison (slope or intercept), rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
 #' @rdname linear_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_linear
 setMethod(f="plot_distributions_difference", signature(object="linear_class"), definition=function(object, ...) {
+  # extract additional parameters
   arguments <- list(...)
 
   wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(linear_class, fit2=linear_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric, bins=numeric)."
@@ -482,6 +528,20 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
   if (length(arguments) == 0) {
     warning(wrong_arguments)
     return()
+  }
+
+  # compare through slope or intercept only
+  par <- NULL
+  if (!is.null(arguments$par)) {
+    par <- arguments$par
+
+    if (!(par == "slope" || par == "intercept")) {
+      w <- sprintf("Parameter %s not recognized, parameters used in this model are slope and intercept! Using the default setting for comparison.", par)
+      warning(w)
+      par <- NULL
+    } else {
+      cat(sprintf("\n---------- Using only the %s parameter. ----------\n\n", par))
+    }
   }
 
   # prepare rope
@@ -541,7 +601,14 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
       ggtitle("Slope") +
       theme(plot.title=element_text(hjust=0.5))
 
-    graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol=2, nrow=1, scale=0.9)
+    if (is.null(par)) {
+      graph <- cowplot::plot_grid(graph_intercept, graph_slope, ncol=2, nrow=1, scale=0.9)
+    } else if (par == "slope") {
+      graph <- graph_slope
+    } else if (par == "intercept") {
+      graph <- graph_intercept
+    }
+
     return(graph)
   } else {
     warning(wrong_arguments)

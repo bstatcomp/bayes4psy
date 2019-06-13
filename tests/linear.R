@@ -49,11 +49,17 @@ compare_means(fit1, fit2=fit2)
 # plot_means_difference(`linear_class`, fit2=`linear_class`)
 plot_means_difference(fit1, fit2=fit2)
 
+# plot_means_difference(`linear_class`, fit2=`linear_class`, par='intercept/slope')
+plot_means_difference(fit1, fit2=fit2, par="intercept")
+
 # plot_means(`linear_class`)
 plot_means(fit1)
 
 # plot_means(`linear_class`, fit2=`linear_class`)
 plot_means(fit1, fit2=fit2)
+
+# plot_means(`linear_class`, fit2=`linear_class`, par='intercept/slope')
+plot_means(fit1, fit2=fit2, par="intercept")
 
 # compare_distributions(`linear_class`, fit2=`linear_class`)
 compare_distributions(fit1, fit2=fit2)
@@ -66,6 +72,9 @@ plot_distributions(fit1, fit2=fit2)
 
 # plot_distributions_difference(`linear_class`, fit2=`linear_class`)
 plot_distributions_difference(fit1, fit2=fit2)
+
+# plot_distributions_difference(`linear_class`, fit2=`linear_class`, par='intercept/slope')
+plot_distributions_difference(fit1, fit2=fit2, par="intercept")
 
 # plot_fit(`linear_class`)
 plot_fit(fit1)

@@ -1,109 +1,161 @@
 # libs
 library(bayes4psy)
 library(ggplot2)
+library(dplyr)
 
-## data wrangling --------------------------------------------------------
-# load data
-df <- read.table("../examples/data/adaptation_level.csv", sep="\t", header=TRUE)
+## load data ------------------------------------------------------------------
+data <- read.table("../examples/data/adaptation_level.csv", sep="\t", header=TRUE)
 
 
-## group 1 ---------------------------------------------------------------
-df_1 <- df[df$group == 1, ]
+## group 1 fitting ------------------------------------------------------------
+group1 <- data[data$group == 1, ]
 
 # number of subjects
-m <- length(unique(df_1$subject))
+m1 <- length(unique(group1$subject))
 
 # map subject to 1..m interval
-df_1$subject <- plyr::mapvalues(df_1$subject, from=unique(df_1$subject), to=1:m)
+group1$subject <- plyr::mapvalues(group1$subject, from=unique(group1$subject), to=1:m1)
 
-# before - 1st part
-df_1b <- df_1[df_1$part == 1, ]
+# split data to (part == 1 and part == 2)
+group1_part1 <- group1 %>% filter(part == 1)
+group1_part2 <- group1 %>% filter(part == 2)
 
-# prep data and fit
-al_1b <- b_linear(x = df_1b$sequence,
-                  y = df_1b$response,
-                  s = df_1b$subject)
+# fit
+fit1_part1 <- b_linear(x = group1_part1$sequence,
+                       y = group1_part1$response,
+                       s = group1_part1$subject)
 
-# to control the amount of warmup and interation steps use
-# b_linear(..., warmup=5000, iter=6000)
+fit1_part2 <- b_linear(x = group1_part2$sequence,
+                       y = group1_part2$response,
+                       s = group1_part2$subject)
 
-# diagnostics
-# summary
-summary(al_1b)
-
-# print a more detailed summary (prints the fit object)
-# same as show(al_1b)
-print(al_1b)
+## diagnose group 1 fits ------------------------------------------------------
+# plot trace
+plot_trace(fit1_part1)
+plot_trace(fit1_part2)
 
 # check fits
-plot_fit(al_1b)
+plot_fit(fit1_part1)
+plot_fit(fit1_part1, subjects=TRUE)
+plot_fit(fit1_part2)
+plot_fit(fit1_part2, subjects=TRUE)
 
-# plot trace
-plot_trace(al_1b)
-
-# plot means
-plot_means(al_1b)
-
-# after - 2nd part
-df_1a <- df_1[df_1$part == 2, ]
-
-# prep data and fit
-al_1a <- b_linear(x = df_1a$sequence,
-                  y = df_1a$response,
-                  s = df_1a$subject)
+# check n_eff and RHat
+print(fit1_part1)
+print(fit1_part2)
 
 
-## group 2 ---------------------------------------------------------------
-df_2 <- df[df$group == 2, ]
+## group 2 fitting ------------------------------------------------------------
+group2 <- data[data$group == 2, ]
 
 # number of subjects
-m <- length(unique(df_2$subject))
+m2 <- length(unique(group2$subject))
 
 # map subject to 1..m interval
-df_2$subject <- plyr::mapvalues(df_2$subject, from=unique(df_2$subject), to=1:m)
+group2$subject <- plyr::mapvalues(group2$subject, from=unique(group2$subject), to=1:m2)
 
-# before - 1st part
-df_2b <- df_2[df_2$part == 1, ]
+# split data to (part == 1 and part == 2)
+group2_part1 <- group2 %>% filter(part == 1)
+group2_part2 <- group2 %>% filter(part == 2)
 
-# prep data and fit
-al_2b <- b_linear(x = df_2b$sequence,
-                  y = df_2b$response,
-                  s = df_2b$subject)
+# fit
+fit2_part1 <- b_linear(x = group2_part1$sequence,
+                       y = group2_part1$response,
+                       s = group2_part1$subject)
 
-# after - 2nd part
-df_2a <- df_2[df_2$part == 2, ]
-
-# prep data and fit
-al_2a <- b_linear(x = df_2a$sequence,
-                  y = df_2a$response,
-                  s = df_2a$subject)
+fit2_part2 <- b_linear(x = group2_part2$sequence,
+                       y = group2_part2$response,
+                       s = group2_part2$subject)
 
 
-## compare ---------------------------------------------------------------
-# compare_means (optional rope parameter)
-compare_means(al_1b, fit2=al_1a)
+## diagnose group 2 fits ------------------------------------------------------
+# plot trace
+plot_trace(fit2_part1)
+plot_trace(fit2_part2)
 
-# difference (optional rope parameter)
-plot_means_difference(al_1b, fit2=al_1a)
+# check fits
+plot_fit(fit2_part1)
+plot_fit(fit2_part1, subjects=TRUE)
+plot_fit(fit2_part2)
+plot_fit(fit2_part2, subjects=TRUE)
+
+# check n_eff and RHat
+print(fit2_part1)
+print(fit2_part2)
+
+
+## comparison and visualizations ----------------------------------------------
+# compare_means
+fit1_comparison <- compare_means(fit1_part1, fit2=fit1_part2)
+fit2_comparison <- compare_means(fit2_part1, fit2=fit2_part2)
+
+
+# difference
+difference_group1 <- plot_means_difference(fit1_part1, fit2=fit1_part2, par="slope") +
+  ggtitle("Group 1")
+difference_group2 <- plot_means_difference(fit2_part1, fit2=fit2_part2, par="slope") +
+  ggtitle("Group 2")
+
+cowplot::plot_grid(difference_group1, difference_group2, ncol=2, nrow=1, scale=0.9)
+
 
 # visually compare means
-plot_means(al_1b, fit2=al_1a)
+means_group1 <- plot_means(fit1_part1, fit2=fit1_part2, par="slope") +
+  ggtitle("Group 1")
+means_group2 <- plot_means(fit2_part1, fit2=fit2_part2, par="slope") +
+  ggtitle("Group 2")
 
-# compare distributions (optional rope parameter)
-compare_distributions(al_1b, fit2=al_1a)
+cowplot::plot_grid(means_group1, means_group2, ncol=2, nrow=1, scale=0.9)
+
 
 # plot_distribution also add labels and same limits for both graphs
-graph_b <- plot_distributions(al_1b, al_2b) +
+distributions_part1 <- plot_distributions(fit1_part1, fit2_part1) +
   xlim(0, 10) +
   ylim(0, 10) +
-  labs(title="Before", x="measurement", y="weight")
+  labs(title="Part I", x="measurement number", y="weight") +
+  theme(legend.position="none")
 
-graph_a <- plot_distributions(al_1a, al_2a) +
+distributions_part2 <- plot_distributions(fit1_part2, fit2_part2) +
   xlim(0, 10) +
   ylim(0, 10) +
-  labs(title="After", x="measurement", y="")
+  labs(title="Part II", x="measurement number", y="") +
+  theme(legend.position=) +
+  theme(legend.position="none")
 
-cowplot::plot_grid(graph_b, graph_a, ncol=2, nrow=1, scale=0.9)
+cowplot::plot_grid(distributions_part1, distributions_part2, ncol=2, nrow=1, scale=0.9)
 
-# plot difference between distributions
-plot_distributions_difference(al_1b, fit2=al_1a)
+
+## t-test ---------------------------------------------------------------------
+## t-test for comparison of adaptation immediately after switching the weights
+group1_sequence1 <- group1_part2 %>% filter(sequence == 1)
+group2_sequence1 <- group2_part2 %>% filter(sequence == 1)
+
+# fit
+ttest_group1 <- b_ttest(data=group1_sequence1$response)
+ttest_group2 <- b_ttest(data=group2_sequence1$response)
+
+## diagnose ttest fits --------------------------------------------------------
+# plot trace
+plot_trace(ttest_group1)
+plot_trace(ttest_group2)
+
+# check fits
+plot_fit(ttest_group1)
+plot_fit(ttest_group2)
+
+# check n_eff and RHat
+print(ttest_group1)
+print(ttest_group2)
+
+# compare
+ttest_comparison <- compare_means(ttest_group1, fit2=ttest_group2)
+
+# plot difference use +/- 1 weight grade as rope interval
+plot_means_difference(ttest_group1, fit2=ttest_group2, rope=1)
+
+# plot means
+plot_means(ttest_group1, fit2=ttest_group2)
+
+# get values
+summary(ttest_group1)
+summary(ttest_group2)

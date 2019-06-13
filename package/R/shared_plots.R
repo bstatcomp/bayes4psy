@@ -60,7 +60,7 @@ plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, nrow=1, 
 
   graph <- graph +
     geom_segment(aes(x=mean_diff, xend=mean_diff, y=0, yend=y_max * 1.05), size=1.5, color="#3182bd", na.rm=T) +
-    geom_text(aes(label=sprintf("%.2f", mean_diff), x=mean_diff, y=y_max * (1.05 + (nrow * 0.03))), size=4, hjust=hjust)
+    geom_text(aes(label=sprintf("%.2f", mean_diff), x=mean_diff, y=y_max * (1.05 + (nrow * 0.05))), size=4, hjust=hjust)
 
   # add HDI
   graph <- graph +

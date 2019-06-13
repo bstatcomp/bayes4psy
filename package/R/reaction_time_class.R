@@ -173,7 +173,7 @@ setMethod(f="compare_means", signature(object="reaction_time_class"), definition
       warning(w)
       par <- NULL
     } else {
-      cat(sprintf("\n---------- Using only the %s parameter. ----------\n", par))
+      cat(sprintf("\n---------- Using only the %s parameter. ----------\n\n", par))
     }
   }
 
@@ -286,7 +286,7 @@ setMethod(f="plot_means_difference", signature(object="reaction_time_class"), de
       warning(w)
       par <- NULL
     } else {
-      cat(sprintf("\n---------- Using only the %s parameter. ----------\n", par))
+      cat(sprintf("\n---------- Using only the %s parameter. ----------\n\n", par))
     }
   }
 
@@ -411,7 +411,7 @@ setMethod(f="plot_means", signature(object="reaction_time_class"), definition=fu
       warning(w)
       par <- NULL
     } else {
-      cat(sprintf("\n---------- Using only the %s parameter. ----------\n", par))
+      cat(sprintf("\n---------- Using only the %s parameter. ----------\n\n", par))
     }
   }
 

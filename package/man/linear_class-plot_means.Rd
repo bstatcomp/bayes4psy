@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{linear_class object.}
 
-\item{...}{fit2 - a second linear_class object.}
+\item{...}{fit2 - a second linear_class object, par - specific parameter of comparison (slope or intercept).}
 }
 \description{
 \code{plot_means} plots means or the first and the second group means.
