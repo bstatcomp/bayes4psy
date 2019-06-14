@@ -1,125 +1,72 @@
 # libs
 library(bayes4psy)
 
-## data wrangling --------------------------------------------------------
+## data wrangling -------------------------------------------------------------
 # load data
-df <- read.table("../examples/data/flanker.csv", sep="\t", header=TRUE)
+data <- read.table("../examples/data/flanker.csv", sep="\t", header=TRUE)
 
-# map correct/incorrect/timeout to 1/0
-df$result_numeric <- 0
-df[df$result == "correct", ]$result_numeric <- 1
+## reaction time analysis - test vs control group -----------------------------
+# analyse only correct answers
+correct <- data[data$result == "correct", ]
 
+## fit reaction times model to control and test groups fit --------------------
+control_rt <- correct[correct$group == "control", ]
+test_rt <- correct[correct$group == "test", ]
 
-### REACTION TIMES - test vs control group -------------------------------
-# test vs control (correct and no timeout only)
-df_correct <- df[df$result == "correct", ]
+# control group subject indexes range is 22..45 cast it to 1..23
+# test group indexes are OK
+control_rt$subject <- control_rt$subject - 21
 
+# fit, use only 1 chain to speed up the process
+# this is only a demonstration
+# more chains or a longer chian would be needed for proper analysis
+rt_control_fit <- b_reaction_time(t=control_rt$rt, s=control_rt$subject,
+                                  chain=1, warmup=500, iter=2000)
 
-## control group fit -----------------------------------------------------
-df_control <- df_correct[df_correct$group == "control", ]
-
-# subject indexes range on 22..45 cast to 1..23
-df_control$subject <- df_control$subject - 21
-
-t <- df_control$rt
-s <- df_control$subject
-
-# to control the amount of warmup and interation steps use
-# b_reaction_time(t=t, s=s, warmup=5000, iter=6000)
-rt_control <- b_reaction_time(t=t, s=s)
-
-# summary
-summary(rt_control)
-
-# print a more detailed summary (prints the fit object)
-# same as show(rt_control)
-print(rt_control)
-
-# check fits
-plot_fit(rt_control)
-# fit per each subject
-plot_fit(rt_control, subjects=TRUE)
+rt_test_fit <- b_reaction_time(t=test_rt$rt, s=test_rt$subject,
+                                  chain=1, warmup=500, iter=2000)
 
 # plot trace
-plot_trace(rt_control)
+plot_trace(rt_control_fit)
+plot_trace(rt_test_fit)
 
-# plot means
-plot_means(rt_control)
-
-# plot distribution
-plot_distributions(rt_control)
-
-
-## test group fit --------------------------------------------------------
-df_test <- df_correct[df_correct$group == "test", ]
-
-t <- df_test$rt
-s <- df_test$subject
-
-rt_test <- b_reaction_time(t=t, s=s)
-
-# summary
-summary(rt_test)
+# check fit (Rhat and n_eff)
+print(rt_control_fit)
+print(rt_test_fit)
 
 # check fits
-plot_fit(rt_test)
-
-# plot trace
-plot_trace(rt_test)
-
-# plot means
-plot_means(rt_test)
-
-# plot distribution
-plot_distributions(rt_test)
+plot_fit(rt_control_fit)
+plot_fit(rt_control_fit, subjects=TRUE)
+plot_fit(rt_test_fit)
+plot_fit(rt_test_fit, subjects=TRUE)
 
 
-## compare two groups  ---------------------------------------------------
-# difference summary
-compare_means(rt_control, fit2=rt_test)
+## analysis of reaction times between control and test group ------------------
+# set rope (region of practical equivalence) interval to +/- 10ms
+rope <- 0.01
 
-# difference summary, compare only mu parameter (or lambda)
-compare_means(rt_control, fit2=rt_test, par="mu")
-
-# difference summary with rope
-compare_means(rt_control, fit2=rt_test, rope=0.1)
+# which one is
+rt_control_test <- compare_means(rt_control_fit, fit2=rt_test_fit, rope=rope)
 
 # difference plot
-plot_means_difference(rt_control, fit2=rt_test)
+plot_means_difference(rt_control_fit, fit2=rt_test_fit, rope=rope)
 
-# difference plot with rope, custom bins of mu parameter
-plot_means_difference(rt_control, fit2=rt_test, rope=0.1, bins=10, par="mu")
-
-# means plot
-plot_means(rt_control, fit2=rt_test)
-
-# plot means only for lambda prameter (or mu)
-plot_means(rt_control, fit2=rt_test, par="lambda")
-
-# compare distributions
-compare_distributions(rt_control, fit2=rt_test)
-
-# compare distributions with rope
-compare_distributions(rt_control, fit2=rt_test, rope=0.1)
-
-# plot distributions
-plot_distributions(rt_control, fit2=rt_test)
-
-# plot distributions difference
-plot_distributions_difference(rt_control, fit2=rt_test)
-
-# plot distributions difference
-plot_distributions_difference(rt_control, fit2=rt_test, par="mu")
-
-# plot distributions difference with rope and custom bins
-plot_distributions_difference(rt_control, fit2=rt_test, rope=0.1, bins=10)
+# visual comparsion of mean difference
+plot_means(rt_control_fit, fit2=rt_test_fit)
 
 
+## sucess rate analysis - test vs control group -------------------------------
+# map correct/incorrect/timeout to 1 (success) or 0 (fail)
+data$result_numeric <- 0
+data[data$result == "correct", ]$result_numeric <- 1
 
-### SUCCESS RATE - test group congruent vs incongruent  ------------------
-df_congruent <- df[df$group == "test" & df$congruency == "congruent", ]
+# split to control and test groups
+control_sr <- data[data$group == "control", ]
+test_sr <- data[data$group == "test", ]
 
-df_incongruent <- df[df$group == "test" & df$congruency == "incongruent", ]
+# control group subject indexes range is 22..45 cast it to 1..23
+# test group indexes are OK
+control_sr$subject <- control_sr$subject - 21
 
 # priors
 p_prior <- b_prior(family="beta", pars=c(1, 1))
@@ -129,74 +76,36 @@ tau_prior <- b_prior(family="uniform", pars=c(0, 500))
 priors <- list(c("p", p_prior),
                c("tau", tau_prior))
 
-## congruent fit ---------------------------------------------------------
-r <- df_congruent$result_numeric
-s <- df_congruent$subject
-
-s_congruent <- b_success_rate(r=r, s=s, priors=priors)
-
-# summary
-summary(s_congruent)
-
-# detailed summery
-print(s_congruent)
-
-# check fits
-plot_fit(s_congruent)
+# fit
+sr_control_fit <- b_success_rate(r=control_sr$result_numeric,
+                                 s=control_sr$subject,
+                                 priors=priors)
+sr_test_fit <- b_success_rate(r=test_sr$result_numeric,
+                              s=test_sr$subject,
+                              priors=priors)
 
 # plot trace
-plot_trace(s_congruent)
+plot_trace(sr_control_fit)
+plot_trace(sr_test_fit)
 
-# plot means
-plot_means(s_congruent)
-
-# plot distribution
-plot_distributions(s_congruent)
-
-
-## incongruent fit -------------------------------------------------------
-r <- df_incongruent$result_numeric
-s <- df_incongruent$subject
-
-s_incongruent <- b_success_rate(r=r, s=s, priors=priors)
-
-# summary
-summary(s_incongruent)
+# check fit (Rhat and n_eff)
+print(sr_control_fit)
+print(sr_test_fit)
 
 # check fits
-plot_fit(s_incongruent)
-
-# plot trace
-plot_trace(s_incongruent)
-
-# plot means
-plot_means(s_incongruent)
-
-# plot distribution
-plot_distributions(s_incongruent)
+plot_fit(sr_control_fit)
+plot_fit(sr_control_fit, subjects=TRUE)
+plot_fit(sr_test_fit)
+plot_fit(sr_test_fit, subjects=TRUE)
 
 
-## comparison ------------------------------------------------------------
-# compare means
-compare_means(s_congruent, fit2=s_incongruent)
-
-# compare means with rope
-compare_means(s_congruent, fit2=s_incongruent, rope=0.05)
+## analysis of sucess rate between control and test group ------------------
+# set rope (region of practical equivalence) interval to +/- 10ms
+# which one is
+sr_control_test <- compare_means(sr_control_fit, fit2=sr_test_fit)
 
 # difference plot
-plot_means_difference(s_congruent, fit2=s_incongruent)
+plot_means_difference(sr_control_fit, fit2=sr_test_fit)
 
-# difference plot with rope and custom bins
-plot_means_difference(s_congruent, fit2=s_incongruent, rope=0.05, bins=20)
-
-# plot means for both groups
-plot_means(s_congruent, fit2=s_incongruent)
-
-# compare distributions
-compare_distributions(s_congruent, fit2=s_incongruent)
-
-# distributions plost
-plot_distributions(s_congruent, fit2=s_incongruent)
-
-# plot distributions difference
-plot_distributions_difference(s_congruent, fit2=s_incongruent)
+# visual comparsion of mean difference
+plot_means(sr_control_fit, fit2=sr_test_fit)

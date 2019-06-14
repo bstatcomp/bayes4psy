@@ -154,11 +154,14 @@ plot_fit(ttest_group2_start)
 print(ttest_group1_start)
 print(ttest_group2_start)
 
+# set rope (region of practical equivalence) interval to +/- 1 weight grade
+rope <- 1
+
 # compare use +/- 1 weight grade as rope interval
-ttest_comparison_start <- compare_means(ttest_group1_start, fit2=ttest_group2_start, rope=1)
+ttest_comparison_start <- compare_means(ttest_group1_start, fit2=ttest_group2_start, rope=rope)
 
 # plot difference use +/- 1 weight grade as rope interval
-plot_means_difference(ttest_group1_start, fit2=ttest_group2_start, rope=1)
+plot_means_difference(ttest_group1_start, fit2=ttest_group2_start, rope=rope)
 
 # plot means
 plot_means(ttest_group1_start, fit2=ttest_group2_start)
