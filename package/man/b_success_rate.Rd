@@ -4,7 +4,7 @@
 \alias{b_success_rate}
 \title{b_success_rate}
 \usage{
-b_success_rate(r, s, priors = NULL, warmup = 2000, iter = 3000,
+b_success_rate(r, s, priors = NULL, warmup = 1000, iter = 2000,
   chains = 4, control = NULL)
 }
 \arguments{
@@ -14,9 +14,9 @@ b_success_rate(r, s, priors = NULL, warmup = 2000, iter = 3000,
 
 \item{priors}{List of parameters and their priors - b_prior objects. You can put a prior on the p (mean probability of success) and tau (variance) parameters (default = NULL).}
 
-\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 2000).}
+\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 1000).}
 
-\item{iter}{Integer specifying the number of iterations (including warmup, default = 3000).}
+\item{iter}{Integer specifying the number of iterations (including warmup, default = 2000).}
 
 \item{chains}{Integer specifying the number of parallel chains (default = 4).}
 

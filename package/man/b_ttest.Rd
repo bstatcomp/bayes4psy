@@ -4,7 +4,7 @@
 \alias{b_ttest}
 \title{b_ttest}
 \usage{
-b_ttest(data, priors = NULL, warmup = 9000, iter = 10000,
+b_ttest(data, priors = NULL, warmup = 1000, iter = 2000,
   chains = 4, control = NULL)
 }
 \arguments{
@@ -12,9 +12,9 @@ b_ttest(data, priors = NULL, warmup = 9000, iter = 10000,
 
 \item{priors}{List of parameters and their priors - b_prior objects. You can put a prior on the mu (mean) and sigma (variance) parameters (default = NULL).}
 
-\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 9000).}
+\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 1000).}
 
-\item{iter}{Integer specifying the number of iterations (including warmup, default = 10000).}
+\item{iter}{Integer specifying the number of iterations (including warmup, default = 2000).}
 
 \item{chains}{Integer specifying the number of parallel chains (default = 4).}
 

@@ -203,21 +203,23 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
     }
   }
 
-  # largest/smallest probabilities
-  if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
-    print(is_smallest_or_largest(data=y, rope=rope))
-    cat("\n\n")
-  }
-
   # add Cohen's d if 2 groups are provided
   if (!is.null(sigma2)) {
     diff <- mean(y[[1]]) - mean(y[[2]])
     cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
-    cat(sprintf("Cohen's d: %.2f\n\n", cohens_d))
+    cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
   }
 
-  return(comparison_matrix)
+  # largest/smallest probabilities
+  if (n > 2) {
+    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
+    smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
+    print(smallest_largest)
+    cat("\n\n")
+    return(list(comparison_matrix=comparison_matrix, smallest_largest=smallest_largest))
+  } else {
+    return(comparison_matrix)
+  }
 })
 
 
@@ -502,21 +504,23 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
     }
   }
 
-  # largest/smallest probabilities
-  if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
-    print(is_smallest_or_largest(data=y, rope=rope))
-    cat("\n\n")
-  }
-
   # add Cohen's d if 2 groups are provided
   if (!is.null(sigma2)) {
     diff <- mean(y[[1]]) - mean(y[[2]])
     cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
-    cat(sprintf("Cohen's d: %.2f\n\n", cohens_d))
+    cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
   }
 
-  return(comparison_matrix)
+  # largest/smallest probabilities
+  if (n > 2) {
+    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
+    smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
+    print(smallest_largest)
+    cat("\n\n")
+    return(list(comparison_matrix=comparison_matrix, smallest_largest=smallest_largest))
+  } else {
+    return(comparison_matrix)
+  }
 })
 
 

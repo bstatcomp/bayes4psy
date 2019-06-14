@@ -192,11 +192,13 @@ setMethod(f="compare_means", signature(object="success_rate_class"), definition=
   # largest/smallest probabilities
   if (n > 2) {
     cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
-    print(is_smallest_or_largest(data=y, rope=rope))
+    smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
+    print(smallest_largest)
     cat("\n\n")
+    return(list(comparison_matrix=comparison_matrix, smallest_largest=smallest_largest))
+  } else {
+    return(comparison_matrix)
   }
-
-  return(comparison_matrix)
 })
 
 
@@ -431,11 +433,13 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
   # largest/smallest probabilities
   if (n > 2) {
     cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
-    print(is_smallest_or_largest(data=y, rope=rope))
+    smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
+    print(smallest_largest)
     cat("\n\n")
+    return(list(comparison_matrix=comparison_matrix, smallest_largest=smallest_largest))
+  } else {
+    return(comparison_matrix)
   }
-
-  return(comparison_matrix)
 })
 
 

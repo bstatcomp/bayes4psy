@@ -50,7 +50,7 @@ rope=1
 
 ## cross compare all fits -----------------------------------------------------
 fit_list <- c(fit_reading_incongruent, fit_naming_neutral, fit_naming_incongruent)
-multiple_comparison <- compare_means(fit_reading_neutral, fits=fit_list)
+multiple_comparison <- compare_means(fit_reading_neutral, fits=fit_list, rope=rope)
 
 # plot means
 plot_means(fit_reading_neutral, fits=fit_list, rope=rope) +

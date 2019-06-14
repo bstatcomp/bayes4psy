@@ -4,8 +4,8 @@
 \alias{b_color}
 \title{b_color}
 \usage{
-b_color(colors, priors = NULL, hsv = FALSE, warmup = 2000,
-  iter = 3000, chains = 4, control = NULL)
+b_color(colors, priors = NULL, hsv = FALSE, warmup = 1000,
+  iter = 2000, chains = 4, control = NULL)
 }
 \arguments{
 \item{colors}{a data frame of colors either in RGB or HSV format. The first column should be the R (or H) component, the second column should be the G (or S) component and the third column should be the B (or V) component.}
@@ -14,9 +14,9 @@ b_color(colors, priors = NULL, hsv = FALSE, warmup = 2000,
 
 \item{hsv}{set to TRUE if colors are provided in HSV format (default = FALSE).}
 
-\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 2000).}
+\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 1000).}
 
-\item{iter}{Integer specifying the number of iterations (including warmup, default = 3000).}
+\item{iter}{Integer specifying the number of iterations (including warmup, default = 2000).}
 
 \item{chains}{Integer specifying the number of parallel chains (default = 4).}
 

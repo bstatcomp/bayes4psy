@@ -4,7 +4,7 @@
 \alias{b_linear}
 \title{b_linear}
 \usage{
-b_linear(x, y, s, priors = NULL, warmup = 2000, iter = 3000,
+b_linear(x, y, s, priors = NULL, warmup = 1000, iter = 2000,
   chains = 4, control = NULL)
 }
 \arguments{
@@ -16,9 +16,9 @@ b_linear(x, y, s, priors = NULL, warmup = 2000, iter = 3000,
 
 \item{priors}{List of parameters and their priors - b_prior objects. You can put a prior on the mu_a (mean intercept), sigma_a (variance of mu_a), mu_b (mean slope), sigma_s (variance of mu_b), mu_s (variance) and sigma_s (variance of mu_s) parameters (default = NULL).}
 
-\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 2000).}
+\item{warmup}{Integer specifying the number of warmup iterations per chain (default = 1000).}
 
-\item{iter}{Integer specifying the number of iterations (including warmup, default = 3000).}
+\item{iter}{Integer specifying the number of iterations (including warmup, default = 2000).}
 
 \item{chains}{Integer specifying the number of parallel chains (default = 4).}
 
