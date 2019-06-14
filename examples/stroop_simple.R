@@ -2,126 +2,103 @@
 library(bayes4psy)
 library(ggplot2)
 
-## load data -------------------------------------------------------------
-df <- read.table("../examples/data/stroop_simple.csv", sep="\t", header=TRUE)
+## load data ------------------------------------------------------------------
+data <- read.table("../examples/data/stroop_simple.csv", sep="\t", header=TRUE)
 
-## ttest fits ------------------------------------------------------------
-fit_reading_neutral <- b_ttest(df$reading_neutral)
-fit_reading_incongruent <- b_ttest(df$reading_incongruent)
-fit_naming_neutral <- b_ttest(df$naming_neutral)
-fit_naming_incongruent <- b_ttest(df$naming_incongruent)
+## ttest fits -----------------------------------------------------------------
+# priors
+mu_prior <- b_prior(family="normal", pars=c(100, 50))
+sigma_prior <- b_prior(family="uniform", pars=c(0, 200))
 
-# to control the amount of warmup and interation steps use
-# fit_reading_neutral <- b_ttest(df$reading_neutral, warmup=5000, iter=6000)
+# attach priors to relevant parameters
+priors <- list(c("mu", mu_prior),
+               c("sigma", sigma_prior))
 
-# inspect fits
-# print summary
-summary(fit_reading_neutral)
 
-# print a more detailed summary (prints the fit object)
-# same as show(ttest_results)
-print(fit_reading_neutral)
+# fir
+fit_reading_neutral <- b_ttest(data$reading_neutral,
+                               priors=priors, iter=3000, warmup=500)
+fit_reading_incongruent <- b_ttest(data$reading_incongruent,
+                                   priors=priors, iter=3000, warmup=500)
+fit_naming_neutral <- b_ttest(data$naming_neutral,
+                              priors=priors, iter=3000, warmup=500)
+fit_naming_incongruent <- b_ttest(data$naming_incongruent,
+                                  priors=priors, iter=3000, warmup=500)
 
 # plot trace
 plot_trace(fit_reading_neutral)
+plot_trace(fit_reading_incongruent)
+plot_trace(fit_naming_neutral)
+plot_trace(fit_naming_incongruent)
 
-# means for single fit
-plot_means(fit_reading_neutral)
+# check fit (Rhat and n_eff)
+print(fit_reading_neutral)
+print(fit_reading_incongruent)
+print(fit_naming_neutral)
+print(fit_naming_incongruent)
 
-# visual fit inspection for all 4
-# visualize fit quality
+# check fits
 plot_fit(fit_reading_neutral)
 plot_fit(fit_reading_incongruent)
 plot_fit(fit_naming_neutral)
 plot_fit(fit_naming_incongruent)
 
 
-## neutral vs incongruent ------------------------------------------------
+## analysis -------------------------------------------------------------------
+# 1 second rope interval
+rope=1
+
+## cross compare all fits -----------------------------------------------------
+fit_list <- c(fit_reading_incongruent, fit_naming_neutral, fit_naming_incongruent)
+multiple_comparison <- compare_means(fit_reading_neutral, fits=fit_list)
+
+# plot means
+plot_means(fit_reading_neutral, fits=fit_list, rope=rope) +
+  scale_fill_hue(labels=c("Reading neutral",
+                          "Reading incongruent",
+                          "Naming neutral",
+                          "Naming incongruent")) +
+  theme(legend.title=element_blank())
+
+# plot pairwise difference between means
+plot_means_difference(fit_reading_neutral, fits=fit_list, rope=rope)
+
+
+## neutral vs incongruent -----------------------------------------------------
 # comparisons (compare_means function works like the usual t-test it compares through fitted means)
-compare_means(fit_reading_neutral, fit2=fit_reading_incongruent)
-compare_means(fit_naming_neutral, fit2=fit_naming_incongruent)
-
-# you can also provide a rope interval
-compare_means(fit_reading_neutral, fit2=fit_reading_incongruent, rope=2)
-
-# compare means with a constant value
-compare_means(fit_reading_neutral, mu=40)
-
-# or compare means with a normal distribution (used here in Cohen's d calculation)
-compare_means(fit_reading_neutral, mu=40, sigma=5)
+reading_neutral_congruent <- compare_means(fit_reading_neutral, fit2=fit_reading_incongruent, rope=rope)
+naming_neutral_congruent <- compare_means(fit_naming_neutral, fit2=fit_naming_incongruent, rope=rope)
 
 # plot comparison results
-diff_r <- plot_means_difference(fit_reading_neutral, fit2=fit_reading_incongruent)
-diff_r <- diff_r + labs(title="Reading")
-diff_n <- plot_means_difference(fit_naming_neutral, fit2=fit_naming_incongruent)
-diff_n <- diff_n + labs(title="Naming", y="")
+diff_r <- plot_means_difference(fit_reading_neutral, fit2=fit_reading_incongruent, rope=rope)
+diff_r <- diff_r + labs(title="Reading") + theme(legend.position="none")
+diff_n <- plot_means_difference(fit_naming_neutral, fit2=fit_naming_incongruent, rope=rope)
+diff_n <- diff_n + labs(title="Naming", y="") + theme(legend.position="none")
 cowplot::plot_grid(diff_r, diff_n, nrow=1, ncol=2, scale=0.9)
 
-# you can also provide the rope and bins parameters and compare with a constant value
-plot_means_difference(fit_reading_neutral, mu=40, rope=2, bins=10)
-
 # plot fitted means
-s_r <- plot_means(fit_reading_neutral, fit2=fit_reading_incongruent)
-s_r <- s_r + labs(title="Reading")
-s_n <- plot_means(fit_naming_neutral, fit2=fit_naming_incongruent)
-s_n <- s_n + labs(title="Naming", y="")
-cowplot::plot_grid(s_r, s_n, nrow=1, ncol=2, scale=0.9)
-
-# you can also plot a constant value
-plot_means(fit_reading_neutral, mu=40)
-
-# compare distributions (draw samples from fitted distributions and compare)
-compare_distributions(fit_reading_neutral, fit2=fit_reading_incongruent)
-compare_distributions(fit_naming_neutral, fit2=fit_naming_incongruent)
-
-# plot distribution difference
-diff_dr <- plot_distributions_difference(fit_reading_neutral, fit2=fit_reading_incongruent)
-diff_dr <- diff_dr + labs(title="Reading")
-diff_dn <- plot_distributions_difference(fit_naming_neutral, fit2=fit_naming_incongruent)
-diff_dn <- diff_dn + labs(title="Naming", y="")
-cowplot::plot_grid(diff_dr, diff_dn, nrow=1, ncol=2, scale=0.9)
-
-# visual comparisons
-dist_r <- plot_distributions(fit_reading_neutral, fit2=fit_reading_incongruent)
-dist_r <- dist_r + labs(title="Reading")
-dist_n <- plot_distributions(fit_naming_neutral, fit2=fit_naming_incongruent)
-dist_n <- dist_n + labs(title="Naming", y="")
-cowplot::plot_grid(dist_r, dist_n, nrow=1, ncol=2, scale=0.9)
+means_r <- plot_means(fit_reading_neutral, fit2=fit_reading_incongruent)
+means_r <- means_r + labs(title="Reading")
+means_n <- plot_means(fit_naming_neutral, fit2=fit_naming_incongruent)
+means_n <- means_n + labs(title="Naming", y="")
+cowplot::plot_grid(means_r, means_n, nrow=1, ncol=2, scale=0.9)
 
 
 ## reading vs naming -----------------------------------------------------
 # comparisons
-compare_means(fit_reading_neutral, fit2=fit_naming_neutral)
-compare_means(fit_reading_incongruent, fit2=fit_naming_incongruent)
+neutral_reading_naming <- compare_means(fit_reading_neutral, fit2=fit_naming_neutral, rope=rope)
+incongruent_reading_naming <- compare_means(fit_reading_incongruent, fit2=fit_naming_incongruent, rope=rope)
 
 # plot comparison results
-diff_ne <- plot_means_difference(fit_reading_neutral, fit2=fit_naming_neutral)
+diff_ne <- plot_means_difference(fit_reading_neutral, fit2=fit_naming_neutral, rope=rope)
 diff_ne <- diff_ne + labs(title="Neutral")
-diff_i <- plot_means_difference(fit_reading_incongruent, fit2=fit_naming_incongruent)
+diff_i <- plot_means_difference(fit_reading_incongruent, fit2=fit_naming_incongruent, rope=rope)
 diff_i <- diff_i + labs(title="Incongruent", y="")
 cowplot::plot_grid(diff_ne, diff_i, nrow=1, ncol=2, scale=0.9)
 
 # plot fitted means
-s_ne <- plot_means(fit_reading_neutral, fit2=fit_naming_neutral)
-s_ne <- s_ne + labs(title="Neutral")
-s_i <- plot_means(fit_reading_incongruent, fit2=fit_naming_incongruent)
-s_i <- s_i + labs(title="Incongruent", y="")
-cowplot::plot_grid(s_ne, s_i, nrow=1, ncol=2, scale=0.9)
-
-# compare distributions (draw samples from fitted distributions and compare)
-compare_distributions(fit_reading_neutral, fit2=fit_naming_neutral)
-compare_distributions(fit_reading_incongruent, fit2=fit_naming_incongruent)
-
-# plot distribution difference
-diff_ne <- plot_distributions_difference(fit_reading_neutral, fit2=fit_naming_neutral)
-diff_ne <- diff_ne + labs(title="Neutral")
-diff_i <- plot_distributions_difference(fit_reading_incongruent, fit2=fit_naming_incongruent)
-diff_i <- diff_i + labs(title="Incongruent", y="")
-cowplot::plot_grid(diff_ne, diff_i, nrow=1, ncol=2, scale=0.9)
-
-# visual comparisons
-dist_ne <- plot_distributions(fit_reading_neutral, fit2=fit_naming_neutral)
-dist_ne <- dist_ne + labs(title="Neutral")
-dist_i <- plot_distributions(fit_reading_incongruent, fit2=fit_naming_incongruent)
-dist_i <- dist_i + labs(title="Incongruent", y="")
-cowplot::plot_grid(dist_ne, dist_i, nrow=1, ncol=2, scale=0.9)
+means_ne <- plot_means(fit_reading_neutral, fit2=fit_naming_neutral)
+means_ne <- means_ne + labs(title="Neutral") + theme(legend.position="none")
+means_i <- plot_means(fit_reading_incongruent, fit2=fit_naming_incongruent)
+means_i <- means_i + labs(title="Incongruent", y="") + theme(legend.position="none")
+cowplot::plot_grid(means_ne, means_i, nrow=1, ncol=2, scale=0.9)
