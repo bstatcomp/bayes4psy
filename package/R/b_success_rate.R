@@ -9,6 +9,7 @@
 #' @param iter Integer specifying the number of iterations (including warmup, default = 2000).
 #' @param chains Integer specifying the number of parallel chains (default = 4).
 #' @param control A named list of parameters to control the sampler's behavior (default = NULL).
+#' @param suppress_warnings Suppress warnings returned by Stan (default = TRUE).
 #' @return An object of class `success_rate_class`.
 b_success_rate <- function(r,
                            s,
@@ -16,7 +17,8 @@ b_success_rate <- function(r,
                            warmup=1000,
                            iter=2000,
                            chains=4,
-                           control=NULL) {
+                           control=NULL,
+                           suppress_warnings=TRUE) {
 
   # prepare data
   n <- length(r)
@@ -71,12 +73,21 @@ b_success_rate <- function(r,
                     p_ids = p_ids,
                     p_values = p_values)
 
-  fit <- suppressWarnings(sampling(stanmodels$success_rate,
-                                   data=stan_data,
-                                   iter=iter,
-                                   warmup=warmup,
-                                   chains = chains,
-                                   control=control))
+  if (suppress_warnings) {
+    fit <- suppressWarnings(sampling(stanmodels$success_rate,
+                                     data=stan_data,
+                                     iter=iter,
+                                     warmup=warmup,
+                                     chains = chains,
+                                     control=control))
+  } else {
+    fit <- sampling(stanmodels$success_rate,
+                    data=stan_data,
+                    iter=iter,
+                    warmup=warmup,
+                    chains = chains,
+                    control=control)
+  }
 
   # extract and parse into list
   extract_raw <- extract(fit, permuted=FALSE)

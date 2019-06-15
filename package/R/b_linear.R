@@ -10,6 +10,7 @@
 #' @param iter Integer specifying the number of iterations (including warmup, default = 2000).
 #' @param chains Integer specifying the number of parallel chains (default = 4).
 #' @param control A named list of parameters to control the sampler's behavior (default = NULL).
+#' @param suppress_warnings Suppress warnings returned by Stan (default = TRUE).
 #' @return An object of class `linear_class`.
 b_linear <- function(x,
                      y,
@@ -18,7 +19,8 @@ b_linear <- function(x,
                      warmup=1000,
                      iter=2000,
                      chains=4,
-                     control=NULL) {
+                     control=NULL,
+                     suppress_warnings=TRUE) {
 
   # prepare data
   n <- length(y)
@@ -74,12 +76,21 @@ b_linear <- function(x,
                     p_ids = p_ids,
                     p_values = p_values)
 
-  fit <- suppressWarnings(sampling(stanmodels$linear,
-                                   data=stan_data,
-                                   iter=iter,
-                                   warmup=warmup,
-                                   chains=chains,
-                                   control=control))
+  if (suppress_warnings) {
+    fit <- suppressWarnings(sampling(stanmodels$linear,
+                                     data=stan_data,
+                                     iter=iter,
+                                     warmup=warmup,
+                                     chains=chains,
+                                     control=control))
+  } else {
+    fit <- sampling(stanmodels$linear,
+                    data=stan_data,
+                    iter=iter,
+                    warmup=warmup,
+                    chains=chains,
+                    control=control)
+  }
 
   # extract and parse into list
   extract_raw <- extract(fit, permuted=FALSE)
