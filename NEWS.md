@@ -1,3 +1,12 @@
+# bayes4psy 0.9.0
+
+### New features and improvements
+Varius quality of life improvements (nicer visualizations and outputs).
+Package is not in its own repository so it can be installed from GitHub via devtools.
+Upgraded all examples and tests.
+Examples and tests are now in a separate repository.
+
+
 # bayes4psy 0.8.0
 
 ### New features and improvements
