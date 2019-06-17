@@ -1,3 +1,10 @@
+# bayes4psy 1.0.2
+
+### New features and improvements
+Compilation is now c++14 compliant.
+Minor update to one of color visualizations.
+
+
 # bayes4psy 1.0.1
 
 ### New features and improvements

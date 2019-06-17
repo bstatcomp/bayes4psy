@@ -55,7 +55,7 @@ To enable users without extensive programming knowledge to perform professional 
 
 ## Development Version
 
-You can install the development version from [GitHub](www.github.com). To do so you first have to install the **RStan** package and C++ toolchain ([instructions](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)). Once **RStan** and the toolchain are installed, you can install **bayes4psy** by using the **devtools** package in R:
+You can install the development version from GitHub. To do so you first have to install the **RStan** package and C++ toolchain ([instructions](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)). Once **RStan** and the toolchain are installed, you can install **bayes4psy** by using the **devtools** package in R:
 
 ```r
 if (!require(devtools)) {

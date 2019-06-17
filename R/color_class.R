@@ -1575,7 +1575,7 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
 
       graphs[[i]] <- graph
       i <- i + 1
-    } else if (p == "h") {
+ } else if (p == "h") {
       # first group data
       h_data <- data.frame(x=preprocess_circular(object@data$h))
       h_mu <- mean(preprocess_circular(object@extract$mu_h))
