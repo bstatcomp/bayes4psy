@@ -1,5 +1,5 @@
 #' @title b_bootstrap
-#' @description # Performs a Bayesian bootstrap and returns a sample of size n1 representing the posterior distribution of the statistic. Returns a vector if the statistic is one-dimensional (like for mean(...)) or a data.frame if the statistic is multi-dimensional (like for the coefs. of lm).
+#' @description Performs a Bayesian bootstrap and returns a sample of size n1 representing the posterior distribution of the statistic. Returns a vector if the statistic is one-dimensional (like for mean(...)) or a data.frame if the statistic is multi-dimensional (like for the coefficients of lm).
 #' @author Rasmus Baath
 #' @references \url{http://www.sumsar.net/blog/2015/07/easy-bayesian-bootstrap-in-r/}
 #' @references Rubin, D. B. (1981). The Bayesian Bootstrap. The annals of statistics, 9(1), 130-134.

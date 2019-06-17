@@ -34,7 +34,7 @@
 #'
 #' compare_distributions(`color_class`, fit2=`color_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' compare_distributions(`color_class`, rgb=`vector`): draws samples from distribution of the first group and compares them againsta color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
+#' compare_distributions(`color_class`, rgb=`vector`): draws samples from distribution of the first group and compares them against a color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
 #' compare_distributions(`color_class`, hsv=`vector`): draws samples from distribution of the first group and compares them against a color defined with hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
@@ -96,7 +96,7 @@ setMethod(f="summary", signature(object="color_class"), definition=function(obje
   mu_v <- mean(object@extract$mu_v)
   sigma_v <- mean(object@extract$sigma_v)
 
-  # hdi
+  # HDI
   mu_r_hdi <- mcmc_hdi(object@extract$mu_r)
   sigma_r_hdi <- mcmc_hdi(object@extract$sigma_r)
   mu_g_hdi <- mcmc_hdi(object@extract$mu_g)
@@ -775,7 +775,7 @@ setMethod(f="plot_means", signature(object="color_class"), definition=function(o
 
 
 #' @title compare_distributions
-#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group or aagainst a color defined with rgb or hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
+#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group or against a color defined with rgb or hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v).
 #' @param object color_class object.
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-compare_distributions

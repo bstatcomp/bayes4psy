@@ -20,7 +20,7 @@ plot_difference <- function(y1, y2, rope=NULL, bins=30, circular=FALSE, nrow=1, 
     y_diff[y_diff < -max_diff] <- -max_diff
   }
 
-  # get 95% hdi
+  # get 95% HDI
   hdi <- mcmc_hdi(y_diff)
 
   # mean difference

@@ -2,9 +2,9 @@
 #' @description Bayesian model for fitting a linear normal model to data.
 #' @import rstan
 #' @export
-#' @param x a vector containting sequence indexes (time).
-#' @param y a vector containting responses of subjects.
-#' @param s a vector contaiting subject indexes. Starting index should be 1 and the largest subject index should equal the number of subjects.
+#' @param x a vector containing sequence indexes (time).
+#' @param y a vector containing responses of subjects.
+#' @param s a vector containing subject indexes. Starting index should be 1 and the largest subject index should equal the number of subjects.
 #' @param priors List of parameters and their priors - b_prior objects. You can put a prior on the mu_a (mean intercept), sigma_a (variance of mu_a), mu_b (mean slope), sigma_s (variance of mu_b), mu_s (variance) and sigma_s (variance of mu_s) parameters (default = NULL).
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 1000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 2000).

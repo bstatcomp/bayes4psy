@@ -10,7 +10,7 @@ An S4 class for storing results of successes (true/false) Bayesian model.
 
 \strong{Functions}
 
-summary(`success_rate_class`): prints summary of the fit.
+summary(`success_rate_class`): prints a summary of the fit.
 
 print(`success_rate_class`): prints a more detailed summary of the fit
 
@@ -20,9 +20,9 @@ get_parameters(`success_rate_class`): returns a dataframe with values of fitted 
 
 get_subject_parameters(`success_rate_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 
-compare_means(`success_rate_class`, fit2=`success_rate_class`): returns difference in successfulness between two groups. You can also provide the rope parameter.
+compare_means(`success_rate_class`, fit2=`success_rate_class`): returns difference in success rate between two groups. You can also provide the rope parameter.
 
-compare_means(`success_rate_class`, fits=`list`): returns difference in successfulness between multiple groups. You can also provide the rope parameter.
+compare_means(`success_rate_class`, fits=`list`): returns difference in success rate between multiple groups. You can also provide the rope parameter.
 
 plot_means_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 

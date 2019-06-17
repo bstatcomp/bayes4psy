@@ -10,7 +10,7 @@ An S4 class for storing results of reaction time Bayesian model.
 
 \strong{Functions}
 
-summary(`reaction_time_class`): prints summary of the fit.
+summary(`reaction_time_class`): prints a summary of the fit.
 
 print(`reaction_time_class`): prints a more detailed summary of the fit
 

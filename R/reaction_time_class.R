@@ -73,7 +73,7 @@ setMethod(f="summary", signature(object="reaction_time_class"), definition=funct
   sigma <- mean(object@extract$mu_s)
   lambda <- mean(object@extract$mu_l)
 
-  # hdi
+  # HDI
   rt_hdi <- mcmc_hdi(object@extract$rt)
   mu_hdi <- mcmc_hdi(object@extract$mu_m)
   sigma_hdi <- mcmc_hdi(object@extract$mu_s)

@@ -8,11 +8,11 @@ b_linear(x, y, s, priors = NULL, warmup = 1000, iter = 2000,
   chains = 4, control = NULL, suppress_warnings = TRUE)
 }
 \arguments{
-\item{x}{a vector containting sequence indexes (time).}
+\item{x}{a vector containing sequence indexes (time).}
 
-\item{y}{a vector containting responses of subjects.}
+\item{y}{a vector containing responses of subjects.}
 
-\item{s}{a vector contaiting subject indexes. Starting index should be 1 and the largest subject index should equal the number of subjects.}
+\item{s}{a vector containing subject indexes. Starting index should be 1 and the largest subject index should equal the number of subjects.}
 
 \item{priors}{List of parameters and their priors - b_prior objects. You can put a prior on the mu_a (mean intercept), sigma_a (variance of mu_a), mu_b (mean slope), sigma_s (variance of mu_b), mu_s (variance) and sigma_s (variance of mu_s) parameters (default = NULL).}
 

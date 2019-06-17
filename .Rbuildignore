@@ -1,3 +1,5 @@
 ^bayes4psy\.Rproj$
 ^\.Rproj\.user$
 ^\.travis\.yml$
+.git
+cran-comments.md

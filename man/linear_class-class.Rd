@@ -10,7 +10,7 @@ An S4 class for storing results of normal linear model.
 
 \strong{Functions}
 
-summary(`linear_class`): prints summary of the fit.
+summary(`linear_class`): prints a summary of the fit.
 
 print(`linear_class`): prints a more detailed summary of the fit
 

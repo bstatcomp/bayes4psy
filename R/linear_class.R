@@ -60,7 +60,7 @@ setMethod(f="summary", signature(object="linear_class"), definition=function(obj
   beta <- mean(object@extract$mu_b)
   sigma <- mean(object@extract$mu_s)
 
-  # hdi
+  # HDI
   alpha_hdi <- mcmc_hdi(object@extract$mu_a)
   beta_hdi <- mcmc_hdi(object@extract$mu_b)
   sigma_hdi <- mcmc_hdi(object@extract$mu_s)

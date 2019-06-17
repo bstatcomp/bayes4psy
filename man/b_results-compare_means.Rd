@@ -12,5 +12,5 @@ compare_means(object, ...)
 \item{...}{see documentation for specific class for the description of available parameters, e.g. ?compare_ttest or ?compare_linear.}
 }
 \description{
-\code{compare_means} prints difference between two groups.
+\code{compare_means} prints difference between two or multiple groups.
 }

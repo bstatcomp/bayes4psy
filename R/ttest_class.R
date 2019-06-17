@@ -87,7 +87,7 @@ setMethod(f="summary", signature(object="ttest_class"), definition=function(obje
   sigma <- mean(object@extract$sigma)
   nu <- mean(object@extract$nu)
 
-  # hdi
+  # HDI
   mu_hdi <- mcmc_hdi(object@extract$mu)
   sigma_hdi <- mcmc_hdi(object@extract$sigma)
   nu_hdi <- mcmc_hdi(object@extract$nu)

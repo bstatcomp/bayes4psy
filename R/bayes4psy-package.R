@@ -1,6 +1,6 @@
 #' The 'bayes4psy' package.
 #'
-#' @description A user-friendly implementation of Bayesian statistical methods commonly used in social sciences. All used models are precompiled, meaning that users only need to call appropriate functions using their data.
+#' @description A user-friendly implementation of Bayesian statistical methods commonly used in social sciences. All used models are pre-compiled, meaning that users only need to call appropriate functions using their data.
 #'
 #' @docType package
 #' @name bayes4psy-package

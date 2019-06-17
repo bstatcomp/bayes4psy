@@ -11,5 +11,5 @@
 \item{object}{linear_class object.}
 }
 \description{
-\code{summary} prints summary of the Bayesian linear model fit.
+\code{summary} prints a summary of the Bayesian linear model fit.
 }
