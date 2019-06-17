@@ -4,7 +4,7 @@
 #'
 #' \strong{Functions}
 #'
-#' summary(`reaction_time_class`): prints summary of the fit.
+#' summary(`reaction_time_class`): prints a summary of the fit.
 #'
 #' print(`reaction_time_class`): prints a more detailed summary of the fit
 #'
@@ -63,7 +63,7 @@ reaction_time_class <- setClass(
 
 
 #' @title summary
-#' @description \code{summary} prints summary of the Bayesian reaction time fit.
+#' @description \code{summary} prints a summary of the Bayesian reaction time fit.
 #' @param object reaction_time_class object.
 #' @exportMethod summary
 setMethod(f="summary", signature(object="reaction_time_class"), definition=function(object) {

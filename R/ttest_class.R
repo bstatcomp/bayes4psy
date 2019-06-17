@@ -4,7 +4,7 @@
 #'
 #' \strong{Functions}
 #'
-#' summary(`ttest_class`): prints summary of the fit.
+#' summary(`ttest_class`): prints a summary of the fit.
 #'
 #' print(`ttest_class`): prints a more detailed summary of the fit
 #'
@@ -78,7 +78,7 @@ ttest_class <- setClass(
 )
 
 #' @title summary
-#' @description \code{summary} prints summary of the Bayesian ttest fit.
+#' @description \code{summary} prints a summary of the Bayesian ttest fit.
 #' @param object ttest_class object.
 #' @exportMethod summary
 setMethod(f="summary", signature(object="ttest_class"), definition=function(object) {

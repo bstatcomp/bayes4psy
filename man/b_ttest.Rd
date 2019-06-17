@@ -5,7 +5,7 @@
 \title{b_ttest}
 \usage{
 b_ttest(data, priors = NULL, warmup = 1000, iter = 2000,
-  chains = 4, control = NULL)
+  chains = 4, control = NULL, suppress_warnings = TRUE)
 }
 \arguments{
 \item{data}{Numeric vector of values on which the fit will be based.}
@@ -19,6 +19,8 @@ b_ttest(data, priors = NULL, warmup = 1000, iter = 2000,
 \item{chains}{Integer specifying the number of parallel chains (default = 4).}
 
 \item{control}{A named list of parameters to control the sampler's behavior (default = NULL).}
+
+\item{suppress_warnings}{Suppress warnings returned by Stan (default = TRUE).}
 }
 \value{
 An object of class `ttest_class`.

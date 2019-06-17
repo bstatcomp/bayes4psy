@@ -5,7 +5,7 @@
 \title{b_success_rate}
 \usage{
 b_success_rate(r, s, priors = NULL, warmup = 1000, iter = 2000,
-  chains = 4, control = NULL)
+  chains = 4, control = NULL, suppress_warnings = TRUE)
 }
 \arguments{
 \item{r}{a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).}
@@ -21,6 +21,8 @@ b_success_rate(r, s, priors = NULL, warmup = 1000, iter = 2000,
 \item{chains}{Integer specifying the number of parallel chains (default = 4).}
 
 \item{control}{A named list of parameters to control the sampler's behavior (default = NULL).}
+
+\item{suppress_warnings}{Suppress warnings returned by Stan (default = TRUE).}
 }
 \value{
 An object of class `success_rate_class`.
