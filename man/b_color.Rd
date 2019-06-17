@@ -5,7 +5,8 @@
 \title{b_color}
 \usage{
 b_color(colors, priors = NULL, hsv = FALSE, warmup = 1000,
-  iter = 2000, chains = 4, control = NULL)
+  iter = 2000, chains = 4, control = NULL,
+  suppress_warnings = TRUE)
 }
 \arguments{
 \item{colors}{a data frame of colors either in RGB or HSV format. The first column should be the R (or H) component, the second column should be the G (or S) component and the third column should be the B (or V) component.}
@@ -21,6 +22,8 @@ b_color(colors, priors = NULL, hsv = FALSE, warmup = 1000,
 \item{chains}{Integer specifying the number of parallel chains (default = 4).}
 
 \item{control}{A named list of parameters to control the sampler's behavior (default = NULL).}
+
+\item{suppress_warnings}{Suppress warnings returned by Stan (default = TRUE).}
 }
 \value{
 An object of class `color_class`

@@ -3,7 +3,7 @@
 #'
 #' \strong{Functions}
 #'
-#' summary(`b_results_class`): prints summary of the fit.
+#' summary(`b_results_class`): prints a summary of the fit.
 #'
 #' print(`b_results_class`): prints a more detailed summary of the fit.
 #'
@@ -28,7 +28,7 @@ setGeneric(name="get_subject_parameters", function(object) standardGeneric("get_
 
 
 #' @title compare_means
-#' @description \code{compare_means} prints difference between two groups.
+#' @description \code{compare_means} prints difference between two or multiple groups.
 #' @param object S4 class object from bayes4psy library.
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?compare_ttest or ?compare_linear.
 #' @rdname b_results-compare_means

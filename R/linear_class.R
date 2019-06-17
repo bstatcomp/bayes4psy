@@ -4,7 +4,7 @@
 #'
 #' \strong{Functions}
 #'
-#' summary(`linear_class`): prints summary of the fit.
+#' summary(`linear_class`): prints a summary of the fit.
 #'
 #' print(`linear_class`): prints a more detailed summary of the fit
 #'
@@ -51,7 +51,7 @@ linear_class <- setClass(
 
 
 #' @title summary
-#' @description \code{summary} prints summary of the Bayesian linear model fit.
+#' @description \code{summary} prints a summary of the Bayesian linear model fit.
 #' @param object linear_class object.
 #' @exportMethod summary
 setMethod(f="summary", signature(object="linear_class"), definition=function(object) {

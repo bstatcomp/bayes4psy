@@ -4,7 +4,7 @@
 #'
 #' \strong{Functions}
 #'
-#' summary(`success_rate_class`): prints summary of the fit.
+#' summary(`success_rate_class`): prints a summary of the fit.
 #'
 #' print(`success_rate_class`): prints a more detailed summary of the fit
 #'
@@ -63,7 +63,7 @@ success_rate_class <- setClass(
 
 
 #' @title summary
-#' @description \code{summary} prints summary of the Bayesian success rate fit.
+#' @description \code{summary} prints a summary of the Bayesian success rate fit.
 #' @param object success_rate_class object.
 #' @exportMethod summary
 setMethod(f="summary", signature(object="success_rate_class"), definition=function(object) {
