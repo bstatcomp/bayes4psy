@@ -6,7 +6,7 @@ This is an R package intended for Bayesian statistical analysis in the field of 
 
 We also prepared several examples where we used the **bayes4psy** package to perform Bayesian data analysis for scientific publications on actual data gathered by psychological tests. These examples can be found on our [GitHub repository](https://github.com/bstatcomp/bayes4psy_tools). This repository also includes short test scenarios (these scenarios execute all developed functionalities on dummy data) intended for debugging the package.
 
-This readme document provides only a brief overview of the package, a detailed description of all implemented functions is provided in package's help pages and vignettes.
+This readme document provides only a brief overview of the package, a detailed description of all implemented functions is provided in package's help pages.
 
 ## Models
 
@@ -32,7 +32,7 @@ If no priors are provided as parameters for fitting functions, then flat (improp
 
 ## Analyzing fits
 
-To enable users without extensive programming knowledge to perform professional level Bayesian data analysis we developed a number of custom methods. Below is a short description of functions common to all models, for descriptions of functions specific to certain models consult the package's help pages and vignettes.
+To enable users without extensive programming knowledge to perform professional level Bayesian data analysis we developed a number of custom methods. Below is a short description of functions common to all models, for descriptions of functions specific to certain models consult the package's help pages.
 
 * __`summary`__ prints a summary of the fit.
 * __`print`__, __`show`__ prints a more detailed summary of the fit (same as RStan's _print_ function).
