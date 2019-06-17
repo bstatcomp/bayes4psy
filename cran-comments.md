@@ -1,7 +1,9 @@
 ## Test environments
 * local OS X Mojave 10.14.5, R 3.5.3
 * local Windows 10, R 3.5.3
-* win-builder (devel)
+* win-builder (R-devel)
+* Ubuntu Linux 16.04 LTS (rhub)
+* Fedora Linux, R-devel (rhub)
 
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
