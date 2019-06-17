@@ -35,3 +35,10 @@ vignettes/*.pdf
 
 # mac files
 .DS_store
+
+# R package stuff
+*.dll
+*.o
+*.so
+*.cc
+*.hpp
