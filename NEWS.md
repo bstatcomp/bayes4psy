@@ -1,3 +1,9 @@
+# bayes4psy 1.0.1
+
+### New features and improvements
+Ran CRAN checks (spell check, ...) and fixed some minor issues according to feedback.
+
+
 # bayes4psy 1.0.0
 
 ### New features and improvements
