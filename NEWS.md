@@ -9,7 +9,7 @@ CRAN publish preparations.
 # bayes4psy 0.9.0
 
 ### New features and improvements
-Varius quality of life improvements (nicer visualizations and outputs).
+Various quality of life improvements (nicer graphs and outputs).
 Package is not in its own repository so it can be installed from GitHub via devtools.
 Upgraded all examples and tests.
 Examples and tests are now in a separate repository.
@@ -53,7 +53,7 @@ Multiple chains support.
 ### New features and improvements
 Large update to documentation, which is now CRAN compliant.
 Added an additional, more detailed diagnostic print of fit.
-Updates to various visualisations.
+Updates to various visualizations.
 Bayesian bootstrap implementation.
 Tidyverse style code.
 

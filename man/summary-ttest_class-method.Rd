@@ -11,5 +11,5 @@
 \item{object}{ttest_class object.}
 }
 \description{
-\code{summary} prints summary of the Bayesian ttest fit.
+\code{summary} prints a summary of the Bayesian ttest fit.
 }

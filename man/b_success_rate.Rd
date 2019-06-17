@@ -8,9 +8,9 @@ b_success_rate(r, s, priors = NULL, warmup = 1000, iter = 2000,
   chains = 4, control = NULL, suppress_warnings = TRUE)
 }
 \arguments{
-\item{r}{a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).}
+\item{r}{a vector containing test results (0 - test was not solved successfully, 1 - test was solved successfully).}
 
-\item{s}{a vector contaiting subject indexes. Starting index should be 1 and the largest subject index should equal the number of subjects.}
+\item{s}{a vector containing subject indexes. Starting index should be 1 and the largest subject index should equal the number of subjects.}
 
 \item{priors}{List of parameters and their priors - b_prior objects. You can put a prior on the p (mean probability of success) and tau (variance) parameters (default = NULL).}
 

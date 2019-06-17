@@ -12,7 +12,7 @@ This readme document provides only a brief overview of the package, a detailed d
 
 Bayesian models in the **bayes4psy** package are written with the [Stan](http://mc-stan.org) language. Stan functions required for working with these models are accessed via the **RStan** package. There are currently five models in the package:
 
-* a Bayesian t-test (Bayesian alterative to the classic t-test, see John Kruschke -- Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan),
+* a Bayesian t-test (Bayesian alternative to the classic t-test, see John Kruschke -- Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan),
 * a reaction time model (a hierarchical exponentially modified Gaussian model),
 * a success rate model (a hierarchical Bernoulli-Beta model),
 * a linear model (a hierarchical linear regression),
@@ -30,7 +30,7 @@ The fitted model objects returned by the **bayes4psy** package are called _b\_re
 
 If no priors are provided as parameters for fitting functions, then flat (improper) priors are put on all parameters. See provided examples and tests to see how one can specify their own priors.
 
-## Analysing fits
+## Analyzing fits
 
 To enable users without extensive programming knowledge to perform professional level Bayesian data analysis we developed a number of custom methods. Below is a short description of functions common to all models, for descriptions of functions specific to certain models consult the package's help pages and vignettes.
 

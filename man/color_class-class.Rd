@@ -10,7 +10,7 @@ An S4 class for storing results of Bayesian color model.
 
 \strong{Functions}
 
-summary(`color_class`): prints summary of the fit.
+summary(`color_class`): prints a summary of the fit.
 
 print(`color_class`): prints a more detailed summary of the fit
 
@@ -40,7 +40,7 @@ plot_means(`color_class`, hsv=`vector`): plots density for the first and a color
 
 compare_distributions(`color_class`, fit2=`color_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 
-compare_distributions(`color_class`, rgb=`vector`): draws samples from distribution of the first group and compares them againsta color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
+compare_distributions(`color_class`, rgb=`vector`): draws samples from distribution of the first group and compares them against a color defined with rgb components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 
 compare_distributions(`color_class`, hsv=`vector`): draws samples from distribution of the first group and compares them against a color defined with hsv components. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 

@@ -14,9 +14,9 @@
 #'
 #' get_subject_parameters(`success_rate_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
 #'
-#' compare_means(`success_rate_class`, fit2=`success_rate_class`): returns difference in successfulness between two groups. You can also provide the rope parameter.
+#' compare_means(`success_rate_class`, fit2=`success_rate_class`): returns difference in success rate between two groups. You can also provide the rope parameter.
 #'
-#' compare_means(`success_rate_class`, fits=`list`): returns difference in successfulness between multiple groups. You can also provide the rope parameter.
+#' compare_means(`success_rate_class`, fits=`list`): returns difference in success rate between multiple groups. You can also provide the rope parameter.
 #'
 #' plot_means_difference(`success_rate_class`, fit2=`success_rate_class`): a visualization of the difference between two groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
@@ -70,7 +70,7 @@ setMethod(f="summary", signature(object="success_rate_class"), definition=functi
   # get means
   p <- mean(object@extract$p0)
 
-  # hdi
+  # HDI
   p_hdi <- mcmc_hdi(object@extract$p0)
 
   # print
@@ -124,7 +124,7 @@ setMethod(f="get_subject_parameters", signature(object="success_rate_class"), de
 
 
 #' @title compare_means
-#' @description \code{compare_means} prints difference in successfulness between two groups or multiple groups.
+#' @description \code{compare_means} prints difference in success rate between two groups or multiple groups.
 #' @param object success_rate_class object.
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence.
 #' @rdname success_rate_class-compare_means

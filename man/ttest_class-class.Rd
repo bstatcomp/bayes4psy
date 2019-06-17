@@ -10,7 +10,7 @@ An S4 class for storing results of Bayesian t-test results.
 
 \strong{Functions}
 
-summary(`ttest_class`): prints summary of the fit.
+summary(`ttest_class`): prints a summary of the fit.
 
 print(`ttest_class`): prints a more detailed summary of the fit
 

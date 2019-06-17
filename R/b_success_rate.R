@@ -2,8 +2,8 @@
 #' @description Bayesian model for comparing test success rate.
 #' @import rstan
 #' @export
-#' @param r a vector containting test results (0 - test was not solved successfully, 1 - test was solved succesfully).
-#' @param s a vector contaiting subject indexes. Starting index should be 1 and the largest subject index should equal the number of subjects.
+#' @param r a vector containing test results (0 - test was not solved successfully, 1 - test was solved successfully).
+#' @param s a vector containing subject indexes. Starting index should be 1 and the largest subject index should equal the number of subjects.
 #' @param priors List of parameters and their priors - b_prior objects. You can put a prior on the p (mean probability of success) and tau (variance) parameters (default = NULL).
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 1000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 2000).

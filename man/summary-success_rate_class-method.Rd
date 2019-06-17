@@ -11,5 +11,5 @@
 \item{object}{success_rate_class object.}
 }
 \description{
-\code{summary} prints summary of the Bayesian success rate fit.
+\code{summary} prints a summary of the Bayesian success rate fit.
 }

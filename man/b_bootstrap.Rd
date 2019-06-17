@@ -26,7 +26,7 @@ b_bootstrap(data, statistic, n1 = 1000, n2 = 1000,
 An object of class `linear_class`.
 }
 \description{
-# Performs a Bayesian bootstrap and returns a sample of size n1 representing the posterior distribution of the statistic. Returns a vector if the statistic is one-dimensional (like for mean(...)) or a data.frame if the statistic is multi-dimensional (like for the coefs. of lm).
+Performs a Bayesian bootstrap and returns a sample of size n1 representing the posterior distribution of the statistic. Returns a vector if the statistic is one-dimensional (like for mean(...)) or a data.frame if the statistic is multi-dimensional (like for the coefficients of lm).
 }
 \references{
 \url{http://www.sumsar.net/blog/2015/07/easy-bayesian-bootstrap-in-r/}
