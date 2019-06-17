@@ -1,3 +1,11 @@
+# bayes4psy 1.0.0
+
+### New features and improvements
+Greatly expanded the readme file.
+Minor changes to a few documentation entries.
+CRAN publish preparations.
+
+
 # bayes4psy 0.9.0
 
 ### New features and improvements

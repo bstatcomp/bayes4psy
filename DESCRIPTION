@@ -1,7 +1,7 @@
 Package: bayes4psy
-Version: 0.9.0
+Version: 1.0.0
 Title: Bayesian applied modelling for social sciences
-Description: A user-friendly implementation of Bayesian statistical methods commonly used in social sciences. All used models are precompiled, meaning that users only need to call appropriate functions using their data.
+Description: This is an R package intended for Bayesian statistical analysis in the field of psychology. This package should enable students and researchers to perform professional level Bayesian data analysis without advanced knowledge in programming and Bayesian statistics.
 Authors@R:
     c(person("Jure", "Demšar", , "jure.demsar@fri.uni-lj.si", c("cre", "aut")),
     person("Grega", "Repovš", , "grega.repovs@psy.ff.uni-lj.si", "aut"),
