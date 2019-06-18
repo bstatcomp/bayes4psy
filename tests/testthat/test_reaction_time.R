@@ -59,9 +59,6 @@ test_that("reaction_time print and show", {
 test_that("reaction_time get_parameters", {
  parameters <- get_parameters(fit1)
  expect_equal(mean(parameters$rt), 12.39, tolerance=tol)
- expect_equal(mean(parameters$mu), 11.87, tolerance=tol)
- expect_equal(mean(parameters$sigma), 1.98, tolerance=tol)
- expect_equal(mean(parameters$lambda), 3.01, tolerance=tol)
 })
 
 
@@ -69,9 +66,6 @@ test_that("reaction_time get_parameters", {
 test_that("reaction_time get_subject_parameters", {
  parameters <- get_subject_parameters(fit1)
  expect_equal(mean(parameters$rt), 12.33, tolerance=tol)
- expect_equal(mean(parameters$mu), 11.82, tolerance=tol)
- expect_equal(mean(parameters$sigma), 1.98, tolerance=tol)
- expect_equal(mean(parameters$lambda), 3.92, tolerance=tol)
 })
 
 
