@@ -5,7 +5,7 @@ seed <- 0
 set.seed(0)
 
 # set tolerance
-tol <- 0.01
+tol <- 0.2
 
 # priors for rgb
 mu_prior <- b_prior(family="uniform", pars=c(0, 255))
@@ -87,9 +87,9 @@ test_that("color print and show", {
 # get_parameters
 test_that("color get_parameters", {
   parameters <- get_parameters(fit1)
-  expect_equal(mean(parameters$h), -0.0976801, tolerance=tol)
-  expect_equal(mean(parameters$s), 0.9366499, tolerance=tol)
-  expect_equal(mean(parameters$v), 0.9609989, tolerance=tol)
+  expect_equal(mean(parameters$h), -0.01, tolerance=tol)
+  expect_equal(mean(parameters$s), 0.94, tolerance=tol)
+  expect_equal(mean(parameters$v), 0.96, tolerance=tol)
 })
 
 

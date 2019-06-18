@@ -5,7 +5,7 @@ seed <- 0
 set.seed(0)
 
 # set tolerance
-tol <- 0.01
+tol <- 0.2
 
 # priors
 p_prior <- b_prior(family="beta", pars=c(1, 1))
@@ -48,15 +48,14 @@ test_that("success_rate print and show", {
 # get_parameters
 test_that("success_rate get_parameters", {
  parameters <- get_parameters(fit1)
- expect_equal(mean(parameters$p), 0.5695991, tolerance=tol)
- expect_equal(mean(parameters$tau), 266.7096, tolerance=tol)
+ expect_equal(mean(parameters$p), 0.57, tolerance=tol)
 })
 
 
 # get_subject_parameters
 test_that("success_rate get_subject_parameters", {
  parameters <- get_subject_parameters(fit1)
- expect_equal(mean(parameters$p), 0.5697545, tolerance=tol)
+ expect_equal(mean(parameters$p), 0.57, tolerance=tol)
 })
 
 

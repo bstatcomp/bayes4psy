@@ -5,7 +5,7 @@ seed <- 0
 set.seed(0)
 
 # set tolerance
-tol <- 0.01
+tol <- 0.2
 
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 100))
@@ -58,14 +58,14 @@ test_that("reaction_time print and show", {
 # get_parameters
 test_that("reaction_time get_parameters", {
  parameters <- get_parameters(fit1)
- expect_equal(mean(parameters$rt), 12.28359, tolerance=tol)
+ expect_equal(mean(parameters$rt), 12.28, tolerance=tol)
 })
 
 
 # get_subject_parameters
 test_that("reaction_time get_subject_parameters", {
  parameters <- get_subject_parameters(fit1)
- expect_equal(mean(parameters$rt), 12.33167, tolerance=tol)
+ expect_equal(mean(parameters$rt), 12.33, tolerance=tol)
 })
 
 
@@ -97,5 +97,5 @@ test_that("reaction_time compare_distributions two fits", {
 test_that("reaction_time compare_distributions multiple fits", {
  o <- capture.output(output <- compare_distributions(fit1, fits=fit_list))
  expect_equal(output$comparison_matrix[1,], c(NA, 0.15, 0.00), tolerance=tol)
- expect_equal(output$smallest_largest$smallest, c(0.84474, 0.15427, 0.00099), tolerance=tol)
+ expect_equal(output$smallest_largest$smallest, c(0.84, 0.15, 0.00), tolerance=tol)
 })

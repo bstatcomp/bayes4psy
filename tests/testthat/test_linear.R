@@ -5,7 +5,7 @@ seed <- 0
 set.seed(0)
 
 # set tolerance
-tol <- 0.01
+tol <- 0.2
 
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 100))
@@ -54,18 +54,18 @@ test_that("linear print and show", {
 # get_parameters
 test_that("linear get_parameters", {
   parameters <- get_parameters(fit1)
-  expect_equal(mean(parameters$slope), 0.2284395, tolerance=tol)
-  expect_equal(mean(parameters$intercept), 0.9633133, tolerance=tol)
-  expect_equal(mean(parameters$sigma), 1.790706, tolerance=tol)
+  expect_equal(mean(parameters$slope), 0.23, tolerance=tol)
+  expect_equal(mean(parameters$intercept), 0.96, tolerance=tol)
+  expect_equal(mean(parameters$sigma), 1.79, tolerance=tol)
 })
 
 
 # get_subject_parameters
 test_that("linear get_subject_parameters", {
   parameters <- get_subject_parameters(fit1)
-  expect_equal(mean(parameters$slope), 0.2284395, tolerance=tol)
-  expect_equal(mean(parameters$intercept), 0.9633133, tolerance=tol)
-  expect_equal(mean(parameters$sigma), 1.790706, tolerance=tol)
+  expect_equal(mean(parameters$slope), 0.23, tolerance=tol)
+  expect_equal(mean(parameters$intercept), 0.96, tolerance=tol)
+  expect_equal(mean(parameters$sigma), 1.79, tolerance=tol)
 })
 
 
