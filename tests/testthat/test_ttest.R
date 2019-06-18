@@ -4,6 +4,9 @@ library(bayes4psy)
 seed <- 0
 set.seed(0)
 
+# set tolerance
+tol <- 1e-1
+
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 1000))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -45,47 +48,47 @@ test_that("ttest print and show", {
 # get_parameters
 test_that("ttest get_parameters", {
  parameters <- get_parameters(fit1)
- expect_equal(parameters$mu[1], 143.06, tolerance=1e-2)
- expect_equal(parameters$sigma[1], 20.58, tolerance=1e-2)
- expect_equal(parameters$nu[1], 46.62, tolerance=1e-2)
+ expect_equal(mean(parameters$mu), 149.83, tolerance=tol)
+ expect_equal(mean(parameters$sigma), 20.83, tolerance=tol)
+ expect_equal(mean(parameters$nu), 33.65, tolerance=tol)
 })
 
 
 # compare_means two fits
 test_that("ttest compare_means two fits", {
  o <- capture.output(output <- compare_means(fit1, fit2=fit2))
- expect_equal(output[1, 2], 0, tolerance=1e-2)
- expect_equal(output[2, 1], 1, tolerance=1e-2)
+ expect_equal(output[1, 2], 0, tolerance=tol)
+ expect_equal(output[2, 1], 1, tolerance=tol)
 })
 
 
 # compare_means fit and mu
 test_that("ttest compare_means fit and mu", {
  o <- capture.output(output <- compare_means(fit1, mu=150))
- expect_equal(output[1, 2], 0.48, tolerance=1e-2)
- expect_equal(output[2, 1], 0.52, tolerance=1e-2)
+ expect_equal(output[1, 2], 0.48, tolerance=tol)
+ expect_equal(output[2, 1], 0.52, tolerance=tol)
 })
 
 
 # compare_means multiple fits
 test_that("ttest compare_means multiple fits", {
  o <- capture.output(output <- compare_means(fit1, fits=fit_list))
- expect_equal(output$comparison_matrix[1,], c(NA, 0.0, 0.4), tolerance=1e-2)
- expect_equal(output$smallest_largest$smallest, c(0.6, 0, 0.4), tolerance=1e-2)
+ expect_equal(output$comparison_matrix[1,], c(NA, 0.0, 0.4), tolerance=tol)
+ expect_equal(output$smallest_largest$smallest, c(0.6, 0, 0.4), tolerance=tol)
 })
 
 
 # compare_distributions two fits
 test_that("ttest compare_distributions two fits", {
  o <- capture.output(output <- compare_distributions(fit1, fit2=fit2))
- expect_equal(output[1, 2], 0.03, tolerance=1e-2)
- expect_equal(output[2, 1], 0.97, tolerance=1e-2)
+ expect_equal(output[1, 2], 0.03, tolerance=tol)
+ expect_equal(output[2, 1], 0.97, tolerance=tol)
 })
 
 
 # compare_distributions multiple fits
 test_that("ttest compare_distributions multiple fits", {
  o <- capture.output(output <- compare_distributions(fit1, fits=fit_list))
- expect_equal(output$comparison_matrix[1,], c(NA, 0.03, 0.48), tolerance=1e-2)
- expect_equal(output$smallest_largest$smallest, c(0.51, 0.01, 0.48), tolerance=1e-2)
+ expect_equal(output$comparison_matrix[1,], c(NA, 0.03, 0.48), tolerance=tol)
+ expect_equal(output$smallest_largest$smallest, c(0.51, 0.01, 0.48), tolerance=tol)
 })

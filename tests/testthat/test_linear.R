@@ -4,6 +4,9 @@ library(bayes4psy)
 seed <- 0
 set.seed(0)
 
+# set tolerance
+tol <- 1e-1
+
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 100))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -51,18 +54,18 @@ test_that("linear print and show", {
 # get_parameters
 test_that("linear get_parameters", {
   parameters <- get_parameters(fit1)
-  expect_equal(parameters$slope[1], 1.23, tolerance=1e-2)
-  expect_equal(parameters$intercept[1], 0.78, tolerance=1e-2)
-  expect_equal(parameters$sigma[1], 1.53, tolerance=1e-2)
+  expect_equal(mean(parameters$slope), 0.28, tolerance=tol)
+  expect_equal(mean(parameters$intercept), 0.95, tolerance=tol)
+  expect_equal(mean(parameters$sigma), 1.9, tolerance=tol)
 })
 
 
 # get_subject_parameters
 test_that("linear get_subject_parameters", {
   parameters <- get_subject_parameters(fit1)
-  expect_equal(parameters$slope[1], 0.99, tolerance=1e-2)
-  expect_equal(parameters$intercept[1], 0.86, tolerance=1e-2)
-  expect_equal(parameters$sigma[1], 1.67, tolerance=1e-2)
+  expect_equal(mean(parameters$slope), 0.20, tolerance=tol)
+  expect_equal(mean(parameters$intercept), 0.95, tolerance=tol)
+  expect_equal(mean(parameters$sigma), 1.8, tolerance=tol)
 })
 
 
@@ -72,7 +75,7 @@ test_that("linear compare_means two fits", {
   intercept <- c(0.17, 0.83, NA)
   slope <- c(0, 1, NA)
   compare <- rbind(intercept, slope)
-  expect_equal(output, compare, tolerance=1e-2)
+  expect_equal(output, compare, tolerance=tol)
 })
 
 
@@ -82,5 +85,5 @@ test_that("linear compare_distributions two fits", {
   intercept <- c(0.2, 0.8, NA)
   slope <- c(0, 1, NA)
   compare <- rbind(intercept, slope)
-  expect_equal(output, compare, tolerance=1e-2)
+  expect_equal(output, compare, tolerance=tol)
 })

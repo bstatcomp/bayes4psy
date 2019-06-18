@@ -4,6 +4,9 @@ library(bayes4psy)
 seed <- 0
 set.seed(0)
 
+# set tolerance
+tol <- 1e-1
+
 # priors
 p_prior <- b_prior(family="beta", pars=c(1, 1))
 tau_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -45,45 +48,45 @@ test_that("success_rate print and show", {
 # get_parameters
 test_that("success_rate get_parameters", {
  parameters <- get_parameters(fit1)
- expect_equal(parameters$p[1], 0.54, tolerance=1e-2)
- expect_equal(parameters$tau[1], 473.24, tolerance=1e-2)
+ expect_equal(mean(parameters$p), 0.57, tolerance=tol)
+ expect_equal(mean(parameters$tau), 251.23, tolerance=tol)
 })
 
 
 # get_subject_parameters
 test_that("success_rate get_subject_parameters", {
  parameters <- get_subject_parameters(fit1)
- expect_equal(parameters$p[1], 0.55, tolerance=1e-2)
+ expect_equal(mean(parameters$p), 0.57, tolerance=tol)
 })
 
 
 # compare_means two fits
 test_that("success_rate compare_means two fits", {
  o <- capture.output(output <- compare_means(fit1, fit2=fit2))
- expect_equal(output[1, 2], 1, tolerance=1e-2)
- expect_equal(output[2, 1], 0, tolerance=1e-2)
+ expect_equal(output[1, 2], 1, tolerance=tol)
+ expect_equal(output[2, 1], 0, tolerance=tol)
 })
 
 
 # compare_means multiple fits
 test_that("success_rate compare_means multiple fits", {
  o <- capture.output(output <- compare_means(fit1, fits=fit_list))
- expect_equal(output$comparison_matrix[1,], c(NA, 1.00, 0.87), tolerance=1e-2)
- expect_equal(output$smallest_largest$smallest, c(0, 1, 0), tolerance=1e-2)
+ expect_equal(output$comparison_matrix[1,], c(NA, 1.00, 0.87), tolerance=tol)
+ expect_equal(output$smallest_largest$smallest, c(0, 1, 0), tolerance=tol)
 })
 
 
 # compare_distributions two fits
 test_that("success_rate compare_distributions two fits", {
  o <- capture.output(output <- compare_distributions(fit1, fit2=fit2))
- expect_equal(output[1, 2], 1, tolerance=1e-2)
- expect_equal(output[2, 1], 0, tolerance=1e-2)
+ expect_equal(output[1, 2], 1, tolerance=tol)
+ expect_equal(output[2, 1], 0, tolerance=tol)
 })
 
 
 # compare_distributions multiple fits
 test_that("success_rate compare_distributions multiple fits", {
  o <- capture.output(output <- compare_distributions(fit1, fits=fit_list))
- expect_equal(output$comparison_matrix[1,], c(NA, 1, 0.96), tolerance=1e-2)
- expect_equal(output$smallest_largest$smallest, c(0, 1, 0), tolerance=1e-2)
+ expect_equal(output$comparison_matrix[1,], c(NA, 1, 0.96), tolerance=tol)
+ expect_equal(output$smallest_largest$smallest, c(0, 1, 0), tolerance=tol)
 })

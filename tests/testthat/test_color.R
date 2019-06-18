@@ -4,6 +4,9 @@ library(bayes4psy)
 seed <- 0
 set.seed(0)
 
+# set tolerance
+tol <- 1e-1
+
 # priors for rgb
 mu_prior <- b_prior(family="uniform", pars=c(0, 255))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 100))
@@ -84,9 +87,10 @@ test_that("color print and show", {
 # get_parameters
 test_that("color get_parameters", {
   parameters <- get_parameters(fit1)
-  expect_equal(parameters$h[1], -0.106492, tolerance=1e-2)
-  expect_equal(parameters$s[1], 0.937346, tolerance=1e-2)
-  expect_equal(parameters$v[1], 0.957944, tolerance=1e-2)
+
+  expect_equal(mean(parameters$h), -0.1, tolerance=tol)
+  expect_equal(mean(parameters$s), 0.93, tolerance=tol)
+  expect_equal(mean(parameters$v), 0.96, tolerance=tol)
 })
 
 
@@ -100,7 +104,7 @@ test_that("color compare_means two fits", {
   s <- c(0, 1, NA)
   v <- c(0, 1, NA)
   compare <- rbind(r, g, b, h, s, v)
-  expect_equal(output, compare, tolerance=1e-2)
+  expect_equal(output, compare, tolerance=tol)
 })
 
 
@@ -114,5 +118,5 @@ test_that("color compare_distributions two fits", {
   s <- c(0.32, 0.68, NA)
   v <- c(0.27, 0.73, NA)
   compare <- rbind(r, g, b, h, s, v)
-  expect_equal(output, compare, tolerance=1e-2)
+  expect_equal(output, compare, tolerance=tol)
 })

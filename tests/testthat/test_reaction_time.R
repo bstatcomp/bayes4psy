@@ -4,6 +4,9 @@ library(bayes4psy)
 seed <- 0
 set.seed(0)
 
+# set tolerance
+tol <- 1e-1
+
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 100))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -55,50 +58,50 @@ test_that("reaction_time print and show", {
 # get_parameters
 test_that("reaction_time get_parameters", {
  parameters <- get_parameters(fit1)
- expect_equal(parameters$rt[1], 12.18, tolerance=1e-2)
- expect_equal(parameters$mu[1], 11.76, tolerance=1e-2)
- expect_equal(parameters$sigma[1], 1.86, tolerance=1e-2)
- expect_equal(parameters$lambda[1], 2.36, tolerance=1e-2)
+ expect_equal(mean(parameters$rt), 12.39, tolerance=tol)
+ expect_equal(mean(parameters$mu), 11.87, tolerance=tol)
+ expect_equal(mean(parameters$sigma), 1.98, tolerance=tol)
+ expect_equal(mean(parameters$lambda), 3.01, tolerance=tol)
 })
 
 
 # get_subject_parameters
 test_that("reaction_time get_subject_parameters", {
  parameters <- get_subject_parameters(fit1)
- expect_equal(parameters$rt[1], 12.51, tolerance=1e-2)
- expect_equal(parameters$mu[1], 12.20, tolerance=1e-2)
- expect_equal(parameters$sigma[1], 1.8, tolerance=1e-2)
- expect_equal(parameters$lambda[1], 3.19, tolerance=1e-2)
+ expect_equal(mean(parameters$rt), 12.33, tolerance=tol)
+ expect_equal(mean(parameters$mu), 11.82, tolerance=tol)
+ expect_equal(mean(parameters$sigma), 1.98, tolerance=tol)
+ expect_equal(mean(parameters$lambda), 3.92, tolerance=tol)
 })
 
 
 # compare_means two fits
 test_that("reaction_time compare_means two fits", {
  o <- capture.output(output <- compare_means(fit1, fit2=fit2))
- expect_equal(output[1, 2], 0, tolerance=1e-2)
- expect_equal(output[2, 1], 1, tolerance=1e-2)
+ expect_equal(output[1, 2], 0, tolerance=tol)
+ expect_equal(output[2, 1], 1, tolerance=tol)
 })
 
 
 # compare_means multiple fits
 test_that("reaction_time compare_means multiple fits", {
  o <- capture.output(output <- compare_means(fit1, fits=fit_list))
- expect_equal(output$comparison_matrix[1,], c(NA, 0, 0), tolerance=1e-2)
- expect_equal(output$smallest_largest$smallest, c(1, 0, 0), tolerance=1e-2)
+ expect_equal(output$comparison_matrix[1,], c(NA, 0, 0), tolerance=tol)
+ expect_equal(output$smallest_largest$smallest, c(1, 0, 0), tolerance=tol)
 })
 
 
 # compare_distributions two fits
 test_that("reaction_time compare_distributions two fits", {
  o <- capture.output(output <- compare_distributions(fit1, fit2=fit2))
- expect_equal(output[1, 2], 0.17, tolerance=1e-2)
- expect_equal(output[2, 1], 0.83, tolerance=1e-2)
+ expect_equal(output[1, 2], 0.17, tolerance=tol)
+ expect_equal(output[2, 1], 0.83, tolerance=tol)
 })
 
 
 # compare_distributions multiple fits
 test_that("reaction_time compare_distributions multiple fits", {
  o <- capture.output(output <- compare_distributions(fit1, fits=fit_list))
- expect_equal(output$comparison_matrix[1,], c(NA, 0.17, 0.00), tolerance=1e-2)
- expect_equal(output$smallest_largest$smallest, c(0.83, 0.17, 0.00), tolerance=1e-2)
+ expect_equal(output$comparison_matrix[1,], c(NA, 0.17, 0.00), tolerance=tol)
+ expect_equal(output$smallest_largest$smallest, c(0.83, 0.17, 0.00), tolerance=tol)
 })
