@@ -5,7 +5,7 @@ seed <- 0
 set.seed(0)
 
 # set tolerance
-tol <- 1e-1
+tol <- 0.01
 
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 100))
@@ -30,9 +30,9 @@ for (i in 1:5) {
   s <- c(s, rep(i, 20))
 }
 
-fit1 <- b_linear(x=x, y=y, s=s, priors=priors, chains=1, refresh=0)
+fit1 <- b_linear(x=x, y=y, s=s, priors=priors, chains=1, seed=seed, refresh=0)
 
-fit2 <- b_linear(x=x, y=-2*y, s=s, priors=priors, chains=1, refresh=0)
+fit2 <- b_linear(x=x, y=-2*y, s=s, priors=priors, chains=1, seed=seed, refresh=0)
 
 
 # summary
@@ -54,25 +54,25 @@ test_that("linear print and show", {
 # get_parameters
 test_that("linear get_parameters", {
   parameters <- get_parameters(fit1)
-  expect_equal(mean(parameters$slope), 0.28, tolerance=tol)
-  expect_equal(mean(parameters$intercept), 0.95, tolerance=tol)
-  expect_equal(mean(parameters$sigma), 1.9, tolerance=tol)
+  expect_equal(mean(parameters$slope), 0.2284395, tolerance=tol)
+  expect_equal(mean(parameters$intercept), 0.9633133, tolerance=tol)
+  expect_equal(mean(parameters$sigma), 1.790706, tolerance=tol)
 })
 
 
 # get_subject_parameters
 test_that("linear get_subject_parameters", {
   parameters <- get_subject_parameters(fit1)
-  expect_equal(mean(parameters$slope), 0.20, tolerance=tol)
-  expect_equal(mean(parameters$intercept), 0.95, tolerance=tol)
-  expect_equal(mean(parameters$sigma), 1.8, tolerance=tol)
+  expect_equal(mean(parameters$slope), 0.2284395, tolerance=tol)
+  expect_equal(mean(parameters$intercept), 0.9633133, tolerance=tol)
+  expect_equal(mean(parameters$sigma), 1.790706, tolerance=tol)
 })
 
 
 # compare_means two fits
 test_that("linear compare_means two fits", {
   o <- capture.output(output <- compare_means(fit1, fit2=fit2))
-  intercept <- c(0.17, 0.83, NA)
+  intercept <- c(0.2, 0.8, NA)
   slope <- c(0, 1, NA)
   compare <- rbind(intercept, slope)
   expect_equal(output, compare, tolerance=tol)
@@ -83,7 +83,7 @@ test_that("linear compare_means two fits", {
 test_that("linear compare_distributions two fits", {
   o <- capture.output(output <- compare_distributions(fit1, fit2=fit2))
   intercept <- c(0.2, 0.8, NA)
-  slope <- c(0, 1, NA)
+  slope <- c(0.0, 1.0, NA)
   compare <- rbind(intercept, slope)
   expect_equal(output, compare, tolerance=tol)
 })

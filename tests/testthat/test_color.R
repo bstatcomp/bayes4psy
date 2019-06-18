@@ -5,7 +5,7 @@ seed <- 0
 set.seed(0)
 
 # set tolerance
-tol <- 1e-1
+tol <- 0.01
 
 # priors for rgb
 mu_prior <- b_prior(family="uniform", pars=c(0, 255))
@@ -35,7 +35,7 @@ b[b < 0] <- 0
 
 colors <- data.frame(r=r, g=g, b=b)
 
-fit1 <- b_color(colors=colors, priors=priors_rgb, chains=1, refresh=0)
+fit1 <- b_color(colors=colors, priors=priors_rgb, chains=1, seed=seed, refresh=0)
 
 
 # priors for hsv
@@ -67,7 +67,7 @@ v[v < 0] <- 0
 
 colors <- data.frame(h=h, s=s, v=v)
 
-fit2 <- b_color(colors=colors, hsv=TRUE, priors=priors_hsv, chains=1, refresh=0)
+fit2 <- b_color(colors=colors, hsv=TRUE, priors=priors_hsv, chains=1, seed=seed, refresh=0)
 
 
 # summary
@@ -87,10 +87,9 @@ test_that("color print and show", {
 # get_parameters
 test_that("color get_parameters", {
   parameters <- get_parameters(fit1)
-
-  expect_equal(mean(parameters$h), -0.1, tolerance=tol)
-  expect_equal(mean(parameters$s), 0.93, tolerance=tol)
-  expect_equal(mean(parameters$v), 0.96, tolerance=tol)
+  expect_equal(mean(parameters$h), -0.0976801, tolerance=tol)
+  expect_equal(mean(parameters$s), 0.9366499, tolerance=tol)
+  expect_equal(mean(parameters$v), 0.9609989, tolerance=tol)
 })
 
 
