@@ -69,29 +69,24 @@ fit2 <- b_color(colors=colors, hsv=TRUE, priors=priors_hsv, chains=1, refresh=0)
 
 # summary
 test_that("color summary", {
-  output <- capture.output(summary(fit1))
-  compare_mu_h <- "mu_h:\t\t-0.10 +/- 0.00026\t95% HDI: [-0.12, -0.07]"
-  compare_kappa_h <- "kappa_h:\t68.33 +/- 0.24086\t95% HDI: [48.79, 86.95]"
-  expect_equal(compare_mu_h, output[7])
-  expect_equal(compare_kappa_h, output[8])
+ expect_output(summary(fit1), regexp="mu_h")
+ expect_output(summary(fit1), regexp="kappa_h")
 })
 
 
 # print and show
 test_that("color print and show", {
-  output <- capture.output(print(fit1))
-  output <- output[12]
-  compare <- "mu_h      -0.10    0.00 0.01   -0.12   -0.11   -0.10   -0.09   -0.08  2457    1"
-  expect_equal(compare, output)
+  expect_output(print(fit1),  regexp="mu_h")
+  expect_output(print(fit1),  regexp="kappa_h")
 })
 
 
 # get_parameters
 test_that("color get_parameters", {
   parameters <- get_parameters(fit1)
-  expect_equal(parameters$h[1], -0.106492, tolerance=1e-4)
-  expect_equal(parameters$s[1], 0.937346, tolerance=1e-4)
-  expect_equal(parameters$v[1], 0.957944, tolerance=1e-4)
+  expect_equal(parameters$h[1], -0.106492, tolerance=1e-2)
+  expect_equal(parameters$s[1], 0.937346, tolerance=1e-2)
+  expect_equal(parameters$v[1], 0.957944, tolerance=1e-2)
 })
 
 
@@ -105,7 +100,7 @@ test_that("color compare_means two fits", {
   s <- c(0, 1, NA)
   v <- c(0, 1, NA)
   compare <- rbind(r, g, b, h, s, v)
-  expect_equal(output, compare)
+  expect_equal(output, compare, tolerance=1e-2)
 })
 
 
@@ -119,5 +114,5 @@ test_that("color compare_distributions two fits", {
   s <- c(0.32, 0.68, NA)
   v <- c(0.27, 0.73, NA)
   compare <- rbind(r, g, b, h, s, v)
-  expect_equal(output, compare)
+  expect_equal(output, compare, tolerance=1e-2)
 })
