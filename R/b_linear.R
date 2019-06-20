@@ -16,6 +16,7 @@
 #' @return An object of class `linear_class`.
 #'
 #' @examples
+#' \dontrun{
 #' # priors
 #' mu_prior <- b_prior(family="normal", pars=c(0, 100))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -40,6 +41,7 @@
 #'
 # fit
 #' fit <- b_linear(x=x, y=y, s=s, priors=priors, chains=1)
+#' }
 #'
 b_linear <- function(x,
                      y,

@@ -41,6 +41,7 @@
 #' @slot data Raw data for the tested group.
 #'
 #' @examples
+#' \dontrun{
 #' # priors
 #' mu_prior <- b_prior(family="normal", pars=c(0, 100))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -58,17 +59,15 @@
 #' x <- vector()
 #' y <- vector()
 #' s <- vector()
-#' for (i in 1:3) {
-#'   x <- c(x, rep(1:10))
-#'   y <- c(y, rnorm(10, mean=1:10, sd=2))
-#'   s <- c(s, rep(i, 10))
+#' for (i in 1:5) {
+#'   x <- c(x, rep(1:10, 2))
+#'   y <- c(y, rnorm(20, mean=1:10, sd=2))
+#'   s <- c(s, rep(i, 20))
 #' }
 #'
-#' fit1 <- b_linear(x=x, y=y, s=s, priors=priors,
-#'                  iter=1000, warmup=500, chains=1)
+#' fit1 <- b_linear(x=x, y=y, s=s, priors=priors, chains=1)
 #'
-#' fit2 <- b_linear(x=x, y=-2*y, s=s, priors=priors,
-#'                  iter=1000, warmup=500, chains=1)
+#' fit2 <- b_linear(x=x, y=-2*y, s=s, priors=priors, chains=1)
 #'
 #' # a short summary of fitted parameters
 #' summary(fit1)
@@ -142,6 +141,7 @@
 #'
 #' # traceplot of the fitted parameters
 #' plot_trace(fit1)
+#' }
 #'
 linear_class <- setClass(
   "linear_class",

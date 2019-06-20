@@ -14,6 +14,7 @@
 #' @return An object of class `ttest_class`.
 #'
 #' @examples
+#' \dontrun{
 #' # priors
 #' mu_prior <- b_prior(family="normal", pars=c(0, 1000))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -27,6 +28,7 @@
 #'
 #' # fit
 #' fit <- b_ttest(data=data, priors=priors, chains=1)
+#' }
 #'
 b_ttest <- function(data,
                     priors=NULL,
