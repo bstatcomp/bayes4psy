@@ -82,21 +82,22 @@
 #'
 #'
 #' # generate data (rgb) and fit
-#' r <- as.integer(rnorm(100, mean=250, sd=20))
+#' r <- as.integer(rnorm(20, mean=250, sd=20))
 #' r[r > 255] <- 255
 #' r[r < 0] <- 0
 #'
-#' g <- as.integer(rnorm(100, mean=20, sd=20))
+#' g <- as.integer(rnorm(20, mean=20, sd=20))
 #' g[g > 255] <- 255
 #' g[g < 0] <- 0
 #'
-#' b <- as.integer(rnorm(100, mean=40, sd=20))
+#' b <- as.integer(rnorm(20, mean=40, sd=20))
 #' b[b > 255] <- 255
 #' b[b < 0] <- 0
 #'
 #' colors <- data.frame(r=r, g=g, b=b)
 #'
-#' fit1 <- b_color(colors=colors, priors=priors_rgb, chains=1)
+#' fit1 <- b_color(colors=colors, priors=priors_rgb,
+#'                 iter=1000, warmup=500, chains=1)
 #'
 #'
 #' # priors for hsv
@@ -114,21 +115,22 @@
 #'                    c("sigma_v", sigma_prior))
 #'
 #' # generate data (hsv) and fit
-#' h <- rnorm(100, mean=2*pi/3, sd=0.5)
+#' h <- rnorm(20, mean=2*pi/3, sd=0.5)
 #' h[h > 2*pi] <- 2*pi
 #' h[h < 0] <- 0
 #'
-#' s <- rnorm(100, mean=0.9, sd=0.2)
+#' s <- rnorm(20, mean=0.9, sd=0.2)
 #' s[s > 1] <- 1
 #' s[s < 0] <- 0
 #'
-#' v <- rnorm(100, mean=0.9, sd=0.2)
+#' v <- rnorm(20, mean=0.9, sd=0.2)
 #' v[v > 1] <- 1
 #' v[v < 0] <- 0
 #'
 #' colors <- data.frame(h=h, s=s, v=v)
 #'
-#' fit2 <- b_color(colors=colors, hsv=TRUE, priors=priors_hsv, chains=1)
+#' fit2 <- b_color(colors=colors, hsv=TRUE, priors=priors_hsv,
+#'                 iter=1000, warmup=500, chains=1)
 #'
 #'
 #' # a short summary of fitted parameters
@@ -154,6 +156,7 @@
 #' # compare means of a fit with an hsv defined color
 #' compare_means(fit1, hsv=c(pi/2, 1, 1))
 #'
+#' \donttest{
 #' # visualize difference in means between two fits
 #' plot_means_difference(fit1, fit2=fit2)
 #'
@@ -182,6 +185,7 @@
 #'
 #' # visualize means of a single fit and an an hsv defined color
 #' plot_means(fit1, hsv=c(pi/2, 1, 1))
+#' }
 #'
 #' # draw samples from distributions underlying two fits and compare them
 #' compare_distributions(fit1, fit2=fit2)
@@ -198,6 +202,7 @@
 #' # compare them with an hsv defined color
 #' compare_distributions(fit1, hsv=c(pi/2, 1, 1))
 #'
+#' \donttest{
 #' # visualize the distribution underlying a fit
 #' plot_distributions(fit1)
 #'
@@ -235,6 +240,7 @@
 #' # plot the fitted distribution against the data,
 #' # specify only a subset of parameters for visualization
 #' plot_fit(fit1, pars=c("h", "s", "v"))
+#' }
 #'
 #' # plot the fitted distribution for hue against the hue data
 #' plot_fit_hsv(fit1)

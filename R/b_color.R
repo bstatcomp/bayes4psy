@@ -29,22 +29,23 @@
 #'
 #'
 #' # generate data (rgb)
-#' r <- as.integer(rnorm(100, mean=250, sd=20))
+#' r <- as.integer(rnorm(20, mean=250, sd=20))
 #' r[r > 255] <- 255
 #' r[r < 0] <- 0
 #'
-#' g <- as.integer(rnorm(100, mean=20, sd=20))
+#' g <- as.integer(rnorm(20, mean=20, sd=20))
 #' g[g > 255] <- 255
 #' g[g < 0] <- 0
 #'
-#' b <- as.integer(rnorm(100, mean=40, sd=20))
+#' b <- as.integer(rnorm(20, mean=40, sd=20))
 #' b[b > 255] <- 255
 #' b[b < 0] <- 0
 #'
 #' colors_rgb <- data.frame(r=r, g=g, b=b)
 #'
 #' # fit
-#' fit_rgb <- b_color(colors=colors_rgb, priors=priors_rgb, chains=1)
+#' fit_rgb <- b_color(colors=colors_rgb, priors=priors_rgb, chains=1
+#'                    iter=1000, warmup=500, chains=1)
 #'
 #'
 #' # priors for hsv
@@ -62,22 +63,23 @@
 #'                    c("sigma_v", sigma_prior))
 #'
 #' # generate data (hsv)
-#' h <- rnorm(100, mean=2*pi/3, sd=0.5)
+#' h <- rnorm(20, mean=2*pi/3, sd=0.5)
 #' h[h > 2*pi] <- 2*pi
 #' h[h < 0] <- 0
 #'
-#' s <- rnorm(100, mean=0.9, sd=0.2)
+#' s <- rnorm(20, mean=0.9, sd=0.2)
 #' s[s > 1] <- 1
 #' s[s < 0] <- 0
 #'
-#' v <- rnorm(100, mean=0.9, sd=0.2)
+#' v <- rnorm(20, mean=0.9, sd=0.2)
 #' v[v > 1] <- 1
 #' v[v < 0] <- 0
 #'
 #' colors_hsv <- data.frame(h=h, s=s, v=v)
 #'
 #' # fit
-#' fit_hsv <- b_color(colors=colors_hsv, hsv=TRUE, priors=priors_hsv, chains=1)
+#' fit_hsv <- b_color(colors=colors_hsv, hsv=TRUE, priors=priors_hsv,
+#'                    iter=1000, warmup=500, chains=1)
 #'
 b_color <- function(colors,
                     priors=NULL,

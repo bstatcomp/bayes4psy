@@ -79,19 +79,19 @@
 #'
 #' # generate data and fit
 #' data1 <- rnorm(20, mean=150, sd=20)
-#' fit1 <- b_ttest(data=data1, priors=priors, chains=1)
+#' fit1 <- b_ttest(data=data1, priors=priors,
+#'                 iter=1000, warmup=500, chains=1)
 #'
 #' data2 <- rnorm(20, mean=200, sd=20)
-#' fit2 <- b_ttest(data=data2, priors=priors, chains=1)
+#' fit2 <- b_ttest(data=data2, priors=priors,
+#'                 iter=1000, warmup=500, chains=1)
 #'
 #' data3 <- rnorm(20, mean=150, sd=40)
-#' fit3 <- b_ttest(data=data3, priors=priors, chains=1)
-#'
-#' data4 <- rnorm(20, mean=50, sd=10)
-#' fit4 <- b_ttest(data=data4, priors=priors, chains=1)
+#' fit3 <- b_ttest(data=data3, priors=priors,
+#'                 iter=1000, warmup=500, chains=1)
 #'
 #' # fit list
-#' fit_list <- list(fit2, fit3, fit4)
+#' fit_list <- list(fit2, fit3)
 #'
 #' # a short summary of fitted parameters
 #' summary(fit1)

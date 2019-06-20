@@ -68,23 +68,23 @@
 #'
 #'
 #' # subjects
-#' s <- rep(1:5, 20)
+#' s <- rep(1:10, 5)
 #'
 #' # generate data and fit
-#' rt1 <- emg::remg(100, mu=10, sigma=1, lambda=0.4)
-#' fit1 <- b_reaction_time(t=rt1, s=s, priors=priors, chains=1)
+#' rt1 <- emg::remg(50, mu=10, sigma=1, lambda=0.4)
+#' fit1 <- b_reaction_time(t=rt1, s=s, priors=priors,
+#'                         iter=500, warmup=250, chains=1)
 #'
-#' rt2 <- emg::remg(100, mu=10, sigma=2, lambda=0.1)
-#' fit2 <- b_reaction_time(t=rt2, s=s, priors=priors, chains=1)
+#' rt2 <- emg::remg(50, mu=10, sigma=2, lambda=0.1)
+#' fit2 <- b_reaction_time(t=rt2, s=s, priors=priors,
+#'                         iter=500, warmup=250, chains=1)
 #'
-#' rt3 <- emg::remg(100, mu=20, sigma=2, lambda=1)
-#' fit3 <- b_reaction_time(t=rt3, s=s, priors=priors, chains=1)
-#'
-#' rt4 <- emg::remg(100, mu=15, sigma=2, lambda=0.5)
-#' fit4 <- b_reaction_time(t=rt4, s=s, priors=priors, chains=1)
+#' rt3 <- emg::remg(50, mu=20, sigma=2, lambda=1)
+#' fit3 <- b_reaction_time(t=rt3, s=s, priors=priors,
+#'                         iter=500, warmup=250, chains=1)
 #'
 #' # fit list
-#' fit_list <- list(fit2, fit3, fit4)
+#' fit_list <- list(fit2, fit3)
 #'
 #' # a short summary of fitted parameters
 #' summary(fit1)
@@ -106,8 +106,10 @@
 #' # use only the mu parameter of the exponentially modified gaussian distribution
 #' compare_means(fit1, fit2=fit2, par="mu")
 #'
+#' \donttest{
 #' # compare means between multiple fits
 #' compare_means(fit1, fits=fit_list)
+#' }
 #'
 #' # visualize difference in means between two fits,
 #' # specify number of histogram bins and rope interval
@@ -117,8 +119,10 @@
 #' # use only the mu parameter of the exponentially modified gaussian distribution
 #' plot_means_difference(fit1, fit2=fit2, par="mu")
 #'
+#' \donttest{
 #' # visualize difference in means between multiple fits
 #' plot_means_difference(fit1, fits=fit_list)
+#' }
 #'
 #' # visualize means of a single fit
 #' plot_means(fit1)
@@ -130,6 +134,7 @@
 #' # use only the mu parameter of the exponentially modified gaussian distribution
 #' plot_means(fit1, fit2=fit2, par="mu")
 #'
+#' \donttest{
 #' # visualize means of multiple fits
 #' plot_means(fit1, fits=fit_list)
 #'
@@ -139,10 +144,12 @@
 #'
 #' # draw samples from distributions underlying multiple fits and compare them
 #' compare_distributions(fit1, fits=fit_list)
+#' }
 #'
 #' # visualize the distribution underlying a fit
 #' plot_distributions(fit1)
 #'
+#' \donttest{
 #' # visualize distributions underlying two fits
 #' plot_distributions(fit1, fit2=fit2)
 #'
@@ -155,6 +162,7 @@
 #'
 #' # visualize difference between distributions underlying multiple fits
 #' plot_distributions_difference(fit1, fits=fit_list)
+#' }
 #'
 #' # plot the fitted distribution against the data
 #' plot_fit(fit1)

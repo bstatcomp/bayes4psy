@@ -62,23 +62,23 @@
 #'                c("tau", tau_prior))
 #'
 #' # subjects
-#' s <- rep(1:5, 20)
+#' s <- rep(1:4, 5)
 #'
 #' # generate data and fit
-#' data1 <- rbinom(100, size=1, prob=0.6)
-#' fit1 <- b_success_rate(r=data1, s=s, priors=priors, chains=1)
+#' data1 <- rbinom(20, size=1, prob=0.6)
+#' fit1 <- b_success_rate(r=data1, s=s, priors=priors,
+#'                        iter=1000, warmup=500, chains=1)
 #'
-#' data2 <- rbinom(100, size=1, prob=0.1)
-#' fit2 <- b_success_rate(r=data2, s=s, priors=priors, chains=1)
+#' data2 <- rbinom(20, size=1, prob=0.1)
+#' fit2 <- b_success_rate(r=data2, s=s, priors=priors,
+#'                        iter=1000, warmup=500, chains=1)
 #'
-#' data3 <- rbinom(100, size=1, prob=0.5)
-#' fit3 <- b_success_rate(r=data3, s=s, priors=priors, chains=1)
-#'
-#' data4 <- rbinom(100, size=1, prob=0.9)
-#' fit4 <- b_success_rate(r=data4, s=s, priors=priors, chains=1)
+#' data3 <- rbinom(20, size=1, prob=0.5)
+#' fit3 <- b_success_rate(r=data3, s=s, priors=priors,
+#'                        iter=1000, warmup=500, chains=1)
 #'
 #' # fit list
-#' fit_list <- list(fit2, fit3, fit4)
+#' fit_list <- list(fit2, fit3)
 #'
 #' # a short summary of fitted parameters
 #' summary(fit1)
