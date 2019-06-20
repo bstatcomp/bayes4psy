@@ -858,11 +858,11 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
   } else {
     m <- min(20, length(object@extract$mu_a))
     # fits
-    df_fit <- data.frame(x=numeric, y=numeric, s=numeric)
+    df_fit <- NULL
     for (i in 1:n) {
       df <- data.frame(intercept=object@extract$alpha[,i],
                        slope=object@extract$beta[,i],
-                       s = i)
+                       s=i)
       df <- sample_n(df, m)
       df_fit <- rbind(df_fit, df)
     }
