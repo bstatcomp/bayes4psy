@@ -8,15 +8,36 @@
 #' @param warmup Integer specifying the number of warmup iterations per chain (default = 1000).
 #' @param iter Integer specifying the number of iterations (including warmup, default = 2000).
 #' @param chains Integer specifying the number of parallel chains (default = 4).
+#' @param seed Random number generator seed (default = NULL).
+#' @param refresh Frequency of output (default = NULL).
 #' @param control A named list of parameters to control the sampler's behavior (default = NULL).
 #' @param suppress_warnings Suppress warnings returned by Stan (default = TRUE).
 #' @return An object of class `success_rate_class`.
+#'
+#' @examples
+#' # priors
+#' p_prior <- b_prior(family="beta", pars=c(1, 1))
+#' tau_prior <- b_prior(family="uniform", pars=c(0, 500))
+#'
+#' # attach priors to relevant parameters
+#' priors <- list(c("p", p_prior),
+#'                c("tau", tau_prior))
+#'
+#' # generate data
+#' s <- rep(1:5, 20)
+#' data <- rbinom(100, size=1, prob=0.6)
+#'
+#' # fit
+#' fit <- b_success_rate(r=data, s=s, priors=priors, chains=1)
+#'
 b_success_rate <- function(r,
                            s,
                            priors=NULL,
                            warmup=1000,
                            iter=2000,
                            chains=4,
+                           seed=NULL,
+                           refresh=NULL,
                            control=NULL,
                            suppress_warnings=TRUE) {
 
@@ -66,6 +87,7 @@ b_success_rate <- function(r,
     }
   }
 
+  # put data together
   stan_data <- list(n=n,
                     m=m,
                     r=r,
@@ -73,19 +95,34 @@ b_success_rate <- function(r,
                     p_ids = p_ids,
                     p_values = p_values)
 
+  # set seed
+  if (is.null(seed)) {
+    seed <- sample.int(.Machine$integer.max, 1)
+  }
+
+  # set output frequency
+  if (is.null(refresh)) {
+    refresh <- max(iter/10, 1)
+  }
+
+  # fit
   if (suppress_warnings) {
     fit <- suppressWarnings(sampling(stanmodels$success_rate,
                                      data=stan_data,
                                      iter=iter,
                                      warmup=warmup,
-                                     chains = chains,
+                                     chains=chains,
+                                     seed=seed,
+                                     refresh=refresh,
                                      control=control))
   } else {
     fit <- sampling(stanmodels$success_rate,
                     data=stan_data,
                     iter=iter,
                     warmup=warmup,
-                    chains = chains,
+                    chains=chains,
+                    seed=seed,
+                    refresh=refresh,
                     control=control)
   }
 

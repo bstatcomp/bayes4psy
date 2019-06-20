@@ -1,13 +1,5 @@
 #' @title b_results
 #' @description Parent S4 class for declaring shared function generics.
-#'
-#' \strong{Functions}
-#'
-#' summary(`b_results_class`): prints a summary of the fit.
-#'
-#' print(`b_results_class`): prints a more detailed summary of the fit.
-#'
-#' show(`b_results_class`): prints a more detailed summary of the fit.
 setClass("b_results")
 
 
@@ -28,16 +20,16 @@ setGeneric(name="get_subject_parameters", function(object) standardGeneric("get_
 
 
 #' @title compare_means
-#' @description \code{compare_means} prints difference between two or multiple groups.
+#' @description \code{compare_means} prints difference between means of two or multiple fits.
 #' @param object S4 class object from bayes4psy library.
-#' @param ... see documentation for specific class for the description of available parameters, e.g. ?compare_ttest or ?compare_linear.
+#' @param ... see documentation for specific class for the description of available parameters, e.g. ?compare_means_ttest or ?compare_means_linear.
 #' @rdname b_results-compare_means
 #' @exportMethod compare_means
 setGeneric(name="compare_means", function(object, ...) standardGeneric("compare_means"))
 
 
 #' @title plot_means_difference
-#' @description \code{plot_means_difference} plots difference between two groups.
+#' @description \code{plot_means_difference} plots difference between means of two or multiple fits.
 #' @param object S4 class object from bayes4psy library.
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_means_difference_ttest or ?plot_means_difference_linear.
 #' @rdname b_results-plot_means_difference
@@ -46,7 +38,7 @@ setGeneric(name="plot_means_difference", function(object, ...) standardGeneric("
 
 
 #' @title plot_means
-#' @description \code{plot_means} plots means for one or two groups.
+#' @description \code{plot_means} plots means for one or multiple fits.
 #' @param object S4 class object from bayes4psy library.
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_means_ttest or ?plot_means_linear.
 #' @rdname b_results-plot_means
@@ -55,7 +47,7 @@ setGeneric(name="plot_means", function(object, ...) standardGeneric("plot_means"
 
 
 #' @title compare_distributions
-#' @description \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group,
+#' @description \code{compare_distributions} draws samples from distribution of the first fit and compares them against samples drawn from the distribution of the second fit, or against samples from multiple fits.
 #' @param object S4 class object from bayes4psy library.
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?compare_distributions_ttest or ?compare_distributions_linear.
 #' @rdname b_results-compare_distributions
@@ -73,7 +65,7 @@ setGeneric(name="plot_distributions", function(object, ...) standardGeneric("plo
 
 
 #' @title plot_distributions_difference
-#' @description \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the distribution or a constant value for the second group.
+#' @description \code{plot_distributions_difference} a visualization of the difference between the distributions of two or more fits.
 #' @param object S4 class object from bayes4psy library.
 #' @param ... see documentation for specific class for the description of available parameters, e.g. ?plot_distributions_difference_ttest or ?plot_distributions_difference_linear.
 #' @rdname b_results-plot_distributions_difference

@@ -1,11 +1,14 @@
 Package: bayes4psy
-Version: 1.0.2
-Title: An R Package for User Friendly Bayesian Data Analysis in Psychology
-Description: This is an R package intended for Bayesian statistical analysis in the field of psychology. This package should enable students and researchers to perform professional level Bayesian data analysis without advanced knowledge in programming and Bayesian statistics.
+Version: 1.1.0
+Title: User Friendly Bayesian Data Analysis for Psychology
+Description: Contains several Bayesian models for data analysis of psychological tests. A user friendly interface for these models should enable students and researchers to perform professional level Bayesian data analysis without advanced knowledge in programming and Bayesian statistics.
 Authors@R:
     c(person("Jure", "Demšar", , "jure.demsar@fri.uni-lj.si", c("cre", "aut")),
     person("Grega", "Repovš", , "grega.repovs@psy.ff.uni-lj.si", "aut"),
-    person("Erik", "Štrumbelj", , "erik.strumbelj@fri.uni-lj.si", "aut"))
+    person("Erik", "Štrumbelj", , "erik.strumbelj@fri.uni-lj.si", "aut"),
+    person("Trustees of", "Columbia University", role = "cph"),
+    person("John", "Kruschke", role = "cph", comment = "R/shared_functions.R - mcmc_hdi, src/stan_files/ttest.stan"),
+    person("Rasmus", "Baath", role = "cph", comment = "R/b_bootstrap.R"))
 License: GPL (>=3)
 Encoding: UTF-8
 LazyData: true
@@ -36,3 +39,5 @@ LinkingTo:
 SystemRequirements: GNU make
 NeedsCompilation: yes
 RoxygenNote: 6.1.1
+Suggests: 
+    testthat

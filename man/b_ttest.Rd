@@ -5,7 +5,8 @@
 \title{b_ttest}
 \usage{
 b_ttest(data, priors = NULL, warmup = 1000, iter = 2000,
-  chains = 4, control = NULL, suppress_warnings = TRUE)
+  chains = 4, seed = NULL, refresh = NULL, control = NULL,
+  suppress_warnings = TRUE)
 }
 \arguments{
 \item{data}{Numeric vector of values on which the fit will be based.}
@@ -18,6 +19,10 @@ b_ttest(data, priors = NULL, warmup = 1000, iter = 2000,
 
 \item{chains}{Integer specifying the number of parallel chains (default = 4).}
 
+\item{seed}{Random number generator seed (default = NULL).}
+
+\item{refresh}{Frequency of output (default = NULL).}
+
 \item{control}{A named list of parameters to control the sampler's behavior (default = NULL).}
 
 \item{suppress_warnings}{Suppress warnings returned by Stan (default = TRUE).}
@@ -27,4 +32,20 @@ An object of class `ttest_class`.
 }
 \description{
 Bayesian t-test.
+}
+\examples{
+# priors
+mu_prior <- b_prior(family="normal", pars=c(0, 1000))
+sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+
+# attach priors to relevant parameters
+priors <- list(c("mu", mu_prior),
+              c("sigma", sigma_prior))
+
+# generate some data
+data  <- rnorm(20, mean=150, sd=20)
+
+# fit
+fit <- b_ttest(data=data, priors=priors, chains=1)
+
 }

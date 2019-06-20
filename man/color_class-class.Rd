@@ -78,3 +78,214 @@ plot_trace(`color_class`): traceplot for main fitted model parameters.
 \item{\code{data}}{Data on which the fit is based.}
 }}
 
+\examples{
+
+# priors for rgb
+mu_prior <- b_prior(family="uniform", pars=c(0, 255))
+sigma_prior <- b_prior(family="uniform", pars=c(0, 100))
+
+# attach priors to relevant parameters
+priors_rgb <- list(c("mu_r", mu_prior),
+                   c("sigma_r", sigma_prior),
+                   c("mu_g", mu_prior),
+                   c("sigma_g", sigma_prior),
+                   c("mu_b", mu_prior),
+                   c("sigma_b", sigma_prior))
+
+
+# generate data (rgb) and fit
+r <- as.integer(rnorm(100, mean=250, sd=20))
+r[r > 255] <- 255
+r[r < 0] <- 0
+
+g <- as.integer(rnorm(100, mean=20, sd=20))
+g[g > 255] <- 255
+g[g < 0] <- 0
+
+b <- as.integer(rnorm(100, mean=40, sd=20))
+b[b > 255] <- 255
+b[b < 0] <- 0
+
+colors <- data.frame(r=r, g=g, b=b)
+
+fit1 <- b_color(colors=colors, priors=priors_rgb, chains=1)
+
+
+# priors for hsv
+h_prior <- b_prior(family="uniform", pars=c(0, 2*pi))
+sv_prior <- b_prior(family="uniform", pars=c(0, 1))
+kappa_prior <- b_prior(family="uniform", pars=c(0, 500))
+sigma_prior <- b_prior(family="uniform", pars=c(0, 1))
+
+# attach priors to relevant parameters
+priors_hsv <- list(c("mu_h", h_prior),
+                   c("kappa_h", kappa_prior),
+                   c("mu_s", sv_prior),
+                   c("sigma_s", sigma_prior),
+                   c("mu_v", sv_prior),
+                   c("sigma_v", sigma_prior))
+
+# generate data (hsv) and fit
+h <- rnorm(100, mean=2*pi/3, sd=0.5)
+h[h > 2*pi] <- 2*pi
+h[h < 0] <- 0
+
+s <- rnorm(100, mean=0.9, sd=0.2)
+s[s > 1] <- 1
+s[s < 0] <- 0
+
+v <- rnorm(100, mean=0.9, sd=0.2)
+v[v > 1] <- 1
+v[v < 0] <- 0
+
+colors <- data.frame(h=h, s=s, v=v)
+
+fit2 <- b_color(colors=colors, hsv=TRUE, priors=priors_hsv, chains=1)
+
+
+# a short summary of fitted parameters
+summary(fit1)
+
+# a more detailed summary of fitted parameters
+print(fit1)
+show(fit1)
+
+# extract parameter values from the fit
+parameters <- get_parameters(fit1)
+
+# compare means between two fits
+compare_means(fit1, fit2=fit2)
+
+# compare means between two fits,
+# specify only a subset of parameters for comparison
+compare_means(fit1, fit2=fit2, pars=c("h", "s", "v"))
+
+# compare means of a fit with an rgb defined color
+compare_means(fit1, rgb=c(255, 0, 0))
+
+# compare means of a fit with an hsv defined color
+compare_means(fit1, hsv=c(pi/2, 1, 1))
+
+# visualize difference in means between two fits
+plot_means_difference(fit1, fit2=fit2)
+
+# visualize difference in means between two fits,
+# specify only a subset of parameters for comparison, use a rope interval
+plot_means_difference(fit1, fit2=fit2, pars=c("r", "g", "b"), rope=10)
+
+# visualize difference in means between a fit and an rgb defined color
+plot_means_difference(fit1, rgb=c(255, 0, 0))
+
+# visualize difference in means between a fit and an hsv defined color
+plot_means_difference(fit1, hsv=c(pi/2, 1, 1))
+
+# visualize means of a single fit
+plot_means(fit1)
+
+# visualize means of two fits
+plot_means(fit1, fit2=fit2)
+
+# visualize means of two fits,
+# specify only a subset of parameters for visualization
+plot_means(fit1, fit2=fit2, pars=c("h", "s", "v"))
+
+# visualize means of a single fit and an rgb defined color
+plot_means(fit1, rgb=c(255, 0, 0))
+
+# visualize means of a single fit and an an hsv defined color
+plot_means(fit1, hsv=c(pi/2, 1, 1))
+
+# draw samples from distributions underlying two fits and compare them
+compare_distributions(fit1, fit2=fit2)
+
+# draw samples from distributions underlying two fits and compare them,
+# specify only a subset of parameters for comparison, use a rope interval
+compare_distributions(fit1, fit2=fit2, pars=c("r", "g", "b"), rope=10)
+
+# draw samples from a distribution underlying the fits,
+# compare them with an rgb defined color
+compare_distributions(fit1, rgb=c(255, 0, 0))
+
+# draw samples from a distribution underlying the fits,
+# compare them with an hsv defined color
+compare_distributions(fit1, hsv=c(pi/2, 1, 1))
+
+# visualize the distribution underlying a fit
+plot_distributions(fit1)
+
+# visualize distributions underlying two fits
+plot_distributions(fit1, fit2=fit2)
+
+# visualize distributions underlying two fits,
+# specify only a subset of parameters for visualization
+plot_distributions(fit1, fit2=fit2, pars=c("h", "s", "v"))
+
+# visualize the distribution underlying a fit, and an rgb defined color
+plot_distributions(fit1, rgb=c(255, 0, 0))
+
+# visualize the distribution underlying a fit, and an hsv defined color
+plot_distributions(fit1, hsv=c(pi/2, 1, 1))
+
+# visualize difference between distributions underlying two fits
+plot_distributions_difference(fit1, fit2=fit2)
+
+# visualize difference between distributions underlying two fits
+# specify only a subset of parameters for comparison, use a rope interval
+plot_distributions_difference(fit1, fit2=fit2, pars=c("r", "g", "b"), rope=10)
+
+# visualize difference between the distributions underlyin a fit,
+# and an rgb defined color
+plot_distributions_difference(fit1, rgb=c(255, 0, 0))
+
+# visualize difference between the distributions underlyin a fit,
+# and an hsv defined color
+plot_distributions_difference(fit1, hsv=c(pi/2, 1, 1))
+
+# plot the fitted distribution against the data
+plot_fit(fit1)
+
+# plot the fitted distribution against the data,
+# specify only a subset of parameters for visualization
+plot_fit(fit1, pars=c("h", "s", "v"))
+
+# plot the fitted distribution for hue against the hue data
+plot_fit_hsv(fit1)
+
+# visualize hue means of a single fit
+plot_means_hsv(fit1)
+
+# visualize hue means of two fits
+plot_means_hsv(fit1, fit2=fit2)
+
+# visualize hue means of two fits, add annotation points and lines,
+# hsv parameter determines whether annotations are defined in hsv or rgb
+lines <- list()
+lines[[1]] <- c(2*pi, 1, 1)
+lines[[2]] <- c(pi/2, 0.5, 0.5)
+
+points <- list()
+points[[1]] <- c(pi, 1, 1)
+
+plot_means_hsv(fit1, fit2=fit2, points=points, lines=lines, hsv=TRUE)
+
+# visualize the hue distribution underlying a fit
+plot_distributions_hsv(fit1)
+
+# visualize hue distributions underlying two fits
+plot_distributions_hsv(fit1, fit2=fit2)
+
+# visualize hue distributions of two fits, add annotation points and lines,
+# hsv parameter determines whether annotations are defined in hsv or rgb
+lines <- list()
+lines[[1]] <- c(2*pi, 1, 1)
+lines[[2]] <- c(pi/2, 0.5, 0.5)
+
+points <- list()
+points[[1]] <- c(pi, 1, 1)
+
+plot_distributions_hsv(fit1, fit2=fit2, points=points, lines=lines, hsv=TRUE)
+
+# traceplot of the fitted parameters
+plot_trace(fit1)
+
+}

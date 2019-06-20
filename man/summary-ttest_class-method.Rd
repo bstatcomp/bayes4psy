@@ -13,3 +13,10 @@
 \description{
 \code{summary} prints a summary of the Bayesian ttest fit.
 }
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?ttest_class
+
+}

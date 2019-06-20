@@ -13,6 +13,16 @@
 
 \item{...}{pars - components of comparison, a subset of (r, g, b, h, s, v).}
 }
+\value{
+A ggplot visualization.
+}
 \description{
 \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
+}
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?color_class
+
 }

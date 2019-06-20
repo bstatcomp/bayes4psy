@@ -13,6 +13,16 @@
 
 \item{...}{fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects.}
 }
+\value{
+A ggplot visualization or a warning if something went wrong.
+}
 \description{
 \code{plot_means} plots density of means, the first and the second group means, means of multiple groups or a mean value in case second group is defined as a constant.
+}
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?ttest_class
+
 }

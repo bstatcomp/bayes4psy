@@ -39,6 +39,108 @@
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Raw data for the tested group.
+#'
+#' @examples
+#' # priors
+#' mu_prior <- b_prior(family="normal", pars=c(0, 100))
+#' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+#'
+#' # attach priors to relevant parameters
+#' priors <- list(c("mu_a", mu_prior),
+#'                c("sigma_a", sigma_prior),
+#'                c("mu_b", mu_prior),
+#'                c("sigma_b", sigma_prior),
+#'                c("mu_s", sigma_prior),
+#'                c("sigma_s", sigma_prior))
+#'
+#'
+#' # generate data and fit
+#' x <- vector()
+#' y <- vector()
+#' s <- vector()
+#' for (i in 1:5) {
+#'   x <- c(x, rep(1:10, 2))
+#'   y <- c(y, rnorm(20, mean=1:10, sd=2))
+#'   s <- c(s, rep(i, 20))
+#' }
+#'
+#' fit1 <- b_linear(x=x, y=y, s=s, priors=priors, chains=1)
+#'
+#' fit2 <- b_linear(x=x, y=-2*y, s=s, priors=priors, chains=1)
+#'
+#' # a short summary of fitted parameters
+#' summary(fit1)
+#'
+#' # a more detailed summary of fitted parameters
+#' print(fit1)
+#' show(fit1)
+#'
+#' # extract parameter values from the fit
+#' parameters <- get_parameters(fit1)
+#'
+#' # extract parameter values on the bottom (subject) level from the fit
+#' subject_parameters <- get_subject_parameters(fit1)
+#'
+#' # compare means between two fits
+#' compare_means(fit1, fit2=fit2)
+#'
+#' # compare means between two fits, use a rope interval for intercept and slope
+#' compare_means(fit1, fit2=fit2, rope_intercept=0.5, rope_slope=0.2)
+#'
+#' # visualize difference in means between two fits
+#' plot_means_difference(fit1, fit2=fit2)
+#'
+#' # visualize difference in means between two fits,
+#' # use a rope interval for intercept and slope,
+#' # set the number of bins in the histogram
+#' plot_means_difference(fit1, fit2=fit2, rope_intercept=0.5, rope_slope=0.2, bins=20)
+#'
+#' # visualize difference in means between two fits, compare only slope
+#' plot_means_difference(fit1, fit2=fit2, par="slope")
+#'
+#' # visualize means of a single fit
+#' plot_means(fit1)
+#'
+#' # visualize means of two fits
+#' plot_means(fit1, fit2=fit2)
+#'
+#' # visualize means of two fits, plot slope only
+#' plot_means(fit1, fit2=fit2, par="slope")
+#'
+#' # draw samples from distributions underlying two fits and compare them,
+#' # use a rope interval for intercept and slope
+#' compare_distributions(fit1, fit2=fit2, rope_intercept=0.5, rope_slope=0.2)
+#'
+#' # visualize the distribution underlying a fit
+#' plot_distributions(fit1)
+#'
+#' # visualize distributions underlying two fits
+#' plot_distributions(fit1, fit2=fit2)
+#'
+#' # visualize distributions underlying two fits, plot slope only
+#' plot_distributions(fit1, fit2=fit2, par="slope")
+#'
+#' # visualize difference between distributions underlying two fits
+#' plot_distributions_difference(fit1, fit2=fit2)
+#'
+#' # visualize difference between distributions underlying two fits,
+#' # use a rope interval for intercept and slope,
+#' # set the number of bins in the histogram
+#' plot_distributions_difference(fit1, fit2=fit2, rope_intercept=0.5, rope_slope=0.2, bins=20)
+#'
+#' # visualize difference between distributions underlying two fits, plot slope only
+#' plot_distributions_difference(fit1, fit2=fit2, par="slope")
+#'
+#' # plot the fitted distribution against the data
+#' plot_fit(fit1)
+#'
+#' # plot the fitted distribution against the data,
+#' # plot on the bottom (subject) level
+#' plot_fit(fit1, subjects=TRUE)
+#'
+#' # traceplot of the fitted parameters
+#' plot_trace(fit1)
+#'
 linear_class <- setClass(
   "linear_class",
   slots = c(
@@ -54,6 +156,13 @@ linear_class <- setClass(
 #' @description \code{summary} prints a summary of the Bayesian linear model fit.
 #' @param object linear_class object.
 #' @exportMethod summary
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
 setMethod(f="summary", signature(object="linear_class"), definition=function(object) {
   # get means
   alpha <- mean(object@extract$mu_a)
@@ -79,6 +188,13 @@ setMethod(f="summary", signature(object="linear_class"), definition=function(obj
 #' @description \code{show} prints a more detailed summary of the Bayesian linear model fit.
 #' @param object linear_class object.
 #' @exportMethod show
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
 setMethod(f="show", signature(object="linear_class"), definition=function(object) {
   # print
   show(object@fit)
@@ -90,6 +206,14 @@ setMethod(f="show", signature(object="linear_class"), definition=function(object
 #' @param object linear_class object.
 #' @rdname linear_class-get_parameters
 #' @aliases get_parameters_linear_class
+#' @return A data frame with parameter values.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
 setMethod(f="get_parameters", signature(object="linear_class"), definition=function(object) {
   df <- data.frame(slope=object@extract$mu_a,
                    intercept=object@extract$mu_b,
@@ -104,6 +228,14 @@ setMethod(f="get_parameters", signature(object="linear_class"), definition=funct
 #' @param object linear_class object.
 #' @rdname linear_class-get_subject_parameters
 #' @aliases get_subject_parameters_linear_class
+#' @return A data frame with parameter values.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
 setMethod(f="get_subject_parameters", signature(object="linear_class"), definition=function(object) {
   df <- data.frame(slope=numeric(), intercept=numeric(), sigma=numeric(), subject=numeric())
 
@@ -128,6 +260,14 @@ setMethod(f="get_subject_parameters", signature(object="linear_class"), definiti
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
 #' @rdname linear_class-compare_means
 #' @aliases compare_meanslinear
+#' @return Comparison results or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
 setMethod(f="compare_means", signature(object="linear_class"), definition=function(object, ...) {
   arguments <- list(...)
 
@@ -187,6 +327,14 @@ setMethod(f="compare_means", signature(object="linear_class"), definition=functi
 #' @param ... fit2 - a second linear_class object, par - specific parameter of comparison (slope or intercept), rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
 #' @rdname linear_class-plot_means_difference
 #' @aliases plot_means_difference_linear
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
 setMethod(f="plot_means_difference", signature(object="linear_class"), definition=function(object, ...) {
   # extract additional parameters
   arguments <- list(...)
@@ -279,6 +427,14 @@ setMethod(f="plot_means_difference", signature(object="linear_class"), definitio
 #' @param ... fit2 - a second linear_class object, par - specific parameter of comparison (slope or intercept).
 #' @rdname linear_class-plot_means
 #' @aliases plot_means_linear
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
 setMethod(f="plot_means", signature(object="linear_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   intercept <- slope <- NULL
@@ -376,6 +532,14 @@ setMethod(f="plot_means", signature(object="linear_class"), definition=function(
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
 #' @rdname linear_class-compare_distributions
 #' @aliases compare_distributions_linear
+#' @return Comparison results or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
 setMethod(f="compare_distributions", signature(object="linear_class"), definition=function(object, ...) {
   arguments <- list(...)
 
@@ -447,6 +611,14 @@ setMethod(f="compare_distributions", signature(object="linear_class"), definitio
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_distributions
 #' @aliases plot_distributions_linear
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
 setMethod(f="plot_distributions", signature(object="linear_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   slope <- intercept <- group <- y <- y_min <- NULL
@@ -519,6 +691,14 @@ setMethod(f="plot_distributions", signature(object="linear_class"), definition=f
 #' @param ... fit2 - a second linear_class object,  par - specific parameter of comparison (slope or intercept), rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
 #' @rdname linear_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_linear
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
 setMethod(f="plot_distributions_difference", signature(object="linear_class"), definition=function(object, ...) {
   # extract additional parameters
   arguments <- list(...)
@@ -623,6 +803,14 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
 #' @param ... subjects - plot fits on a subject level (default = FALSE).
 #' @rdname linear_class-plot_fit
 #' @aliases plot_fit_linear
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
 setMethod(f="plot_fit", signature(object="linear_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   slope <- intercept <- s <- x <- y <- NULL
@@ -670,11 +858,11 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
   } else {
     m <- min(20, length(object@extract$mu_a))
     # fits
-    df_fit <- data.frame(x=numeric, y=numeric, s=numeric)
+    df_fit <- NULL
     for (i in 1:n) {
       df <- data.frame(intercept=object@extract$alpha[,i],
                        slope=object@extract$beta[,i],
-                       s = i)
+                       s=i)
       df <- sample_n(df, m)
       df_fit <- rbind(df_fit, df)
     }
@@ -698,6 +886,14 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
 #' @param object linear_class object.
 #' @rdname linear_class-plot_trace
 #' @aliases plot_trace_linear
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
 setMethod(f="plot_trace", signature(object="linear_class"), definition=function(object) {
   rstan::traceplot(object@fit, pars=c("mu_a", "mu_b", "mu_s"), inc_warmup=TRUE)
 })

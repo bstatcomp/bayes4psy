@@ -5,7 +5,8 @@
 \title{b_linear}
 \usage{
 b_linear(x, y, s, priors = NULL, warmup = 1000, iter = 2000,
-  chains = 4, control = NULL, suppress_warnings = TRUE)
+  chains = 4, seed = NULL, refresh = NULL, control = NULL,
+  suppress_warnings = TRUE)
 }
 \arguments{
 \item{x}{a vector containing sequence indexes (time).}
@@ -22,6 +23,10 @@ b_linear(x, y, s, priors = NULL, warmup = 1000, iter = 2000,
 
 \item{chains}{Integer specifying the number of parallel chains (default = 4).}
 
+\item{seed}{Random number generator seed (default = NULL).}
+
+\item{refresh}{Frequency of output (default = NULL).}
+
 \item{control}{A named list of parameters to control the sampler's behavior (default = NULL).}
 
 \item{suppress_warnings}{Suppress warnings returned by Stan (default = TRUE).}
@@ -31,4 +36,30 @@ An object of class `linear_class`.
 }
 \description{
 Bayesian model for fitting a linear normal model to data.
+}
+\examples{
+# priors
+mu_prior <- b_prior(family="normal", pars=c(0, 100))
+sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+
+# attach priors to relevant parameters
+priors <- list(c("mu_a", mu_prior),
+               c("sigma_a", sigma_prior),
+               c("mu_b", mu_prior),
+               c("sigma_b", sigma_prior),
+               c("mu_s", sigma_prior),
+               c("sigma_s", sigma_prior))
+
+# generate data
+x <- vector()
+y <- vector()
+s <- vector()
+for (i in 1:5) {
+  x <- c(x, rep(1:10, 2))
+  y <- c(y, rnorm(20, mean=1:10, sd=2))
+  s <- c(s, rep(i, 20))
+}
+
+fit <- b_linear(x=x, y=y, s=s, priors=priors, chains=1)
+
 }

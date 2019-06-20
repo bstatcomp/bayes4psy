@@ -13,6 +13,16 @@
 
 \item{...}{fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence.}
 }
+\value{
+Comparison results or a warning if something went wrong.
+}
 \description{
 \code{compare_means} prints difference/equality of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
+}
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?ttest_class
+
 }

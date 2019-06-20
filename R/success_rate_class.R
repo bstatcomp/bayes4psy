@@ -51,6 +51,103 @@
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Data on which the fit is based.
+#'
+#' @examples
+#' #priors
+#' p_prior <- b_prior(family="beta", pars=c(1, 1))
+#' tau_prior <- b_prior(family="uniform", pars=c(0, 500))
+#'
+#' # attach priors to relevant parameters
+#' priors <- list(c("p", p_prior),
+#'                c("tau", tau_prior))
+#'
+#' # subjects
+#' s <- rep(1:5, 20)
+#'
+#' # generate data and fit
+#' data1 <- rbinom(100, size=1, prob=0.6)
+#' fit1 <- b_success_rate(r=data1, s=s, priors=priors, chains=1)
+#'
+#' data2 <- rbinom(100, size=1, prob=0.1)
+#' fit2 <- b_success_rate(r=data2, s=s, priors=priors, chains=1)
+#'
+#' data3 <- rbinom(100, size=1, prob=0.5)
+#' fit3 <- b_success_rate(r=data3, s=s, priors=priors, chains=1)
+#'
+#' data4 <- rbinom(100, size=1, prob=0.9)
+#' fit4 <- b_success_rate(r=data4, s=s, priors=priors, chains=1)
+#'
+#' # fit list
+#' fit_list <- list(fit2, fit3, fit4)
+#'
+#' # a short summary of fitted parameters
+#' summary(fit1)
+#'
+#' # a more detailed summary of fitted parameters
+#' print(fit1)
+#' show(fit1)
+#'
+#' # extract parameter values from the fit
+#' parameters <- get_parameters(fit1)
+#'
+#' # extract parameter values on the bottom (subject) level from the fit
+#' subject_parameters <- get_subject_parameters(fit1)
+#'
+#' # compare means between two fits, use a rope interval
+#' compare_means(fit1, fit2=fit2, rope=0.05)
+#'
+#' # compare means between multiple fits
+#' compare_means(fit1, fits=fit_list)
+#'
+#' # visualize difference in means between two fits,
+#' # specify number of histogram bins and rope interval
+#' plot_means_difference(fit1, fit2=fit2, bins=40, rope=0.05)
+#'
+#' # visualize difference in means between multiple fits
+#' plot_means_difference(fit1, fits=fit_list)
+#'
+#' # visualize means of a single fit
+#' plot_means(fit1)
+#'
+#' # visualize means of two fits
+#' plot_means(fit1, fit2=fit2)
+#'
+#' # visualize means of multiple fits
+#' plot_means(fit1, fits=fit_list)
+#'
+#' # draw samples from distributions underlying two fits and compare them,
+#' # use a rope interval
+#' compare_distributions(fit1, fit2=fit2, rope=0.05)
+#'
+#' # draw samples from distributions underlying multiple fits and compare them
+#' compare_distributions(fit1, fits=fit_list)
+#'
+#' # visualize the distribution underlying a fit
+#' plot_distributions(fit1)
+#'
+#' # visualize distributions underlying two fits
+#' plot_distributions(fit1, fit2=fit2)
+#'
+#' # visualize distributions underlying multiple fits
+#' plot_distributions(fit1, fits=fit_list)
+#'
+#' # visualize difference between distributions underlying two fits,
+#' # use a rope interval
+#' plot_distributions_difference(fit1, fit2=fit2, rope=0.05)
+#'
+#' # visualize difference between distributions underlying multiple fits
+#' plot_distributions_difference(fit1, fits=fit_list)
+#'
+#' # plot the fitted distribution against the data
+#' plot_fit(fit1)
+#'
+#' # plot the fitted distribution against the data,
+#' # plot on the bottom (subject) level
+#' plot_fit(fit1, subjects=TRUE)
+#'
+#' # traceplot of the fitted parameters
+#' plot_trace(fit1)
+#'
 success_rate_class <- setClass(
   "success_rate_class",
   slots = c(
@@ -66,6 +163,13 @@ success_rate_class <- setClass(
 #' @description \code{summary} prints a summary of the Bayesian success rate fit.
 #' @param object success_rate_class object.
 #' @exportMethod summary
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?success_rate_class
+#'
 setMethod(f="summary", signature(object="success_rate_class"), definition=function(object) {
   # get means
   p <- mean(object@extract$p0)
@@ -83,6 +187,13 @@ setMethod(f="summary", signature(object="success_rate_class"), definition=functi
 #' @description \code{show} prints a more detailed summary of the Bayesian success rate fit.
 #' @param object success_rate_class object.
 #' @exportMethod show
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?success_rate_class
+#'
 setMethod(f="show", signature(object="success_rate_class"), definition=function(object) {
   # print
   show(object@fit)
@@ -94,6 +205,14 @@ setMethod(f="show", signature(object="success_rate_class"), definition=function(
 #' @param object success_rate_class object.
 #' @rdname success_rate_class-get_parameters
 #' @aliases get_parameters_success_rate_class
+#' @return A data frame with parameter values.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?success_rate_class
+#'
 setMethod(f="get_parameters", signature(object="success_rate_class"), definition=function(object) {
   df <- data.frame(p=object@extract$p0,
                    tau=object@extract$tau)
@@ -107,6 +226,14 @@ setMethod(f="get_parameters", signature(object="success_rate_class"), definition
 #' @param object success_rate_class object.
 #' @rdname success_rate_class-get_subject_parameters
 #' @aliases get_subject_parameters_success_rate_class
+#' @return A data frame with parameter values.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?success_rate_class
+#'
 setMethod(f="get_subject_parameters", signature(object="success_rate_class"), definition=function(object) {
   df <- data.frame(p=numeric(), subject=numeric())
 
@@ -129,6 +256,14 @@ setMethod(f="get_subject_parameters", signature(object="success_rate_class"), de
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence.
 #' @rdname success_rate_class-compare_means
 #' @aliases compare_means_success_rate
+#' @return Comparison results or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?success_rate_class
+#'
 setMethod(f="compare_means", signature(object="success_rate_class"), definition=function(object, ...) {
   arguments <- list(...)
 
@@ -208,6 +343,14 @@ setMethod(f="compare_means", signature(object="success_rate_class"), definition=
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname success_rate_class-plot_means_difference
 #' @aliases plot_means_difference_success_rate
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?success_rate_class
+#'
 setMethod(f="plot_means_difference", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
@@ -304,6 +447,14 @@ setMethod(f="plot_means_difference", signature(object="success_rate_class"), def
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects.
 #' @rdname success_rate_class-plot_means
 #' @aliases plot_means_success_rate
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?success_rate_class
+#'
 setMethod(f="plot_means", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   group <- value <- NULL
@@ -365,6 +516,14 @@ setMethod(f="plot_means", signature(object="success_rate_class"), definition=fun
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence.
 #' @rdname success_rate_class-compare_distributions
 #' @aliases compare_distributions_success_rate
+#' @return Comparison results or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?success_rate_class
+#'
 setMethod(f="compare_distributions", signature(object="success_rate_class"), definition=function(object, ...) {
   arguments <- list(...)
 
@@ -449,6 +608,14 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects.
 #' @rdname success_rate_class-plot_distributions
 #' @aliases plot_distributions_success_rate
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?success_rate_class
+#'
 setMethod(f="plot_distributions", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   group <- x <- y <- NULL
@@ -533,6 +700,14 @@ setMethod(f="plot_distributions", signature(object="success_rate_class"), defini
 #' @param ... fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname success_rate_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_success_rate
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?success_rate_class
+#'
 setMethod(f="plot_distributions_difference", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
@@ -635,6 +810,14 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
 #' @param ... subjects - plot fits on a subject level (default = FALSE).
 #' @rdname success_rate_class-plot_fit
 #' @aliases plot_fit_success_rate
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?success_rate_class
+#'
 setMethod(f="plot_fit", signature(object="success_rate_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   variable <- value <- NULL
@@ -687,6 +870,14 @@ setMethod(f="plot_fit", signature(object="success_rate_class"), definition=funct
 #' @param object success_rate_class object.
 #' @rdname success_rate_class-plot_trace
 #' @aliases plot_trace_success_rate
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?success_rate_class
+#'
 setMethod(f="plot_trace", signature(object="success_rate_class"), definition=function(object) {
   rstan::traceplot(object@fit, pars=c("p"), inc_warmup=TRUE)
 })

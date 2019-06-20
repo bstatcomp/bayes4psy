@@ -64,3 +64,100 @@ plot_trace(`success_rate_class`): traceplot for main fitted model parameters.
 \item{\code{data}}{Data on which the fit is based.}
 }}
 
+\examples{
+#priors
+p_prior <- b_prior(family="beta", pars=c(1, 1))
+tau_prior <- b_prior(family="uniform", pars=c(0, 500))
+
+# attach priors to relevant parameters
+priors <- list(c("p", p_prior),
+               c("tau", tau_prior))
+
+# subjects
+s <- rep(1:5, 20)
+
+# generate data and fit
+data1 <- rbinom(100, size=1, prob=0.6)
+fit1 <- b_success_rate(r=data1, s=s, priors=priors, chains=1)
+
+data2 <- rbinom(100, size=1, prob=0.1)
+fit2 <- b_success_rate(r=data2, s=s, priors=priors, chains=1)
+
+data3 <- rbinom(100, size=1, prob=0.5)
+fit3 <- b_success_rate(r=data3, s=s, priors=priors, chains=1)
+
+data4 <- rbinom(100, size=1, prob=0.9)
+fit4 <- b_success_rate(r=data4, s=s, priors=priors, chains=1)
+
+# fit list
+fit_list <- list(fit2, fit3, fit4)
+
+# a short summary of fitted parameters
+summary(fit1)
+
+# a more detailed summary of fitted parameters
+print(fit1)
+show(fit1)
+
+# extract parameter values from the fit
+parameters <- get_parameters(fit1)
+
+# extract parameter values on the bottom (subject) level from the fit
+subject_parameters <- get_subject_parameters(fit1)
+
+# compare means between two fits, use a rope interval
+compare_means(fit1, fit2=fit2, rope=0.05)
+
+# compare means between multiple fits
+compare_means(fit1, fits=fit_list)
+
+# visualize difference in means between two fits,
+# specify number of histogram bins and rope interval
+plot_means_difference(fit1, fit2=fit2, bins=40, rope=0.05)
+
+# visualize difference in means between multiple fits
+plot_means_difference(fit1, fits=fit_list)
+
+# visualize means of a single fit
+plot_means(fit1)
+
+# visualize means of two fits
+plot_means(fit1, fit2=fit2)
+
+# visualize means of multiple fits
+plot_means(fit1, fits=fit_list)
+
+# draw samples from distributions underlying two fits and compare them,
+# use a rope interval
+compare_distributions(fit1, fit2=fit2, rope=0.05)
+
+# draw samples from distributions underlying multiple fits and compare them
+compare_distributions(fit1, fits=fit_list)
+
+# visualize the distribution underlying a fit
+plot_distributions(fit1)
+
+# visualize distributions underlying two fits
+plot_distributions(fit1, fit2=fit2)
+
+# visualize distributions underlying multiple fits
+plot_distributions(fit1, fits=fit_list)
+
+# visualize difference between distributions underlying two fits,
+# use a rope interval
+plot_distributions_difference(fit1, fit2=fit2, rope=0.05)
+
+# visualize difference between distributions underlying multiple fits
+plot_distributions_difference(fit1, fits=fit_list)
+
+# plot the fitted distribution against the data
+plot_fit(fit1)
+
+# plot the fitted distribution against the data,
+# plot on the bottom (subject) level
+plot_fit(fit1, subjects=TRUE)
+
+# traceplot of the fitted parameters
+plot_trace(fit1)
+
+}

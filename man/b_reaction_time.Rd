@@ -5,7 +5,8 @@
 \title{b_reaction_time}
 \usage{
 b_reaction_time(t, s, priors = NULL, warmup = 1000, iter = 2000,
-  chains = 4, control = NULL, suppress_warnings = TRUE)
+  chains = 4, seed = NULL, refresh = NULL, control = NULL,
+  suppress_warnings = TRUE)
 }
 \arguments{
 \item{t}{a vector containing reaction times for each measurement.}
@@ -20,13 +21,39 @@ b_reaction_time(t, s, priors = NULL, warmup = 1000, iter = 2000,
 
 \item{chains}{Integer specifying the number of parallel chains (default = 4).}
 
+\item{seed}{Random number generator seed (default = NULL).}
+
+\item{refresh}{Frequency of output (default = NULL).}
+
 \item{control}{A named list of parameters to control the sampler's behavior (default = NULL).}
 
 \item{suppress_warnings}{Suppress warnings returned by Stan (default = TRUE).}
 }
 \value{
-An object of class `reaction_time_class`.
+An object of class `reaction_time_class`
 }
 \description{
 Bayesian model for comparing reaction times.
+}
+\examples{
+# priors
+mu_prior <- b_prior(family="normal", pars=c(0, 100))
+sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+lambda_prior <- b_prior(family="uniform", pars=c(0.05, 5))
+
+# attach priors to relevant parameters
+priors <- list(c("mu_m", mu_prior),
+              c("sigma_m", sigma_prior),
+              c("mu_s", sigma_prior),
+              c("sigma_s", sigma_prior),
+              c("mu_l", lambda_prior),
+              c("sigma_l", sigma_prior))
+
+# generate data
+s <- rep(1:5, 20)
+rt <- emg::remg(100, mu=10, sigma=1, lambda=0.4)
+
+# fit
+fit <- b_reaction_time(t=rt, s=s, priors=priors, chains=1)
+
 }

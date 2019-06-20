@@ -13,6 +13,16 @@
 
 \item{...}{fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects.}
 }
+\value{
+A ggplot visualization or a warning if something went wrong.
+}
 \description{
 \code{plot_distributions} a visualization of the fitted distribution, for one, two or multiple fits.
+}
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?reaction_time_class
+
 }

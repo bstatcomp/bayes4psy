@@ -12,6 +12,20 @@
 #' @param weight_arg If the statistic function includes a named argument for the weights this could be specified here (default = NULL).
 #' @param ... Further arguments passed on to the statistic function.
 #' @return An object of class `linear_class`.
+#'
+#' @examples
+#'
+#' # linear function of seqence vs. response
+#' lm_statistic <- function(data) {
+#'   lm(sequence ~ response, data)$coef
+#' }
+#'
+#' # load data
+#' data <- adaptation_level_small
+#'
+#' # bootstrap
+#' data_bootstrap <- b_bootstrap(data, lm_statistic, n1=1000, n2=1000)
+#'
 b_bootstrap <- function(data, statistic, n1=1000, n2=1000, use_weights=FALSE, weight_arg=NULL, ...) {
   # Draw from a uniform Dirichlet dist. with alpha set to rep(1, n_dim).
   # Using the facts that you can transform gamma distributed draws into

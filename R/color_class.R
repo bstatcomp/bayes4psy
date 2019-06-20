@@ -65,6 +65,217 @@
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Data on which the fit is based.
+#'
+#' @examples
+#'
+#' # priors for rgb
+#' mu_prior <- b_prior(family="uniform", pars=c(0, 255))
+#' sigma_prior <- b_prior(family="uniform", pars=c(0, 100))
+#'
+#' # attach priors to relevant parameters
+#' priors_rgb <- list(c("mu_r", mu_prior),
+#'                    c("sigma_r", sigma_prior),
+#'                    c("mu_g", mu_prior),
+#'                    c("sigma_g", sigma_prior),
+#'                    c("mu_b", mu_prior),
+#'                    c("sigma_b", sigma_prior))
+#'
+#'
+#' # generate data (rgb) and fit
+#' r <- as.integer(rnorm(100, mean=250, sd=20))
+#' r[r > 255] <- 255
+#' r[r < 0] <- 0
+#'
+#' g <- as.integer(rnorm(100, mean=20, sd=20))
+#' g[g > 255] <- 255
+#' g[g < 0] <- 0
+#'
+#' b <- as.integer(rnorm(100, mean=40, sd=20))
+#' b[b > 255] <- 255
+#' b[b < 0] <- 0
+#'
+#' colors <- data.frame(r=r, g=g, b=b)
+#'
+#' fit1 <- b_color(colors=colors, priors=priors_rgb, chains=1)
+#'
+#'
+#' # priors for hsv
+#' h_prior <- b_prior(family="uniform", pars=c(0, 2*pi))
+#' sv_prior <- b_prior(family="uniform", pars=c(0, 1))
+#' kappa_prior <- b_prior(family="uniform", pars=c(0, 500))
+#' sigma_prior <- b_prior(family="uniform", pars=c(0, 1))
+#'
+#' # attach priors to relevant parameters
+#' priors_hsv <- list(c("mu_h", h_prior),
+#'                    c("kappa_h", kappa_prior),
+#'                    c("mu_s", sv_prior),
+#'                    c("sigma_s", sigma_prior),
+#'                    c("mu_v", sv_prior),
+#'                    c("sigma_v", sigma_prior))
+#'
+#' # generate data (hsv) and fit
+#' h <- rnorm(100, mean=2*pi/3, sd=0.5)
+#' h[h > 2*pi] <- 2*pi
+#' h[h < 0] <- 0
+#'
+#' s <- rnorm(100, mean=0.9, sd=0.2)
+#' s[s > 1] <- 1
+#' s[s < 0] <- 0
+#'
+#' v <- rnorm(100, mean=0.9, sd=0.2)
+#' v[v > 1] <- 1
+#' v[v < 0] <- 0
+#'
+#' colors <- data.frame(h=h, s=s, v=v)
+#'
+#' fit2 <- b_color(colors=colors, hsv=TRUE, priors=priors_hsv, chains=1)
+#'
+#'
+#' # a short summary of fitted parameters
+#' summary(fit1)
+#'
+#' # a more detailed summary of fitted parameters
+#' print(fit1)
+#' show(fit1)
+#'
+#' # extract parameter values from the fit
+#' parameters <- get_parameters(fit1)
+#'
+#' # compare means between two fits
+#' compare_means(fit1, fit2=fit2)
+#'
+#' # compare means between two fits,
+#' # specify only a subset of parameters for comparison
+#' compare_means(fit1, fit2=fit2, pars=c("h", "s", "v"))
+#'
+#' # compare means of a fit with an rgb defined color
+#' compare_means(fit1, rgb=c(255, 0, 0))
+#'
+#' # compare means of a fit with an hsv defined color
+#' compare_means(fit1, hsv=c(pi/2, 1, 1))
+#'
+#' # visualize difference in means between two fits
+#' plot_means_difference(fit1, fit2=fit2)
+#'
+#' # visualize difference in means between two fits,
+#' # specify only a subset of parameters for comparison, use a rope interval
+#' plot_means_difference(fit1, fit2=fit2, pars=c("r", "g", "b"), rope=10)
+#'
+#' # visualize difference in means between a fit and an rgb defined color
+#' plot_means_difference(fit1, rgb=c(255, 0, 0))
+#'
+#' # visualize difference in means between a fit and an hsv defined color
+#' plot_means_difference(fit1, hsv=c(pi/2, 1, 1))
+#'
+#' # visualize means of a single fit
+#' plot_means(fit1)
+#'
+#' # visualize means of two fits
+#' plot_means(fit1, fit2=fit2)
+#'
+#' # visualize means of two fits,
+#' # specify only a subset of parameters for visualization
+#' plot_means(fit1, fit2=fit2, pars=c("h", "s", "v"))
+#'
+#' # visualize means of a single fit and an rgb defined color
+#' plot_means(fit1, rgb=c(255, 0, 0))
+#'
+#' # visualize means of a single fit and an an hsv defined color
+#' plot_means(fit1, hsv=c(pi/2, 1, 1))
+#'
+#' # draw samples from distributions underlying two fits and compare them
+#' compare_distributions(fit1, fit2=fit2)
+#'
+#' # draw samples from distributions underlying two fits and compare them,
+#' # specify only a subset of parameters for comparison, use a rope interval
+#' compare_distributions(fit1, fit2=fit2, pars=c("r", "g", "b"), rope=10)
+#'
+#' # draw samples from a distribution underlying the fits,
+#' # compare them with an rgb defined color
+#' compare_distributions(fit1, rgb=c(255, 0, 0))
+#'
+#' # draw samples from a distribution underlying the fits,
+#' # compare them with an hsv defined color
+#' compare_distributions(fit1, hsv=c(pi/2, 1, 1))
+#'
+#' # visualize the distribution underlying a fit
+#' plot_distributions(fit1)
+#'
+#' # visualize distributions underlying two fits
+#' plot_distributions(fit1, fit2=fit2)
+#'
+#' # visualize distributions underlying two fits,
+#' # specify only a subset of parameters for visualization
+#' plot_distributions(fit1, fit2=fit2, pars=c("h", "s", "v"))
+#'
+#' # visualize the distribution underlying a fit, and an rgb defined color
+#' plot_distributions(fit1, rgb=c(255, 0, 0))
+#'
+#' # visualize the distribution underlying a fit, and an hsv defined color
+#' plot_distributions(fit1, hsv=c(pi/2, 1, 1))
+#'
+#' # visualize difference between distributions underlying two fits
+#' plot_distributions_difference(fit1, fit2=fit2)
+#'
+#' # visualize difference between distributions underlying two fits
+#' # specify only a subset of parameters for comparison, use a rope interval
+#' plot_distributions_difference(fit1, fit2=fit2, pars=c("r", "g", "b"), rope=10)
+#'
+#' # visualize difference between the distributions underlyin a fit,
+#' # and an rgb defined color
+#' plot_distributions_difference(fit1, rgb=c(255, 0, 0))
+#'
+#' # visualize difference between the distributions underlyin a fit,
+#' # and an hsv defined color
+#' plot_distributions_difference(fit1, hsv=c(pi/2, 1, 1))
+#'
+#' # plot the fitted distribution against the data
+#' plot_fit(fit1)
+#'
+#' # plot the fitted distribution against the data,
+#' # specify only a subset of parameters for visualization
+#' plot_fit(fit1, pars=c("h", "s", "v"))
+#'
+#' # plot the fitted distribution for hue against the hue data
+#' plot_fit_hsv(fit1)
+#'
+#' # visualize hue means of a single fit
+#' plot_means_hsv(fit1)
+#'
+#' # visualize hue means of two fits
+#' plot_means_hsv(fit1, fit2=fit2)
+#'
+#' # visualize hue means of two fits, add annotation points and lines,
+#' # hsv parameter determines whether annotations are defined in hsv or rgb
+#' lines <- list()
+#' lines[[1]] <- c(2*pi, 1, 1)
+#' lines[[2]] <- c(pi/2, 0.5, 0.5)
+#'
+#' points <- list()
+#' points[[1]] <- c(pi, 1, 1)
+#'
+#' plot_means_hsv(fit1, fit2=fit2, points=points, lines=lines, hsv=TRUE)
+#'
+#' # visualize the hue distribution underlying a fit
+#' plot_distributions_hsv(fit1)
+#'
+#' # visualize hue distributions underlying two fits
+#' plot_distributions_hsv(fit1, fit2=fit2)
+#'
+#' # visualize hue distributions of two fits, add annotation points and lines,
+#' # hsv parameter determines whether annotations are defined in hsv or rgb
+#' lines <- list()
+#' lines[[1]] <- c(2*pi, 1, 1)
+#' lines[[2]] <- c(pi/2, 0.5, 0.5)
+#'
+#' points <- list()
+#' points[[1]] <- c(pi, 1, 1)
+#'
+#' plot_distributions_hsv(fit1, fit2=fit2, points=points, lines=lines, hsv=TRUE)
+#'
+#' # traceplot of the fitted parameters
+#' plot_trace(fit1)
+#'
 color_class <- setClass(
   "color_class",
   slots = c(
@@ -80,6 +291,13 @@ color_class <- setClass(
 #' @description \code{summary} prints summary of the Bayesian color fit.
 #' @param object color_class object.
 #' @exportMethod summary
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="summary", signature(object="color_class"), definition=function(object) {
   # get means
   mu_r <- mean(object@extract$mu_r)
@@ -143,6 +361,13 @@ setMethod(f="summary", signature(object="color_class"), definition=function(obje
 #' @description \code{show} prints a more detailed summary of the Bayesian color fit.
 #' @param object color_class object.
 #' @exportMethod show
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="show", signature(object="color_class"), definition=function(object) {
   # print
   show(object@fit)
@@ -154,6 +379,14 @@ setMethod(f="show", signature(object="color_class"), definition=function(object)
 #' @param object color_class object.
 #' @rdname color_class-get_parameters
 #' @aliases get_parameters_color_class
+#' @return A data frame with parameter values.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="get_parameters", signature(object="color_class"), definition=function(object) {
   df <- data.frame(r=object@extract$mu_r,
                    g=object@extract$mu_g,
@@ -172,6 +405,14 @@ setMethod(f="get_parameters", signature(object="color_class"), definition=functi
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-compare_means
 #' @aliases compare_means_color
+#' @return Comparison results or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="compare_means", signature(object="color_class"), definition=function(object, ...) {
   arguments <- list(...)
 
@@ -308,6 +549,14 @@ setMethod(f="compare_means", signature(object="color_class"), definition=functio
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_means_difference
 #' @aliases plot_means_difference_color
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="plot_means_difference", signature(object="color_class"), definition=function(object, ...) {
   # get arguments
   arguments <- list(...)
@@ -474,6 +723,14 @@ setMethod(f="plot_means_difference", signature(object="color_class"), definition
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_means
 #' @aliases plot_means_color
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="plot_means", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
@@ -780,6 +1037,14 @@ setMethod(f="plot_means", signature(object="color_class"), definition=function(o
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-compare_distributions
 #' @aliases compare_distributions_color
+#' @return Comparison results or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="compare_distributions", signature(object="color_class"), definition=function(object, ...) {
   arguments <- list(...)
 
@@ -954,6 +1219,14 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_distributions
 #' @aliases plot_distributions_color
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="plot_distributions", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- x <- y <- NULL
@@ -1284,6 +1557,14 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_color
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="plot_distributions_difference", signature(object="color_class"), definition=function(object, ...) {
   # get arguments
   arguments <- list(...)
@@ -1487,6 +1768,14 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
 #' @param ... pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_fit
 #' @aliases plot_fit_color
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="plot_fit", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- x <- y <- NULL
@@ -1669,6 +1958,14 @@ setGeneric(name="plot_fit_hsv", function(object) standardGeneric("plot_fit_hsv")
 #' @param object color_class object.
 #' @rdname color_class-plot_fit_hsv
 #' @aliases plot_fit_hsv_color
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="plot_fit_hsv", signature(object="color_class"), definition=function(object) {
   # init local varibales for CRAN check
   r <- g <- b <- h <- s <- v <- sv <- NULL
@@ -1753,6 +2050,14 @@ setGeneric(name="plot_means_hsv", function(object, ...) standardGeneric("plot_me
 #' @param ... fit2 - a second color_class object, points - points to plot defined through rgb or hsv, lines - lines to plot defined through rgb or hsv, hsv - are points and lines defined in hsv format (default = FALSE).
 #' @rdname color_class-plot_means_hsv
 #' @aliases plot_means_hsv_color
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="plot_means_hsv", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   points <- lines <- r <- g <- b <- h <- s <- v <- sv <- NULL
@@ -1983,6 +2288,14 @@ setGeneric(name="plot_distributions_hsv", function(object, ...) standardGeneric(
 #' @param ... fit2 - a second color_class object, points - points to plot defined through rgb or hsv, lines - lines to plot defined through rgb or hsv, hsv - are points and lines defined in hsv format (default = FALSE).
 #' @rdname color_class-plot_distributions_hsv
 #' @aliases plot_distributions_hsv_color
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="plot_distributions_hsv", signature(object="color_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   points <- lines <- r <- g <- b <- h <- s <- v <- sv <- NULL
@@ -2222,6 +2535,14 @@ setMethod(f="plot_distributions_hsv", signature(object="color_class"), definitio
 #' @param object color_class object.
 #' @rdname color_class-plot_trace
 #' @aliases plot_trace_color
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
 setMethod(f="plot_trace", signature(object="color_class"), definition=function(object) {
   rstan::traceplot(object@fit, pars=c("mu_r", "mu_g", "mu_b", "mu_h", "mu_s", "mu_v"), inc_warmup=TRUE)
 })

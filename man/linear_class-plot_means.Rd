@@ -13,6 +13,16 @@
 
 \item{...}{fit2 - a second linear_class object, par - specific parameter of comparison (slope or intercept).}
 }
+\value{
+A ggplot visualization or a warning if something went wrong.
+}
 \description{
 \code{plot_means} plots means or the first and the second group means.
+}
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?linear_class
+
 }

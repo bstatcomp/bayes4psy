@@ -5,7 +5,8 @@
 \title{b_success_rate}
 \usage{
 b_success_rate(r, s, priors = NULL, warmup = 1000, iter = 2000,
-  chains = 4, control = NULL, suppress_warnings = TRUE)
+  chains = 4, seed = NULL, refresh = NULL, control = NULL,
+  suppress_warnings = TRUE)
 }
 \arguments{
 \item{r}{a vector containing test results (0 - test was not solved successfully, 1 - test was solved successfully).}
@@ -20,6 +21,10 @@ b_success_rate(r, s, priors = NULL, warmup = 1000, iter = 2000,
 
 \item{chains}{Integer specifying the number of parallel chains (default = 4).}
 
+\item{seed}{Random number generator seed (default = NULL).}
+
+\item{refresh}{Frequency of output (default = NULL).}
+
 \item{control}{A named list of parameters to control the sampler's behavior (default = NULL).}
 
 \item{suppress_warnings}{Suppress warnings returned by Stan (default = TRUE).}
@@ -29,4 +34,21 @@ An object of class `success_rate_class`.
 }
 \description{
 Bayesian model for comparing test success rate.
+}
+\examples{
+# priors
+p_prior <- b_prior(family="beta", pars=c(1, 1))
+tau_prior <- b_prior(family="uniform", pars=c(0, 500))
+
+# attach priors to relevant parameters
+priors <- list(c("p", p_prior),
+               c("tau", tau_prior))
+
+# generate data
+s <- rep(1:5, 20)
+data <- rbinom(100, size=1, prob=0.6)
+
+# fit
+fit <- b_success_rate(r=data, s=s, priors=priors, chains=1)
+
 }

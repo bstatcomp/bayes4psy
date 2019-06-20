@@ -13,6 +13,16 @@
 
 \item{...}{fit2 - a second linear_class object,  par - specific parameter of comparison (slope or intercept), rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.}
 }
+\value{
+A ggplot visualization or a warning if something went wrong.
+}
 \description{
 \code{plot_distributions_difference} visualizes the difference between two groups.
+}
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?linear_class
+
 }

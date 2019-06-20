@@ -13,6 +13,16 @@
 
 \item{...}{fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, pars - components of comparison, a subset of (r, g, b, h, s, v).}
 }
+\value{
+A ggplot visualization or a warning if something went wrong.
+}
 \description{
 \code{plot_means} plots density of means, the first and the second group means or a constant values in case second group is defined as rgb or hsv color.
+}
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?color_class
+
 }
