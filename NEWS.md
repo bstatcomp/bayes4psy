@@ -1,3 +1,11 @@
+# bayes4psy 1.1.0
+
+### New features and improvements
+Examples for all models and fitting functions.
+Code tests for all core functions.
+Documentation amended in accordance with CRAN team comments.
+
+
 # bayes4psy 1.0.2
 
 ### New features and improvements
