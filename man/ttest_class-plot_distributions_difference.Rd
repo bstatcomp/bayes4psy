@@ -13,6 +13,16 @@
 
 \item{...}{fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation, rope - region of practical equivalence, bins - number of bins in the histogram.}
 }
+\value{
+A ggplot visualization or a warning if something went wrong.
+}
 \description{
 \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group, the distribution or a constant value for the second group or between multiple distributions.
+}
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?ttest_class
+
 }

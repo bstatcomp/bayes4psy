@@ -30,8 +30,30 @@ b_reaction_time(t, s, priors = NULL, warmup = 1000, iter = 2000,
 \item{suppress_warnings}{Suppress warnings returned by Stan (default = TRUE).}
 }
 \value{
-An object of class `reaction_time_class`.
+An object of class `reaction_time_class`
 }
 \description{
 Bayesian model for comparing reaction times.
+}
+\examples{
+# priors
+mu_prior <- b_prior(family="normal", pars=c(0, 100))
+sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+lambda_prior <- b_prior(family="uniform", pars=c(0.05, 5))
+
+# attach priors to relevant parameters
+priors <- list(c("mu_m", mu_prior),
+              c("sigma_m", sigma_prior),
+              c("mu_s", sigma_prior),
+              c("sigma_s", sigma_prior),
+              c("mu_l", lambda_prior),
+              c("sigma_l", sigma_prior))
+
+# generate data
+s <- rep(1:5, 20)
+rt <- emg::remg(100, mu=10, sigma=1, lambda=0.4)
+
+# fit
+fit <- b_reaction_time(t=rt, s=s, priors=priors, chains=1)
+
 }

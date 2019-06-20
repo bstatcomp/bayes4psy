@@ -64,3 +64,118 @@ plot_trace(`reaction_time_class`): traceplot for main fitted model parameters.
 \item{\code{data}}{Data on which the fit is based.}
 }}
 
+\examples{
+# priors
+mu_prior <- b_prior(family="normal", pars=c(0, 100))
+sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+lambda_prior <- b_prior(family="uniform", pars=c(0.05, 5))
+
+# attach priors to relevant parameters
+priors <- list(c("mu_m", mu_prior),
+               c("sigma_m", sigma_prior),
+               c("mu_s", sigma_prior),
+               c("sigma_s", sigma_prior),
+               c("mu_l", lambda_prior),
+               c("sigma_l", sigma_prior))
+
+
+# subjects
+s <- rep(1:5, 20)
+
+# generate data and fit
+rt1 <- emg::remg(100, mu=10, sigma=1, lambda=0.4)
+fit1 <- b_reaction_time(t=rt1, s=s, priors=priors, chains=1)
+
+rt2 <- emg::remg(100, mu=10, sigma=2, lambda=0.1)
+fit2 <- b_reaction_time(t=rt2, s=s, priors=priors, chains=1)
+
+rt3 <- emg::remg(100, mu=20, sigma=2, lambda=1)
+fit3 <- b_reaction_time(t=rt3, s=s, priors=priors, chains=1)
+
+rt4 <- emg::remg(100, mu=15, sigma=2, lambda=0.5)
+fit4 <- b_reaction_time(t=rt4, s=s, priors=priors, chains=1)
+
+# fit list
+fit_list <- list(fit2, fit3, fit4)
+
+# a short summary of fitted parameters
+summary(fit1)
+
+# a more detailed summary of fitted parameters
+print(fit1)
+show(fit1)
+
+# extract parameter values from the fit
+parameters <- get_parameters(fit1)
+
+# extract parameter values on the bottom (subject) level from the fit
+subject_parameters <- get_subject_parameters(fit1)
+
+# compare means between two fits, use a rope interval
+compare_means(fit1, fit2=fit2, rope=0.5)
+
+# compare means between two fits,
+# use only the mu parameter of the exponentially modified gaussian distribution
+compare_means(fit1, fit2=fit2, par="mu")
+
+# compare means between multiple fits
+compare_means(fit1, fits=fit_list)
+
+# visualize difference in means between two fits,
+# specify number of histogram bins and rope interval
+plot_means_difference(fit1, fit2=fit2, bins=20, rope=0.5)
+
+# visualize difference in means between two fits,
+# use only the mu parameter of the exponentially modified gaussian distribution
+plot_means_difference(fit1, fit2=fit2, par="mu")
+
+# visualize difference in means between multiple fits
+plot_means_difference(fit1, fits=fit_list)
+
+# visualize means of a single fit
+plot_means(fit1)
+
+# visualize means of two fits
+plot_means(fit1, fit2=fit1)
+
+# visualize means of two fits,
+# use only the mu parameter of the exponentially modified gaussian distribution
+plot_means(fit1, fit2=fit2, par="mu")
+
+# visualize means of multiple fits
+plot_means(fit1, fits=fit_list)
+
+# draw samples from distributions underlying two fits and compare them,
+# use a rope interval
+compare_distributions(fit1, fit2=fit2, rope=0.5)
+
+# draw samples from distributions underlying multiple fits and compare them
+compare_distributions(fit1, fits=fit_list)
+
+# visualize the distribution underlying a fit
+plot_distributions(fit1)
+
+# visualize distributions underlying two fits
+plot_distributions(fit1, fit2=fit2)
+
+# visualize distributions underlying multiple fits
+plot_distributions(fit1, fits=fit_list)
+
+# visualize difference between distributions underlying two fits,
+# use a rope interval
+plot_distributions_difference(fit1, fit2=fit2, rope=0.05)
+
+# visualize difference between distributions underlying multiple fits
+plot_distributions_difference(fit1, fits=fit_list)
+
+# plot the fitted distribution against the data
+plot_fit(fit1)
+
+# plot the fitted distribution against the data,
+# plot on the bottom (subject) level
+plot_fit(fit1, subjects=TRUE)
+
+# traceplot of the fitted parameters
+plot_trace(fit1)
+
+}

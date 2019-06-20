@@ -14,6 +14,16 @@ plot_fit_hsv(object)
 \arguments{
 \item{object}{color_class object.}
 }
+\value{
+A ggplot visualization.
+}
 \description{
 \code{plot_fit_hsv} plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
+}
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?color_class
+
 }

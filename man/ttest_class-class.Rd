@@ -24,7 +24,7 @@ compare_means(`ttest_class`, mu=`numeric`): prints difference/equality of the fi
 
 compare_means(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohen's d calculation. You can also provide the rope parameter.
 
-compare_means(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups.
+compare_means(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups. You can also provide the rope parameter.
 
 plot_means_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
@@ -46,7 +46,7 @@ compare_distributions(`ttest_class`, mu=`numeric`): draws samples from distribut
 
 compare_distributions(`ttest_class`, mu=`numeric`, sigma=`numeric`): draws samples from distribution of the first group and compares them against samples from a normal distribution with a defined mean value and variance. You can also provide the rope parameter.
 
-compare_distributions(`ttest_class`, fits=`list`): draws samples from distribution of the first group and compares them against samples drawn from multiple other groups.
+compare_distributions(`ttest_class`, fits=`list`): draws samples from distribution of the first group and compares them against samples drawn from multiple other groups. You can also provide the rope parameter.
 
 plot_distributions(`ttest_class`): a visualization of the fitted distribution.
 
@@ -80,3 +80,127 @@ plot_trace(`ttest_class`): traceplot for main fitted model parameters.
 \item{\code{data}}{Raw data for the tested group.}
 }}
 
+\examples{
+# priors
+mu_prior <- b_prior(family="normal", pars=c(0, 1000))
+sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+
+# attach priors to relevant parameters
+priors <- list(c("mu", mu_prior),
+               c("sigma", sigma_prior))
+
+# generate data and fit
+data1 <- rnorm(20, mean=150, sd=20)
+fit1 <- b_ttest(data=data1, priors=priors, chains=1)
+
+data2 <- rnorm(20, mean=200, sd=20)
+fit2 <- b_ttest(data=data2, priors=priors, chains=1)
+
+data3 <- rnorm(20, mean=150, sd=40)
+fit3 <- b_ttest(data=data3, priors=priors, chains=1)
+
+data4 <- rnorm(20, mean=50, sd=10)
+fit4 <- b_ttest(data=data4, priors=priors, chains=1)
+
+# fit list
+fit_list <- list(fit2, fit3, fit4)
+
+# a short summary of fitted parameters
+summary(fit1)
+
+# a more detailed summary of fitted parameters
+print(fit1)
+show(fit1)
+
+# extract parameter values from the fit
+parameters <- get_parameters(fit1)
+
+# compare means between two fits
+compare_means(fit1, fit2=fit2)
+
+# compare means between two fits, use a rope interval
+compare_means(fit1, fit2=fit2, rope=2)
+
+# compare means between a fit and a constant value
+compare_means(fit1, mu=150)
+
+# compare means between a fit and a distribution,
+# sigma is used for calculating Cohen's d
+compare_means(fit1, mu=150, sigma=20)
+
+# compare means between multiple fits
+compare_means(fit1, fits=fit_list)
+
+# visualize difference in means between two fits,
+# specify number of histogram bins
+plot_means_difference(fit1, fit2=fit2, bins=20)
+
+# visualize difference in means between a fit and a constant value
+plot_means_difference(fit1, mu=150)
+
+# visualize difference in means between multiple fits, use a rope interval
+plot_means_difference(fit1, fits=fit_list, rope=2)
+
+# visualize means of a single fit
+plot_means(fit1)
+
+# visualize means of two fits
+plot_means(fit1, fit2=fit2)
+
+# visualize means of a fit and a constant value
+plot_means(fit1, mu=150)
+
+# visualize means of multiple fits
+plot_means(fit1, fits=fit_list)
+
+# draw samples from distributions underlying two fits and compare them
+compare_distributions(fit1, fit2=fit2)
+
+# draw samples from a distribution underlying the fit
+# and compare them with a constant, use a rope interval
+compare_distributions(fit1, mu=150, rope=2)
+
+# draw samples from a distribution underlying the fit and
+# compare them with a user defined distribution
+compare_distributions(fit1, mu=150, sigma=20)
+
+# draw samples from distributions underlying multiple fits and compare them
+compare_distributions(fit1, fits=fit_list)
+
+# visualize the distribution underlying a fit
+plot_distributions(fit1)
+
+# visualize distributions underlying two fits
+plot_distributions(fit1, fit2=fit2)
+
+# visualize the distribution underlying a fit and a constant value
+plot_distributions(fit1, mu=150)
+
+# visualize the distribution underlying a fit and a user defined distribution
+plot_distributions(fit1, mu=150, sigma=20)
+
+# visualize distributions underlying multiple fits
+plot_distributions(fit1, fits=fit_list)
+
+# visualize difference between distributions underlying two fits,
+# use a rope interval
+plot_distributions_difference(fit1, fit2=fit2, rope=2)
+
+# visualize difference between a distribution underlying the fit
+# and a constant value
+plot_distributions_difference(fit1, mu=150)
+
+# visualize difference between a distribution underlying the fits
+# and a user defined distribution
+plot_distributions_difference(fit1, mu=150, sigma=20)
+
+# visualize difference between distributions underlying multiple fits
+plot_distributions_difference(fit1, fits=fit_list)
+
+# plot the fitted distribution against the data
+plot_fit(fit1)
+
+# traceplot of the fitted parameters
+plot_trace(fit1)
+
+}

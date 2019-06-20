@@ -13,6 +13,16 @@
 
 \item{...}{fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence.}
 }
+\value{
+Comparison results or a warning if something went wrong.
+}
 \description{
 \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group or from samples drawn from distributions of multiple groups.
+}
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?success_rate_class
+
 }

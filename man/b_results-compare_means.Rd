@@ -9,8 +9,8 @@ compare_means(object, ...)
 \arguments{
 \item{object}{S4 class object from bayes4psy library.}
 
-\item{...}{see documentation for specific class for the description of available parameters, e.g. ?compare_ttest or ?compare_linear.}
+\item{...}{see documentation for specific class for the description of available parameters, e.g. ?compare_means_ttest or ?compare_means_linear.}
 }
 \description{
-\code{compare_means} prints difference between two or multiple groups.
+\code{compare_means} prints difference between means of two or multiple fits.
 }

@@ -18,7 +18,7 @@
 #'
 #' compare_means(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohen's d calculation. You can also provide the rope parameter.
 #'
-#' compare_means(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups.
+#' compare_means(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups. You can also provide the rope parameter.
 #'
 #' plot_means_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
@@ -40,7 +40,7 @@
 #'
 #' compare_distributions(`ttest_class`, mu=`numeric`, sigma=`numeric`): draws samples from distribution of the first group and compares them against samples from a normal distribution with a defined mean value and variance. You can also provide the rope parameter.
 #'
-#' compare_distributions(`ttest_class`, fits=`list`): draws samples from distribution of the first group and compares them against samples drawn from multiple other groups.
+#' compare_distributions(`ttest_class`, fits=`list`): draws samples from distribution of the first group and compares them against samples drawn from multiple other groups. You can also provide the rope parameter.
 #'
 #' plot_distributions(`ttest_class`): a visualization of the fitted distribution.
 #'
@@ -67,6 +67,130 @@
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Raw data for the tested group.
+#'
+#' @examples
+#' # priors
+#' mu_prior <- b_prior(family="normal", pars=c(0, 1000))
+#' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+#'
+#' # attach priors to relevant parameters
+#' priors <- list(c("mu", mu_prior),
+#'                c("sigma", sigma_prior))
+#'
+#' # generate data and fit
+#' data1 <- rnorm(20, mean=150, sd=20)
+#' fit1 <- b_ttest(data=data1, priors=priors, chains=1)
+#'
+#' data2 <- rnorm(20, mean=200, sd=20)
+#' fit2 <- b_ttest(data=data2, priors=priors, chains=1)
+#'
+#' data3 <- rnorm(20, mean=150, sd=40)
+#' fit3 <- b_ttest(data=data3, priors=priors, chains=1)
+#'
+#' data4 <- rnorm(20, mean=50, sd=10)
+#' fit4 <- b_ttest(data=data4, priors=priors, chains=1)
+#'
+#' # fit list
+#' fit_list <- list(fit2, fit3, fit4)
+#'
+#' # a short summary of fitted parameters
+#' summary(fit1)
+#'
+#' # a more detailed summary of fitted parameters
+#' print(fit1)
+#' show(fit1)
+#'
+#' # extract parameter values from the fit
+#' parameters <- get_parameters(fit1)
+#'
+#' # compare means between two fits
+#' compare_means(fit1, fit2=fit2)
+#'
+#' # compare means between two fits, use a rope interval
+#' compare_means(fit1, fit2=fit2, rope=2)
+#'
+#' # compare means between a fit and a constant value
+#' compare_means(fit1, mu=150)
+#'
+#' # compare means between a fit and a distribution,
+#' # sigma is used for calculating Cohen's d
+#' compare_means(fit1, mu=150, sigma=20)
+#'
+#' # compare means between multiple fits
+#' compare_means(fit1, fits=fit_list)
+#'
+#' # visualize difference in means between two fits,
+#' # specify number of histogram bins
+#' plot_means_difference(fit1, fit2=fit2, bins=20)
+#'
+#' # visualize difference in means between a fit and a constant value
+#' plot_means_difference(fit1, mu=150)
+#'
+#' # visualize difference in means between multiple fits, use a rope interval
+#' plot_means_difference(fit1, fits=fit_list, rope=2)
+#'
+#' # visualize means of a single fit
+#' plot_means(fit1)
+#'
+#' # visualize means of two fits
+#' plot_means(fit1, fit2=fit2)
+#'
+#' # visualize means of a fit and a constant value
+#' plot_means(fit1, mu=150)
+#'
+#' # visualize means of multiple fits
+#' plot_means(fit1, fits=fit_list)
+#'
+#' # draw samples from distributions underlying two fits and compare them
+#' compare_distributions(fit1, fit2=fit2)
+#'
+#' # draw samples from a distribution underlying the fit
+#' # and compare them with a constant, use a rope interval
+#' compare_distributions(fit1, mu=150, rope=2)
+#'
+#' # draw samples from a distribution underlying the fit and
+#' # compare them with a user defined distribution
+#' compare_distributions(fit1, mu=150, sigma=20)
+#'
+#' # draw samples from distributions underlying multiple fits and compare them
+#' compare_distributions(fit1, fits=fit_list)
+#'
+#' # visualize the distribution underlying a fit
+#' plot_distributions(fit1)
+#'
+#' # visualize distributions underlying two fits
+#' plot_distributions(fit1, fit2=fit2)
+#'
+#' # visualize the distribution underlying a fit and a constant value
+#' plot_distributions(fit1, mu=150)
+#'
+#' # visualize the distribution underlying a fit and a user defined distribution
+#' plot_distributions(fit1, mu=150, sigma=20)
+#'
+#' # visualize distributions underlying multiple fits
+#' plot_distributions(fit1, fits=fit_list)
+#'
+#' # visualize difference between distributions underlying two fits,
+#' # use a rope interval
+#' plot_distributions_difference(fit1, fit2=fit2, rope=2)
+#'
+#' # visualize difference between a distribution underlying the fit
+#' # and a constant value
+#' plot_distributions_difference(fit1, mu=150)
+#'
+#' # visualize difference between a distribution underlying the fits
+#' # and a user defined distribution
+#' plot_distributions_difference(fit1, mu=150, sigma=20)
+#'
+#' # visualize difference between distributions underlying multiple fits
+#' plot_distributions_difference(fit1, fits=fit_list)
+#'
+#' # plot the fitted distribution against the data
+#' plot_fit(fit1)
+#'
+#' # traceplot of the fitted parameters
+#' plot_trace(fit1)
+#'
 ttest_class <- setClass(
   "ttest_class",
   slots = c(
@@ -81,6 +205,13 @@ ttest_class <- setClass(
 #' @description \code{summary} prints a summary of the Bayesian ttest fit.
 #' @param object ttest_class object.
 #' @exportMethod summary
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
 setMethod(f="summary", signature(object="ttest_class"), definition=function(object) {
   # get means
   mu <- mean(object@extract$mu)
@@ -106,6 +237,13 @@ setMethod(f="summary", signature(object="ttest_class"), definition=function(obje
 #' @description \code{show} prints a more detailed summary of the Bayesian ttest fit.
 #' @param object ttest_class object.
 #' @exportMethod show
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
 setMethod(f="show", signature(object="ttest_class"), definition=function(object) {
   # print
   show(object@fit)
@@ -117,6 +255,14 @@ setMethod(f="show", signature(object="ttest_class"), definition=function(object)
 #' @param object ttest_class object.
 #' @rdname ttest_class-get_parameters
 #' @aliases get_parameters_ttest_class
+#' @return A data frame with parameter values.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
 setMethod(f="get_parameters", signature(object="ttest_class"), definition=function(object) {
   df <- data.frame(mu=object@extract$mu,
                    sigma=object@extract$sigma,
@@ -132,6 +278,14 @@ setMethod(f="get_parameters", signature(object="ttest_class"), definition=functi
 #' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence.
 #' @rdname ttest_class-compare_means
 #' @aliases compare_means_ttest
+#' @return Comparison results or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
 setMethod(f="compare_means", signature(object="ttest_class"), definition=function(object, ...) {
   arguments <- list(...)
 
@@ -229,6 +383,14 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
 #' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname ttest_class-plot_means_difference
 #' @aliases plot_means_difference_ttest
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
 setMethod(f="plot_means_difference", signature(object="ttest_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
@@ -341,6 +503,14 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
 #' @param ... fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects.
 #' @rdname ttest_class-plot_means
 #' @aliases plot_means_ttest
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
 setMethod(f="plot_means", signature(object="ttest_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   group <- value <- NULL
@@ -423,6 +593,14 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
 #' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
 #' @rdname ttest_class-compare_distributions
 #' @aliases compare_distributions_ttest
+#' @return Comparison results or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
 setMethod(f="compare_distributions", signature(object="ttest_class"), definition=function(object, ...) {
   arguments <- list(...)
 
@@ -530,6 +708,14 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
 #' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation.
 #' @rdname ttest_class-plot_distributions
 #' @aliases plot_distributions_ttest
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
 setMethod(f="plot_distributions", signature(object="ttest_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   x <- y <- group <- NULL
@@ -660,6 +846,14 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
 #' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname ttest_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_ttest
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
 setMethod(f="plot_distributions_difference", signature(object="ttest_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
@@ -787,6 +981,14 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
 #' @param object ttest_class object.
 #' @rdname ttest_class-plot_fit
 #' @aliases plot_fit_ttest
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
 setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(object) {
   # init local varibales for CRAN check
   value <- NULL
@@ -822,6 +1024,14 @@ setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(obj
 #' @param object ttest_class object.
 #' @rdname ttest_class-plot_trace
 #' @aliases plot_trace_ttest
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
 setMethod(f="plot_trace", signature(object="ttest_class"), definition=function(object) {
   traceplot(object@fit, pars=c("mu", "sigma"), inc_warmup=TRUE)
 })

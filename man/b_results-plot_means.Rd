@@ -12,5 +12,5 @@ plot_means(object, ...)
 \item{...}{see documentation for specific class for the description of available parameters, e.g. ?plot_means_ttest or ?plot_means_linear.}
 }
 \description{
-\code{plot_means} plots means for one or two groups.
+\code{plot_means} plots means for one or multiple fits.
 }

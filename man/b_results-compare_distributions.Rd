@@ -12,5 +12,5 @@ compare_distributions(object, ...)
 \item{...}{see documentation for specific class for the description of available parameters, e.g. ?compare_distributions_ttest or ?compare_distributions_linear.}
 }
 \description{
-\code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group,
+\code{compare_distributions} draws samples from distribution of the first fit and compares them against samples drawn from the distribution of the second fit, or against samples from multiple fits.
 }

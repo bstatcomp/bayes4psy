@@ -6,12 +6,4 @@
 \title{b_results}
 \description{
 Parent S4 class for declaring shared function generics.
-
-\strong{Functions}
-
-summary(`b_results_class`): prints a summary of the fit.
-
-print(`b_results_class`): prints a more detailed summary of the fit.
-
-show(`b_results_class`): prints a more detailed summary of the fit.
 }

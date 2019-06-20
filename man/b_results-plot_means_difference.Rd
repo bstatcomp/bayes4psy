@@ -12,5 +12,5 @@ plot_means_difference(object, ...)
 \item{...}{see documentation for specific class for the description of available parameters, e.g. ?plot_means_difference_ttest or ?plot_means_difference_linear.}
 }
 \description{
-\code{plot_means_difference} plots difference between two groups.
+\code{plot_means_difference} plots difference between means of two or multiple fits.
 }

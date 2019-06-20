@@ -16,6 +16,16 @@ plot_means_hsv(object, ...)
 
 \item{...}{fit2 - a second color_class object, points - points to plot defined through rgb or hsv, lines - lines to plot defined through rgb or hsv, hsv - are points and lines defined in hsv format (default = FALSE).}
 }
+\value{
+A ggplot visualization.
+}
 \description{
 \code{plot_means_hsv} a visualization of the difference between means of two fits through a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
+}
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?color_class
+
 }

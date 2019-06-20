@@ -51,6 +51,121 @@
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Data on which the fit is based.
+#'
+#' @examples
+#' # priors
+#' mu_prior <- b_prior(family="normal", pars=c(0, 100))
+#' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+#' lambda_prior <- b_prior(family="uniform", pars=c(0.05, 5))
+#'
+#' # attach priors to relevant parameters
+#' priors <- list(c("mu_m", mu_prior),
+#'                c("sigma_m", sigma_prior),
+#'                c("mu_s", sigma_prior),
+#'                c("sigma_s", sigma_prior),
+#'                c("mu_l", lambda_prior),
+#'                c("sigma_l", sigma_prior))
+#'
+#'
+#' # subjects
+#' s <- rep(1:5, 20)
+#'
+#' # generate data and fit
+#' rt1 <- emg::remg(100, mu=10, sigma=1, lambda=0.4)
+#' fit1 <- b_reaction_time(t=rt1, s=s, priors=priors, chains=1)
+#'
+#' rt2 <- emg::remg(100, mu=10, sigma=2, lambda=0.1)
+#' fit2 <- b_reaction_time(t=rt2, s=s, priors=priors, chains=1)
+#'
+#' rt3 <- emg::remg(100, mu=20, sigma=2, lambda=1)
+#' fit3 <- b_reaction_time(t=rt3, s=s, priors=priors, chains=1)
+#'
+#' rt4 <- emg::remg(100, mu=15, sigma=2, lambda=0.5)
+#' fit4 <- b_reaction_time(t=rt4, s=s, priors=priors, chains=1)
+#'
+#' # fit list
+#' fit_list <- list(fit2, fit3, fit4)
+#'
+#' # a short summary of fitted parameters
+#' summary(fit1)
+#'
+#' # a more detailed summary of fitted parameters
+#' print(fit1)
+#' show(fit1)
+#'
+#' # extract parameter values from the fit
+#' parameters <- get_parameters(fit1)
+#'
+#' # extract parameter values on the bottom (subject) level from the fit
+#' subject_parameters <- get_subject_parameters(fit1)
+#'
+#' # compare means between two fits, use a rope interval
+#' compare_means(fit1, fit2=fit2, rope=0.5)
+#'
+#' # compare means between two fits,
+#' # use only the mu parameter of the exponentially modified gaussian distribution
+#' compare_means(fit1, fit2=fit2, par="mu")
+#'
+#' # compare means between multiple fits
+#' compare_means(fit1, fits=fit_list)
+#'
+#' # visualize difference in means between two fits,
+#' # specify number of histogram bins and rope interval
+#' plot_means_difference(fit1, fit2=fit2, bins=20, rope=0.5)
+#'
+#' # visualize difference in means between two fits,
+#' # use only the mu parameter of the exponentially modified gaussian distribution
+#' plot_means_difference(fit1, fit2=fit2, par="mu")
+#'
+#' # visualize difference in means between multiple fits
+#' plot_means_difference(fit1, fits=fit_list)
+#'
+#' # visualize means of a single fit
+#' plot_means(fit1)
+#'
+#' # visualize means of two fits
+#' plot_means(fit1, fit2=fit1)
+#'
+#' # visualize means of two fits,
+#' # use only the mu parameter of the exponentially modified gaussian distribution
+#' plot_means(fit1, fit2=fit2, par="mu")
+#'
+#' # visualize means of multiple fits
+#' plot_means(fit1, fits=fit_list)
+#'
+#' # draw samples from distributions underlying two fits and compare them,
+#' # use a rope interval
+#' compare_distributions(fit1, fit2=fit2, rope=0.5)
+#'
+#' # draw samples from distributions underlying multiple fits and compare them
+#' compare_distributions(fit1, fits=fit_list)
+#'
+#' # visualize the distribution underlying a fit
+#' plot_distributions(fit1)
+#'
+#' # visualize distributions underlying two fits
+#' plot_distributions(fit1, fit2=fit2)
+#'
+#' # visualize distributions underlying multiple fits
+#' plot_distributions(fit1, fits=fit_list)
+#'
+#' # visualize difference between distributions underlying two fits,
+#' # use a rope interval
+#' plot_distributions_difference(fit1, fit2=fit2, rope=0.05)
+#'
+#' # visualize difference between distributions underlying multiple fits
+#' plot_distributions_difference(fit1, fits=fit_list)
+#'
+#' # plot the fitted distribution against the data
+#' plot_fit(fit1)
+#'
+#' # plot the fitted distribution against the data,
+#' # plot on the bottom (subject) level
+#' plot_fit(fit1, subjects=TRUE)
+#'
+#' # traceplot of the fitted parameters
+#' plot_trace(fit1)
+#'
 reaction_time_class <- setClass(
   "reaction_time_class",
   slots = c(
@@ -66,6 +181,13 @@ reaction_time_class <- setClass(
 #' @description \code{summary} prints a summary of the Bayesian reaction time fit.
 #' @param object reaction_time_class object.
 #' @exportMethod summary
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?reaction_time_class
+#'
 setMethod(f="summary", signature(object="reaction_time_class"), definition=function(object) {
   # get means
   rt <- mean(object@extract$rt)
@@ -95,6 +217,13 @@ setMethod(f="summary", signature(object="reaction_time_class"), definition=funct
 #' @description \code{show} prints a more detailed summary of the Bayesian reaction time fit.
 #' @param object reaction_time_class object.
 #' @exportMethod show
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?reaction_time_class
+#'
 setMethod(f="show", signature(object="reaction_time_class"), definition=function(object) {
   # print
   show(object@fit)
@@ -106,6 +235,14 @@ setMethod(f="show", signature(object="reaction_time_class"), definition=function
 #' @param object reaction_time_class object.
 #' @rdname reaction_time_class-get_parameters
 #' @aliases get_parameters_reaction_time
+#' @return A data frame with parameter values.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?reaction_time_class
+#'
 setMethod(f="get_parameters", signature(object="reaction_time_class"), definition=function(object) {
   df <- data.frame(rt=object@extract$rt,
                    mu=object@extract$mu_m,
@@ -121,6 +258,14 @@ setMethod(f="get_parameters", signature(object="reaction_time_class"), definitio
 #' @param object reaction_time_class object.
 #' @rdname reaction_time_class-get_subject_parameters
 #' @aliases get_subject_parameters_reaction_time
+#' @return A data frame with parameter values.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?reaction_time_class
+#'
 setMethod(f="get_subject_parameters", signature(object="reaction_time_class"), definition=function(object) {
   df <- data.frame(rt=numeric(), mu=numeric(), sigma=numeric(), lambda=numeric(), subject=numeric())
 
@@ -146,6 +291,14 @@ setMethod(f="get_subject_parameters", signature(object="reaction_time_class"), d
 #' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-compare_means
 #' @aliases compare_means_reaction_time
+#' @return Comparison results or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?reaction_time_class
+#'
 setMethod(f="compare_means", signature(object="reaction_time_class"), definition=function(object, ...) {
   arguments <- list(...)
 
@@ -258,6 +411,14 @@ setMethod(f="compare_means", signature(object="reaction_time_class"), definition
 #' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_means_difference
 #' @aliases plot_means_difference_reaction_time
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?reaction_time_class
+#'
 setMethod(f="plot_means_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
@@ -396,6 +557,14 @@ setMethod(f="plot_means_difference", signature(object="reaction_time_class"), de
 #' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, par - specific parameter of comparison - mu or lambda.
 #' @rdname reaction_time_class-plot_means
 #' @aliases plot_means_reaction_time
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?reaction_time_class
+#'
 setMethod(f="plot_means", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   group <- value <- NULL
@@ -498,6 +667,14 @@ setMethod(f="plot_means", signature(object="reaction_time_class"), definition=fu
 #' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence.
 #' @rdname reaction_time_class-compare_distributions
 #' @aliases compare_distributions_reaction_time
+#' @return Comparison results or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?reaction_time_class
+#'
 setMethod(f="compare_distributions", signature(object="reaction_time_class"), definition=function(object, ...) {
   arguments <- list(...)
 
@@ -588,6 +765,14 @@ setMethod(f="compare_distributions", signature(object="reaction_time_class"), de
 #' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects.
 #' @rdname reaction_time_class-plot_distributions
 #' @aliases plot_distributions_reaction_time
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?reaction_time_class
+#'
 setMethod(f="plot_distributions", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   group <- x <- y <- NULL
@@ -685,6 +870,14 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
 #' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname reaction_time_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_reaction_time
+#' @return A ggplot visualization or a warning if something went wrong.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?reaction_time_class
+#'
 setMethod(f="plot_distributions_difference", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
@@ -800,6 +993,14 @@ setMethod(f="plot_distributions_difference", signature(object="reaction_time_cla
 #' @param ... subjects - plot fits on a subject level (default = FALSE).
 #' @rdname reaction_time_class-plot_fit
 #' @aliases plot_fit_reaction_time
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?reaction_time_class
+#'
 setMethod(f="plot_fit", signature(object="reaction_time_class"), definition=function(object, ...) {
   # init local varibales for CRAN check
   rt <- x <- y <- NULL
@@ -873,6 +1074,14 @@ setMethod(f="plot_fit", signature(object="reaction_time_class"), definition=func
 #' @param object reaction_time_class object.
 #' @rdname reaction_time_class-plot_trace
 #' @aliases plot_trace_reaction_time
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?reaction_time_class
+#'
 setMethod(f="plot_trace", signature(object="reaction_time_class"), definition=function(object) {
   rstan::traceplot(object@fit, pars=c("mu_m", "mu_s", "mu_l"), inc_warmup = TRUE)
 })

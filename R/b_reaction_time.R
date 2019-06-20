@@ -12,7 +12,29 @@
 #' @param refresh Frequency of output (default = NULL).
 #' @param control A named list of parameters to control the sampler's behavior (default = NULL).
 #' @param suppress_warnings Suppress warnings returned by Stan (default = TRUE).
-#' @return An object of class `reaction_time_class`.
+#' @return An object of class `reaction_time_class`
+#'
+#' @examples
+#' # priors
+#' mu_prior <- b_prior(family="normal", pars=c(0, 100))
+#' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+#' lambda_prior <- b_prior(family="uniform", pars=c(0.05, 5))
+#'
+#' # attach priors to relevant parameters
+#' priors <- list(c("mu_m", mu_prior),
+#'               c("sigma_m", sigma_prior),
+#'               c("mu_s", sigma_prior),
+#'               c("sigma_s", sigma_prior),
+#'               c("mu_l", lambda_prior),
+#'               c("sigma_l", sigma_prior))
+#'
+#' # generate data
+#' s <- rep(1:5, 20)
+#' rt <- emg::remg(100, mu=10, sigma=1, lambda=0.4)
+#'
+#' # fit
+#' fit <- b_reaction_time(t=rt, s=s, priors=priors, chains=1)
+#'
 b_reaction_time <- function(t,
                             s,
                             priors=NULL,

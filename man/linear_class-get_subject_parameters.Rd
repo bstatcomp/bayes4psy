@@ -11,6 +11,16 @@
 \arguments{
 \item{object}{linear_class object.}
 }
+\value{
+A data frame with parameter values.
+}
 \description{
 \code{get_subject_parameters} returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
+}
+\examples{
+# to use the function you first have to prepare the data and fit the model
+# see class documentation for an example of the whole process
+# along with an example of how to use this function
+?linear_class
+
 }
