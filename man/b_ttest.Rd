@@ -34,6 +34,7 @@ An object of class `ttest_class`.
 Bayesian t-test.
 }
 \examples{
+\dontrun{
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 1000))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -47,5 +48,6 @@ data  <- rnorm(20, mean=150, sd=20)
 
 # fit
 fit <- b_ttest(data=data, priors=priors, chains=1)
+}
 
 }

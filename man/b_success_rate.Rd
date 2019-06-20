@@ -36,6 +36,7 @@ An object of class `success_rate_class`.
 Bayesian model for comparing test success rate.
 }
 \examples{
+\dontrun{
 # priors
 p_prior <- b_prior(family="beta", pars=c(1, 1))
 tau_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -50,5 +51,6 @@ data <- rbinom(100, size=1, prob=0.6)
 
 # fit
 fit <- b_success_rate(r=data, s=s, priors=priors, chains=1)
+}
 
 }

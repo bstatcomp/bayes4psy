@@ -65,6 +65,7 @@ plot_trace(`success_rate_class`): traceplot for main fitted model parameters.
 }}
 
 \examples{
+\dontrun{
 #priors
 p_prior <- b_prior(family="beta", pars=c(1, 1))
 tau_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -159,5 +160,6 @@ plot_fit(fit1, subjects=TRUE)
 
 # traceplot of the fitted parameters
 plot_trace(fit1)
+}
 
 }

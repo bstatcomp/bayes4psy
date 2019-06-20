@@ -36,6 +36,7 @@ An object of class `color_class`
 Bayesian model for comparing colors.
 }
 \examples{
+\dontrun{
 # priors for rgb
 mu_prior <- b_prior(family="uniform", pars=c(0, 255))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 100))
@@ -99,5 +100,6 @@ colors_hsv <- data.frame(h=h, s=s, v=v)
 
 # fit
 fit_hsv <- b_color(colors=colors_hsv, hsv=TRUE, priors=priors_hsv, chains=1)
+}
 
 }

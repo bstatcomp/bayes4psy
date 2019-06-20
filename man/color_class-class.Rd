@@ -79,7 +79,7 @@ plot_trace(`color_class`): traceplot for main fitted model parameters.
 }}
 
 \examples{
-
+\dontrun{
 # priors for rgb
 mu_prior <- b_prior(family="uniform", pars=c(0, 255))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 100))
@@ -287,5 +287,6 @@ plot_distributions_hsv(fit1, fit2=fit2, points=points, lines=lines, hsv=TRUE)
 
 # traceplot of the fitted parameters
 plot_trace(fit1)
+}
 
 }

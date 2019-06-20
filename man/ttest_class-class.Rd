@@ -81,6 +81,7 @@ plot_trace(`ttest_class`): traceplot for main fitted model parameters.
 }}
 
 \examples{
+\dontrun{
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 1000))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -202,5 +203,6 @@ plot_fit(fit1)
 
 # traceplot of the fitted parameters
 plot_trace(fit1)
+}
 
 }
