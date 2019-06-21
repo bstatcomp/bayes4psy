@@ -3,8 +3,8 @@ data {
   real y[n];
 
   // priors
-  int<lower=0> p_ids[2];
-  real p_values[4];
+  int<lower=0> p_ids[3];
+  real p_values[6];
 }
 
 transformed data {
@@ -47,6 +47,18 @@ model {
     sigma ~ gamma(p_values[id*2-1], p_values[id*2]);
   } else if (p_ids[id] == 4) {
     sigma ~ beta(p_values[id*2-1], p_values[id*2]);
+  }
+
+  // nu
+  id = 3;
+  if (p_ids[id] == 1) {
+    nu ~ uniform(p_values[id*2-1], p_values[id*2]);
+  } else if (p_ids[id] == 2) {
+    nu ~ normal(p_values[id*2-1], p_values[id*2]);
+  } else if (p_ids[id] == 3) {
+    nu ~ gamma(p_values[id*2-1], p_values[id*2]);
+  } else if (p_ids[id] == 4) {
+    nu ~ beta(p_values[id*2-1], p_values[id*2]);
   }
 
   nuMinusOne ~ exponential(eLambda);
