@@ -902,11 +902,14 @@ setMethod(f="plot_means", signature(object="color_class"), definition=function(o
       h_mu1 <- preprocess_circular(object@extract$mu_h)
       h_df1 <- data.frame(value=h_mu1)
 
-      # plot on -pi..pi or 0..2pi
+      # plot on -pi..pi, -2pi..0 or 0..2pi
       suppressWarnings(mean_h <- mean(circular::as.circular(h_mu1)))
-      if (abs(mean_h) < pi/2) {
+      if (mean_h < pi/2 & mean_h > -pi/2) {
         x_min <- -pi
         x_max <- pi
+      } else if (mean_h < -pi/2) {
+        x_min <- -2*pi
+        x_max <- 0
       } else {
         x_min <- 0
         x_max <- 2*pi
@@ -1404,10 +1407,12 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
       h_kappa1 <- mean(object@extract$kappa_h)
 
       # plot on -pi..pi or 0..2pi
-      suppressWarnings(mean_h <- mean(circular::as.circular(object@extract$mu_h)))
-      if (abs(mean_h) < pi/2) {
+      if (h_mu1 < pi/2 & h_mu1 > -pi/2) {
         x_min <- -pi
         x_max <- pi
+      } else if (h_mu1 < -pi/2) {
+        x_min <- -2*pi
+        x_max <- 0
       } else {
         x_min <- 0
         x_max <- 2*pi
@@ -1867,15 +1872,18 @@ setMethod(f="plot_fit", signature(object="color_class"), definition=function(obj
       i <- i + 1
  } else if (p == "h") {
       # first group data
-      h_data <- data.frame(x=preprocess_circular(object@data$h))
       h_mu <- mean(preprocess_circular(object@extract$mu_h))
+      h_data <- data.frame(x=preprocess_circular(object@data$h))
       h_kappa <- mean(object@extract$kappa_h)
 
       # plot on -pi..pi or 0..2pi
-      suppressWarnings(mean_h <- mean(circular::as.circular(h_data)))
-      if (abs(mean_h) < pi/2) {
+      # plot on -pi..pi or 0..2pi
+      if (h_mu < pi/2 & h_mu > -pi/2) {
         x_min <- -pi
         x_max <- pi
+      } else if (h_mu < -pi/2) {
+        x_min <- -2*pi
+        x_max <- 0
       } else {
         x_min <- 0
         x_max <- 2*pi
