@@ -1,6 +1,14 @@
 # bayes4psy 1.1.0
 
 ### New features and improvements
+Modified some examples due to CRAN revision.
+Beautified some outputs.
+T-test now supports comparison through the sigma parameter only.
+
+
+# bayes4psy 1.1.0
+
+### New features and improvements
 Examples for all models and fitting functions.
 Code tests for all core functions.
 Documentation amended in accordance with CRAN team comments.
