@@ -15,7 +15,7 @@ mcmc_hdi(samples, cred_mass = 0.95)
 Boundaries of the HDI.
 }
 \description{
-A function for calculating the HDI (high density interval) of a vector of values.
+A function for calculating the HDI (highest density interval) of a vector of values.
 }
 \author{
 John Kruschke

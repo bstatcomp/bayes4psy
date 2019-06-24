@@ -266,7 +266,7 @@ clamp <- function(y, min, max) {
 
 #' @title mcmc_hdi
 #' @author John Kruschke
-#' @description A function for calculating the HDI (high density interval) of a vector of values.
+#' @description A function for calculating the HDI (highest density interval) of a vector of values.
 #' @export
 #' @param samples vector of values.
 #' @param cred_mass credibility mass that the interval should include (default = 0.95).

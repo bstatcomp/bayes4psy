@@ -38,6 +38,7 @@ An object of class `linear_class`.
 Bayesian model for fitting a linear normal model to data.
 }
 \examples{
+\donttest{
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 100))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -61,5 +62,6 @@ for (i in 1:5) {
 }
 
 fit <- b_linear(x=x, y=y, s=s, priors=priors, chains=1)
+}
 
 }

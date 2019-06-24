@@ -67,7 +67,7 @@
 #' @slot data Data on which the fit is based.
 #'
 #' @examples
-#'
+#' \donttest{
 #' # priors for rgb
 #' mu_prior <- b_prior(family="uniform", pars=c(0, 255))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 100))
@@ -275,6 +275,7 @@
 #'
 #' # traceplot of the fitted parameters
 #' plot_trace(fit1)
+#' }
 #'
 color_class <- setClass(
   "color_class",

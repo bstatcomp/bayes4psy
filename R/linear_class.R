@@ -30,9 +30,9 @@
 #'
 #' plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can plot only slope or intercept by using the par parameter. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the group level.
+#' plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the subject level.
 #'
-#' plot_fit(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+#' plot_fit(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the subjects level (subjects=FALSE).
 #'
 #' plot_trace(`linear_class`): traceplot for main fitted model parameters.
 #'
@@ -41,6 +41,7 @@
 #' @slot data Raw data for the tested group.
 #'
 #' @examples
+#' \donttest{
 #' # priors
 #' mu_prior <- b_prior(family="normal", pars=c(0, 100))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -135,11 +136,12 @@
 #' plot_fit(fit1)
 #'
 #' # plot the fitted distribution against the data,
-#' # plot on the bottom (subject) level
-#' plot_fit(fit1, subjects=TRUE)
+#' # plot on the top (group) level
+#' plot_fit(fit1, subjects=FALSE)
 #'
 #' # traceplot of the fitted parameters
 #' plot_trace(fit1)
+#' }
 #'
 linear_class <- setClass(
   "linear_class",
@@ -175,9 +177,9 @@ setMethod(f="summary", signature(object="linear_class"), definition=function(obj
   sigma_hdi <- mcmc_hdi(object@extract$mu_s)
 
   # print
-  cat(sprintf("intercept (alpha):\t%.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("intercept (alpha):\t%.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
               alpha, mcmcse::mcse(object@extract$mu_a)$se, alpha_hdi[1], alpha_hdi[2]))
-  cat(sprintf("slope (beta):\t\t%.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("slope (beta):\t\t%.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
               beta, mcmcse::mcse(object@extract$mu_b)$se, beta_hdi[1], beta_hdi[2]))
   cat(sprintf("sigma:\t\t\t%.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
               sigma, mcmcse::mcse(object@extract$mu_s)$se, sigma_hdi[1], sigma_hdi[2]))
@@ -424,7 +426,7 @@ setMethod(f="plot_means_difference", signature(object="linear_class"), definitio
 #' @title plot_means
 #' @description \code{plot_means} plots means or the first and the second group means.
 #' @param object linear_class object.
-#' @param ... fit2 - a second linear_class object, par - specific parameter of comparison (slope or intercept).
+#' @param ... fit2 - a second linear_class object, par - plot a specific parameter (slope or intercept).
 #' @rdname linear_class-plot_means
 #' @aliases plot_means_linear
 #' @return A ggplot visualization or a warning if something went wrong.
@@ -798,9 +800,9 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
 
 
 #' @title plot_fit
-#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the group level (subjects=FALSE).
 #' @param object linear_class object.
-#' @param ... subjects - plot fits on a subject level (default = FALSE).
+#' @param ... subjects - plot fits on a subject level (default = TRUE).
 #' @rdname linear_class-plot_fit
 #' @aliases plot_fit_linear
 #' @return A ggplot visualization.
@@ -818,7 +820,7 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
   arguments <- list(...)
 
   # plot on a subject level?
-  subjects <- FALSE
+  subjects <- TRUE
   if (!is.null(arguments$subjects)) {
     subjects <- arguments$subjects
   }

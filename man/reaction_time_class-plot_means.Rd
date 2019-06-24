@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{reaction_time_class object.}
 
-\item{...}{fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, par - specific parameter of comparison - mu or lambda.}
+\item{...}{fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, par - plot a specific parameter (mu or lambda).}
 }
 \value{
 A ggplot visualization or a warning if something went wrong.

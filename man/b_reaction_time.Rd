@@ -36,6 +36,7 @@ An object of class `reaction_time_class`
 Bayesian model for comparing reaction times.
 }
 \examples{
+\donttest{
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 100))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -55,5 +56,6 @@ rt <- emg::remg(100, mu=10, sigma=1, lambda=0.4)
 
 # fit
 fit <- b_reaction_time(t=rt, s=s, priors=priors, chains=1)
+}
 
 }

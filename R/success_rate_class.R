@@ -44,7 +44,7 @@
 #'
 #' plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the group level.
 #'
-#' plot_fit(`success_rate_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+#' plot_fit(`success_rate_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subjects level (subjects=TRUE) or on the group level (subjects=FALSE).
 #'
 #' plot_trace(`success_rate_class`): traceplot for main fitted model parameters.
 #'
@@ -53,6 +53,7 @@
 #' @slot data Data on which the fit is based.
 #'
 #' @examples
+#' \donttest{
 #' #priors
 #' p_prior <- b_prior(family="beta", pars=c(1, 1))
 #' tau_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -142,11 +143,12 @@
 #' plot_fit(fit1)
 #'
 #' # plot the fitted distribution against the data,
-#' # plot on the bottom (subject) level
-#' plot_fit(fit1, subjects=TRUE)
+#' # plot on the top (group) level
+#' plot_fit(fit1, subjects=FALSE)
 #'
 #' # traceplot of the fitted parameters
 #' plot_trace(fit1)
+#' }
 #'
 success_rate_class <- setClass(
   "success_rate_class",
@@ -326,7 +328,7 @@ setMethod(f="compare_means", signature(object="success_rate_class"), definition=
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
+    cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
     smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
     print(smallest_largest)
     cat("\n\n")
@@ -591,7 +593,7 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
+    cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
     smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
     print(smallest_largest)
     cat("\n\n")
@@ -805,9 +807,9 @@ setMethod(f="plot_distributions_difference", signature(object="success_rate_clas
 
 
 #' @title plot_fit
-#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subjects level (subjects=TRUE) or on the group level (subjects=FALSE).
 #' @param object success_rate_class object.
-#' @param ... subjects - plot fits on a subject level (default = FALSE).
+#' @param ... subjects - plot fits on a subject level (default = TRUE).
 #' @rdname success_rate_class-plot_fit
 #' @aliases plot_fit_success_rate
 #' @return A ggplot visualization.
@@ -825,7 +827,7 @@ setMethod(f="plot_fit", signature(object="success_rate_class"), definition=funct
   arguments <- list(...)
 
   # plot on a subject level?
-  subjects <- FALSE
+  subjects <- TRUE
   if (!is.null(arguments$subjects)) {
     subjects <- arguments$subjects
   }

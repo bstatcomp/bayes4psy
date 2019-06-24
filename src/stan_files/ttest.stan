@@ -1,5 +1,5 @@
 data {
-  int<lower=1> n; // number of samples
+  int<lower=0> n; // number of samples
   real y[n];
 
   // priors

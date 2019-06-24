@@ -11,7 +11,7 @@
 #' @param use_weights Whether the statistic function accepts a weight argument or should be calculated using resampled data (default = FALSE).
 #' @param weight_arg If the statistic function includes a named argument for the weights this could be specified here (default = NULL).
 #' @param ... Further arguments passed on to the statistic function.
-#' @return An object of class `linear_class`.
+#' @return A data frame containing bootstrap samples.
 #'
 #' @examples
 #'

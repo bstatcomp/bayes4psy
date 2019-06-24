@@ -12,27 +12,27 @@
 #'
 #' get_parameters(`ttest_class`): returns a dataframe with values of fitted parameters.
 #'
-#' compare_means(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter.
+#' compare_means(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter or execute the comparison through the sigma parameter.
 #'
-#' compare_means(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter.
+#' compare_means(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter or execute the comparison through the sigma parameter.
 #'
-#' compare_means(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohen's d calculation. You can also provide the rope parameter.
+#' compare_means(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohen's d calculation. You can also provide the rope parameter or execute the comparison through the sigma parameter.
 #'
-#' compare_means(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups. You can also provide the rope parameter.
+#' compare_means(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups. You can also provide the rope parameter or execute the comparison through the sigma parameter.
 #'
-#' plot_means_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_means_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through the sigma parameter.
 #'
-#' plot_means_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_means_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through the sigma parameter.
 #'
-#' plot_means_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
+#' plot_means_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through the sigma parameter.
 #'
-#' plot_means(`ttest_class`): plots density of means.
+#' plot_means(`ttest_class`): plots density of means. You can also visualize the density for the sigma parameter.
 #'
-#' plot_means(`ttest_class`, fit2=`ttest_class`): plots density for the first and the second group means.
+#' plot_means(`ttest_class`, fit2=`ttest_class`): plots density for the first and the second group means. You can also visualize the density for the sigma parameter.
 #'
-#' plot_means(`ttest_class`, mu=`numeric`): plots density for the first group means and a mean value in case second group is defined as a normal distribution or as a constant.
+#' plot_means(`ttest_class`, mu=`numeric`): plots density for the first group means and a mean value in case second group is defined as a normal distribution or as a constant. You can also visualize the density for the sigma parameter.
 #'
-#' plot_means(`ttest_class`, fits=`list`): plots density for the first group means and means for multiple other groups.
+#' plot_means(`ttest_class`, fits=`list`): plots density for the first group means and means for multiple other groups. You can also visualize the density for the sigma parameter.
 #'
 #' compare_distributions(`ttest_class`, fit2=`ttest_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
@@ -69,6 +69,7 @@
 #' @slot data Raw data for the tested group.
 #'
 #' @examples
+#' \donttest{
 #' # priors
 #' mu_prior <- b_prior(family="normal", pars=c(0, 1000))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -190,6 +191,7 @@
 #'
 #' # traceplot of the fitted parameters
 #' plot_trace(fit1)
+#' }
 #'
 ttest_class <- setClass(
   "ttest_class",
@@ -275,7 +277,7 @@ setMethod(f="get_parameters", signature(object="ttest_class"), definition=functi
 #' @title compare_means
 #' @description \code{compare_means} prints difference/equality of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
-#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence.
+#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence, par - execute comparison through the sigma parameter.
 #' @rdname ttest_class-compare_means
 #' @aliases compare_means_ttest
 #' @return Comparison results or a warning if something went wrong.
@@ -289,7 +291,7 @@ setMethod(f="get_parameters", signature(object="ttest_class"), definition=functi
 setMethod(f="compare_means", signature(object="ttest_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_means function are invalid, compare_means(ttest_class, fit2=ttest_class), compare_means(ttest_class, mu=numeric), compare_means(ttest_class, mu=numeric, sigma=numeric) or compare_means(ttest_class, fits=list) is required! You can also provide the rope parameter, e.g. compare_means(ttest_class, fit2=ttest_class, rope=numeric)."
+  wrong_arguments <- "The provided arguments for the compare_means function are invalid, compare_means(ttest_class, fit2=ttest_class), compare_means(ttest_class, mu=numeric), compare_means(ttest_class, mu=numeric, sigma=numeric) or compare_means(ttest_class, fits=list) is required! You provide the rope parameter, e.g. compare_means(ttest_class, fit2=ttest_class, rope=numeric) or execute the comparison through the sigma parameter, e.g. compare_means(ttest_class, fit2=ttest_class, par=\"sigma\")."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -303,11 +305,29 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
   }
   rope <- prepare_rope(rope)
 
+  # compare through a different parameter
+  par <- "mu"
+  if (!is.null(arguments$par)) {
+    par <- arguments$par
+
+    if (!(par == "mu" || par == "sigma")) {
+      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu and sigma! Using the default setting for comparison.", par)
+      warning(w)
+      par <- "mu"
+    } else {
+      cat(sprintf("\n---------- Using the %s parameter. ----------\n\n", par))
+    }
+  }
+
   # data
   y <- list()
 
   # first group data
-  y[[1]] <- object@extract$mu
+  if (par == "mu") {
+    y[[1]] <- object@extract$mu
+  } else if (par == "sigma") {
+    y[[1]] <- object@extract$sigma
+  }
   sigma1 <- mean(object@extract$sigma)
   n <- length(y[[1]])
 
@@ -320,15 +340,26 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
     } else {
       fit2 <- arguments[[1]]
     }
-    y[[2]] <- fit2@extract$mu
+
+    if (par == "mu") {
+      y[[2]] <- fit2@extract$mu
+    } else if (par == "sigma") {
+      y[[2]] <- fit2@extract$sigma
+    }
+
     sigma2 <- mean(fit2@extract$sigma)
-  } else if (!is.null(arguments$mu)) {
-    # provided mu and sigma
+  } else if (!is.null(arguments$mu) && par == "mu") {
+    # provided mu
     y[[2]] <- arguments$mu;
 
+    # provided also sigma?
     if (!is.null(arguments$sigma)) {
       sigma2 <- arguments$sigma
     }
+  } else if (!is.null(arguments$sigma) && par == "sigma") {
+    # provided sigma
+    y[[2]] <- arguments$sigma;
+    sigma2 <- arguments$sigma
   } else if (!is.null(arguments$fits)) {
     # provided a list of fits
     i <- 2
@@ -337,7 +368,13 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
         warning("One of the fits in the fits list is not a valid ttest_class object.")
         return()
       }
-      y[[i]] <- fit@extract$mu
+
+      if (par == "mu") {
+        y[[i]] <- fit@extract$mu
+      } else if (par == "sigma") {
+        y[[i]] <- fit@extract$sigma
+      }
+
       i <- i + 1
     }
   } else {
@@ -366,7 +403,7 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
+    cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
     smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
     print(smallest_largest)
     cat("\n\n")
@@ -380,7 +417,7 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
 #' @title plot_means_difference
 #' @description \code{plot_means_difference} a visualization of the difference of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
-#' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram.
+#' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram, par - compare through the sigma parameter.
 #' @rdname ttest_class-plot_means_difference
 #' @aliases plot_means_difference_ttest
 #' @return A ggplot visualization or a warning if something went wrong.
@@ -397,7 +434,7 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
 
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_means_difference function are invalid, plot_means_difference(ttest_class, fit2=ttest_class), plot_means_difference(ttest_class, fits=list) or plot_means_difference(ttest_class, mu=numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_means_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric)."
+  wrong_arguments <- "The provided arguments for the plot_means_difference function are invalid, plot_means_difference(ttest_class, fit2=ttest_class), plot_means_difference(ttest_class, fits=list) or plot_means_difference(ttest_class, mu=numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_means_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric) or visualise the difference of the sigma parameter, e.g. plot_means_difference(ttest_class, fit2=ttest_class, par=\"sigma\")."
 
   if (length(arguments) == 0) {
     warning(wrong_arguments)
@@ -411,9 +448,29 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
   }
   rope <- prepare_rope(rope)
 
-  # first group data
+  # compare through a different parameter
+  par <- "mu"
+  if (!is.null(arguments$par)) {
+    par <- arguments$par
+
+    if (!(par == "mu" || par == "sigma")) {
+      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu and sigma! Using the default setting for comparison.", par)
+      warning(w)
+      par <- "mu"
+    } else {
+      cat(sprintf("\n---------- Using the %s parameter. ----------\n\n", par))
+    }
+  }
+
+  # data
   y <- list()
-  y[[1]] <- object@extract$mu
+
+  # first group data
+  if (par == "mu") {
+    y[[1]] <- object@extract$mu
+  } else if (par == "sigma") {
+    y[[1]] <- object@extract$sigma
+  }
 
   # limits
   x_min <- min(y[[1]])
@@ -427,10 +484,16 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
     } else {
       fit2 <- arguments[[1]]
     }
-    y[[2]] <- fit2@extract$mu
-  } else if (!is.null(arguments$mu)) {
-    # provided mu and sigma
+
+    if (par == "mu") {
+      y[[2]] <- fit2@extract$mu
+    } else if (par == "sigma") {
+      y[[2]] <- fit2@extract$sigma
+    }
+  } else if (!is.null(arguments$mu) && par == "mu") {
     y[[2]] <- arguments$mu;
+  } else if (!is.null(arguments$sigma) && par == "sigma") {
+    y[[2]] <- arguments$sigma;
   } else if (!is.null(arguments$fits)) {
     i <- 2
     for (fit in arguments$fits) {
@@ -439,7 +502,11 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
         return()
       }
 
-      y[[i]] <- fit@extract$mu
+      if (par == "mu") {
+        y[[i]] <- fit@extract$mu
+      } else if (par == "sigma") {
+        y[[i]] <- fit@extract$sigma
+      }
 
       # limits
       x_min <- min(x_min, y[[i]])
@@ -500,7 +567,7 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
 #' @title plot_means
 #' @description \code{plot_means} plots density of means, the first and the second group means, means of multiple groups or a mean value in case second group is defined as a constant.
 #' @param object ttest_class object.
-#' @param ... fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects.
+#' @param ... fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects, par - plot the sigma parameter.
 #' @rdname ttest_class-plot_means
 #' @aliases plot_means_ttest
 #' @return A ggplot visualization or a warning if something went wrong.
@@ -515,11 +582,31 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
   # init local varibales for CRAN check
   group <- value <- NULL
 
+  # compare through a different parameter
+  arguments <- list(...)
+  par <- "mu"
+  if (!is.null(arguments$par)) {
+    par <- arguments$par
+
+    if (!(par == "mu" || par == "sigma")) {
+      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu and sigma! Using the default setting for comparison.", par)
+      warning(w)
+      par <- "mu"
+    } else {
+      cat(sprintf("\n---------- Using the %s parameter. ----------\n\n", par))
+    }
+  }
+
   # first group data
-  df <- data.frame(value= object@extract$mu, group="1")
+  df <- NULL
+  if (par == "mu") {
+    df <- data.frame(value=object@extract$mu, group="1")
+  } else if (par == "sigma") {
+    df <- data.frame(value=object@extract$sigma, group="1")
+  }
 
   # second group data
-  mu2 <- NULL
+  par2 <- NULL
   arguments <- list(...)
   if (length(arguments) > 0) {
     if (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "ttest_class") {
@@ -530,10 +617,18 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
         fit2 <- arguments[[1]]
       }
 
-      df <- rbind(df, data.frame(value=fit2@extract$mu, group="2"))
-    } else if (!is.null(arguments$mu)) {
+      if (par == "mu") {
+        df <- rbind(df, data.frame(value=fit2@extract$mu, group="2"))
+      } else if (par == "sigma") {
+        df <- rbind(df, data.frame(value=fit2@extract$sigma, group="2"))
+      }
+
+    } else if (!is.null(arguments$mu) && par == "mu") {
       # provided mu and sigma
-      mu2 <- arguments$mu;
+      par2 <- arguments$mu;
+    } else if (!is.null(arguments$sigma) && par == "sigma") {
+      # provided mu and sigma
+      par2 <- arguments$sigma;
     } else if (!is.null(arguments$fits)) {
       i <- 2
       for (fit in arguments$fits) {
@@ -542,7 +637,12 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
           return()
         }
 
-        df <- rbind(df, data.frame(value=fit@extract$mu, group=as.factor(i)))
+        if (par == "mu") {
+          df <- rbind(df, data.frame(value=fit@extract$mu, group=as.factor(i)))
+        } else if (par == "sigma") {
+          df <- rbind(df, data.frame(value=fit@extract$sigma, group=as.factor(i)))
+        }
+
         i <- i + 1
       }
     }
@@ -560,12 +660,12 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
   } else if (n_groups > 2) {
     graph <- graph +
       scale_fill_hue()
-  } else if (n_groups == 1 & !is.null(mu2)) {
+  } else if (n_groups == 1 & !is.null(par2)) {
     y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
     graph <- graph +
-      geom_segment(aes(x=mu2, xend=mu2, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
-      geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4) +
+      geom_segment(aes(x=par2, xend=par2, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
+      geom_text(aes(label=sprintf("%.2f", par2), x=par2, y=y_max[2]*1.08), size=4) +
       scale_fill_manual(values=c("#3182bd")) +
       theme(legend.position="none")
   } else {
@@ -691,7 +791,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
+    cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
     smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
     print(smallest_largest)
     cat("\n\n")

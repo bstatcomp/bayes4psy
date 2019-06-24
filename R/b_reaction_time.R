@@ -15,6 +15,7 @@
 #' @return An object of class `reaction_time_class`
 #'
 #' @examples
+#' \donttest{
 #' # priors
 #' mu_prior <- b_prior(family="normal", pars=c(0, 100))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -34,6 +35,7 @@
 #'
 #' # fit
 #' fit <- b_reaction_time(t=rt, s=s, priors=priors, chains=1)
+#' }
 #'
 b_reaction_time <- function(t,
                             s,

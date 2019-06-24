@@ -15,6 +15,7 @@
 #' @return An object of class `color_class`
 #'
 #' @examples
+#' \donttest{
 #' # priors for rgb
 #' mu_prior <- b_prior(family="uniform", pars=c(0, 255))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 100))
@@ -78,6 +79,7 @@
 #'
 #' # fit
 #' fit_hsv <- b_color(colors=colors_hsv, hsv=TRUE, priors=priors_hsv, chains=1)
+#' }
 #'
 b_color <- function(colors,
                     priors=NULL,

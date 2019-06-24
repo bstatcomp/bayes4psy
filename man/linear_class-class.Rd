@@ -36,9 +36,9 @@ plot_distributions(`linear_class`, fit2=`linear_class`): a visualization of two 
 
 plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can plot only slope or intercept by using the par parameter. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
-plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the group level.
+plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the subject level.
 
-plot_fit(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+plot_fit(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the subjects level (subjects=FALSE).
 
 plot_trace(`linear_class`): traceplot for main fitted model parameters.
 }
@@ -53,6 +53,7 @@ plot_trace(`linear_class`): traceplot for main fitted model parameters.
 }}
 
 \examples{
+\donttest{
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 100))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -147,10 +148,11 @@ plot_distributions_difference(fit1, fit2=fit2, par="slope")
 plot_fit(fit1)
 
 # plot the fitted distribution against the data,
-# plot on the bottom (subject) level
-plot_fit(fit1, subjects=TRUE)
+# plot on the top (group) level
+plot_fit(fit1, subjects=FALSE)
 
 # traceplot of the fitted parameters
 plot_trace(fit1)
+}
 
 }

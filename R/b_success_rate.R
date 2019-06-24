@@ -15,6 +15,7 @@
 #' @return An object of class `success_rate_class`.
 #'
 #' @examples
+#' \donttest{
 #' # priors
 #' p_prior <- b_prior(family="beta", pars=c(1, 1))
 #' tau_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -29,6 +30,7 @@
 #'
 #' # fit
 #' fit <- b_success_rate(r=data, s=s, priors=priors, chains=1)
+#' }
 #'
 b_success_rate <- function(r,
                            s,
