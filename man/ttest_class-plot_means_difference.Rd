@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{ttest_class object.}
 
-\item{...}{fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram, par - different parameter of comparison (sigma or nu).}
+\item{...}{fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram, par - compare through the sigma parameter.}
 }
 \value{
 A ggplot visualization or a warning if something went wrong.

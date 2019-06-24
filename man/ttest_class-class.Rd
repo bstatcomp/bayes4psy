@@ -18,27 +18,27 @@ show(`ttest_class`): prints a more detailed summary of the fit.
 
 get_parameters(`ttest_class`): returns a dataframe with values of fitted parameters.
 
-compare_means(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter or execute the comparison through a different parameter - sigma or nu.
+compare_means(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter or execute the comparison through the sigma parameter.
 
-compare_means(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter or execute the comparison through a different parameter - sigma or nu.
+compare_means(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter or execute the comparison through the sigma parameter.
 
-compare_means(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohen's d calculation. You can also provide the rope parameter or execute the comparison through a different parameter - sigma or nu.
+compare_means(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohen's d calculation. You can also provide the rope parameter or execute the comparison through the sigma parameter.
 
-compare_means(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups. You can also provide the rope parameter or execute the comparison through a different parameter - sigma or nu.
+compare_means(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups. You can also provide the rope parameter or execute the comparison through the sigma parameter.
 
-plot_means_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through a different parameter - sigma or nu.
+plot_means_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through the sigma parameter.
 
-plot_means_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through a different parameter - sigma or nu.
+plot_means_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through the sigma parameter.
 
-plot_means_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through a different parameter - sigma or nu.
+plot_means_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through the sigma parameter.
 
-plot_means(`ttest_class`): plots density of means. You can also visualize the density for a different parameter - sigma or nu.
+plot_means(`ttest_class`): plots density of means. You can also visualize the density for the sigma parameter.
 
-plot_means(`ttest_class`, fit2=`ttest_class`): plots density for the first and the second group means. You can also visualize the density for a different parameter - sigma or nu.
+plot_means(`ttest_class`, fit2=`ttest_class`): plots density for the first and the second group means. You can also visualize the density for the sigma parameter.
 
-plot_means(`ttest_class`, mu=`numeric`): plots density for the first group means and a mean value in case second group is defined as a normal distribution or as a constant. You can also visualize the density for a different parameter - sigma or nu.
+plot_means(`ttest_class`, mu=`numeric`): plots density for the first group means and a mean value in case second group is defined as a normal distribution or as a constant. You can also visualize the density for the sigma parameter.
 
-plot_means(`ttest_class`, fits=`list`): plots density for the first group means and means for multiple other groups. You can also visualize the density for a different parameter - sigma or nu.
+plot_means(`ttest_class`, fits=`list`): plots density for the first group means and means for multiple other groups. You can also visualize the density for the sigma parameter.
 
 compare_distributions(`ttest_class`, fit2=`ttest_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 
@@ -85,12 +85,10 @@ plot_trace(`ttest_class`): traceplot for main fitted model parameters.
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 1000))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
-nu_prior <- b_prior(family="uniform", pars=c(0, 500))
 
 # attach priors to relevant parameters
 priors <- list(c("mu", mu_prior),
-               c("sigma", sigma_prior),
-               c("nu", nu_prior))
+               c("sigma", sigma_prior))
 
 # generate data and fit
 data1 <- rnorm(20, mean=150, sd=20)

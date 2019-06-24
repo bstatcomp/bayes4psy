@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{ttest_class object.}
 
-\item{...}{fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects, par - plot a different parameter (sigma or nu).}
+\item{...}{fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects, par - plot the sigma parameter.}
 }
 \value{
 A ggplot visualization or a warning if something went wrong.

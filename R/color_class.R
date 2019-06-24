@@ -1999,14 +1999,18 @@ setMethod(f="plot_fit_hsv", signature(object="color_class"), definition=function
     h <- h + 2 * pi
     mu_h_processed <- mu_h_processed + 2 * pi
   }
-  h <- h / (2*pi)
-  r <- mean(object@extract$mu_r)
-  g <- mean(object@extract$mu_g)
-  b <- mean(object@extract$mu_b)
-  df_fit <- data.frame(h=h, r=r, g=g, b=b)
 
   # annotate HDI
-  h_hdi <- mcmc_hdi(mu_h_processed)
+  kappa <- mean(object@extract$kappa_h)
+  # suppress circular warnings
+  h_mean <- suppressWarnings(circular::as.circular(h))
+  kappa <- suppressWarnings(circular::as.circular(kappa))
+
+  # draw from distribution
+  n <- 10000
+  y <- circular::rvonmises(n, h_mean, kappa)
+  y <- preprocess_circular(y, base=h_mean)
+  h_hdi <- as.numeric(mcmc_hdi(y))
 
   # cast to 0..1
   h_hdi <- h_hdi / (2*pi)
@@ -2029,12 +2033,19 @@ setMethod(f="plot_fit_hsv", signature(object="color_class"), definition=function
     h_high <- c(1, h_high)
   }
 
+  # create data frame
+  h <- h / (2*pi)
+  r <- mean(object@extract$mu_r)
+  g <- mean(object@extract$mu_g)
+  b <- mean(object@extract$mu_b)
+  df_fit <- data.frame(h=h, r=r, g=g, b=b)
+
   graph <- ggplot() +
     annotate(geom="rect", xmin=0, xmax=1, ymin=-1, ymax=1, alpha=0.1) +
     geom_hline(yintercept=0, color="gray20", size=1) +
     geom_point(data=df_colors, aes(x=h, y=sv, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=5, alpha=0.5, shape=16) +
-    annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.6) +
-    geom_segment(data=df_fit, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=1) +
+    annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.5) +
+    geom_segment(data=df_fit, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=2) +
     scale_colour_identity() +
     theme(axis.ticks=element_blank(),
           axis.text=element_blank(),
@@ -2176,7 +2187,7 @@ setMethod(f="plot_means_hsv", signature(object="color_class"), definition=functi
   df_fits <- rbind(df_fits, data.frame(h=h, r=r, g=g, b=b))
 
   graph <- graph +
-    annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.6)
+    annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.5)
 
   # fit2 provided?
   if (length(arguments) != 0 && (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class")) {
@@ -2271,7 +2282,7 @@ setMethod(f="plot_means_hsv", signature(object="color_class"), definition=functi
 
   # add fits and beutify chart
   graph <- graph +
-    geom_segment(data=df_fits, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=1) +
+    geom_segment(data=df_fits, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=2) +
     scale_colour_identity() +
     theme(axis.ticks=element_blank(),
           axis.text=element_blank(),
@@ -2378,7 +2389,6 @@ setMethod(f="plot_distributions_hsv", signature(object="color_class"), definitio
   g <- mean(object@extract$mu_g)
   b <- mean(object@extract$mu_b)
 
-
   # annotate HDI
   kappa <- mean(object@extract$kappa_h)
   # suppress circular warnings
@@ -2422,7 +2432,7 @@ setMethod(f="plot_distributions_hsv", signature(object="color_class"), definitio
   df_fits <- rbind(df_fits, data.frame(h=h, r=r, g=g, b=b))
 
   graph <- graph +
-    annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.6)
+    annotate(geom="rect", xmin=h_low, xmax=h_high, ymin=-1, ymax=1, fill=grDevices::rgb(r, g, b, maxColorValue=255), alpha=0.5)
 
   # fit2 provided?
   if (length(arguments) != 0 && (!is.null(arguments$fit2) || class(arguments[[1]])[1] == "color_class")) {
@@ -2523,7 +2533,7 @@ setMethod(f="plot_distributions_hsv", signature(object="color_class"), definitio
 
   # add fits and beutify chart
   graph <- graph +
-    geom_segment(data=df_fits, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=1) +
+    geom_segment(data=df_fits, aes(x=h, xend=h, y=-1, yend=1, color=grDevices::rgb(r, g, b, maxColorValue=255)), size=2) +
     scale_colour_identity() +
     theme(axis.ticks=element_blank(),
           axis.text=element_blank(),

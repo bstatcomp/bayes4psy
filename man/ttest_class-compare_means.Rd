@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{ttest_class object.}
 
-\item{...}{fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence, par - different parameter of comparison (sigma or nu).}
+\item{...}{fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence, par - execute comparison through the sigma parameter.}
 }
 \value{
 Comparison results or a warning if something went wrong.
