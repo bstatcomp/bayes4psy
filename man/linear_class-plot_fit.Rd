@@ -11,13 +11,13 @@
 \arguments{
 \item{object}{linear_class object.}
 
-\item{...}{subjects - plot fits on a subject level (default = FALSE).}
+\item{...}{subjects - plot fits on a subject level (default = TRUE).}
 }
 \value{
 A ggplot visualization.
 }
 \description{
-\code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+\code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the group level (subjects=FALSE).
 }
 \examples{
 # to use the function you first have to prepare the data and fit the model

@@ -85,10 +85,12 @@ plot_trace(`ttest_class`): traceplot for main fitted model parameters.
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 1000))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+nu_prior <- b_prior(family="uniform", pars=c(0, 500))
 
 # attach priors to relevant parameters
 priors <- list(c("mu", mu_prior),
-               c("sigma", sigma_prior))
+               c("sigma", sigma_prior),
+               c("nu", nu_prior))
 
 # generate data and fit
 data1 <- rnorm(20, mean=150, sd=20)

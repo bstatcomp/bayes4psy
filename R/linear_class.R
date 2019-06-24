@@ -30,9 +30,9 @@
 #'
 #' plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can plot only slope or intercept by using the par parameter. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the group level.
+#' plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the subject level.
 #'
-#' plot_fit(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+#' plot_fit(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the subjects level (subjects=FALSE).
 #'
 #' plot_trace(`linear_class`): traceplot for main fitted model parameters.
 #'
@@ -136,8 +136,8 @@
 #' plot_fit(fit1)
 #'
 #' # plot the fitted distribution against the data,
-#' # plot on the bottom (subject) level
-#' plot_fit(fit1, subjects=TRUE)
+#' # plot on the top (group) level
+#' plot_fit(fit1, subjects=FALSE)
 #'
 #' # traceplot of the fitted parameters
 #' plot_trace(fit1)
@@ -800,9 +800,9 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
 
 
 #' @title plot_fit
-#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the group level (subjects=FALSE).
 #' @param object linear_class object.
-#' @param ... subjects - plot fits on a subject level (default = FALSE).
+#' @param ... subjects - plot fits on a subject level (default = TRUE).
 #' @rdname linear_class-plot_fit
 #' @aliases plot_fit_linear
 #' @return A ggplot visualization.
@@ -820,7 +820,7 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
   arguments <- list(...)
 
   # plot on a subject level?
-  subjects <- FALSE
+  subjects <- TRUE
   if (!is.null(arguments$subjects)) {
     subjects <- arguments$subjects
   }

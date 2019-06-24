@@ -50,7 +50,7 @@ plot_distributions_difference(`reaction_time_class`, fits=`list`): a visualizati
 
 plot_fit(`reaction_time_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 
-plot_fit(`reaction_time_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+plot_fit(`reaction_time_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the group level (subjects=FALSE).
 
 plot_trace(`reaction_time_class`): traceplot for main fitted model parameters.
 }
@@ -173,8 +173,8 @@ plot_distributions_difference(fit1, fits=fit_list)
 plot_fit(fit1)
 
 # plot the fitted distribution against the data,
-# plot on the bottom (subject) level
-plot_fit(fit1, subjects=TRUE)
+# plot on the top (group) level
+plot_fit(fit1, subjects=FALSE)
 
 # traceplot of the fitted parameters
 plot_trace(fit1)

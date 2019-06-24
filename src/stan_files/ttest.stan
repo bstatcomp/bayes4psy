@@ -7,20 +7,10 @@ data {
   real p_values[6];
 }
 
-transformed data {
-  real eLambda;
-  eLambda = 1 / 29.0;
-}
-
 parameters {
-  real<lower=0> nuMinusOne;
+  real nu;
   real mu;
   real<lower=0> sigma;
-}
-
-transformed parameters {
-  real<lower=0> nu;
-  nu = nuMinusOne + 1;
 }
 
 model {
@@ -60,8 +50,6 @@ model {
   } else if (p_ids[id] == 4) {
     nu ~ beta(p_values[id*2-1], p_values[id*2]);
   }
-
-  nuMinusOne ~ exponential(eLambda);
 
   for (i in 1:n) {
     y[i] ~ student_t(nu, mu, sigma);

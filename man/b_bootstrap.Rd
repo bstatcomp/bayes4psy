@@ -23,7 +23,7 @@ b_bootstrap(data, statistic, n1 = 1000, n2 = 1000,
 \item{...}{Further arguments passed on to the statistic function.}
 }
 \value{
-An object of class `linear_class`.
+A data frame containing bootstrap samples.
 }
 \description{
 Performs a Bayesian bootstrap and returns a sample of size n1 representing the posterior distribution of the statistic. Returns a vector if the statistic is one-dimensional (like for mean(...)) or a data.frame if the statistic is multi-dimensional (like for the coefficients of lm).

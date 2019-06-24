@@ -44,7 +44,7 @@
 #'
 #' plot_fit(`reaction_time_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 #'
-#' plot_fit(`reaction_time_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+#' plot_fit(`reaction_time_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the group level (subjects=FALSE).
 #'
 #' plot_trace(`reaction_time_class`): traceplot for main fitted model parameters.
 #'
@@ -161,8 +161,8 @@
 #' plot_fit(fit1)
 #'
 #' # plot the fitted distribution against the data,
-#' # plot on the bottom (subject) level
-#' plot_fit(fit1, subjects=TRUE)
+#' # plot on the top (group) level
+#' plot_fit(fit1, subjects=FALSE)
 #'
 #' # traceplot of the fitted parameters
 #' plot_trace(fit1)
@@ -990,9 +990,9 @@ setMethod(f="plot_distributions_difference", signature(object="reaction_time_cla
 
 
 #' @title plot_fit
-#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the group level (subjects=FALSE) or on the subjects level (subjects=TRUE).
+#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subjects level (subjects=TRUE) or on the group level (subjects=FALSE).
 #' @param object reaction_time_class object.
-#' @param ... subjects - plot fits on a subject level (default = FALSE).
+#' @param ... subjects - plot fits on a subject level (default = TRUE).
 #' @rdname reaction_time_class-plot_fit
 #' @aliases plot_fit_reaction_time
 #' @return A ggplot visualization.
@@ -1010,7 +1010,7 @@ setMethod(f="plot_fit", signature(object="reaction_time_class"), definition=func
   arguments <- list(...)
 
   # plot on a subject level?
-  subjects <- FALSE
+  subjects <- TRUE
   if (!is.null(arguments$subjects)) {
     subjects <- arguments$subjects
   }
