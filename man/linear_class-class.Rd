@@ -53,7 +53,7 @@ plot_trace(`linear_class`): traceplot for main fitted model parameters.
 }}
 
 \examples{
-\dontrun{
+\donttest{
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 100))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))

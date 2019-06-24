@@ -53,7 +53,7 @@
 #' @slot data Data on which the fit is based.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # priors
 #' mu_prior <- b_prior(family="normal", pars=c(0, 100))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -290,7 +290,7 @@ setMethod(f="get_subject_parameters", signature(object="reaction_time_class"), d
 #' @title compare_means
 #' @description \code{compare_means} prints difference in reaction times between two groups or multiple groups.
 #' @param object reaction_time_class object.
-#' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence, par - specific parameter of comparison - mu or lambda.
+#' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence, par - specific parameter of comparison (mu or lambda).
 #' @rdname reaction_time_class-compare_means
 #' @aliases compare_means_reaction_time
 #' @return Comparison results or a warning if something went wrong.
@@ -396,7 +396,7 @@ setMethod(f="compare_means", signature(object="reaction_time_class"), definition
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
+    cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
     smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
     print(smallest_largest)
     cat("\n\n")
@@ -410,7 +410,7 @@ setMethod(f="compare_means", signature(object="reaction_time_class"), definition
 #' @title plot_means_difference
 #' @description \code{plot_means_difference} a visualization of the difference between two groups or multiple groups.
 #' @param object reaction_time_class object.
-#' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison - mu or lambda.
+#' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison (mu or lambda).
 #' @rdname reaction_time_class-plot_means_difference
 #' @aliases plot_means_difference_reaction_time
 #' @return A ggplot visualization or a warning if something went wrong.
@@ -556,7 +556,7 @@ setMethod(f="plot_means_difference", signature(object="reaction_time_class"), de
 #' @title plot_means
 #' @description \code{plot_means} plots density of means for one, two or multiple groups.
 #' @param object reaction_time_class object.
-#' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, par - specific parameter of comparison - mu or lambda.
+#' @param ... fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, par - plot a specific parameter (mu or lambda).
 #' @rdname reaction_time_class-plot_means
 #' @aliases plot_means_reaction_time
 #' @return A ggplot visualization or a warning if something went wrong.
@@ -750,7 +750,7 @@ setMethod(f="compare_distributions", signature(object="reaction_time_class"), de
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
+    cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
     smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
     print(smallest_largest)
     cat("\n\n")

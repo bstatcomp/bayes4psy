@@ -41,7 +41,7 @@
 #' @slot data Raw data for the tested group.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # priors
 #' mu_prior <- b_prior(family="normal", pars=c(0, 100))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -177,9 +177,9 @@ setMethod(f="summary", signature(object="linear_class"), definition=function(obj
   sigma_hdi <- mcmc_hdi(object@extract$mu_s)
 
   # print
-  cat(sprintf("intercept (alpha):\t%.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("intercept (alpha):\t%.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
               alpha, mcmcse::mcse(object@extract$mu_a)$se, alpha_hdi[1], alpha_hdi[2]))
-  cat(sprintf("slope (beta):\t\t%.2f +/- %.5f,, 95%% HDI: [%.2f, %.2f]\n",
+  cat(sprintf("slope (beta):\t\t%.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
               beta, mcmcse::mcse(object@extract$mu_b)$se, beta_hdi[1], beta_hdi[2]))
   cat(sprintf("sigma:\t\t\t%.2f +/- %.5f, 95%% HDI: [%.2f, %.2f]\n",
               sigma, mcmcse::mcse(object@extract$mu_s)$se, sigma_hdi[1], sigma_hdi[2]))
@@ -426,7 +426,7 @@ setMethod(f="plot_means_difference", signature(object="linear_class"), definitio
 #' @title plot_means
 #' @description \code{plot_means} plots means or the first and the second group means.
 #' @param object linear_class object.
-#' @param ... fit2 - a second linear_class object, par - specific parameter of comparison (slope or intercept).
+#' @param ... fit2 - a second linear_class object, par - plot a specific parameter (slope or intercept).
 #' @rdname linear_class-plot_means
 #' @aliases plot_means_linear
 #' @return A ggplot visualization or a warning if something went wrong.

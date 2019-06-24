@@ -1,16 +1,26 @@
 data {
-  int<lower=1> n; // number of samples
+  int<lower=0> n; // number of samples
   real y[n];
 
   // priors
-  int<lower=0> p_ids[3];
-  real p_values[6];
+  int<lower=0> p_ids[2];
+  real p_values[4];
+}
+
+transformed data {
+  real eLambda;
+  eLambda = 1 / 29.0;
 }
 
 parameters {
-  real nu;
+  real<lower=0> nuMinusOne;
   real mu;
   real<lower=0> sigma;
+}
+
+transformed parameters {
+  real<lower=0> nu;
+  nu = nuMinusOne + 1;
 }
 
 model {
@@ -39,17 +49,7 @@ model {
     sigma ~ beta(p_values[id*2-1], p_values[id*2]);
   }
 
-  // nu
-  id = 3;
-  if (p_ids[id] == 1) {
-    nu ~ uniform(p_values[id*2-1], p_values[id*2]);
-  } else if (p_ids[id] == 2) {
-    nu ~ normal(p_values[id*2-1], p_values[id*2]);
-  } else if (p_ids[id] == 3) {
-    nu ~ gamma(p_values[id*2-1], p_values[id*2]);
-  } else if (p_ids[id] == 4) {
-    nu ~ beta(p_values[id*2-1], p_values[id*2]);
-  }
+  nuMinusOne ~ exponential(eLambda);
 
   for (i in 1:n) {
     y[i] ~ student_t(nu, mu, sigma);

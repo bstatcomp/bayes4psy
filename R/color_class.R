@@ -67,7 +67,7 @@
 #' @slot data Data on which the fit is based.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # priors for rgb
 #' mu_prior <- b_prior(family="uniform", pars=c(0, 255))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 100))

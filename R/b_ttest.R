@@ -14,7 +14,7 @@
 #' @return An object of class `ttest_class`.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # priors
 #' mu_prior <- b_prior(family="normal", pars=c(0, 1000))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -46,11 +46,11 @@ b_ttest <- function(data,
   n <- length(data)
 
   # prior ids and values
-  p_ids <- rep(0, 3)
-  p_values <- rep(0, 6)
+  p_ids <- rep(0, 2)
+  p_values <- rep(0, 4)
 
   # parameter mapping
-  df_pars <- data.frame(par=c("mu", "sigma", "nu"), index=c(1, 2, 3))
+  df_pars <- data.frame(par=c("mu", "sigma"), index=c(1, 2))
 
   # priors
   if (!is.null(priors)) {
@@ -64,7 +64,7 @@ b_ttest <- function(data,
       if (nrow(par_id) > 0) {
         id <- par_id$index
       } else {
-        wrong_prior <- "Provided an unknown parameter for prior, use \"mu\" \"sigma\" or \"nu\"."
+        wrong_prior <- "Provided an unknown parameter for prior, use \"mu\" or \"sigma\"."
         warning(wrong_prior)
         return()
       }

@@ -36,7 +36,7 @@ An object of class `reaction_time_class`
 Bayesian model for comparing reaction times.
 }
 \examples{
-\dontrun{
+\donttest{
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 100))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))

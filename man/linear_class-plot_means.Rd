@@ -11,7 +11,7 @@
 \arguments{
 \item{object}{linear_class object.}
 
-\item{...}{fit2 - a second linear_class object, par - specific parameter of comparison (slope or intercept).}
+\item{...}{fit2 - a second linear_class object, par - plot a specific parameter (slope or intercept).}
 }
 \value{
 A ggplot visualization or a warning if something went wrong.

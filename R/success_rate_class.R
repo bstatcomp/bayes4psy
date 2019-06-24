@@ -53,7 +53,7 @@
 #' @slot data Data on which the fit is based.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' #priors
 #' p_prior <- b_prior(family="beta", pars=c(1, 1))
 #' tau_prior <- b_prior(family="uniform", pars=c(0, 500))
@@ -328,7 +328,7 @@ setMethod(f="compare_means", signature(object="success_rate_class"), definition=
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
+    cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
     smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
     print(smallest_largest)
     cat("\n\n")
@@ -593,7 +593,7 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
 
   # largest/smallest probabilities
   if (n > 2) {
-    cat("\nProbabilities that a certain group is smallest/largest or equal to all others:\n\n")
+    cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
     smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
     print(smallest_largest)
     cat("\n\n")

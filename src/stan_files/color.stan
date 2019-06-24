@@ -1,5 +1,5 @@
 data {
-	int<lower=1> n; // number of samples
+	int<lower=0> n; // number of data entries
 	// rgb
 	real<lower=0,upper=255> r[n];
 	real<lower=0,upper=255> g[n];
