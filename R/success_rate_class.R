@@ -175,13 +175,17 @@ success_rate_class <- setClass(
 setMethod(f="summary", signature(object="success_rate_class"), definition=function(object) {
   # get means
   p <- mean(object@extract$p0)
+  tau <- mean(object@extract$tau)
 
   # HDI
   p_hdi <- mcmc_hdi(object@extract$p0)
+  tau_hdi <- mcmc_hdi(object@extract$tau)
 
   # print
   cat(sprintf("Success rate:\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
               p, mcmcse::mcse(object@extract$p0)$se, p_hdi[1], p_hdi[2]))
+  cat(sprintf("Tau:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
+              tau, mcmcse::mcse(object@extract$tau)$se, tau_hdi[1], tau_hdi[2]))
 })
 
 

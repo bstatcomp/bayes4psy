@@ -856,7 +856,9 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
       geom_point(data=df_data, aes(x=x, y=y), color="#3182bd", alpha=0.4, shape=16) +
       geom_abline(data=df_fit, aes(slope=slope, intercept=intercept), color="#3182bd", alpha=0.1, size=1) +
       xlim(x_min, x_max) +
-      ylim(y_min, y_max)
+      ylim(y_min, y_max) +
+      ylab("response") +
+      xlab("question index")
   } else {
     m <- min(20, length(object@extract$mu_a))
     # fits
@@ -876,7 +878,9 @@ setMethod(f="plot_fit", signature(object="linear_class"), definition=function(ob
     graph <- ggplot() +
       geom_point(data=df_data, aes(x=x, y=y), color="#3182bd", shape=16, alpha=0.4) +
       geom_abline(data=df_fit, aes(slope=slope, intercept=intercept), color="#3182bd", alpha=0.2, size=1) +
-      facet_wrap(. ~ s, ncol=n_col)
+      facet_wrap(. ~ s, ncol=n_col) +
+      ylab("response") +
+      xlab("question index")
   }
 
   return(graph)

@@ -18,10 +18,12 @@
 #' # priors
 #' mu_prior <- b_prior(family="normal", pars=c(0, 1000))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+#' nu_prior <- b_prior(family="normal", pars=c(2000, 1000))
 #'
 #' # attach priors to relevant parameters
 #' priors <- list(c("mu", mu_prior),
-#'               c("sigma", sigma_prior))
+#'                c("sigma", sigma_prior),
+#'                c("nu", nu_prior))
 #'
 #' # generate some data
 #' data  <- rnorm(20, mean=150, sd=20)
@@ -44,11 +46,11 @@ b_ttest <- function(data,
   n <- length(data)
 
   # prior ids and values
-  p_ids <- rep(0, 2)
-  p_values <- rep(0, 4)
+  p_ids <- rep(0, 3)
+  p_values <- rep(0, 6)
 
   # parameter mapping
-  df_pars <- data.frame(par=c("mu", "sigma"), index=c(1, 2))
+  df_pars <- data.frame(par=c("mu", "sigma", "nu"), index=c(1, 2, 3))
 
   # priors
   if (!is.null(priors)) {
@@ -62,7 +64,7 @@ b_ttest <- function(data,
       if (nrow(par_id) > 0) {
         id <- par_id$index
       } else {
-        wrong_prior <- "Provided an unknown parameter for prior, use \"mu\" or \"sigma\"."
+        wrong_prior <- "Provided an unknown parameter for prior, use \"nu\", \"mu\" or \"sigma\"."
         warning(wrong_prior)
         return()
       }

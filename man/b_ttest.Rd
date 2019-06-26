@@ -38,10 +38,12 @@ Bayesian t-test.
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 1000))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+nu_prior <- b_prior(family="normal", pars=c(2000, 1000))
 
 # attach priors to relevant parameters
 priors <- list(c("mu", mu_prior),
-              c("sigma", sigma_prior))
+               c("sigma", sigma_prior),
+               c("nu", nu_prior))
 
 # generate some data
 data  <- rnorm(20, mean=150, sd=20)

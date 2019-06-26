@@ -73,10 +73,12 @@
 #' # priors
 #' mu_prior <- b_prior(family="normal", pars=c(0, 1000))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+#' nu_prior <- b_prior(family="normal", pars=c(2000, 1000))
 #'
 #' # attach priors to relevant parameters
 #' priors <- list(c("mu", mu_prior),
-#'                c("sigma", sigma_prior))
+#'                c("sigma", sigma_prior),
+#'                c("nu", nu_prior))
 #'
 #' # generate data and fit
 #' data1 <- rnorm(20, mean=150, sd=20)
@@ -1133,5 +1135,5 @@ setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(obj
 #' ?ttest_class
 #'
 setMethod(f="plot_trace", signature(object="ttest_class"), definition=function(object) {
-  traceplot(object@fit, pars=c("mu", "sigma"), inc_warmup=TRUE)
+  traceplot(object@fit, pars=c("mu", "sigma", "nu"), inc_warmup=TRUE)
 })

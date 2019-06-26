@@ -11,12 +11,12 @@ data {
 
 parameters {
   // per subject parameters
-  vector[m] mu;
+  vector<lower=0>[m] mu;
   vector<lower=0>[m] sigma;
   vector<lower=0>[m] lambda;
 
   // global parameters
-  real mu_m;
+  real<lower=0> mu_m;
   real<lower=0.05> mu_l;
   real<lower=0> mu_s;
   real<lower=0> sigma_m;
