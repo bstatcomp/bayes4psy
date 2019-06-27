@@ -332,6 +332,7 @@ setMethod(f="compare_means", signature(object="success_rate_class"), definition=
 
   # largest/smallest probabilities
   if (n > 2) {
+    cat("-----------------------------------------")
     cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
     smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
     print(smallest_largest)
@@ -597,6 +598,7 @@ setMethod(f="compare_distributions", signature(object="success_rate_class"), def
 
   # largest/smallest probabilities
   if (n > 2) {
+    cat("-----------------------------------------")
     cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
     smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
     print(smallest_largest)
