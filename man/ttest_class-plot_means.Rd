@@ -11,10 +11,10 @@
 \arguments{
 \item{object}{ttest_class object.}
 
-\item{...}{fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects, par - plot the sigma parameter.}
+\item{...}{fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects, par - plot the sigma or nu parameter.}
 }
 \value{
-A ggplot visualization or a warning if something went wrong.
+A ggplot visualization or an error if something went wrong.
 }
 \description{
 \code{plot_means} plots density of means, the first and the second group means, means of multiple groups or a mean value in case second group is defined as a constant.

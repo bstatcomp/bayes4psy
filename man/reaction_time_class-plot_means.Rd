@@ -14,7 +14,7 @@
 \item{...}{fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, par - plot a specific parameter (mu or lambda).}
 }
 \value{
-A ggplot visualization or a warning if something went wrong.
+A ggplot visualization or an error if something went wrong.
 }
 \description{
 \code{plot_means} plots density of means for one, two or multiple groups.

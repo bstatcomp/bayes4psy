@@ -14,7 +14,7 @@
 \item{...}{fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence.}
 }
 \value{
-Comparison results or a warning if something went wrong.
+Comparison results or an error if something went wrong.
 }
 \description{
 \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group or from samples drawn from distributions of multiple groups.

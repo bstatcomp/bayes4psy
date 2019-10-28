@@ -16,6 +16,12 @@ print(`success_rate_class`): prints a more detailed summary of the fit
 
 show(`success_rate_class`): prints a more detailed summary of the fit.
 
+plot(`success_rate_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subjects level (subjects=TRUE) or on the group level (subjects=FALSE).
+
+plot_fit(`success_rate_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subjects level (subjects=TRUE) or on the group level (subjects=FALSE).
+
+plot_trace(`success_rate_class`): traceplot for main fitted model parameters.
+
 get_parameters(`success_rate_class`): returns a dataframe with values of fitted parameters.
 
 get_subject_parameters(`success_rate_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
@@ -49,10 +55,6 @@ plot_distributions_difference(`success_rate_class`, fit2=`success_rate_class`): 
 plot_distributions_difference(`success_rate_class`, fits=`list`): a visualization of the difference between the distributions of multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 
 plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the group level.
-
-plot_fit(`success_rate_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subjects level (subjects=TRUE) or on the group level (subjects=FALSE).
-
-plot_trace(`success_rate_class`): traceplot for main fitted model parameters.
 }
 \section{Slots}{
 

@@ -14,7 +14,7 @@
 \item{...}{fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence, par - specific parameter of comparison (mu or lambda).}
 }
 \value{
-Comparison results or a warning if something went wrong.
+Comparison results or an error if something went wrong.
 }
 \description{
 \code{compare_means} prints difference in reaction times between two groups or multiple groups.

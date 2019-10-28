@@ -10,6 +10,12 @@
 #'
 #' show(`color_class`): prints a more detailed summary of the fit.
 #'
+#' plot(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
+#'
+#' plot_fit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
+#'
+#' plot_trace(`color_class`): traceplot for main fitted model parameters.
+#'
 #' get_parameters(`color_class`): returns a dataframe with values of fitted parameters.
 #'
 #' compare_means(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
@@ -52,15 +58,11 @@
 #'
 #' plot_distributions_difference(`color_class`, hsv=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 #'
-#' plot_fit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
-#'
 #' plot_fit_hsv(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
 #'
 #' plot_means_hsv(`color_class`): a visualization of the difference between means of two fits through a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 #'
 #' plot_distributions_hsv(`color_class`): a visualization of distributions of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
-#'
-#' plot_trace(`color_class`): traceplot for main fitted model parameters.
 #'
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
@@ -137,6 +139,18 @@
 #' # a more detailed summary of fitted parameters
 #' print(fit1)
 #' show(fit1)
+#'
+#' # plot the fitted distribution against the data
+#' plot(fit1)
+#' plot_fit(fit1)
+#'
+#' # plot the fitted distribution against the data,
+#' # specify only a subset of parameters for visualization
+#' plot(fit1, pars=c("h", "s", "v"))
+#' plot_fit(fit1, pars=c("h", "s", "v"))
+#'
+#' # traceplot of the fitted parameters
+#' plot_trace(fit1)
 #'
 #' # extract parameter values from the fit
 #' parameters <- get_parameters(fit1)
@@ -229,13 +243,6 @@
 #' # and an hsv defined color
 #' plot_distributions_difference(fit1, hsv=c(pi/2, 1, 1))
 #'
-#' # plot the fitted distribution against the data
-#' plot_fit(fit1)
-#'
-#' # plot the fitted distribution against the data,
-#' # specify only a subset of parameters for visualization
-#' plot_fit(fit1, pars=c("h", "s", "v"))
-#'
 #' # plot the fitted distribution for hue against the hue data
 #' plot_fit_hsv(fit1)
 #'
@@ -272,9 +279,6 @@
 #' points[[1]] <- c(pi, 1, 1)
 #'
 #' plot_distributions_hsv(fit1, fit2=fit2, points=points, lines=lines, hsv=TRUE)
-#'
-#' # traceplot of the fitted parameters
-#' plot_trace(fit1)
 #' }
 #'
 color_class <- setClass(
@@ -375,6 +379,231 @@ setMethod(f="show", signature(object="color_class"), definition=function(object)
 })
 
 
+#' @title plot
+#' @description \code{plot} plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
+#' @param object color_class object.
+#' @param ... pars - components of comparison, a subset of (r, g, b, h, s, v).
+#' @exportMethod plot
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
+setMethod(f="plot", signature(x="color_class", y="missing"), definition=function(x, ...) {
+  return(plot_fit(object=x, ...))
+})
+
+
+#' @title plot_fit
+#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
+#' @param object color_class object.
+#' @param ... pars - components of comparison, a subset of (r, g, b, h, s, v).
+#' @rdname color_class-plot_fit
+#' @aliases plot_fit_color
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
+setMethod(f="plot_fit", signature(object="color_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  value <- x <- y <- NULL
+
+  # get arguments
+  arguments <- list(...)
+
+  # compare through all components or through a subset
+  pars <- c("r", "g", "b", "h", "s", "v")
+  if (length(arguments) != 0 && !is.null(arguments$pars)) {
+    pars <- arguments$pars
+  }
+
+  # calculate number of columns and rows
+  n_graph <- length(pars)
+  nrow <- 1
+  ncol <- 1
+  if (n_graph > 1) {
+    nrow <- ceiling(n_graph / 3)
+    ncol <- 3
+    if (n_graph == 2 || n_graph == 4) {
+      ncol <- 2
+    }
+  }
+
+  n <- 1000
+
+  # plot
+  graphs <- list()
+  i <- 1
+  for (p in pars) {
+    if (p == "r") {
+      # first group data
+      r_data <- data.frame(x=object@data$r)
+      r_mu <- mean(object@extract$mu_r)
+      r_sigma <- mean(object@extract$sigma_r)
+
+      # plot
+      df_x <- data.frame(value=c(0, 255))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        geom_density(data=r_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=r_mu, sd=r_sigma), geom="line", size=1, color="#000000") +
+        xlab("value") +
+        ggtitle("r") +
+        theme(plot.title=element_text(hjust=0.5))
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "g") {
+      # first group data
+      g_data <- data.frame(x=object@data$g)
+      g_mu <- mean(object@extract$mu_g)
+      g_sigma <- mean(object@extract$sigma_g)
+
+      # plot
+      df_x <- data.frame(value=c(0, 255))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        geom_density(data=g_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=g_mu, sd=g_sigma), geom="line", size=1, color="#000000") +
+        xlab("value") +
+        ggtitle("g") +
+        theme(plot.title=element_text(hjust=0.5))
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "b") {
+      # first group data
+      b_data <- data.frame(x=object@data$b)
+      b_mu <- mean(object@extract$mu_b)
+      b_sigma <- mean(object@extract$sigma_b)
+
+      # plot
+      df_x <- data.frame(value=c(0, 255))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        geom_density(data=b_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu, sd=b_sigma), geom="line", size=1, color="#000000") +
+        xlab("value") +
+        ggtitle("b") +
+        theme(plot.title=element_text(hjust=0.5))
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "h") {
+      # first group data
+      h_mu <- mean(preprocess_circular(object@extract$mu_h))
+      h_data <- data.frame(x=preprocess_circular(object@data$h))
+      h_kappa <- mean(object@extract$kappa_h)
+
+      # plot on -pi..pi or 0..2pi
+      # plot on -pi..pi or 0..2pi
+      if (h_mu < pi/2 & h_mu > -pi/2) {
+        x_min <- -pi
+        x_max <- pi
+      } else if (h_mu < -pi/2) {
+        x_min <- -2*pi
+        x_max <- 0
+      } else {
+        x_min <- 0
+        x_max <- 2*pi
+      }
+
+      # suppress circular warnings
+      h_mu <- suppressWarnings(circular::as.circular(h_mu))
+      h_kappa <- suppressWarnings(circular::as.circular(h_kappa))
+
+      # get data points
+      step <- 2*pi/n
+      h_x <- suppressWarnings(circular::as.circular(seq(x_min, x_max, step)))
+      h_y <- circular::dvonmises(h_x, h_mu, h_kappa)
+      df <- data.frame(x=h_x, y=h_y)
+
+      # plot
+      graph <- ggplot() +
+        geom_density(data=h_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
+        geom_line(data=df, aes(x=x, y=y), color="#000000", size=1) +
+        xlab("value") +
+        ggtitle("h") +
+        theme(plot.title=element_text(hjust=0.5))
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "s") {
+      # first group data
+      s_data <- data.frame(x=object@data$s)
+      s_mu <- mean(object@extract$mu_s)
+      s_sigma <- mean(object@extract$sigma_s)
+
+      # plot
+      df_x <- data.frame(value=c(0, 1))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        geom_density(data=s_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=s_mu, sd=s_sigma), geom="line", size=1, color="#000000") +
+        xlab("value") +
+        ggtitle("s") +
+        theme(plot.title=element_text(hjust=0.5))
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    } else if (p == "v") {
+      # first group data
+      v_data <- data.frame(x=object@data$v)
+      b_mu <- mean(object@extract$mu_v)
+      b_sigma <- mean(object@extract$sigma_v)
+
+      # plot
+      df_x <- data.frame(value=c(0, 1))
+
+      # plot
+      graph <- ggplot(data=df_x, aes(x=value)) +
+        geom_density(data=v_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
+        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu, sd=b_sigma), geom="line", size=1, color="#000000") +
+        xlab("value") +
+        ggtitle("v") +
+        theme(plot.title=element_text(hjust=0.5))
+
+      graphs[[i]] <- graph
+      i <- i + 1
+    }
+  }
+
+  if (n_graph > 1) {
+    graph <- cowplot::plot_grid(plotlist=graphs, ncol=ncol, nrow=nrow, scale=0.9)
+  }
+
+  return(graph)
+})
+
+
+#' @title plot_trace
+#' @description \code{plot_trace} traceplot for main fitted model parameters.
+#' @param object color_class object.
+#' @rdname color_class-plot_trace
+#' @aliases plot_trace_color
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
+setMethod(f="plot_trace", signature(object="color_class"), definition=function(object) {
+  rstan::traceplot(object@fit, pars=c("mu_r", "mu_g", "mu_b", "mu_h", "mu_s", "mu_v"), inc_warmup=TRUE)
+})
+
+
 #' @title get_parameters
 #' @description \code{get_parameters} returns a dataframe with values of fitted parameters.
 #' @param object color_class object.
@@ -406,7 +635,7 @@ setMethod(f="get_parameters", signature(object="color_class"), definition=functi
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-compare_means
 #' @aliases compare_means_color
-#' @return Comparison results or a warning if something went wrong.
+#' @return Comparison results or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -420,8 +649,7 @@ setMethod(f="compare_means", signature(object="color_class"), definition=functio
   wrong_arguments <- "The provided arguments for the compare_means function are invalid, compare_means(color_class, fit2=color_class), compare(color_class, rgb=vector) or compare_means(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. compare_means(color_class, fit2=color_class, rope=numeric). You can also execute the comparison through a subset of color components, e.g. compare_means(color_class, fit2=color_class, pars=c(\"h\", \"s\", \"v\"))."
 
   if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # comparing with another fit, rgb or hsv
@@ -445,8 +673,7 @@ setMethod(f="compare_means", signature(object="color_class"), definition=functio
 
   # are all null?
   if (is.null(fit2) && is.null(rgb) && is.null(hsv)) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # prepare rope
@@ -550,7 +777,7 @@ setMethod(f="compare_means", signature(object="color_class"), definition=functio
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_means_difference
 #' @aliases plot_means_difference_color
-#' @return A ggplot visualization or a warning if something went wrong.
+#' @return A ggplot visualization or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -565,8 +792,7 @@ setMethod(f="plot_means_difference", signature(object="color_class"), definition
   wrong_arguments <- "The provided arguments for the plot_means_difference function are invalid, plot_means_difference(color_class, fit2=color_class), plot_means_difference(color_class, rgb=vector) or plot_means_difference(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. plot_means_difference(color_class, fit2=color_class, rope=numeric) or the bins parameter plot_means_difference(color_class, fit2=color_class, bins=numeric). You can also execute the comparison through a subset of color components, e.g. plot_means_difference(color_class, fit2=color_class, pars=c(\"h\", \"s\", \"v\"))."
 
   if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # comparing with another fit, rgb or hsv
@@ -590,8 +816,7 @@ setMethod(f="plot_means_difference", signature(object="color_class"), definition
 
   # are all null?
   if (is.null(fit2) && is.null(rgb) && is.null(hsv)) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # prepare rope
@@ -724,7 +949,7 @@ setMethod(f="plot_means_difference", signature(object="color_class"), definition
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_means
 #' @aliases plot_means_color
-#' @return A ggplot visualization or a warning if something went wrong.
+#' @return A ggplot visualization or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -1041,7 +1266,7 @@ setMethod(f="plot_means", signature(object="color_class"), definition=function(o
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-compare_distributions
 #' @aliases compare_distributions_color
-#' @return Comparison results or a warning if something went wrong.
+#' @return Comparison results or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -1055,8 +1280,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
   wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(color_class, fit2=color_class), compare_distributions(color_class, rgb=vector) or compare_distributions(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. compare_distributions(color_class, fit2=color_class, rope=numeric). You can also execute the comparison through a subset of color components, e.g. compare_distributions(color_class, fit2=color_class, pars=c(\"h\", \"s\", \"v\"))."
 
   if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # comparing with another fit, rgb or hsv
@@ -1080,8 +1304,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
 
   # are all null?
   if (is.null(fit2) && is.null(rgb) && is.null(hsv)) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # prepare rope
@@ -1223,7 +1446,7 @@ setMethod(f="compare_distributions", signature(object="color_class"), definition
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_distributions
 #' @aliases plot_distributions_color
-#' @return A ggplot visualization or a warning if something went wrong.
+#' @return A ggplot visualization or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -1563,7 +1786,7 @@ setMethod(f="plot_distributions", signature(object="color_class"), definition=fu
 #' @param ... fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, rope - region of practical equivalence, bins - number of bins in the histogram, pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @rdname color_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_color
-#' @return A ggplot visualization or a warning if something went wrong.
+#' @return A ggplot visualization or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -1578,8 +1801,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
   wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(color_class, fit2=color_class), plot_distributions_difference(color_class, rgb=vector) or plot_distributions_difference(color_class, hsv=vector) is required! You can optionallly provide the rope parameter, e.g. plot_distributions_difference(color_class, fit2=color_class, rope=numeric) or the bins parameter plot_distributions_difference(color_class, fit2=color_class, bins=numeric). You can also execute the comparison through a subset of color components, e.g. plot_distributions_difference(color_class, fit2=color_class, pars=c(\"h\", \"s\", \"v\"))."
 
   if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # comparing with another fit, rgb or hsv
@@ -1603,8 +1825,7 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
 
   # are all null?
   if (is.null(fit2) && is.null(rgb) && is.null(hsv)) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # prepare rope
@@ -1755,196 +1976,6 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
 
       graph <- plot_difference(y1=y1, y2=y2, rope=rope, bins=bins, nrow=nrow, max_diff=1)
       graph <- graph + ggtitle("v") + theme(plot.title=element_text(hjust=0.5))
-      graphs[[i]] <- graph
-      i <- i + 1
-    }
-  }
-
-  if (n_graph > 1) {
-    graph <- cowplot::plot_grid(plotlist=graphs, ncol=ncol, nrow=nrow, scale=0.9)
-  }
-
-  return(graph)
-})
-
-
-#' @title plot_fit
-#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
-#' @param object color_class object.
-#' @param ... pars - components of comparison, a subset of (r, g, b, h, s, v).
-#' @rdname color_class-plot_fit
-#' @aliases plot_fit_color
-#' @return A ggplot visualization.
-#'
-#' @examples
-#' # to use the function you first have to prepare the data and fit the model
-#' # see class documentation for an example of the whole process
-#' # along with an example of how to use this function
-#' ?color_class
-#'
-setMethod(f="plot_fit", signature(object="color_class"), definition=function(object, ...) {
-  # init local varibales for CRAN check
-  value <- x <- y <- NULL
-
-  # get arguments
-  arguments <- list(...)
-
-  # compare through all components or through a subset
-  pars <- c("r", "g", "b", "h", "s", "v")
-  if (length(arguments) != 0 && !is.null(arguments$pars)) {
-    pars <- arguments$pars
-  }
-
-  # calculate number of columns and rows
-  n_graph <- length(pars)
-  nrow <- 1
-  ncol <- 1
-  if (n_graph > 1) {
-    nrow <- ceiling(n_graph / 3)
-    ncol <- 3
-    if (n_graph == 2 || n_graph == 4) {
-      ncol <- 2
-    }
-  }
-
-  n <- 1000
-
-  # plot
-  graphs <- list()
-  i <- 1
-  for (p in pars) {
-    if (p == "r") {
-      # first group data
-      r_data <- data.frame(x=object@data$r)
-      r_mu <- mean(object@extract$mu_r)
-      r_sigma <- mean(object@extract$sigma_r)
-
-      # plot
-      df_x <- data.frame(value=c(0, 255))
-
-      # plot
-      graph <- ggplot(data=df_x, aes(x=value)) +
-        geom_density(data=r_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
-        stat_function(fun=stats::dnorm, n=n, args=list(mean=r_mu, sd=r_sigma), geom="line", size=1, color="#000000") +
-        xlab("value") +
-        ggtitle("r") +
-        theme(plot.title=element_text(hjust=0.5))
-
-      graphs[[i]] <- graph
-      i <- i + 1
-    } else if (p == "g") {
-      # first group data
-      g_data <- data.frame(x=object@data$g)
-      g_mu <- mean(object@extract$mu_g)
-      g_sigma <- mean(object@extract$sigma_g)
-
-      # plot
-      df_x <- data.frame(value=c(0, 255))
-
-      # plot
-      graph <- ggplot(data=df_x, aes(x=value)) +
-        geom_density(data=g_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
-        stat_function(fun=stats::dnorm, n=n, args=list(mean=g_mu, sd=g_sigma), geom="line", size=1, color="#000000") +
-        xlab("value") +
-        ggtitle("g") +
-        theme(plot.title=element_text(hjust=0.5))
-
-      graphs[[i]] <- graph
-      i <- i + 1
-    } else if (p == "b") {
-      # first group data
-      b_data <- data.frame(x=object@data$b)
-      b_mu <- mean(object@extract$mu_b)
-      b_sigma <- mean(object@extract$sigma_b)
-
-      # plot
-      df_x <- data.frame(value=c(0, 255))
-
-      # plot
-      graph <- ggplot(data=df_x, aes(x=value)) +
-        geom_density(data=b_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
-        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu, sd=b_sigma), geom="line", size=1, color="#000000") +
-        xlab("value") +
-        ggtitle("b") +
-        theme(plot.title=element_text(hjust=0.5))
-
-      graphs[[i]] <- graph
-      i <- i + 1
- } else if (p == "h") {
-      # first group data
-      h_mu <- mean(preprocess_circular(object@extract$mu_h))
-      h_data <- data.frame(x=preprocess_circular(object@data$h))
-      h_kappa <- mean(object@extract$kappa_h)
-
-      # plot on -pi..pi or 0..2pi
-      # plot on -pi..pi or 0..2pi
-      if (h_mu < pi/2 & h_mu > -pi/2) {
-        x_min <- -pi
-        x_max <- pi
-      } else if (h_mu < -pi/2) {
-        x_min <- -2*pi
-        x_max <- 0
-      } else {
-        x_min <- 0
-        x_max <- 2*pi
-      }
-
-      # suppress circular warnings
-      h_mu <- suppressWarnings(circular::as.circular(h_mu))
-      h_kappa <- suppressWarnings(circular::as.circular(h_kappa))
-
-      # get data points
-      step <- 2*pi/n
-      h_x <- suppressWarnings(circular::as.circular(seq(x_min, x_max, step)))
-      h_y <- circular::dvonmises(h_x, h_mu, h_kappa)
-      df <- data.frame(x=h_x, y=h_y)
-
-      # plot
-      graph <- ggplot() +
-        geom_density(data=h_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
-        geom_line(data=df, aes(x=x, y=y), color="#000000", size=1) +
-        xlab("value") +
-        ggtitle("h") +
-        theme(plot.title=element_text(hjust=0.5))
-
-      graphs[[i]] <- graph
-      i <- i + 1
-    } else if (p == "s") {
-      # first group data
-      s_data <- data.frame(x=object@data$s)
-      s_mu <- mean(object@extract$mu_s)
-      s_sigma <- mean(object@extract$sigma_s)
-
-      # plot
-      df_x <- data.frame(value=c(0, 1))
-
-      # plot
-      graph <- ggplot(data=df_x, aes(x=value)) +
-        geom_density(data=s_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
-        stat_function(fun=stats::dnorm, n=n, args=list(mean=s_mu, sd=s_sigma), geom="line", size=1, color="#000000") +
-        xlab("value") +
-        ggtitle("s") +
-        theme(plot.title=element_text(hjust=0.5))
-
-      graphs[[i]] <- graph
-      i <- i + 1
-    } else if (p == "v") {
-      # first group data
-      v_data <- data.frame(x=object@data$v)
-      b_mu <- mean(object@extract$mu_v)
-      b_sigma <- mean(object@extract$sigma_v)
-
-      # plot
-      df_x <- data.frame(value=c(0, 1))
-
-      # plot
-      graph <- ggplot(data=df_x, aes(x=value)) +
-        geom_density(data=v_data, aes(x=x), fill="#808080", alpha=0.5, color=NA) +
-        stat_function(fun=stats::dnorm, n=n, args=list(mean=b_mu, sd=b_sigma), geom="line", size=1, color="#000000") +
-        xlab("value") +
-        ggtitle("v") +
-        theme(plot.title=element_text(hjust=0.5))
-
       graphs[[i]] <- graph
       i <- i + 1
     }
@@ -2546,22 +2577,4 @@ setMethod(f="plot_distributions_hsv", signature(object="color_class"), definitio
     scale_x_continuous(limits=c(0, 1), expand=c(0,0))
 
   return(graph)
-})
-
-
-#' @title plot_trace
-#' @description \code{plot_trace} traceplot for main fitted model parameters.
-#' @param object color_class object.
-#' @rdname color_class-plot_trace
-#' @aliases plot_trace_color
-#' @return A ggplot visualization.
-#'
-#' @examples
-#' # to use the function you first have to prepare the data and fit the model
-#' # see class documentation for an example of the whole process
-#' # along with an example of how to use this function
-#' ?color_class
-#'
-setMethod(f="plot_trace", signature(object="color_class"), definition=function(object) {
-  rstan::traceplot(object@fit, pars=c("mu_r", "mu_g", "mu_b", "mu_h", "mu_s", "mu_v"), inc_warmup=TRUE)
 })

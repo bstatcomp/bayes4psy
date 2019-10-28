@@ -8,9 +8,9 @@ data {
 }
 
 parameters {
-  real<lower=0> nu;
   real mu;
   real<lower=0> sigma;
+  real<lower=0> nu;
 }
 
 model {
@@ -51,7 +51,5 @@ model {
     nu ~ beta(p_values[id*2-1], p_values[id*2]);
   }
 
-  for (i in 1:n) {
-    y[i] ~ student_t(nu, mu, sigma);
-  }
+  y ~ student_t(nu, sigma, mu);
 }

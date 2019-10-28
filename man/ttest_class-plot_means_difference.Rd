@@ -11,10 +11,10 @@
 \arguments{
 \item{object}{ttest_class object.}
 
-\item{...}{fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram, par - compare through the sigma parameter.}
+\item{...}{fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram, par - compare through the sigma or nu parameter.}
 }
 \value{
-A ggplot visualization or a warning if something went wrong.
+A ggplot visualization or an error if something went wrong.
 }
 \description{
 \code{plot_means_difference} a visualization of the difference of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.

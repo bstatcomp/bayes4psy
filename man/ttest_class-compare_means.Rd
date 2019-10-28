@@ -11,10 +11,10 @@
 \arguments{
 \item{object}{ttest_class object.}
 
-\item{...}{fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence, par - execute comparison through the sigma parameter.}
+\item{...}{fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence, par - execute comparison through the sigma or nu parameter.}
 }
 \value{
-Comparison results or a warning if something went wrong.
+Comparison results or an error if something went wrong.
 }
 \description{
 \code{compare_means} prints difference/equality of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.

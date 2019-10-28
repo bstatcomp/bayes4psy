@@ -14,7 +14,7 @@
 \item{...}{fit2 - a second color_class object, rgb - color defined through rgb, hsv - color defined through rgb, pars - components of comparison, a subset of (r, g, b, h, s, v).}
 }
 \value{
-A ggplot visualization or a warning if something went wrong.
+A ggplot visualization or an error if something went wrong.
 }
 \description{
 \code{plot_distributions} a visualization of the fitted distributions or constant colors.
