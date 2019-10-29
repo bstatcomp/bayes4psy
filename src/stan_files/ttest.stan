@@ -10,7 +10,7 @@ data {
 parameters {
   real mu;
   real<lower=0> sigma;
-  real<lower=0> nu;
+  real<lower=0, upper=1000> nu;
 }
 
 model {
@@ -49,7 +49,9 @@ model {
     nu ~ gamma(p_values[id*2-1], p_values[id*2]);
   } else if (p_ids[id] == 4) {
     nu ~ beta(p_values[id*2-1], p_values[id*2]);
+  } else {
+    nu ~ exponential(1.0/29.0);
   }
 
-  y ~ student_t(nu, sigma, mu);
+  y ~ student_t(nu, mu, sigma);
 }
