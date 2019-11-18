@@ -37,7 +37,9 @@ LinkingTo:
     Rcpp (>= 0.12.16),
     RcppEigen (>= 0.3.3.4.0)
 SystemRequirements: GNU make
+VignetteBuilder: knitr
 NeedsCompilation: yes
 RoxygenNote: 6.1.1
 Suggests: 
-    testthat
+    testthat,
+    knitr

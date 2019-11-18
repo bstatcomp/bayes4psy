@@ -117,6 +117,13 @@ summary(fit1)
 print(fit1)
 show(fit1)
 
+# plot the fitted distribution against the data
+plot(fit1)
+plot_fit(fit1)
+
+# traceplot of the fitted parameters
+plot_trace(fit1)
+
 # extract parameter values from the fit
 parameters <- get_parameters(fit1)
 
@@ -201,12 +208,6 @@ plot_distributions_difference(fit1, mu=150, sigma=20)
 
 # visualize difference between distributions underlying multiple fits
 plot_distributions_difference(fit1, fits=fit_list)
-
-# plot the fitted distribution against the data
-plot_fit(fit1)
-
-# traceplot of the fitted parameters
-plot_trace(fit1)
 }
 
 }

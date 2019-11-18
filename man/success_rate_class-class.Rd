@@ -16,7 +16,11 @@ print(`success_rate_class`): prints a more detailed summary of the fit
 
 show(`success_rate_class`): prints a more detailed summary of the fit.
 
+plot(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
+
 plot(`success_rate_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subjects level (subjects=TRUE) or on the group level (subjects=FALSE).
+
+plot_fit(`success_rate_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
 
 plot_fit(`success_rate_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subjects level (subjects=TRUE) or on the group level (subjects=FALSE).
 
@@ -102,6 +106,18 @@ summary(fit1)
 print(fit1)
 show(fit1)
 
+# plot the fitted distribution against the data
+plot(fit1)
+plot_fit(fit1)
+
+# plot the fitted distribution against the data,
+# plot on the top (group) level
+plot(fit1, subjects=FALSE)
+plot_fit(fit1, subjects=FALSE)
+
+# traceplot of the fitted parameters
+plot_trace(fit1)
+
 # extract parameter values from the fit
 parameters <- get_parameters(fit1)
 
@@ -152,16 +168,6 @@ plot_distributions_difference(fit1, fit2=fit2, rope=0.05)
 
 # visualize difference between distributions underlying multiple fits
 plot_distributions_difference(fit1, fits=fit_list)
-
-# plot the fitted distribution against the data
-plot_fit(fit1)
-
-# plot the fitted distribution against the data,
-# plot on the top (group) level
-plot_fit(fit1, subjects=FALSE)
-
-# traceplot of the fitted parameters
-plot_trace(fit1)
 }
 
 }

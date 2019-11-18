@@ -92,6 +92,11 @@ b_color <- function(colors,
                     control=NULL,
                     suppress_warnings=TRUE) {
 
+  # multi core
+  if (chains > 1) {
+    options(mc.cores = parallel::detectCores())
+  }
+
   # prepare data
   n <- nrow(colors)
 

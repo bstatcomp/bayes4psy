@@ -1,0 +1,18 @@
+---
+  title: "Analysis of the adaptation level experiment data using the Bayesian linear model"
+  author: "Jure Demšar, Erik Štrumbelj and Grega Repovš"
+  date: "`r Sys.Date()`"
+  output:
+    html_vignette:
+    toc: yes
+---
+
+<!--
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{b_linear: Bayesian linear model}
+-->
+
+# Introduction
+
+This vignette explains how to use the Bayesian linear model in the bayes4psy package.
