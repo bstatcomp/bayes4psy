@@ -10,9 +10,15 @@
 <!--
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{b_linear: Bayesian linear model}
+  %\VignetteIndexEntry{b_reaction_time: Bayesian reaction time model}
 -->
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+knitr::opts_chunk$set(fig.width=6, fig.height=4.5)
+options(width=800)
+```
 
 # Introduction
 
-This vignette explains how to use the Bayesian linear model in the bayes4psy package.
+In the adaptation level experiment participants had to assess weights of the objects placed in their hands by using a verbal scale: very very light, very light, light, medium light, medium, medium heavy, heavy, very heavy and very very heavy. The task was to assess the weight of an object that was placed on the palm of their hand. To standardize the procedure the participants had to place the elbow on the desk, extend the palm and assess the weight of the object after it was placed on their palm by slight up and down movements of their arm. During the experiment participants were blinded by using non-transparent fabric. In total there were 15 objects of the same shape and size but different mass (photo film canisters filled with metallic balls). Objects were grouped into three sets:
+
