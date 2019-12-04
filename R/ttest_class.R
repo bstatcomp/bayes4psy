@@ -774,6 +774,14 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
   x_min <- min(df$value)
   x_max <- max(df$value)
   diff <- x_max - x_min
+
+  # par2 (mu or sigma)
+  if (!is.null(par2)) {
+    x_min <- min(x_min, par2)
+    x_max <- max(x_max, par2)
+  }
+  
+  diff <- x_max - x_min
   x_min <- x_min - 0.1*diff
   x_max <- x_max + 0.1*diff
 
