@@ -1994,28 +1994,6 @@ setMethod(f="plot_distributions_difference", signature(object="color_class"), de
 })
 
 
-#' @rdname color_class-plot_hsv
-#' @exportMethod plot_hsv
-setGeneric(name="plot_hsv", function(object) standardGeneric("plot_hsv"))
-
-#' @title plot_hsv
-#' @description \code{plot_hsv} plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
-#' @param object color_class object.
-#' @rdname color_class-plot_hsv
-#' @aliases plot_hsv_color
-#' @return A ggplot visualization.
-#'
-#' @examples
-#' # to use the function you first have to prepare the data and fit the model
-#' # see class documentation for an example of the whole process
-#' # along with an example of how to use this function
-#' ?color_class
-#'
-setMethod(f="plot_hsv", signature(object="color_class"), definition=function(object) {
-  return(plot_fit_hsv(object))
-})
-
-
 #' @rdname color_class-plot_fit_hsv
 #' @exportMethod plot_fit_hsv
 setGeneric(name="plot_fit_hsv", function(object) standardGeneric("plot_fit_hsv"))
@@ -2115,6 +2093,29 @@ setMethod(f="plot_fit_hsv", signature(object="color_class"), definition=function
     scale_x_continuous(limits=c(0, 1), expand=c(0,0))
 
   return(graph)
+})
+
+
+
+#' @rdname color_class-plot_hsv
+#' @exportMethod plot_hsv
+setGeneric(name="plot_hsv", function(object) standardGeneric("plot_hsv"))
+
+#' @title plot_hsv
+#' @description \code{plot_hsv} plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
+#' @param object color_class object.
+#' @rdname color_class-plot_hsv
+#' @aliases plot_hsv_color
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?color_class
+#'
+setMethod(f="plot_hsv", signature(object="color_class"), definition=function(object) {
+  return(plot_fit_hsv(object))
 })
 
 

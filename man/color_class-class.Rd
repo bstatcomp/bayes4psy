@@ -64,6 +64,8 @@ plot_distributions_difference(`color_class`, rgb=`vector`): a visualization of t
 
 plot_distributions_difference(`color_class`, hsv=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 
+plot_hsv(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
+
 plot_fit_hsv(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
 
 plot_means_hsv(`color_class`): a visualization of the difference between means of two fits through a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
@@ -254,6 +256,9 @@ plot_distributions_difference(fit1, rgb=c(255, 0, 0))
 # visualize difference between the distributions underlyin a fit,
 # and an hsv defined color
 plot_distributions_difference(fit1, hsv=c(pi/2, 1, 1))
+
+# plot the fitted distribution for hue against the hue data
+plot_hsv(fit1)
 
 # plot the fitted distribution for hue against the hue data
 plot_fit_hsv(fit1)

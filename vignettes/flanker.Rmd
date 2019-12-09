@@ -1,5 +1,5 @@
 ---
-  title: "Analysis of the flanker experiment data using the Bayesian reaction time model"
+  title: "Analysis of the flanker experiment data using the Bayesian reaction time and success rate models"
   author: "Jure Demšar, Erik Štrumbelj and Grega Repovš"
   date: "`r Sys.Date()`"
   output:
@@ -14,8 +14,12 @@
 -->
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# knitr options
 knitr::opts_chunk$set(fig.width=6, fig.height=4.5)
 options(width=800)
+
+# parallel execution
+options(mc.cores = parallel::detectCores())
 ```
 
 # Introduction
@@ -79,9 +83,9 @@ The traceplots gives us no cause for concern regarding MCMC convergence and mixi
 # check fit (Rhat and n_eff)
 print(rt_control_fit)
 
+# the command below is commented out for the sake of brevity
 #print(rt_test_fit)
 ```
-
 
 The output above provides further MCMC diagnostics, which again do not give us cause for concern (only output of one fit is provided for the sake of brevity). The convergence diagnostic **Rhat** is practically 1 for all parameters and there is little auto-correlation (possibly even some positive auto-correlation) -- effective sample sizes (**n\_eff**) are of the order of samples taken and Monte Carlo standard errors (**se\_mean**) are relatively small.
 

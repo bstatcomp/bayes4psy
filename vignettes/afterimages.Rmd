@@ -1,0 +1,240 @@
+---
+  title: "Analysis of the Stroop experiment data using the Bayesian t-test"
+  author: "Jure Demšar, Erik Štrumbelj and Grega Repovš"
+  date: "`r Sys.Date()`"
+  output:
+    html_vignette:
+    toc: yes
+---
+
+<!--
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{b_reaction_time: Bayesian reaction time model}
+-->
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# knitr options
+knitr::opts_chunk$set(fig.width=6, fig.height=4.5)
+options(width=800)
+
+# parallel execution
+options(mc.cores = parallel::detectCores())
+```
+
+# Introduction
+
+In the afterimages task participants were asked to fix their gaze on a fixation point in the middle of the computer screen. Stimulus -- a colored rectangle -- was then shown above the fixation point. After 20 seconds the rectangle disappeared and a color palette was shown on the right-hand side of the screen. Participants were asked to keep their gaze on the fixation point while using the mouse to select the color that best matches the color of the afterimage that appeared above the fixation point. Then a colored rectangle of the selected color and same size as before was shown below the fixation point. Finally, participants confirmed their selection. For each trial the color of the stimulus rectangle, the response in RGB and the response time were recorded. The goal of this study was to determine which of the two color coding mechanisms (trichromatic or opponent-process), better explains the color of the afterimages. We used six differently colored rectangles: red, green, blue, cyan, magenta, yellow.
+
+We start our analysis by loading the experiment and stimuli data. The experiment data include subject index, reaction time, response in RGB format, stimuli name (e.g blue) and stimuli values in RGB and HSV. The stimuli data set includes only the information about stimuli (names, RGB and HSV values).
+
+```{r, message=FALSE, warning=FALSE}
+# libs
+library(bayes4psy)
+library(dplyr)
+library(ggplot2)
+
+# load data
+data_all <- after_images
+
+# load stimuli
+stimuli <- after_images_stimuli
+```
+
+Once we load required libraries and thata we can start fitting the Bayesian color models. Below is a detailed example of fitting the Bayesian color model for red color stimuli.
+
+```{r, message=FALSE, warning=FALSE}
+# prepare data
+data_red <- data_all %>% filter(stimuli == "red")
+data_red <- data.frame(r=data_red$r,
+                       g=data_red$g,
+                       b=data_red$b)
+
+# fit
+fit_red <- b_color(colors=data_red)
+
+# inspect
+plot_trace(fit_red)
+print(fit_red)
+plot_hsv(fit_red)
+```
+
+The function **plot\_hsv** was developed specially for the color model. Input data points are visualized with circles, mean of the fit is visualized with a solid line and the 95% HDI of the underlying distribution is visualized as a colored band. If we are satisfied with the fit we repeat the whole process five more times for the remaining five colors of stimuli. For brevity only code for fitting the model is executed here, the inspections of fits are ommited.
+
+```{r, message=FALSE, warning=FALSE}
+# green
+data_green <- data_all %>% filter(stimuli == "green")
+data_green <- data.frame(r=data_green$r,
+                         g=data_green$g,
+                         b=data_green$b)
+fit_green <- b_color(colors=data_green)
+
+# blue
+data_blue <- data_all %>% filter(stimuli == "blue")
+data_blue <- data.frame(r=data_blue$r,
+                        g=data_blue$g,
+                        b=data_blue$b)
+fit_blue <- b_color(colors=data_blue)
+
+# yellow
+data_yellow <- data_all %>% filter(stimuli == "yellow")
+data_yellow <- data.frame(r=data_yellow$r,
+                          g=data_yellow$g,
+                          b=data_yellow$b)
+fit_yellow <- b_color(colors=data_yellow)
+
+# cyan
+data_cyan <- data_all %>% filter(stimuli == "cyan")
+data_cyan <- data.frame(r=data_cyan$r,
+                        g=data_cyan$g,
+                        b=data_cyan$b)
+fit_cyan <- b_color(colors=data_cyan)
+
+# magenta
+data_magenta <- data_all %>% filter(stimuli == "magenta")
+data_magenta <- data.frame(r=data_magenta$r,
+                           g=data_magenta$g,
+                           b=data_magenta$b)
+fit_magenta <- b_color(colors=data_magenta)
+```
+
+We start the analysis by loading data about the colors predicted by the trichromatic or the opponent-process theory. We can then use the **plot\_distributions\_hsv** function of the Bayesian color model to produce a visualization of the accuracy of both color coding mechanisms predictions for each stimuli independently. Each graph visualizes the fitted distribution, displayed stimuli and responses predicted by the trichromatic and opponent-process coding. This additional information can be added to the visualization via annotation points and lines.
+
+```{r, message=FALSE, warning=FALSE}
+# load theory predictions
+trichromatic <- after_images_trichromatic
+opponent_process <- after_images_opponent_process
+
+# red
+stimulus <- "red"
+lines <- list()
+lines[[1]] <- c(trichromatic[trichromatic$stimuli == stimulus, ]$h,
+                trichromatic[trichromatic$stimuli == stimulus, ]$s,
+                trichromatic[trichromatic$stimuli == stimulus, ]$v)
+lines[[2]] <- c(opponent_process[opponent_process$stimuli == stimulus, ]$h,
+                opponent_process[opponent_process$stimuli == stimulus, ]$s,
+                opponent_process[opponent_process$stimuli == stimulus, ]$v)
+    
+points <- list()
+points[[1]] <- c(stimuli[stimuli$stimuli == stimulus, ]$h_s,
+                 stimuli[stimuli$stimuli == stimulus, ]$s_s,
+                 stimuli[stimuli$stimuli == stimulus, ]$v_s)
+    
+plot_red <- plot_distributions_hsv(fit_red, points=points,
+                                   lines=lines, hsv=TRUE)
+
+plot_red <- plot_red + ggtitle("Red") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# green
+stimulus <- "green"
+lines <- list()
+lines[[1]] <- c(trichromatic[trichromatic$stimuli == stimulus, ]$h,
+                trichromatic[trichromatic$stimuli == stimulus, ]$s,
+                trichromatic[trichromatic$stimuli == stimulus, ]$v)
+lines[[2]] <- c(opponent_process[opponent_process$stimuli == stimulus, ]$h,
+                opponent_process[opponent_process$stimuli == stimulus, ]$s,
+                opponent_process[opponent_process$stimuli == stimulus, ]$v)
+
+points <- list()
+points[[1]] <- c(stimuli[stimuli$stimuli == stimulus, ]$h_s,
+                 stimuli[stimuli$stimuli == stimulus, ]$s_s,
+                 stimuli[stimuli$stimuli == stimulus, ]$v_s)
+
+plot_green <- plot_distributions_hsv(fit_green, points=points,
+                                     lines=lines, hsv=TRUE)
+plot_green <- plot_green + ggtitle("Green") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# blue
+stimulus <- "blue"
+lines <- list()
+lines[[1]] <- c(trichromatic[trichromatic$stimuli == stimulus, ]$h,
+                trichromatic[trichromatic$stimuli == stimulus, ]$s,
+                trichromatic[trichromatic$stimuli == stimulus, ]$v)
+lines[[2]] <- c(opponent_process[opponent_process$stimuli == stimulus, ]$h,
+                opponent_process[opponent_process$stimuli == stimulus, ]$s,
+                opponent_process[opponent_process$stimuli == stimulus, ]$v)
+
+points <- list()
+points[[1]] <- c(stimuli[stimuli$stimuli == stimulus, ]$h_s,
+                 stimuli[stimuli$stimuli == stimulus, ]$s_s,
+                 stimuli[stimuli$stimuli == stimulus, ]$v_s)
+
+plot_blue <- plot_distributions_hsv(fit_blue, points=points,
+                                    lines=lines, hsv=TRUE)
+plot_blue <- plot_blue + ggtitle("Blue") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# yellow
+stimulus <- "yellow"
+lines <- list()
+lines[[1]] <- c(trichromatic[trichromatic$stimuli == stimulus, ]$h,
+                trichromatic[trichromatic$stimuli == stimulus, ]$s,
+                trichromatic[trichromatic$stimuli == stimulus, ]$v)
+lines[[2]] <- c(opponent_process[opponent_process$stimuli == stimulus, ]$h,
+                opponent_process[opponent_process$stimuli == stimulus, ]$s,
+                opponent_process[opponent_process$stimuli == stimulus, ]$v)
+
+points <- list()
+points[[1]] <- c(stimuli[stimuli$stimuli == stimulus, ]$h_s,
+                 stimuli[stimuli$stimuli == stimulus, ]$s_s,
+                 stimuli[stimuli$stimuli == stimulus, ]$v_s)
+
+plot_yellow <- plot_distributions_hsv(fit_yellow, points=points,
+                                      lines=lines, hsv=TRUE)
+plot_yellow <- plot_yellow + ggtitle("Yellow") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+# cyan
+stimulus <- "cyan"
+lines <- list()
+lines[[1]] <- c(trichromatic[trichromatic$stimuli == stimulus, ]$h,
+                trichromatic[trichromatic$stimuli == stimulus, ]$s,
+                trichromatic[trichromatic$stimuli == stimulus, ]$v)
+lines[[2]] <- c(opponent_process[opponent_process$stimuli == stimulus, ]$h,
+                opponent_process[opponent_process$stimuli == stimulus, ]$s,
+                opponent_process[opponent_process$stimuli == stimulus, ]$v)
+
+points <- list()
+points[[1]] <- c(stimuli[stimuli$stimuli == stimulus, ]$h_s,
+                 stimuli[stimuli$stimuli == stimulus, ]$s_s,
+                 stimuli[stimuli$stimuli == stimulus, ]$v_s)
+
+plot_cyan <- plot_distributions_hsv(fit_cyan, points=points,
+                                    lines=lines, hsv=TRUE)
+plot_cyan <- plot_cyan + ggtitle("Cyan") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+# magenta
+stimulus <- "magenta"
+lines <- list()
+lines[[1]] <- c(trichromatic[trichromatic$stimuli == stimulus, ]$h,
+                trichromatic[trichromatic$stimuli == stimulus, ]$s,
+                trichromatic[trichromatic$stimuli == stimulus, ]$v)
+lines[[2]] <- c(opponent_process[opponent_process$stimuli == stimulus, ]$h,
+                opponent_process[opponent_process$stimuli == stimulus, ]$s,
+                opponent_process[opponent_process$stimuli == stimulus, ]$v)
+
+points <- list()
+points[[1]] <- c(stimuli[stimuli$stimuli == stimulus, ]$h_s,
+                 stimuli[stimuli$stimuli == stimulus, ]$s_s,
+                 stimuli[stimuli$stimuli == stimulus, ]$v_s)
+
+plot_magenta <- plot_distributions_hsv(fit_magenta, points=points,
+                                       lines=lines, hsv=TRUE)
+plot_magenta <- plot_magenta + ggtitle("Magenta") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+We can then use the **cowplot** library to combine the plots into a single figure.
+
+```{r, message=FALSE, warning=FALSE}
+cowplot::plot_grid(plot_red, plot_green, plot_blue,
+                   plot_yellow, plot_cyan, plot_magenta,
+                   ncol=3, nrow=2, scale=0.9)
+```
+
+This last figure features the comparison of predictions between the thrichromatic and the oponent-process color coding. The long solid line visualizes the trichromatic color coding prediction while the dashed line visualizes the opponent-process color coding. Short solid line represents the mean hue of the fit and the the colored band the 95% HDI of the distribution underlying the fit. The small colored circle visualizes the color of the presented stimuli. In the case of blue and yellow stimuli the dashed line is not visible because both color codings predict the same outcome. The prediction based on the thrichromatic color coding seems more accurate as its prediction is always inside the 95% of the most probable subject's responses and is always closer to the mean predicted hue than the opponent-process prediction. The opponent-process prediction is outside of the 95% of the most probable subject's responses in cases of red and green stimuli.
