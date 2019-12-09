@@ -1,5 +1,7 @@
 # bayes4psy
 
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/bayes4psy?color=blue)](http://cran.r-project.org/package=bayes4psy)[![Downloads](http://cranlogs.r-pkg.org/badges/bayes4psy?color=blue)](http://cran.rstudio.com/package=bayes4psy)
+
 ## The package
 
 This is an R package intended for Bayesian statistical analysis in the field of psychology. Psychology is one of the fields where [the replication crisis](https://en.wikipedia.org/wiki/Replication_crisis) is the most prominent. Scientist believe that one of the main reason for this might be non-transparent and inappropriate use of frequentist statistics. We believe that using fully transparent Bayesian methods provided in this package could greatly alleviate the replication crisis in psychology.

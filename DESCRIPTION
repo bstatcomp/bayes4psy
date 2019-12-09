@@ -1,5 +1,5 @@
 Package: bayes4psy
-Version: 1.1.1
+Version: 1.2.0
 Title: User Friendly Bayesian Data Analysis for Psychology
 Description: Contains several Bayesian models for data analysis of psychological tests. A user friendly interface for these models should enable students and researchers to perform professional level Bayesian data analysis without advanced knowledge in programming and Bayesian statistics.
 Authors@R:
