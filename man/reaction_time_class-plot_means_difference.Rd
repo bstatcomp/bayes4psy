@@ -14,7 +14,7 @@
 \item{...}{fit2 - a second reaction_time_class object, fits - a list of reaction_time_class objects, rope - region of practical equivalence, bins - number of bins in the histogram, par - specific parameter of comparison (mu or lambda).}
 }
 \value{
-A ggplot visualization or a warning if something went wrong.
+A ggplot visualization or an error if something went wrong.
 }
 \description{
 \code{plot_means_difference} a visualization of the difference between two groups or multiple groups.

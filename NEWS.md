@@ -1,4 +1,12 @@
-# bayes4psy 1.1.0
+# bayes4psy 1.2.0
+
+### New features and improvements
+Added detailed examples of usage as vignettes.
+All models now create visualizations with the default R plot function.
+Several minor tweaks and improvements.
+
+
+# bayes4psy 1.1.1
 
 ### New features and improvements
 Modified some examples due to CRAN revision.

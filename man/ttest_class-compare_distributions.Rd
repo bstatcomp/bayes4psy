@@ -14,7 +14,7 @@
 \item{...}{fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.}
 }
 \value{
-Comparison results or a warning if something went wrong.
+Comparison results or an error if something went wrong.
 }
 \description{
 \code{compare_distributions} draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group, against samples drawn from distributions of multiple groups, against a mean value or against samples from a normal distribution with a defined mean value and variance.

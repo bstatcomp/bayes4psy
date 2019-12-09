@@ -16,6 +16,12 @@ print(`color_class`): prints a more detailed summary of the fit
 
 show(`color_class`): prints a more detailed summary of the fit.
 
+plot(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
+
+plot_fit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
+
+plot_trace(`color_class`): traceplot for main fitted model parameters.
+
 get_parameters(`color_class`): returns a dataframe with values of fitted parameters.
 
 compare_means(`color_class`, fit2=`color_class`): prints color difference between two fits. You can also provide the rope parameter or execute the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
@@ -58,15 +64,13 @@ plot_distributions_difference(`color_class`, rgb=`vector`): a visualization of t
 
 plot_distributions_difference(`color_class`, hsv=`vector`): a visualization of the difference between the distribution of the first fit and a color defined with hsv components. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
 
-plot_fit(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v) by using the pars parameter.
+plot_hsv(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
 
 plot_fit_hsv(`color_class`): plots fitted model against the data. Use this function to explore the quality of your fit thorough a circular visualization of hsv color components.
 
 plot_means_hsv(`color_class`): a visualization of the difference between means of two fits through a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
 
 plot_distributions_hsv(`color_class`): a visualization of distributions of one or two fits thorough a circular visualization of hsv color components. You can also compare fit means with colors defined through rgb or hsv components (as points or as lines on the visualization).
-
-plot_trace(`color_class`): traceplot for main fitted model parameters.
 }
 \section{Slots}{
 
@@ -149,6 +153,18 @@ summary(fit1)
 # a more detailed summary of fitted parameters
 print(fit1)
 show(fit1)
+
+# plot the fitted distribution against the data
+plot(fit1)
+plot_fit(fit1)
+
+# plot the fitted distribution against the data,
+# specify only a subset of parameters for visualization
+plot(fit1, pars=c("h", "s", "v"))
+plot_fit(fit1, pars=c("h", "s", "v"))
+
+# traceplot of the fitted parameters
+plot_trace(fit1)
 
 # extract parameter values from the fit
 parameters <- get_parameters(fit1)
@@ -241,12 +257,8 @@ plot_distributions_difference(fit1, rgb=c(255, 0, 0))
 # and an hsv defined color
 plot_distributions_difference(fit1, hsv=c(pi/2, 1, 1))
 
-# plot the fitted distribution against the data
-plot_fit(fit1)
-
-# plot the fitted distribution against the data,
-# specify only a subset of parameters for visualization
-plot_fit(fit1, pars=c("h", "s", "v"))
+# plot the fitted distribution for hue against the hue data
+plot_hsv(fit1)
 
 # plot the fitted distribution for hue against the hue data
 plot_fit_hsv(fit1)
@@ -284,9 +296,6 @@ points <- list()
 points[[1]] <- c(pi, 1, 1)
 
 plot_distributions_hsv(fit1, fit2=fit2, points=points, lines=lines, hsv=TRUE)
-
-# traceplot of the fitted parameters
-plot_trace(fit1)
 }
 
 }

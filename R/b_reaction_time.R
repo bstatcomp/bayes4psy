@@ -48,6 +48,11 @@ b_reaction_time <- function(t,
                             control=NULL,
                             suppress_warnings=TRUE) {
 
+  # multi core
+  if (chains > 1) {
+    options(mc.cores = parallel::detectCores())
+  }
+
   # prepare data
   n <- length(t)
   m <- length(unique(s))

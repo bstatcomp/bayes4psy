@@ -14,7 +14,7 @@
 \item{...}{fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation.}
 }
 \value{
-A ggplot visualization or a warning if something went wrong.
+A ggplot visualization or an error if something went wrong.
 }
 \description{
 \code{plot_distributions} visualizes distributions underlying tested groups.

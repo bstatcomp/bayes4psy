@@ -14,7 +14,7 @@
 \item{...}{fit2 - a second linear_class object, par - plot a specific parameter (slope or intercept).}
 }
 \value{
-A ggplot visualization or a warning if something went wrong.
+A ggplot visualization or an error if something went wrong.
 }
 \description{
 \code{plot_means} plots means or the first and the second group means.

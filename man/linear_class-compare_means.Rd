@@ -14,7 +14,7 @@
 \item{...}{fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.}
 }
 \value{
-Comparison results or a warning if something went wrong.
+Comparison results or an error if something went wrong.
 }
 \description{
 \code{compare_means} prints difference in intercept and slope between two groups.

@@ -14,7 +14,7 @@
 \item{...}{fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence, bins - number of bins in the histogram.}
 }
 \value{
-A ggplot visualization or a warning if something went wrong.
+A ggplot visualization or an error if something went wrong.
 }
 \description{
 \code{plot_distributions_difference} a visualization of the difference between the distribution of the first group and the second group or between multiple groups.

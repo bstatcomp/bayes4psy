@@ -10,29 +10,35 @@
 #'
 #' show(`ttest_class`): prints a more detailed summary of the fit.
 #'
+#' plot(`ttest_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
+#'
+#' plot_fit(`ttest_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
+#'
+#' plot_trace(`ttest_class`): traceplot for main fitted model parameters.
+#'
 #' get_parameters(`ttest_class`): returns a dataframe with values of fitted parameters.
 #'
-#' compare_means(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter or execute the comparison through the sigma parameter.
+#' compare_means(`ttest_class`, fit2=`ttest_class`): prints difference/equality of the first group against the second group. You can also provide the rope parameter or execute the comparison through the sigma or nu parameter.
 #'
 #' compare_means(`ttest_class`, mu=`numeric`): prints difference/equality of the first group against a mean value. You can also provide the rope parameter or execute the comparison through the sigma parameter.
 #'
-#' compare_means(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is use only in the Cohen's d calculation. You can also provide the rope parameter or execute the comparison through the sigma parameter.
+#' compare_means(`ttest_class`, mu=`numeric`, sigma=`numeric`): prints difference/equality of the first group against a normal distribution provided with mean value and standard deviation. Note here that sigma is used only in the Cohen's d calculation. You can also provide the rope parameter or execute the comparison through the sigma or nu parameter.
 #'
-#' compare_means(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups. You can also provide the rope parameter or execute the comparison through the sigma parameter.
+#' compare_means(`ttest_class`, fits=`list`): prints difference/equality of the first group and multiple other groups. You can also provide the rope parameter or execute the comparison through the sigma or nu parameter.
 #'
-#' plot_means_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through the sigma parameter.
+#' plot_means_difference(`ttest_class`, fit2=`ttest_class`): a visualization of the difference between the first group and the second group. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through the sigma or nu parameter.
 #'
-#' plot_means_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through the sigma parameter.
+#' plot_means_difference(`ttest_class`, mu=`numeric`): a visualization of the difference between the first group and a constant value or a normal distribution with mean value mu. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through the sigma or nu parameter.
 #'
-#' plot_means_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through the sigma parameter.
+#' plot_means_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters or visualize the comparison through the sigma or nu parameter.
 #'
-#' plot_means(`ttest_class`): plots density of means. You can also visualize the density for the sigma parameter.
+#' plot_means(`ttest_class`): plots density of means. You can also visualize the density for the sigma or nu parameter.
 #'
-#' plot_means(`ttest_class`, fit2=`ttest_class`): plots density for the first and the second group means. You can also visualize the density for the sigma parameter.
+#' plot_means(`ttest_class`, fit2=`ttest_class`): plots density for the first and the second group means. You can also visualize the density for the sigma or nu parameter.
 #'
-#' plot_means(`ttest_class`, mu=`numeric`): plots density for the first group means and a mean value in case second group is defined as a normal distribution or as a constant. You can also visualize the density for the sigma parameter.
+#' plot_means(`ttest_class`, mu=`numeric`): plots density for the first group means and a mean value in case second group is defined as a normal distribution or as a constant. You can also visualize the density for the sigma or nu parameter.
 #'
-#' plot_means(`ttest_class`, fits=`list`): plots density for the first group means and means for multiple other groups. You can also visualize the density for the sigma parameter.
+#' plot_means(`ttest_class`, fits=`list`): plots density for the first group means and means for multiple other groups. You can also visualize the density for the sigma or nu parameter.
 #'
 #' compare_distributions(`ttest_class`, fit2=`ttest_class`): draws samples from distribution of the first group and compares them against samples drawn from the distribution of the second group. You can also provide the rope parameter.
 #'
@@ -60,10 +66,6 @@
 #'
 #' plot_distributions_difference(`ttest_class`, fits=`list`): a visualization of the difference between multiple groups. You can also provide the rope and bins (number of bins in the histogram) parameters.
 #'
-#' plot_fit(`ttest_class`): plots fitted model against the data. Use this function to explore the quality of your fit.
-#'
-#' plot_trace(`ttest_class`): traceplot for main fitted model parameters.
-#'
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
 #' @slot data Raw data for the tested group.
@@ -73,10 +75,12 @@
 #' # priors
 #' mu_prior <- b_prior(family="normal", pars=c(0, 1000))
 #' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
+#' nu_prior <- b_prior(family="normal", pars=c(2000, 1000))
 #'
 #' # attach priors to relevant parameters
 #' priors <- list(c("mu", mu_prior),
-#'                c("sigma", sigma_prior))
+#'                c("sigma", sigma_prior),
+#'                c("nu", nu_prior))
 #'
 #' # generate data and fit
 #' data1 <- rnorm(20, mean=150, sd=20)
@@ -100,6 +104,13 @@
 #' # a more detailed summary of fitted parameters
 #' print(fit1)
 #' show(fit1)
+#'
+#' # plot the fitted distribution against the data
+#' plot(fit1)
+#' plot_fit(fit1)
+#'
+#' # traceplot of the fitted parameters
+#' plot_trace(fit1)
 #'
 #' # extract parameter values from the fit
 #' parameters <- get_parameters(fit1)
@@ -185,12 +196,6 @@
 #'
 #' # visualize difference between distributions underlying multiple fits
 #' plot_distributions_difference(fit1, fits=fit_list)
-#'
-#' # plot the fitted distribution against the data
-#' plot_fit(fit1)
-#'
-#' # traceplot of the fitted parameters
-#' plot_trace(fit1)
 #' }
 #'
 ttest_class <- setClass(
@@ -252,6 +257,83 @@ setMethod(f="show", signature(object="ttest_class"), definition=function(object)
 })
 
 
+#' @title plot
+#' @description \code{plot} plots fitted model against the data. Use this function to explore the quality of your fit.
+#' @param object ttest_class object.
+#' @exportMethod plot
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
+setMethod(f="plot", signature(x="ttest_class", y="missing"), definition=function(x) {
+  return(plot_fit(object=x))
+})
+
+
+#' @title plot_fit
+#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
+#' @param object ttest_class object.
+#' @rdname ttest_class-plot_fit
+#' @aliases plot_fit_ttest
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
+setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(object) {
+  # init local varibales for CRAN check
+  value <- NULL
+
+  df_data <- data.frame(value=object@data)
+
+  nu <- mean(object@extract$nu)
+  mu <- mean(object@extract$mu)
+  sigma <- mean(object@extract$sigma)
+
+  # get x range
+  x_min <- min(mu - 4*sigma, df_data$value)
+  x_max <- max(mu + 4*sigma, df_data$value)
+
+  diff <- x_max - x_min
+  x_min <- x_min - 0.1*diff
+  x_max <- x_max + 0.1*diff
+
+  df_x <- data.frame(x=c(x_min, x_max))
+
+  graph <- ggplot(data=df_x) +
+    geom_density(data=df_data, aes(x=value), fill="#3182bd", alpha=0.4, color=NA) +
+    stat_function(fun=metRology::dt.scaled, n=10000, args=list(df=nu, mean=mu, sd=sigma), colour="#3182bd", size=1) +
+    xlab("value") +
+    xlim(x_min, x_max)
+
+  return(graph)
+})
+
+
+#' @title plot_trace
+#' @description \code{plot_trace} traceplot for main fitted model parameters.
+#' @param object ttest_class object.
+#' @rdname ttest_class-plot_trace
+#' @aliases plot_trace_ttest
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?ttest_class
+#'
+setMethod(f="plot_trace", signature(object="ttest_class"), definition=function(object) {
+  traceplot(object@fit, pars=c("mu", "sigma", "nu"), inc_warmup=TRUE)
+})
+
+
 #' @title get_parameters
 #' @description \code{get_parameters} returns a dataframe with values of fitted parameters.
 #' @param object ttest_class object.
@@ -277,10 +359,10 @@ setMethod(f="get_parameters", signature(object="ttest_class"), definition=functi
 #' @title compare_means
 #' @description \code{compare_means} prints difference/equality of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
-#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence, par - execute comparison through the sigma parameter.
+#' @param ... fit2 - a second ttest_class object, mu - mean value, sigma - standard deviation, fits - a list of ttest_class objects, rope - region of practical equivalence, par - execute comparison through the sigma or nu parameter.
 #' @rdname ttest_class-compare_means
 #' @aliases compare_means_ttest
-#' @return Comparison results or a warning if something went wrong.
+#' @return Comparison results or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -291,11 +373,10 @@ setMethod(f="get_parameters", signature(object="ttest_class"), definition=functi
 setMethod(f="compare_means", signature(object="ttest_class"), definition=function(object, ...) {
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the compare_means function are invalid, compare_means(ttest_class, fit2=ttest_class), compare_means(ttest_class, mu=numeric), compare_means(ttest_class, mu=numeric, sigma=numeric) or compare_means(ttest_class, fits=list) is required! You provide the rope parameter, e.g. compare_means(ttest_class, fit2=ttest_class, rope=numeric) or execute the comparison through the sigma parameter, e.g. compare_means(ttest_class, fit2=ttest_class, par=\"sigma\")."
+  wrong_arguments <- "The provided arguments for the compare_means function are invalid, compare_means(ttest_class, fit2=ttest_class), compare_means(ttest_class, mu=numeric), compare_means(ttest_class, mu=numeric, sigma=numeric) or compare_means(ttest_class, fits=list) is required! You provide the rope parameter, e.g. compare_means(ttest_class, fit2=ttest_class, rope=numeric) or execute the comparison through the sigma or nu parameter, e.g. compare_means(ttest_class, fit2=ttest_class, par=\"sigma\")."
 
   if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # prepare rope
@@ -310,8 +391,8 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
   if (!is.null(arguments$par)) {
     par <- arguments$par
 
-    if (!(par == "mu" || par == "sigma")) {
-      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu and sigma! Using the default setting for comparison.", par)
+    if (!(par == "mu" || par == "sigma" || par == "nu")) {
+      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu, sigma and nu! Using the default setting for comparison.", par)
       warning(w)
       par <- "mu"
     } else {
@@ -327,7 +408,11 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
     y[[1]] <- object@extract$mu
   } else if (par == "sigma") {
     y[[1]] <- object@extract$sigma
+  } else if (par == "nu") {
+    y[[1]] <- object@extract$nu
   }
+
+
   sigma1 <- mean(object@extract$sigma)
   n <- length(y[[1]])
 
@@ -345,6 +430,8 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
       y[[2]] <- fit2@extract$mu
     } else if (par == "sigma") {
       y[[2]] <- fit2@extract$sigma
+    } else if (par == "nu") {
+      y[[2]] <- fit2@extract$nu
     }
 
     sigma2 <- mean(fit2@extract$sigma)
@@ -365,21 +452,21 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
     i <- 2
     for (fit in arguments$fits) {
       if (class(fit) != "ttest_class") {
-        warning("One of the fits in the fits list is not a valid ttest_class object.")
-        return()
+        stop("One of the fits in the fits list is not a valid ttest_class object.")
       }
 
       if (par == "mu") {
         y[[i]] <- fit@extract$mu
       } else if (par == "sigma") {
         y[[i]] <- fit@extract$sigma
+      } else if (par == "nu") {
+        y[[i]] <- fit@extract$nu
       }
 
       i <- i + 1
     }
   } else {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   n <- length(y)
@@ -403,6 +490,7 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
 
   # largest/smallest probabilities
   if (n > 2) {
+    cat("-----------------------------------------")
     cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
     smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
     print(smallest_largest)
@@ -417,10 +505,10 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
 #' @title plot_means_difference
 #' @description \code{plot_means_difference} a visualization of the difference of the first group against the second group, against multiple groups, against a mean value or against a normal distribution with a defined mean value and variance.
 #' @param object ttest_class object.
-#' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram, par - compare through the sigma parameter.
+#' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, rope - region of practical equivalence, bins - number of bins in the histogram, par - compare through the sigma or nu parameter.
 #' @rdname ttest_class-plot_means_difference
 #' @aliases plot_means_difference_ttest
-#' @return A ggplot visualization or a warning if something went wrong.
+#' @return A ggplot visualization or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -434,11 +522,10 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
 
   arguments <- list(...)
 
-  wrong_arguments <- "The provided arguments for the plot_means_difference function are invalid, plot_means_difference(ttest_class, fit2=ttest_class), plot_means_difference(ttest_class, fits=list) or plot_means_difference(ttest_class, mu=numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_means_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric) or visualise the difference of the sigma parameter, e.g. plot_means_difference(ttest_class, fit2=ttest_class, par=\"sigma\")."
+  wrong_arguments <- "The provided arguments for the plot_means_difference function are invalid, plot_means_difference(ttest_class, fit2=ttest_class), plot_means_difference(ttest_class, fits=list) or plot_means_difference(ttest_class, mu=numeric) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_means_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric) or visualise the difference of the sigma or nu parameter, e.g. plot_means_difference(ttest_class, fit2=ttest_class, par=\"sigma\")."
 
   if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # prepare rope
@@ -453,8 +540,8 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
   if (!is.null(arguments$par)) {
     par <- arguments$par
 
-    if (!(par == "mu" || par == "sigma")) {
-      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu and sigma! Using the default setting for comparison.", par)
+    if (!(par == "mu" || par == "sigma" || par == "nu")) {
+      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu, sigma and nu! Using the default setting for comparison.", par)
       warning(w)
       par <- "mu"
     } else {
@@ -470,6 +557,8 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
     y[[1]] <- object@extract$mu
   } else if (par == "sigma") {
     y[[1]] <- object@extract$sigma
+  } else if (par == "nu") {
+    y[[1]] <- object@extract$nu
   }
 
   # limits
@@ -489,6 +578,8 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
       y[[2]] <- fit2@extract$mu
     } else if (par == "sigma") {
       y[[2]] <- fit2@extract$sigma
+    } else if (par == "nu") {
+      y[[2]] <- fit2@extract$nu
     }
   } else if (!is.null(arguments$mu) && par == "mu") {
     y[[2]] <- arguments$mu;
@@ -498,14 +589,15 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
     i <- 2
     for (fit in arguments$fits) {
       if (class(fit) != "ttest_class") {
-        warning("One of the fits in the fits list is not a valid ttest_class object.")
-        return()
+        stop("One of the fits in the fits list is not a valid ttest_class object.")
       }
 
       if (par == "mu") {
         y[[i]] <- fit@extract$mu
       } else if (par == "sigma") {
         y[[i]] <- fit@extract$sigma
+      } else if (par == "nu") {
+        y[[i]] <- fit@extract$nu
       }
 
       # limits
@@ -515,8 +607,7 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
       i <- i + 1
     }
   } else {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # bins in the histogram
@@ -567,10 +658,10 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
 #' @title plot_means
 #' @description \code{plot_means} plots density of means, the first and the second group means, means of multiple groups or a mean value in case second group is defined as a constant.
 #' @param object ttest_class object.
-#' @param ... fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects, par - plot the sigma parameter.
+#' @param ... fit2 - a second ttest_class object, mu - mean value, fits - a list of ttest_class objects, par - plot the sigma or nu parameter.
 #' @rdname ttest_class-plot_means
 #' @aliases plot_means_ttest
-#' @return A ggplot visualization or a warning if something went wrong.
+#' @return A ggplot visualization or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -588,8 +679,8 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
   if (!is.null(arguments$par)) {
     par <- arguments$par
 
-    if (!(par == "mu" || par == "sigma")) {
-      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu and sigma! Using the default setting for comparison.", par)
+    if (!(par == "mu" || par == "sigma" || par == "nu")) {
+      w <- sprintf("Parameter %s not recognized, parameters used in this model are mu, sigma and nu! Using the default setting for comparison.", par)
       warning(w)
       par <- "mu"
     } else {
@@ -603,6 +694,8 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
     df <- data.frame(value=object@extract$mu, group="1")
   } else if (par == "sigma") {
     df <- data.frame(value=object@extract$sigma, group="1")
+  } else if (par == "nu") {
+    df <- data.frame(value=object@extract$nu, group="1")
   }
 
   # second group data
@@ -621,6 +714,8 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
         df <- rbind(df, data.frame(value=fit2@extract$mu, group="2"))
       } else if (par == "sigma") {
         df <- rbind(df, data.frame(value=fit2@extract$sigma, group="2"))
+      } else if (par == "nu") {
+        df <- rbind(df, data.frame(value=fit2@extract$nu, group="2"))
       }
 
     } else if (!is.null(arguments$mu) && par == "mu") {
@@ -633,14 +728,15 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
       i <- 2
       for (fit in arguments$fits) {
         if (class(fit) != "ttest_class") {
-          warning("One of the fits in the fits list is not a valid ttest_class object.")
-          return()
+          stop("One of the fits in the fits list is not a valid ttest_class object.")
         }
 
         if (par == "mu") {
           df <- rbind(df, data.frame(value=fit@extract$mu, group=as.factor(i)))
         } else if (par == "sigma") {
           df <- rbind(df, data.frame(value=fit@extract$sigma, group=as.factor(i)))
+        } else if (par == "nu") {
+          df <- rbind(df, data.frame(value=fit@extract$nu, group=as.factor(i)))
         }
 
         i <- i + 1
@@ -678,6 +774,14 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
   x_min <- min(df$value)
   x_max <- max(df$value)
   diff <- x_max - x_min
+
+  # par2 (mu or sigma)
+  if (!is.null(par2)) {
+    x_min <- min(x_min, par2)
+    x_max <- max(x_max, par2)
+  }
+  
+  diff <- x_max - x_min
   x_min <- x_min - 0.1*diff
   x_max <- x_max + 0.1*diff
 
@@ -693,7 +797,7 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
 #' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation, rope - region of practical equivalence.
 #' @rdname ttest_class-compare_distributions
 #' @aliases compare_distributions_ttest
-#' @return Comparison results or a warning if something went wrong.
+#' @return Comparison results or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -707,8 +811,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
   wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(ttest_class, fit2=ttest_class), compare_distributions(ttest_class, fits=list), compare_distributions(ttest_class, mu=numeric) or compare_distributions(ttest_class, mu=numeric, sigma=numeric) is required! You can also provide the rope parameter, e.g. compare_distributions(ttest_class, fit2=ttest_class, rope=numeric)."
 
   if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # prepare rope
@@ -754,8 +857,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
     i <- 2
     for (fit in arguments$fits) {
       if (class(fit) != "ttest_class") {
-        warning("One of the fits in the fits list is not a valid ttest_class object.")
-        return()
+        stop("One of the fits in the fits list is not a valid ttest_class object.")
       }
 
       y[[i]] <- metRology::rt.scaled(n,
@@ -766,8 +868,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
       i <- i + 1
     }
   } else {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   n <- length(y)
@@ -791,6 +892,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
 
   # largest/smallest probabilities
   if (n > 2) {
+    cat("-----------------------------------------")
     cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
     smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
     print(smallest_largest)
@@ -808,7 +910,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
 #' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation.
 #' @rdname ttest_class-plot_distributions
 #' @aliases plot_distributions_ttest
-#' @return A ggplot visualization or a warning if something went wrong.
+#' @return A ggplot visualization or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -854,8 +956,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
       i <- 2
       for (fit in arguments$fits) {
         if (class(fit) != "ttest_class") {
-          warning("One of the fits in the fits list is not a valid ttest_class object.")
-          return()
+          stop("One of the fits in the fits list is not a valid ttest_class object.")
         }
 
         nus[i] <- mean(fit@extract$nu)
@@ -946,7 +1047,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
 #' @param ... fit2 - a second ttest_class object, fits - a list of ttest_class objects, mu - mean value, sigma - standard deviation, rope - region of practical equivalence, bins - number of bins in the histogram.
 #' @rdname ttest_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_ttest
-#' @return A ggplot visualization or a warning if something went wrong.
+#' @return A ggplot visualization or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -963,8 +1064,7 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
   wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(ttest_class, fit2=ttest_class), plot_distributions_difference(ttest_class, mu=numeric), plot_distributions_difference(ttest_class, mu=numeric, sigma=numeric) or plot_distributions_difference(ttest_class, fits=list) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(ttest_class, fit2=ttest_class, rope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # prepare rope
@@ -1011,8 +1111,7 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
     i <- 2
     for (fit in arguments$fits) {
       if (class(fit) != "ttest_class") {
-        warning("One of the fits in the fits list is not a valid ttest_class object.")
-        return()
+        stop("One of the fits in the fits list is not a valid ttest_class object.")
       }
 
       y[[i]] <- metRology::rt.scaled(n,
@@ -1027,8 +1126,7 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
       i <- i + 1
     }
   } else {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # bins in the histogram
@@ -1073,65 +1171,4 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
     graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
     return(graph)
   }
-})
-
-
-#' @title plot_fit
-#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit.
-#' @param object ttest_class object.
-#' @rdname ttest_class-plot_fit
-#' @aliases plot_fit_ttest
-#' @return A ggplot visualization.
-#'
-#' @examples
-#' # to use the function you first have to prepare the data and fit the model
-#' # see class documentation for an example of the whole process
-#' # along with an example of how to use this function
-#' ?ttest_class
-#'
-setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(object) {
-  # init local varibales for CRAN check
-  value <- NULL
-
-  df_data <- data.frame(value=object@data)
-
-  nu <- mean(object@extract$nu)
-  mu <- mean(object@extract$mu)
-  sigma <- mean(object@extract$sigma)
-
-  # get x range
-  x_min <- min(mu - 4*sigma, df_data$value)
-  x_max <- max(mu + 4*sigma, df_data$value)
-
-  diff <- x_max - x_min
-  x_min <- x_min - 0.1*diff
-  x_max <- x_max + 0.1*diff
-
-  df_x <- data.frame(x=c(x_min, x_max))
-
-  graph <- ggplot(data=df_x) +
-    geom_density(data=df_data, aes(x=value), fill="#3182bd", alpha=0.4, color=NA) +
-    stat_function(fun=metRology::dt.scaled, n=10000, args=list(df=nu, mean=mu, sd=sigma), colour="#3182bd", size=1) +
-    xlab("value") +
-    xlim(x_min, x_max)
-
-  return(graph)
-})
-
-
-#' @title plot_trace
-#' @description \code{plot_trace} traceplot for main fitted model parameters.
-#' @param object ttest_class object.
-#' @rdname ttest_class-plot_trace
-#' @aliases plot_trace_ttest
-#' @return A ggplot visualization.
-#'
-#' @examples
-#' # to use the function you first have to prepare the data and fit the model
-#' # see class documentation for an example of the whole process
-#' # along with an example of how to use this function
-#' ?ttest_class
-#'
-setMethod(f="plot_trace", signature(object="ttest_class"), definition=function(object) {
-  traceplot(object@fit, pars=c("mu", "sigma"), inc_warmup=TRUE)
 })

@@ -16,6 +16,16 @@ print(`linear_class`): prints a more detailed summary of the fit
 
 show(`linear_class`): prints a more detailed summary of the fit.
 
+plot(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the subject level.
+
+plot(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the subjects level (subjects=FALSE).
+
+plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the subject level.
+
+plot_fit(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the subjects level (subjects=FALSE).
+
+plot_trace(`linear_class`): traceplot for main fitted model parameters.
+
 get_parameters(`linear_class`): returns a dataframe with values of fitted parameters.
 
 get_subject_parameters(`linear_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
@@ -35,12 +45,6 @@ plot_distributions(`linear_class`): a visualization of the fitted distribution.
 plot_distributions(`linear_class`, fit2=`linear_class`): a visualization of two fitted distribution.
 
 plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can plot only slope or intercept by using the par parameter. You can also provide the rope and bins (number of bins in the histogram) parameters.
-
-plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the subject level.
-
-plot_fit(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the subjects level (subjects=FALSE).
-
-plot_trace(`linear_class`): traceplot for main fitted model parameters.
 }
 \section{Slots}{
 
@@ -88,6 +92,17 @@ summary(fit1)
 print(fit1)
 show(fit1)
 
+# plot the fitted distribution against the data
+plot(fit1)
+plot_fit(fit1)
+
+# plot the fitted distribution against the data,
+# plot on the top (group) level
+plot(fit1, subjects=FALSE)
+plot_fit(fit1, subjects=FALSE)
+
+# traceplot of the fitted parameters
+plot_trace(fit1)
 # extract parameter values from the fit
 parameters <- get_parameters(fit1)
 
@@ -143,16 +158,6 @@ plot_distributions_difference(fit1, fit2=fit2, rope_intercept=0.5, rope_slope=0.
 
 # visualize difference between distributions underlying two fits, plot slope only
 plot_distributions_difference(fit1, fit2=fit2, par="slope")
-
-# plot the fitted distribution against the data
-plot_fit(fit1)
-
-# plot the fitted distribution against the data,
-# plot on the top (group) level
-plot_fit(fit1, subjects=FALSE)
-
-# traceplot of the fitted parameters
-plot_trace(fit1)
 }
 
 }

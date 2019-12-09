@@ -14,7 +14,7 @@
 \item{...}{fit2 - a second success_rate_class object, fits - a list of success_rate_class objects, rope - region of practical equivalence.}
 }
 \value{
-Comparison results or a warning if something went wrong.
+Comparison results or an error if something went wrong.
 }
 \description{
 \code{compare_means} prints difference in success rate between two groups or multiple groups.

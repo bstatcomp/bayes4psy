@@ -1,0 +1,127 @@
+---
+  title: "Analysis of the adaptation level experiment data using the Bayesian linear model"
+  author: "Jure Demšar, Erik Štrumbelj and Grega Repovš"
+  date: "`r Sys.Date()`"
+  output:
+    html_vignette:
+    toc: yes
+---
+
+<!--
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{b_reaction_time: Bayesian reaction time model}
+-->
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# knitr options
+knitr::opts_chunk$set(fig.width=6, fig.height=4.5)
+options(width=800)
+
+# parallel execution
+options(mc.cores = parallel::detectCores())
+```
+
+# Introduction
+
+In the adaptation level experiment participants had to assess weights of the objects placed in their hands by using a verbal scale: very very light, very light, light, medium light, medium, medium heavy, heavy, very heavy and very very heavy. The task was to assess the weight of an object that was placed on the palm of their hand. To standardize the procedure the participants had to place the elbow on the desk, extend the palm and assess the weight of the object after it was placed on their palm by slight up and down movements of their arm. During the experiment participants were blinded by using non-transparent fabric. In total there were 15 objects of the same shape and size but different mass (photo film canisters filled with metallic balls). Objects were grouped into three sets:
+
+* light set: 45 g, 55 g, 65 g, 75 g, 85 g (weights 1 to 5),
+* medium set: 95 g, 105 g, 115 g, 125 g, 135 g (weights 6 to 10),
+* heavy set: 145 g, 155 g, 165 g, 175 g, 185 g (weights 11 to 15).
+
+The experimenter sequentially placed weights in the palm of the participant and recorded the trial index, the weight of the object and participant's response. The participants were divided into two groups, in group 1 the participants first assessed the weights of the light set in ten rounds within which all five weights were weighted in a random order. After completing the 10 rounds with the light set, the experimenter switched to the medium set, without any announcement or break. The participant then weighted the medium set across another 10 rounds of weighting the five weights in a random order within each round. In group 2 the overall procedure was the same, the only difference being that they started with the 10 rounds of the heavy set and then performed another 10 rounds of weighting of the medium set. Importantly, the weights within each set were given in random order and the experimenter switched between sets seamlessly without any break or other indication to the participant.
+
+We will use the **bayes4psy** package to show that the two groups provide different assessment of the weights in the second part of the experiment even though both groups are responding to weights from the same (medium) set. The difference is very pronounced at first but then fades away with subsequent assessments of medium weights. This is congruent with the hypothesis that each group formed a different adaptation level during the initial phase of the task, the formed adaptation level then determined the perceptual experience of the same set of weights at the beginning of the second part of the task.
+
+We will conduct the analysis by using the hierarchical linear model. First we have to construct fits for the second part of the experiment for each group independently. The code below loads and prepares the data, just like in the previous example, subject indexes have to be mapped to a [1, n] interval. We will use to **ggplot2** package to fine-tune graph axes and properly annotate graphs returned by the **bayes4psy** package.
+
+```{r, message=FALSE, warning=FALSE}
+# libs
+library(bayes4psy)
+library(ggplot2)
+library(dplyr)
+
+# load data
+data <- adaptation_level
+
+# separate groups
+group1 <- data %>% filter(group == 1)
+group2 <- data %>% filter(group == 2)
+
+# number of subjects
+n1 <- length(unique(group1$subject))
+n2 <- length(unique(group2$subject))
+
+# map subjects to 1..n interval
+group1$subject <- plyr::mapvalues(group1$subject,
+                                  from=unique(group1$subject),
+                                  to=1:n1)
+group2$subject <- plyr::mapvalues(group2$subject,
+                                  from=unique(group2$subject),
+                                  to=1:n2)
+
+# second part data
+group1_part2 <- group1 %>% filter(part == 2)
+group2_part2 <- group2 %>% filter(part == 2)
+```
+
+Once the data is prepared we can fit the Bayesian models, the input data comes in the form of three vectors, $x$ stores indexes of the measurements, $y$ subject's responses and $s$ indexes of subjects. The **warmup** and **iter** parameters are set in order to achieve an effective sample size of 10,000.
+
+```{r, message=FALSE, warning=FALSE}
+fit1 <- b_linear(x=group1_part2$sequence,
+                 y=group1_part2$response,
+                 s=group1_part2$subject,
+                 iter=10000, warmup=500)
+
+fit2 <- b_linear(x=group2_part2$sequence,
+                 y=group2_part2$response,
+                 s=group2_part2$subject,
+                 iter=10000, warmup=500)
+```
+
+The fitting process is always followed by the quality analysis.
+
+```{r, message=FALSE, warning=FALSE}
+# trace plots
+plot_trace(fit1)
+plot_trace(fit2)
+
+# check fit
+print(fit1)
+
+# the command below is commented out for the sake of brevity
+#print(fit2)
+
+# visual inspection
+plot(fit1)
+plot(fit2)
+```
+
+The trace plot showed no MCMC related issues, effective sample sizes of parameters relevant for our analysis ($\mu_a$, $\mu_b$ and $\mu_s$) are large enough. Since the visual inspection of the fit also looks good we can continue with our analysis. To get a quick description of fits we can take a look at the summary statistics of model's parameters.
+
+```{r, message=FALSE, warning=FALSE}
+summary(fit1)
+summary(fit2)
+```
+
+Values of intercept suggest that our initial hypothesis about adaptation level is true. Subject's that weighted lighter object in the first part of the experiment (**fit1**) find medium objects at the beginning of experiment's second part heavier than subjects that weighted heavier objects in the first part (**fit2**). We can confirm this assumption by using functions that perform a more detailed analysis (e.g. **compare\_means** and **plot\_means\_difference**, see the outputs below).
+
+```{r, message=FALSE, warning=FALSE}
+comparison_results <- compare_means(fit1, fit2=fit2)
+
+plot_means_difference(fit1, fit2=fit2, par="intercept")
+```
+
+The fact that the slope for the first group is very likely to be negative (the whole 95\% HDI lies below 0) and positive for the second group (the whole 95\% HDI lies above 0) suggests that the adaptation level phenomenon fades away with time. We can visualize this by plotting means and distributions underlying both fits. The plotting functions in the **bayes4psy** package return regular **ggplot2** plot objects, so we can use the same techniques to annotate or change the look and feel of graphs as we would with the usual **ggplot2** visualizations.
+
+```{r, message=FALSE, warning=FALSE}
+plot_distributions(fit1, fit2) +
+  labs(title="Part II", x="measurement number", y="") +
+  theme(legend.position=) +
+  theme(legend.position="none") +
+  scale_x_continuous(limits=c(1, 10), breaks=seq(1:10)) +
+  ylim(0, 10)
+```
+
+Based on the analysis above, the hypothesis that each group formed a different adaptation level during the initial phase of the task seems to be true. Group that switches from heavy to medium weights assesses weights as lighter than they really are while for the group that switches from light to medium the weights appear heavier. With time these adaptation levels fade away and assessments converge to similar estimates of weight.

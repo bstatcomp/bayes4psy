@@ -10,6 +10,16 @@
 #'
 #' show(`linear_class`): prints a more detailed summary of the fit.
 #'
+#' plot(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the subject level.
+#'
+#' plot(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the subjects level (subjects=FALSE).
+#'
+#' plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the subject level.
+#'
+#' plot_fit(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the subjects level (subjects=FALSE).
+#'
+#' plot_trace(`linear_class`): traceplot for main fitted model parameters.
+#'
 #' get_parameters(`linear_class`): returns a dataframe with values of fitted parameters.
 #'
 #' get_subject_parameters(`linear_class`): returns a dataframe with values of fitted parameters for each subject in the hierarchical model.
@@ -29,12 +39,6 @@
 #' plot_distributions(`linear_class`, fit2=`linear_class`): a visualization of two fitted distribution.
 #'
 #' plot_distributions_difference(`linear_class`, fit2=`linear_class`): a visualization of the difference between the distribution of the first group and the second group. You can plot only slope or intercept by using the par parameter. You can also provide the rope and bins (number of bins in the histogram) parameters.
-#'
-#' plot_fit(`linear_class`): plots fitted model against the data. Use this function to explore the quality of your fit. Fit will be plotted on the subject level.
-#'
-#' plot_fit(`linear_class`, subjects='boolean'): plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the subjects level (subjects=FALSE).
-#'
-#' plot_trace(`linear_class`): traceplot for main fitted model parameters.
 #'
 #' @slot extract Extract from Stan fit.
 #' @slot fit Stan fit.
@@ -76,6 +80,17 @@
 #' print(fit1)
 #' show(fit1)
 #'
+#' # plot the fitted distribution against the data
+#' plot(fit1)
+#' plot_fit(fit1)
+#'
+#' # plot the fitted distribution against the data,
+#' # plot on the top (group) level
+#' plot(fit1, subjects=FALSE)
+#' plot_fit(fit1, subjects=FALSE)
+#'
+#' # traceplot of the fitted parameters
+#' plot_trace(fit1)
 #' # extract parameter values from the fit
 #' parameters <- get_parameters(fit1)
 #'
@@ -131,16 +146,6 @@
 #'
 #' # visualize difference between distributions underlying two fits, plot slope only
 #' plot_distributions_difference(fit1, fit2=fit2, par="slope")
-#'
-#' # plot the fitted distribution against the data
-#' plot_fit(fit1)
-#'
-#' # plot the fitted distribution against the data,
-#' # plot on the top (group) level
-#' plot_fit(fit1, subjects=FALSE)
-#'
-#' # traceplot of the fitted parameters
-#' plot_trace(fit1)
 #' }
 #'
 linear_class <- setClass(
@@ -203,6 +208,129 @@ setMethod(f="show", signature(object="linear_class"), definition=function(object
 })
 
 
+#' @title plot
+#' @description \code{plot} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the group level (subjects=FALSE).
+#' @param object linear_class object.
+#' @param ... subjects - plot fits on a subject level (default = TRUE).
+#' @exportMethod plot
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
+setMethod(f="plot", signature(x="linear_class", y="missing"), definition=function(x, ...) {
+  return(plot_fit(object=x, ...))
+})
+
+
+#' @title plot_fit
+#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the group level (subjects=FALSE).
+#' @param object linear_class object.
+#' @param ... subjects - plot fits on a subject level (default = TRUE).
+#' @rdname linear_class-plot_fit
+#' @aliases plot_fit_linear
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
+setMethod(f="plot_fit", signature(object="linear_class"), definition=function(object, ...) {
+  # init local varibales for CRAN check
+  slope <- intercept <- s <- x <- y <- NULL
+
+  arguments <- list(...)
+
+  # plot on a subject level?
+  subjects <- TRUE
+  if (!is.null(arguments$subjects)) {
+    subjects <- arguments$subjects
+  }
+
+  # data
+  df_data <- data.frame(x=object@data$x, y=object@data$y, s=object@data$s)
+
+  n <- length(unique(df_data$s))
+
+  x_min <- floor(min(df_data$x))
+  y_min <- floor(min(df_data$y))
+  x_max <- ceiling(max(df_data$x))
+  y_max <- ceiling(max(df_data$y))
+
+  diff_x <- x_max - x_min
+  x_min <- x_min - 0.1*diff_x
+  x_max <- x_max + 0.1*diff_x
+  diff_y <- y_max - y_min
+  y_min <- y_min - 0.1*diff_y
+  y_max <- y_max + 0.1*diff_y
+
+  # mean per subject
+  df_data <- df_data %>% group_by(s, x) %>% summarize(y=mean(y, na.rm=TRUE))
+
+  if (!subjects) {
+    m <- min(100, length(object@extract$mu_a))
+    # fit
+    df_fit <- data.frame(intercept=object@extract$mu_a,
+                         slope=object@extract$mu_b)
+    df_fit <- sample_n(df_fit, m)
+
+    graph <- ggplot() +
+      geom_point(data=df_data, aes(x=x, y=y), color="#3182bd", alpha=0.4, shape=16) +
+      geom_abline(data=df_fit, aes(slope=slope, intercept=intercept), color="#3182bd", alpha=0.1, size=1) +
+      xlim(x_min, x_max) +
+      ylim(y_min, y_max) +
+      ylab("response") +
+      xlab("question index")
+  } else {
+    m <- min(20, length(object@extract$mu_a))
+    # fits
+    df_fit <- NULL
+    for (i in 1:n) {
+      df <- data.frame(intercept=object@extract$alpha[,i],
+                       slope=object@extract$beta[,i],
+                       s=i)
+      df <- sample_n(df, m)
+      df_fit <- rbind(df_fit, df)
+    }
+
+    # ncol
+    n_col <- ceiling(sqrt(n))
+
+    # density per subject
+    graph <- ggplot() +
+      geom_point(data=df_data, aes(x=x, y=y), color="#3182bd", shape=16, alpha=0.4) +
+      geom_abline(data=df_fit, aes(slope=slope, intercept=intercept), color="#3182bd", alpha=0.2, size=1) +
+      facet_wrap(. ~ s, ncol=n_col) +
+      ylab("response") +
+      xlab("question index")
+  }
+
+  return(graph)
+})
+
+
+#' @title plot_trace
+#' @description \code{plot_trace} traceplot for main fitted model parameters.
+#' @param object linear_class object.
+#' @rdname linear_class-plot_trace
+#' @aliases plot_trace_linear
+#' @return A ggplot visualization.
+#'
+#' @examples
+#' # to use the function you first have to prepare the data and fit the model
+#' # see class documentation for an example of the whole process
+#' # along with an example of how to use this function
+#' ?linear_class
+#'
+setMethod(f="plot_trace", signature(object="linear_class"), definition=function(object) {
+  rstan::traceplot(object@fit, pars=c("mu_a", "mu_b", "mu_s"), inc_warmup=TRUE)
+})
+
+
 #' @title get_parameters
 #' @description \code{get_parameters} returns a dataframe with values of fitted parameters.
 #' @param object linear_class object.
@@ -262,7 +390,7 @@ setMethod(f="get_subject_parameters", signature(object="linear_class"), definiti
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
 #' @rdname linear_class-compare_means
 #' @aliases compare_meanslinear
-#' @return Comparison results or a warning if something went wrong.
+#' @return Comparison results or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -276,8 +404,7 @@ setMethod(f="compare_means", signature(object="linear_class"), definition=functi
   wrong_arguments <- "The provided arguments for the compare_means function are invalid, compare_means(linear_class, fit2=linear_class) is required! You can also provide the rope parameters, e.g. compare_means(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric)."
 
   if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # prepare rope
@@ -317,8 +444,7 @@ setMethod(f="compare_means", signature(object="linear_class"), definition=functi
     cat("\n")
     return(rbind(intercept, slope))
   } else {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 })
 
@@ -329,7 +455,7 @@ setMethod(f="compare_means", signature(object="linear_class"), definition=functi
 #' @param ... fit2 - a second linear_class object, par - specific parameter of comparison (slope or intercept), rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
 #' @rdname linear_class-plot_means_difference
 #' @aliases plot_means_difference_linear
-#' @return A ggplot visualization or a warning if something went wrong.
+#' @return A ggplot visualization or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -344,8 +470,7 @@ setMethod(f="plot_means_difference", signature(object="linear_class"), definitio
   wrong_arguments <- "The provided arguments for the plot_means_difference function are invalid, plot_means_difference(linear_class, fit2=linear_class) is required! You can optionallly provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_means_difference(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # compare through slope or intercept only
@@ -417,8 +542,7 @@ setMethod(f="plot_means_difference", signature(object="linear_class"), definitio
 
     return(graph)
   } else {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 })
 
@@ -429,7 +553,7 @@ setMethod(f="plot_means_difference", signature(object="linear_class"), definitio
 #' @param ... fit2 - a second linear_class object, par - plot a specific parameter (slope or intercept).
 #' @rdname linear_class-plot_means
 #' @aliases plot_means_linear
-#' @return A ggplot visualization or a warning if something went wrong.
+#' @return A ggplot visualization or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -534,7 +658,7 @@ setMethod(f="plot_means", signature(object="linear_class"), definition=function(
 #' @param ... fit2 - a second linear_class object, rope_intercept and rope_slope - regions of practical equivalence.
 #' @rdname linear_class-compare_distributions
 #' @aliases compare_distributions_linear
-#' @return Comparison results or a warning if something went wrong.
+#' @return Comparison results or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -548,8 +672,7 @@ setMethod(f="compare_distributions", signature(object="linear_class"), definitio
   wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(linear_class, fit2=linear_class) is required! You can also provide the rope parameter, e.g. compare_distributions(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric)."
 
   if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # prepare rope
@@ -601,8 +724,7 @@ setMethod(f="compare_distributions", signature(object="linear_class"), definitio
     cat("\n")
     return(rbind(intercept, slope))
   } else {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 })
 
@@ -613,7 +735,7 @@ setMethod(f="compare_distributions", signature(object="linear_class"), definitio
 #' @param ... fit2 - a second linear_class object.
 #' @rdname linear_class-plot_distributions
 #' @aliases plot_distributions_linear
-#' @return A ggplot visualization or a warning if something went wrong.
+#' @return A ggplot visualization or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -693,7 +815,7 @@ setMethod(f="plot_distributions", signature(object="linear_class"), definition=f
 #' @param ... fit2 - a second linear_class object,  par - specific parameter of comparison (slope or intercept), rope_intercept and rope_slope - regions of practical equivalence, bins - number of bins in the histogram.
 #' @rdname linear_class-plot_distributions_difference
 #' @aliases plot_distributions_difference_linear
-#' @return A ggplot visualization or a warning if something went wrong.
+#' @return A ggplot visualization or an error if something went wrong.
 #'
 #' @examples
 #' # to use the function you first have to prepare the data and fit the model
@@ -708,8 +830,7 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
   wrong_arguments <- "The provided arguments for the plot_distributions_difference function are invalid, plot_distributions_difference(linear_class, fit2=linear_class) is required! You can also provide the rope and bins (number of bins in the histogram) parameters, e.g. plot_distributions_difference(linear_class, fit2=linear_class, rope_intercept=numeric, rope_slope=numeric, bins=numeric)."
 
   if (length(arguments) == 0) {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
 
   # compare through slope or intercept only
@@ -793,109 +914,6 @@ setMethod(f="plot_distributions_difference", signature(object="linear_class"), d
 
     return(graph)
   } else {
-    warning(wrong_arguments)
-    return()
+    stop(wrong_arguments)
   }
-})
-
-
-#' @title plot_fit
-#' @description \code{plot_fit} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the group level (subjects=FALSE).
-#' @param object linear_class object.
-#' @param ... subjects - plot fits on a subject level (default = TRUE).
-#' @rdname linear_class-plot_fit
-#' @aliases plot_fit_linear
-#' @return A ggplot visualization.
-#'
-#' @examples
-#' # to use the function you first have to prepare the data and fit the model
-#' # see class documentation for an example of the whole process
-#' # along with an example of how to use this function
-#' ?linear_class
-#'
-setMethod(f="plot_fit", signature(object="linear_class"), definition=function(object, ...) {
-  # init local varibales for CRAN check
-  slope <- intercept <- s <- x <- y <- NULL
-
-  arguments <- list(...)
-
-  # plot on a subject level?
-  subjects <- TRUE
-  if (!is.null(arguments$subjects)) {
-    subjects <- arguments$subjects
-  }
-
-  # data
-  df_data <- data.frame(x=object@data$x, y=object@data$y, s=object@data$s)
-
-  n <- length(unique(df_data$s))
-
-  x_min <- floor(min(df_data$x))
-  y_min <- floor(min(df_data$y))
-  x_max <- ceiling(max(df_data$x))
-  y_max <- ceiling(max(df_data$y))
-
-  diff_x <- x_max - x_min
-  x_min <- x_min - 0.1*diff_x
-  x_max <- x_max + 0.1*diff_x
-  diff_y <- y_max - y_min
-  y_min <- y_min - 0.1*diff_y
-  y_max <- y_max + 0.1*diff_y
-
-  # mean per subject
-  df_data <- df_data %>% group_by(s, x) %>% summarize(y=mean(y, na.rm=TRUE))
-
-  if (!subjects) {
-    m <- min(100, length(object@extract$mu_a))
-    # fit
-    df_fit <- data.frame(intercept=object@extract$mu_a,
-                         slope=object@extract$mu_b)
-    df_fit <- sample_n(df_fit, m)
-
-    graph <- ggplot() +
-      geom_point(data=df_data, aes(x=x, y=y), color="#3182bd", alpha=0.4, shape=16) +
-      geom_abline(data=df_fit, aes(slope=slope, intercept=intercept), color="#3182bd", alpha=0.1, size=1) +
-      xlim(x_min, x_max) +
-      ylim(y_min, y_max)
-  } else {
-    m <- min(20, length(object@extract$mu_a))
-    # fits
-    df_fit <- NULL
-    for (i in 1:n) {
-      df <- data.frame(intercept=object@extract$alpha[,i],
-                       slope=object@extract$beta[,i],
-                       s=i)
-      df <- sample_n(df, m)
-      df_fit <- rbind(df_fit, df)
-    }
-
-    # ncol
-    n_col <- ceiling(sqrt(n))
-
-    # density per subject
-    graph <- ggplot() +
-      geom_point(data=df_data, aes(x=x, y=y), color="#3182bd", shape=16, alpha=0.4) +
-      geom_abline(data=df_fit, aes(slope=slope, intercept=intercept), color="#3182bd", alpha=0.2, size=1) +
-      facet_wrap(. ~ s, ncol=n_col)
-  }
-
-  return(graph)
-})
-
-
-#' @title plot_trace
-#' @description \code{plot_trace} traceplot for main fitted model parameters.
-#' @param object linear_class object.
-#' @rdname linear_class-plot_trace
-#' @aliases plot_trace_linear
-#' @return A ggplot visualization.
-#'
-#' @examples
-#' # to use the function you first have to prepare the data and fit the model
-#' # see class documentation for an example of the whole process
-#' # along with an example of how to use this function
-#' ?linear_class
-#'
-setMethod(f="plot_trace", signature(object="linear_class"), definition=function(object) {
-  rstan::traceplot(object@fit, pars=c("mu_a", "mu_b", "mu_s"), inc_warmup=TRUE)
 })

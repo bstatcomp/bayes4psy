@@ -43,6 +43,11 @@ b_success_rate <- function(r,
                            control=NULL,
                            suppress_warnings=TRUE) {
 
+  # multi core
+  if (chains > 1) {
+    options(mc.cores = parallel::detectCores())
+  }
+
   # prepare data
   n <- length(r)
   m <- length(unique(s))
