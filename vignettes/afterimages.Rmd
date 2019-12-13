@@ -1,5 +1,5 @@
 ---
-  title: "Analysis of the Stroop experiment data using the Bayesian t-test"
+  title: "Analysis of the after images experiment data using the Bayesian color model"
   author: "Jure Demšar, Erik Štrumbelj and Grega Repovš"
   date: "`r Sys.Date()`"
   output:
@@ -10,7 +10,7 @@
 <!--
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{b_reaction_time: Bayesian reaction time model}
+  %\VignetteIndexEntry{b_color: Bayesian color model}
 -->
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}

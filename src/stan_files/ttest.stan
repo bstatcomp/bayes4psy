@@ -10,7 +10,7 @@ data {
 parameters {
   real mu;
   real<lower=0> sigma;
-  real<lower=0, upper=1000> nu;
+  real<lower=0, upper=10000> nu;
 }
 
 model {

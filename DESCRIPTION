@@ -15,7 +15,7 @@ LazyData: true
 ByteCompile: true
 Depends:
     methods,
-    R (>= 3.4.0),
+    R (>= 3.6.1),
     Rcpp (>= 0.12.16)
 Imports:
     circular (>= 0.4.93),

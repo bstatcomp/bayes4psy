@@ -10,7 +10,7 @@
 <!--
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{b_reaction_time: Bayesian reaction time model}
+  %\VignetteIndexEntry{b_linear: Bayesian linear model}
 -->
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
@@ -45,25 +45,9 @@ library(dplyr)
 # load data
 data <- adaptation_level
 
-# separate groups
-group1 <- data %>% filter(group == 1)
-group2 <- data %>% filter(group == 2)
-
-# number of subjects
-n1 <- length(unique(group1$subject))
-n2 <- length(unique(group2$subject))
-
-# map subjects to 1..n interval
-group1$subject <- plyr::mapvalues(group1$subject,
-                                  from=unique(group1$subject),
-                                  to=1:n1)
-group2$subject <- plyr::mapvalues(group2$subject,
-                                  from=unique(group2$subject),
-                                  to=1:n2)
-
-# second part data
-group1_part2 <- group1 %>% filter(part == 2)
-group2_part2 <- group2 %>% filter(part == 2)
+# separate groups and parts
+group1_part2 <- data %>% filter(group == 1 & part == 2)
+group2_part2 <- data %>% filter(group == 2 & part == 2)
 ```
 
 Once the data is prepared we can fit the Bayesian models, the input data comes in the form of three vectors, $x$ stores indexes of the measurements, $y$ subject's responses and $s$ indexes of subjects. The **warmup** and **iter** parameters are set in order to achieve an effective sample size of 10,000.
