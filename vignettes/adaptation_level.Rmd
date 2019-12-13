@@ -18,8 +18,8 @@
 knitr::opts_chunk$set(fig.width=6, fig.height=4.5)
 options(width=800)
 
-# parallel execution
-options(mc.cores = parallel::detectCores())
+# vignettes support only 2 cores
+options(mc.cores=2)
 ```
 
 # Introduction
@@ -39,9 +39,8 @@ We will conduct the analysis by using the hierarchical linear model. First we ha
 ```{r, message=FALSE, warning=FALSE}
 # libs
 library(bayes4psy)
-library(ggplot2)
-library(plyr)
 library(dplyr)
+library(ggplot2)
 
 # load data
 data <- adaptation_level
@@ -51,18 +50,18 @@ group1_part2 <- data %>% filter(group == 1 & part == 2)
 group2_part2 <- data %>% filter(group == 2 & part == 2)
 ```
 
-Once the data is prepared we can fit the Bayesian models, the input data comes in the form of three vectors, $x$ stores indexes of the measurements, $y$ subject's responses and $s$ indexes of subjects.
+Once the data is prepared we can fit the Bayesian models, the input data comes in the form of three vectors, $x$ stores indexes of the measurements, $y$ subject's responses and $s$ indexes of subjects. Note here that, due to vignette limitations, all fits are built using only two chains, using more chains in parallel is usually more efficient.
 
 ```{r, message=FALSE, warning=FALSE}
 fit1 <- b_linear(x=group1_part2$sequence,
                  y=group1_part2$response,
                  s=group1_part2$subject,
-                 iter=2000, warmup=500)
+                 iter=2000, warmup=500, chains=2)
 
 fit2 <- b_linear(x=group2_part2$sequence,
                  y=group2_part2$response,
                  s=group2_part2$subject,
-                 iter=2000, warmup=500)
+                 iter=2000, warmup=500, chains=2)
 ```
 
 The fitting process is always followed by the quality analysis.

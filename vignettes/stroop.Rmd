@@ -18,8 +18,8 @@
 knitr::opts_chunk$set(fig.width=6, fig.height=4.5)
 options(width=800)
 
-# parallel execution
-options(mc.cores = parallel::detectCores())
+# vignettes support only 2 cores
+options(mc.cores=2)
 ```
 
 # Introduction
@@ -33,12 +33,11 @@ In our version of the Stroop test participants were faced with four types of con
 * Reading incongruent -- name of the color was printed in incongruent ink, the participant had to read the written name of the color.
 * Naming incongruent -- name of the color was printed in incongruent ink, the participant had to name the ink color.
 
-We are primarily interested in expected task completion times. Every participant had the same number of stimuli in every condition, so we opt for a Bayesian t-test. The data are already split into the four conditions described above, so we only need to specify the priors. We based them on our previous experience with similar tasks -- participants finish the task in approximately 1 minute and the typical standard deviation for a participant is less than 2 minutes.
+We are primarily interested in expected task completion times. Every participant had the same number of stimuli in every condition, so we opt for a Bayesian t-test. The data are already split into the four conditions described above, so we only need to specify the priors. We based them on our previous experience with similar tasks -- participants finish the task in approximately 1 minute and the typical standard deviation for a participant is less than 2 minutes. Note here that, due to vignette limitations, all fits are built using only two chains, using more chains in parallel is usually more efficient.
 
 ```{r, message=FALSE, warning=FALSE}
 # libs
 library(bayes4psy)
-library(dplyr)
 library(ggplot2)
 
 # load data
@@ -53,19 +52,19 @@ priors <- list(c("mu", mu_prior),
 # fit
 fit_reading_neutral <- b_ttest(data$reading_neutral,
                                priors=priors,
-                               iter=4000, warmup=500)
+                               iter=4000, warmup=500, chains=2)
 
 fit_reading_incongruent <- b_ttest(data$reading_incongruent,
                                    priors=priors,
-                                   iter=4000, warmup=500)
+                                   iter=4000, warmup=500, chains=2)
 
 fit_naming_neutral <- b_ttest(data$naming_neutral,
                               priors=priors,
-                              iter=4000, warmup=500)
+                              iter=4000, warmup=500, chains=2)
 
 fit_naming_incongruent <- b_ttest(data$naming_incongruent,
                                   priors=priors,
-                                  iter=4000, warmup=500)
+                                  iter=4000, warmup=500, chains=2)
 ```
 
 Next we perform MCMC diagnostics and visual checks of model fits.

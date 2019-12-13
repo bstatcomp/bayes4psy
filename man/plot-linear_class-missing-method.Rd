@@ -10,6 +10,8 @@
 \arguments{
 \item{x}{linear_class object.}
 
+\item{y}{empty dummy variable, ignore this.}
+
 \item{...}{subjects - plot fits on a subject level (default = TRUE).}
 }
 \description{
