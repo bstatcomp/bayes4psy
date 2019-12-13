@@ -8,9 +8,9 @@
 \S4method{plot}{linear_class,missing}(x, y, ...)
 }
 \arguments{
-\item{...}{subjects - plot fits on a subject level (default = TRUE).}
+\item{x}{linear_class object.}
 
-\item{object}{linear_class object.}
+\item{...}{subjects - plot fits on a subject level (default = TRUE).}
 }
 \description{
 \code{plot} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the group level (subjects=FALSE).

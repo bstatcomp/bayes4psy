@@ -10,7 +10,7 @@
 <!--
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{b_reaction_time: Bayesian reaction time model}
+  %\VignetteIndexEntry{b_ttest: Bayesian t-test}
 -->
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}

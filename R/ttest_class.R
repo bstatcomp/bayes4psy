@@ -259,7 +259,7 @@ setMethod(f="show", signature(object="ttest_class"), definition=function(object)
 
 #' @title plot
 #' @description \code{plot} plots fitted model against the data. Use this function to explore the quality of your fit.
-#' @param object ttest_class object.
+#' @param x ttest_class object.
 #' @exportMethod plot
 #'
 #' @examples
@@ -780,7 +780,7 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
     x_min <- min(x_min, par2)
     x_max <- max(x_max, par2)
   }
-  
+
   diff <- x_max - x_min
   x_min <- x_min - 0.1*diff
   x_max <- x_max + 0.1*diff

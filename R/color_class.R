@@ -386,7 +386,8 @@ setMethod(f="show", signature(object="color_class"), definition=function(object)
 
 #' @title plot
 #' @description \code{plot} plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).
-#' @param object color_class object.
+#' @param x color_class object.
+#' @param y empty dummy variable, ignore this.
 #' @param ... pars - components of comparison, a subset of (r, g, b, h, s, v).
 #' @exportMethod plot
 #'

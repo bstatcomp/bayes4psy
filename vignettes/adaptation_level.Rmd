@@ -10,7 +10,7 @@
 <!--
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{b_reaction_time: Bayesian reaction time model}
+  %\VignetteIndexEntry{b_linear: Bayesian linear model}
 -->
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
@@ -40,6 +40,7 @@ We will conduct the analysis by using the hierarchical linear model. First we ha
 # libs
 library(bayes4psy)
 library(ggplot2)
+library(plyr)
 library(dplyr)
 
 # load data
@@ -54,30 +55,30 @@ n1 <- length(unique(group1$subject))
 n2 <- length(unique(group2$subject))
 
 # map subjects to 1..n interval
-group1$subject <- plyr::mapvalues(group1$subject,
-                                  from=unique(group1$subject),
-                                  to=1:n1)
-group2$subject <- plyr::mapvalues(group2$subject,
-                                  from=unique(group2$subject),
-                                  to=1:n2)
+group1$subject <- mapvalues(group1$subject,
+                            from=unique(group1$subject),
+                            to=1:n1)
+group2$subject <- mapvalues(group2$subject,
+                            from=unique(group2$subject),
+                            to=1:n2)
 
 # second part data
 group1_part2 <- group1 %>% filter(part == 2)
 group2_part2 <- group2 %>% filter(part == 2)
 ```
 
-Once the data is prepared we can fit the Bayesian models, the input data comes in the form of three vectors, $x$ stores indexes of the measurements, $y$ subject's responses and $s$ indexes of subjects. The **warmup** and **iter** parameters are set in order to achieve an effective sample size of 10,000.
+Once the data is prepared we can fit the Bayesian models, the input data comes in the form of three vectors, $x$ stores indexes of the measurements, $y$ subject's responses and $s$ indexes of subjects.
 
 ```{r, message=FALSE, warning=FALSE}
 fit1 <- b_linear(x=group1_part2$sequence,
                  y=group1_part2$response,
                  s=group1_part2$subject,
-                 iter=10000, warmup=500)
+                 iter=2000, warmup=500)
 
 fit2 <- b_linear(x=group2_part2$sequence,
                  y=group2_part2$response,
                  s=group2_part2$subject,
-                 iter=10000, warmup=500)
+                 iter=2000, warmup=500)
 ```
 
 The fitting process is always followed by the quality analysis.

@@ -20,6 +20,7 @@ Depends:
 Imports:
     circular (>= 0.4.93),
     cowplot (>= 0.9.3),
+    plyr,
     dplyr (>= 0.7.6),
     emg (>= 1.0.7),
     ggplot2 (>= 2.2.1),
