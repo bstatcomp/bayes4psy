@@ -8,9 +8,11 @@
 \S4method{plot}{reaction_time_class,missing}(x, y, ...)
 }
 \arguments{
-\item{...}{subjects - plot fits on a subject level (default = TRUE).}
+\item{x}{reaction_time_class object.}
 
-\item{object}{reaction_time_class object.}
+\item{y}{empty dummy variable, ignore this.}
+
+\item{...}{subjects - plot fits on a subject level (default = TRUE).}
 }
 \description{
 \code{plot} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subjects level (subjects=TRUE) or on the group level (subjects=FALSE).

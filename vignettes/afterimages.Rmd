@@ -33,6 +33,7 @@ We start our analysis by loading the experiment and stimuli data. The experiment
 library(bayes4psy)
 library(dplyr)
 library(ggplot2)
+library(cowplot)
 
 # load data
 data_all <- after_images
@@ -232,9 +233,9 @@ plot_magenta <- plot_magenta + ggtitle("Magenta") +
 We can then use the **cowplot** library to combine the plots into a single figure.
 
 ```{r, message=FALSE, warning=FALSE}
-cowplot::plot_grid(plot_red, plot_green, plot_blue,
-                   plot_yellow, plot_cyan, plot_magenta,
-                   ncol=3, nrow=2, scale=0.9)
+plot_grid(plot_red, plot_green, plot_blue,
+          plot_yellow, plot_cyan, plot_magenta,
+          ncol=3, nrow=2, scale=0.9)
 ```
 
 This last figure features the comparison of predictions between the thrichromatic and the oponent-process color coding. The long solid line visualizes the trichromatic color coding prediction while the dashed line visualizes the opponent-process color coding. Short solid line represents the mean hue of the fit and the the colored band the 95% HDI of the distribution underlying the fit. The small colored circle visualizes the color of the presented stimuli. In the case of blue and yellow stimuli the dashed line is not visible because both color codings predict the same outcome. The prediction based on the thrichromatic color coding seems more accurate as its prediction is always inside the 95% of the most probable subject's responses and is always closer to the mean predicted hue than the opponent-process prediction. The opponent-process prediction is outside of the 95% of the most probable subject's responses in cases of red and green stimuli.

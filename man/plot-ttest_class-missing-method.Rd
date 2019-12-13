@@ -8,7 +8,7 @@
 \S4method{plot}{ttest_class,missing}(x)
 }
 \arguments{
-\item{object}{ttest_class object.}
+\item{x}{ttest_class object.}
 }
 \description{
 \code{plot} plots fitted model against the data. Use this function to explore the quality of your fit.
