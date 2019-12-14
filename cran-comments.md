@@ -1,5 +1,9 @@
 ## Revisions
 
+### CRAN submission 28. 6. 2019
+
+Everything was OK.
+
 ### CRAN submission 19. 6. 2019
 
 1. CRAN: Omit the redundant part "An R Package for" in your title. Please do not start your Description with "This package", package name or similar.

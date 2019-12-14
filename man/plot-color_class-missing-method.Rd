@@ -8,9 +8,11 @@
 \S4method{plot}{color_class,missing}(x, y, ...)
 }
 \arguments{
-\item{...}{pars - components of comparison, a subset of (r, g, b, h, s, v).}
+\item{x}{color_class object.}
 
-\item{object}{color_class object.}
+\item{y}{empty dummy variable, ignore this.}
+
+\item{...}{pars - components of comparison, a subset of (r, g, b, h, s, v).}
 }
 \description{
 \code{plot} plots fitted model against the data. Use this function to explore the quality of your fit. You can compare fit with underlying data only through chosen color components (r, g, b, h, s, v).

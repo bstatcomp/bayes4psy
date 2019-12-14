@@ -1,5 +1,5 @@
 Package: bayes4psy
-Version: 1.2.0
+Version: 1.2.1
 Title: User Friendly Bayesian Data Analysis for Psychology
 Description: Contains several Bayesian models for data analysis of psychological tests. A user friendly interface for these models should enable students and researchers to perform professional level Bayesian data analysis without advanced knowledge in programming and Bayesian statistics.
 Authors@R:
@@ -15,7 +15,7 @@ LazyData: true
 ByteCompile: true
 Depends:
     methods,
-    R (>= 3.4.0),
+    R (>= 3.5.0),
     Rcpp (>= 0.12.16)
 Imports:
     circular (>= 0.4.93),
@@ -29,7 +29,11 @@ Imports:
     rstantools (>= 1.5.0),
     mcmcse (>= 1.3.2),
     stats,
-    utils,
+    utils
+Suggests: 
+    testthat,
+    rmarkdown,
+    knitr
 LinkingTo:
     StanHeaders (>= 2.17.2),
     rstan (>= 2.17.3),
@@ -40,6 +44,3 @@ SystemRequirements: GNU make
 VignetteBuilder: knitr
 NeedsCompilation: yes
 RoxygenNote: 6.1.1
-Suggests: 
-    testthat,
-    knitr

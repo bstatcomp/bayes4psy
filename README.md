@@ -1,6 +1,6 @@
 # bayes4psy
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/bayes4psy?color=blue)](http://cran.r-project.org/package=bayes4psy)[![Downloads](http://cranlogs.r-pkg.org/badges/bayes4psy?color=blue)](http://cran.rstudio.com/package=bayes4psy)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/bayes4psy?color=blue)](https://CRAN.R-project.org/package=bayes4psy)[![Downloads](http://cranlogs.r-pkg.org/badges/bayes4psy?color=blue)](https://CRAN.R-project.org/package=bayes4psy)
 
 ## The package
 

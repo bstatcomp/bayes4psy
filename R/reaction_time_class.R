@@ -240,7 +240,8 @@ setMethod(f="show", signature(object="reaction_time_class"), definition=function
 
 #' @title plot
 #' @description \code{plot} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subjects level (subjects=TRUE) or on the group level (subjects=FALSE).
-#' @param object reaction_time_class object.
+#' @param x reaction_time_class object.
+#' @param y empty dummy variable, ignore this.
 #' @param ... subjects - plot fits on a subject level (default = TRUE).
 #' @exportMethod plot
 #'

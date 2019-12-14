@@ -210,7 +210,8 @@ setMethod(f="show", signature(object="linear_class"), definition=function(object
 
 #' @title plot
 #' @description \code{plot} plots fitted model against the data. Use this function to explore the quality of your fit. You can plot on the subject level (subjects=TRUE) or on the group level (subjects=FALSE).
-#' @param object linear_class object.
+#' @param x linear_class object.
+#' @param y empty dummy variable, ignore this.
 #' @param ... subjects - plot fits on a subject level (default = TRUE).
 #' @exportMethod plot
 #'

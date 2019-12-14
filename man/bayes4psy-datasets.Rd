@@ -3,11 +3,23 @@
 \name{bayes4psy-datasets}
 \alias{bayes4psy-datasets}
 \alias{adaptation_level_small}
+\alias{adaptation_level}
+\alias{after_images_opponent_process}
+\alias{after_images_stimuli}
+\alias{after_images_trichromatic}
+\alias{after_images}
+\alias{flanker}
+\alias{stroop_extended}
+\alias{stroop_simple}
 \title{Datasets for bayes4psy examples
-Example datasets for use in \pkg{rstanarm} examples and vignettes.}
+Example datasets for use in \pkg{rstanarm} examples and vignettes.
+The datasets were extracted from the internal MBLab \url{http://www.mblab.si} repository.
+MBLab is a research lab at the Faculty of Arts, Department of Psychology, University of Ljubljana, Slovenia.}
 \format{\describe{
 \item{\code{adaptation_level_small}}{
 Small dataset on subjects picking up weights and determining their weights from 1..10.
+
+Source: Internal MBLab repository.
 
 50 obs. of 3 variables
 \itemize{
@@ -19,7 +31,7 @@ Small dataset on subjects picking up weights and determining their weights from 
 \item{\code{adaptation_level}}{
 Data on subjects picking up weights and determining their weights from 1..10.
 
-Source: Internal MBLab \url{www.mblab.si} repository.
+Source: Internal MBLab repository.
 
 2900 obs. of 6 variables
 \itemize{
@@ -34,7 +46,7 @@ Source: Internal MBLab \url{www.mblab.si} repository.
 #' \item{\code{after_images_opponent_process}}{
 Colors predicted by the opponent process theory.
 
-Source: Internal MBLab \url{www.mblab.si} repository.
+Source: Internal MBLab repository.
 
 6 obs. of 7 variables
 \itemize{
@@ -50,7 +62,7 @@ Source: Internal MBLab \url{www.mblab.si} repository.
 #' \item{\code{after_images_opponent_stimuli}}{
 Stimuli used in the after images experiment.
 
-Source: Internal MBLab \url{www.mblab.si} repository.
+Source: Internal MBLab repository.
 
 6 obs. of 7 variables
 \itemize{
@@ -66,7 +78,7 @@ Source: Internal MBLab \url{www.mblab.si} repository.
 #' \item{\code{after_images_trichromatic}}{
 Colors predicted by the trichromatic theory.
 
-Source: Internal MBLab \url{www.mblab.si} repository.
+Source: Internal MBLab repository.
 
 6 obs. of 7 variables
 \itemize{
@@ -82,7 +94,7 @@ Source: Internal MBLab \url{www.mblab.si} repository.
 #' \item{\code{after_images}}{
 Data gathered by the after images experiment.
 
-Source: Internal MBLab \url{www.mblab.si} repository.
+Source: Internal MBLab repository.
 
 1311 obs. of 12 variables
 \itemize{
@@ -103,7 +115,7 @@ Source: Internal MBLab \url{www.mblab.si} repository.
 #' \item{\code{flanker}}{
 Data gathered by the flanker experiment.
 
-Source: Internal MBLab \url{www.mblab.si} repository.
+Source: Internal MBLab repository.
 
 8256 obs. of 5 variables
 \itemize{
@@ -117,7 +129,7 @@ Source: Internal MBLab \url{www.mblab.si} repository.
 #' \item{\code{stroop_extended}}{
 All the data gathered by the Stroop experiment.
 
-Source: Internal MBLab \url{www.mblab.si} repository.
+Source: Internal MBLab repository.
 
 41068 obs. of 5 variables
 \itemize{
@@ -131,7 +143,7 @@ Source: Internal MBLab \url{www.mblab.si} repository.
 #' \item{\code{stroop_simple}}{
 All the data gathered by the Stroop experiment.
 
-Source: Internal MBLab \url{www.mblab.si} repository.
+Source: Internal MBLab repository.
 
 61 obs. of 5 variables
 \itemize{
@@ -146,6 +158,8 @@ Source: Internal MBLab \url{www.mblab.si} repository.
 \description{
 Datasets for bayes4psy examples
 Example datasets for use in \pkg{rstanarm} examples and vignettes.
+The datasets were extracted from the internal MBLab \url{http://www.mblab.si} repository.
+MBLab is a research lab at the Faculty of Arts, Department of Psychology, University of Ljubljana, Slovenia.
 }
 \examples{
 
