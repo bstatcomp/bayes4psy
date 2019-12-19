@@ -44,3 +44,4 @@ SystemRequirements: GNU make
 VignetteBuilder: knitr
 NeedsCompilation: yes
 RoxygenNote: 6.1.1
+URL: https://github.com/bstatcomp/bayes4psy
