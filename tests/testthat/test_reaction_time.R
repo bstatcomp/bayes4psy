@@ -88,8 +88,8 @@ test_that("reaction_time compare_means multiple fits", {
 # compare_distributions two fits
 test_that("reaction_time compare_distributions two fits", {
  o <- capture.output(output <- compare_distributions(fit1, fit2=fit2))
- expect_equal(output[1, 2], 0.15, tolerance=tol)
- expect_equal(output[2, 1], 0.85, tolerance=tol)
+ expect_equal(output[1, 2], 0.2, tolerance=tol)
+ expect_equal(output[2, 1], 0.8, tolerance=tol)
 })
 
 
