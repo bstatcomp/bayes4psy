@@ -1,6 +1,10 @@
 ## Revisions
 
-### CRAN submission 28. 6. 2019
+### CRAN submission 17. 2. 2020
+
+Fixxed errors denoted in the check results report.
+
+### CRAN submission 23. 12. 2019
 
 Everything was OK.
 
