@@ -4,9 +4,19 @@
 \alias{b_linear}
 \title{b_linear}
 \usage{
-b_linear(x, y, s, priors = NULL, warmup = 1000, iter = 2000,
-  chains = 4, seed = NULL, refresh = NULL, control = NULL,
-  suppress_warnings = TRUE)
+b_linear(
+  x,
+  y,
+  s,
+  priors = NULL,
+  warmup = 1000,
+  iter = 2000,
+  chains = 4,
+  seed = NULL,
+  refresh = NULL,
+  control = NULL,
+  suppress_warnings = TRUE
+)
 }
 \arguments{
 \item{x}{a vector containing sequence indexes (time).}

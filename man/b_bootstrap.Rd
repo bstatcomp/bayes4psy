@@ -4,8 +4,15 @@
 \alias{b_bootstrap}
 \title{b_bootstrap}
 \usage{
-b_bootstrap(data, statistic, n1 = 1000, n2 = 1000,
-  use_weights = FALSE, weight_arg = NULL, ...)
+b_bootstrap(
+  data,
+  statistic,
+  n1 = 1000,
+  n2 = 1000,
+  use_weights = FALSE,
+  weight_arg = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{The data as either a vector, matrix or data.frame.}

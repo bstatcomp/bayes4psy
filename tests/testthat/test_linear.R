@@ -25,9 +25,9 @@ x <- vector()
 y <- vector()
 s <- vector()
 for (i in 1:5) {
-  x <- c(x, rep(1:10, 2))
-  y <- c(y, rnorm(20, mean=1:10, sd=2))
-  s <- c(s, rep(i, 20))
+  x <- c(x, rep(1:10))
+  y <- c(y, rnorm(10, mean=1:10, sd=2))
+  s <- c(s, rep(i, 10))
 }
 
 fit1 <- b_linear(x=x, y=y, s=s, priors=priors, chains=1, seed=seed, refresh=0)
@@ -54,25 +54,25 @@ test_that("linear print and show", {
 # get_parameters
 test_that("linear get_parameters", {
   parameters <- get_parameters(fit1)
-  expect_equal(mean(parameters$slope), 0.23, tolerance=tol)
-  expect_equal(mean(parameters$intercept), 0.96, tolerance=tol)
-  expect_equal(mean(parameters$sigma), 1.79, tolerance=tol)
+  expect_equal(mean(parameters$slope), 0.2, tolerance=tol)
+  expect_equal(mean(parameters$intercept), 0.97, tolerance=tol)
+  expect_equal(mean(parameters$sigma), 1.94, tolerance=tol)
 })
 
 
 # get_subject_parameters
 test_that("linear get_subject_parameters", {
   parameters <- get_subject_parameters(fit1)
-  expect_equal(mean(parameters$slope), 0.23, tolerance=tol)
-  expect_equal(mean(parameters$intercept), 0.96, tolerance=tol)
-  expect_equal(mean(parameters$sigma), 1.79, tolerance=tol)
+  expect_equal(mean(parameters$slope), 0.19, tolerance=tol)
+  expect_equal(mean(parameters$intercept), 0.97, tolerance=tol)
+  expect_equal(mean(parameters$sigma), 1.92, tolerance=tol)
 })
 
 
 # compare_means two fits
 test_that("linear compare_means two fits", {
   o <- capture.output(output <- compare_means(fit1, fit2=fit2))
-  intercept <- c(0.2, 0.8, NA)
+  intercept <- c(0.32, 0.68, NA)
   slope <- c(0, 1, NA)
   compare <- rbind(intercept, slope)
   expect_equal(output, compare, tolerance=tol)
@@ -82,7 +82,7 @@ test_that("linear compare_means two fits", {
 # compare_distributions two fits
 test_that("linear compare_distributions two fits", {
   o <- capture.output(output <- compare_distributions(fit1, fit2=fit2))
-  intercept <- c(0.2, 0.8, NA)
+  intercept <- c(0.32, 0.68, NA)
   slope <- c(0.0, 1.0, NA)
   compare <- rbind(intercept, slope)
   expect_equal(output, compare, tolerance=tol)

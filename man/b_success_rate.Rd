@@ -4,9 +4,18 @@
 \alias{b_success_rate}
 \title{b_success_rate}
 \usage{
-b_success_rate(r, s, priors = NULL, warmup = 1000, iter = 2000,
-  chains = 4, seed = NULL, refresh = NULL, control = NULL,
-  suppress_warnings = TRUE)
+b_success_rate(
+  r,
+  s,
+  priors = NULL,
+  warmup = 1000,
+  iter = 2000,
+  chains = 4,
+  seed = NULL,
+  refresh = NULL,
+  control = NULL,
+  suppress_warnings = TRUE
+)
 }
 \arguments{
 \item{r}{a vector containing test results (0 - test was not solved successfully, 1 - test was solved successfully).}

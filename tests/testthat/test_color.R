@@ -21,15 +21,15 @@ priors_rgb <- list(c("mu_r", mu_prior),
 
 
 # generate data (rgb) and fit
-r <- as.integer(rnorm(100, mean=250, sd=20))
+r <- as.integer(rnorm(50, mean=250, sd=20))
 r[r > 255] <- 255
 r[r < 0] <- 0
 
-g <- as.integer(rnorm(100, mean=20, sd=20))
+g <- as.integer(rnorm(50, mean=20, sd=20))
 g[g > 255] <- 255
 g[g < 0] <- 0
 
-b <- as.integer(rnorm(100, mean=40, sd=20))
+b <- as.integer(rnorm(50, mean=40, sd=20))
 b[b > 255] <- 255
 b[b < 0] <- 0
 
@@ -87,8 +87,8 @@ test_that("color print and show", {
 # get_parameters
 test_that("color get_parameters", {
   parameters <- get_parameters(fit1)
-  expect_equal(mean(parameters$h), -0.01, tolerance=tol)
-  expect_equal(mean(parameters$s), 0.94, tolerance=tol)
+  expect_equal(mean(parameters$h), -0.06, tolerance=tol)
+  expect_equal(mean(parameters$s), 0.93, tolerance=tol)
   expect_equal(mean(parameters$v), 0.96, tolerance=tol)
 })
 
@@ -110,9 +110,9 @@ test_that("color compare_means two fits", {
 # compare_distributions two fits
 test_that("color compare_distributions two fits", {
   o <- capture.output(output <- compare_distributions(fit1, fit2=fit2))
-  r <- c(0.01, 0.99, NA)
+  r <- c(0.00, 1.00, NA)
   g <- c(1.00, 0.00, NA)
-  b <- c(0.63, 0.37, NA)
+  b <- c(0.72, 0.28, NA)
   h <- c(1.00, 0.00, NA)
   s <- c(0.32, 0.68, NA)
   v <- c(0.27, 0.73, NA)
