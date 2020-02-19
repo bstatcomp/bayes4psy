@@ -1,5 +1,9 @@
 ## Revisions
 
+### CRAN submission 19. 2. 2020
+
+Reran all unit tests manually and corrected all checks.
+
 ### CRAN submission 17. 2. 2020
 
 Fixxed errors denoted in the check results report.
