@@ -16,16 +16,16 @@ priors <- list(c("p", p_prior),
         c("tau", tau_prior))
 
 # subjects
-s <- rep(1:5, 10)
+s <- rep(1:5, 20)
 
 # generate data and fit
-data1 <- rbinom(50, size=1, prob=0.6)
+data1 <- rbinom(100, size=1, prob=0.6)
 fit1 <- b_success_rate(r=data1, s=s, priors=priors, chains=1, seed=seed, refresh=0)
 
-data2 <- rbinom(50, size=1, prob=0.1)
+data2 <- rbinom(100, size=1, prob=0.1)
 fit2 <- b_success_rate(r=data2, s=s, priors=priors, chains=1, seed=seed, refresh=0)
 
-data3 <- rbinom(50, size=1, prob=0.5)
+data3 <- rbinom(100, size=1, prob=0.5)
 fit3 <- b_success_rate(r=data3, s=s, priors=priors, chains=1, seed=seed, refresh=0)
 
 # fit list
@@ -48,14 +48,14 @@ test_that("success_rate print and show", {
 # get_parameters
 test_that("success_rate get_parameters", {
  parameters <- get_parameters(fit1)
- expect_equal(mean(parameters$p), 0.54, tolerance=tol)
+ expect_equal(mean(parameters$p), 0.57, tolerance=tol)
 })
 
 
 # get_subject_parameters
 test_that("success_rate get_subject_parameters", {
  parameters <- get_subject_parameters(fit1)
- expect_equal(mean(parameters$p), 0.54, tolerance=tol)
+ expect_equal(mean(parameters$p), 0.57, tolerance=tol)
 })
 
 
@@ -70,7 +70,7 @@ test_that("success_rate compare_means two fits", {
 # compare_means multiple fits
 test_that("success_rate compare_means multiple fits", {
  o <- capture.output(output <- compare_means(fit1, fits=fit_list))
- expect_equal(output$comparison_matrix[1,], c(NA, 1.00, 0.53), tolerance=tol)
+ expect_equal(output$comparison_matrix[1,], c(NA, 1.00, 0.96), tolerance=tol)
  expect_equal(output$smallest_largest$smallest, c(0, 1, 0), tolerance=tol)
 })
 
@@ -86,6 +86,6 @@ test_that("success_rate compare_distributions two fits", {
 # compare_distributions multiple fits
 test_that("success_rate compare_distributions multiple fits", {
  o <- capture.output(output <- compare_distributions(fit1, fits=fit_list))
- expect_equal(output$comparison_matrix[1,], c(NA, 1, 0.52), tolerance=tol)
+ expect_equal(output$comparison_matrix[1,], c(NA, 1, 1), tolerance=tol)
  expect_equal(output$smallest_largest$smallest, c(0, 1, 0), tolerance=tol)
 })
