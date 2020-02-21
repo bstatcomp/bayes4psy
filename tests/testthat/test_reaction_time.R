@@ -22,16 +22,16 @@ priors <- list(c("mu_m", mu_prior),
 
 
 # subjects
-s <- rep(1:5, 20)
+s <- rep(1:5, 10)
 
 # generate data and fit
-rt1 <- emg::remg(100, mu=10, sigma=1, lambda=0.4)
+rt1 <- emg::remg(50, mu=10, sigma=1, lambda=0.4)
 fit1 <- b_reaction_time(t=rt1, s=s, priors=priors, chains=1, seed=seed, refresh=0)
 
-rt2 <- emg::remg(100, mu=10, sigma=2, lambda=0.1)
+rt2 <- emg::remg(50, mu=20, sigma=2, lambda=0.1)
 fit2 <- b_reaction_time(t=rt2, s=s, priors=priors, chains=1, seed=seed, refresh=0)
 
-rt3 <- emg::remg(100, mu=20, sigma=2, lambda=1)
+rt3 <- emg::remg(50, mu=10, sigma=2, lambda=1)
 fit3 <- b_reaction_time(t=rt3, s=s, priors=priors, chains=1, seed=seed, refresh=0)
 
 # fit list
@@ -58,14 +58,14 @@ test_that("reaction_time print and show", {
 # get_parameters
 test_that("reaction_time get_parameters", {
  parameters <- get_parameters(fit1)
- expect_equal(mean(parameters$rt), 12.28, tolerance=tol)
+ expect_equal(mean(parameters$rt), 11.90, tolerance=tol)
 })
 
 
 # get_subject_parameters
 test_that("reaction_time get_subject_parameters", {
  parameters <- get_subject_parameters(fit1)
- expect_equal(mean(parameters$rt), 12.33, tolerance=tol)
+ expect_equal(mean(parameters$rt), 12.00, tolerance=tol)
 })
 
 
@@ -80,22 +80,22 @@ test_that("reaction_time compare_means two fits", {
 # compare_means multiple fits
 test_that("reaction_time compare_means multiple fits", {
  o <- capture.output(output <- compare_means(fit1, fits=fit_list))
- expect_equal(output$comparison_matrix[1,], c(NA, 0, 0), tolerance=tol)
- expect_equal(output$smallest_largest$smallest, c(1, 0, 0), tolerance=tol)
+ expect_equal(output$comparison_matrix[1,], c(NA, 0, 0.94), tolerance=tol)
+ expect_equal(output$smallest_largest$smallest, c(0.06, 0, 0.94), tolerance=tol)
 })
 
 
 # compare_distributions two fits
 test_that("reaction_time compare_distributions two fits", {
  o <- capture.output(output <- compare_distributions(fit1, fit2=fit2))
- expect_equal(output[1, 2], 0.15, tolerance=tol)
- expect_equal(output[2, 1], 0.85, tolerance=tol)
+ expect_equal(output[1, 2], 0.03, tolerance=tol)
+ expect_equal(output[2, 1], 0.97, tolerance=tol)
 })
 
 
 # compare_distributions multiple fits
 test_that("reaction_time compare_distributions multiple fits", {
  o <- capture.output(output <- compare_distributions(fit1, fits=fit_list))
- expect_equal(output$comparison_matrix[1,], c(NA, 0.15, 0.00), tolerance=tol)
- expect_equal(output$smallest_largest$smallest, c(0.84, 0.15, 0.00), tolerance=tol)
+ expect_equal(output$comparison_matrix[1,], c(NA, 0.03, 0.66), tolerance=tol)
+ expect_equal(output$smallest_largest$smallest, c(0.33, 0.01, 0.65), tolerance=tol)
 })

@@ -17,9 +17,6 @@
 # knitr options
 knitr::opts_chunk$set(fig.width=6, fig.height=4.5)
 options(width=800)
-
-# vignettes support only 2 cores
-options(mc.cores=2)
 ```
 
 # Introduction
@@ -33,7 +30,7 @@ In our version of the Stroop test participants were faced with four types of con
 * Reading incongruent -- name of the color was printed in incongruent ink, the participant had to read the written name of the color.
 * Naming incongruent -- name of the color was printed in incongruent ink, the participant had to name the ink color.
 
-We are primarily interested in expected task completion times. Every participant had the same number of stimuli in every condition, so we opt for a Bayesian t-test. The data are already split into the four conditions described above, so we only need to specify the priors. We based them on our previous experience with similar tasks -- participants finish the task in approximately 1 minute and the typical standard deviation for a participant is less than 2 minutes. Note here that, due to vignette limitations, all fits are built using only two chains, using more chains in parallel is usually more efficient.
+We are primarily interested in expected task completion times. Every participant had the same number of stimuli in every condition, so we opt for a Bayesian t-test. The data are already split into the four conditions described above, so we only need to specify the priors. We based them on our previous experience with similar tasks -- participants finish the task in approximately 1 minute and the typical standard deviation for a participant is less than 2 minutes. Note here that, due to vignette limitations, all fits are built using only one chain, using more chains in parallel is usually more efficient. Also to increase the building speed of vignettes we greatly reduced the amount of iterations, use an appropriate amount of iterations when executing actual analyses!
 
 ```{r, message=FALSE, warning=FALSE}
 # libs
@@ -52,19 +49,19 @@ priors <- list(c("mu", mu_prior),
 # fit
 fit_reading_neutral <- b_ttest(data$reading_neutral,
                                priors=priors,
-                               iter=4000, warmup=500, chains=2)
+                               iter=500, warmup=100, chains=1)
 
 fit_reading_incongruent <- b_ttest(data$reading_incongruent,
                                    priors=priors,
-                                   iter=4000, warmup=500, chains=2)
+                                   iter=500, warmup=100, chains=1)
 
 fit_naming_neutral <- b_ttest(data$naming_neutral,
                               priors=priors,
-                              iter=4000, warmup=500, chains=2)
+                              iter=500, warmup=100, chains=1)
 
 fit_naming_incongruent <- b_ttest(data$naming_incongruent,
                                   priors=priors,
-                                  iter=4000, warmup=500, chains=2)
+                                  iter=500, warmup=100, chains=1)
 ```
 
 Next we perform MCMC diagnostics and visual checks of model fits.

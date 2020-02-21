@@ -1,3 +1,16 @@
+# bayes4psy 1.2.3
+
+### New features and improvements
+Additional unit tests for CRAN checks.
+
+
+# bayes4psy 1.2.2
+
+### New features and improvements
+Further vignettes and tests optimizations.
+Added references to the description.
+
+
 # bayes4psy 1.2.1
 
 ### New features and improvements

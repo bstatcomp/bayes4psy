@@ -17,9 +17,6 @@
 # knitr options
 knitr::opts_chunk$set(fig.width=6, fig.height=4.5)
 options(width=800)
-
-# vignettes support only 2 cores
-options(mc.cores=2)
 ```
 
 # Introduction
@@ -50,18 +47,18 @@ group1_part2 <- data %>% filter(group == 1 & part == 2)
 group2_part2 <- data %>% filter(group == 2 & part == 2)
 ```
 
-Once the data is prepared we can fit the Bayesian models, the input data comes in the form of three vectors, $x$ stores indexes of the measurements, $y$ subject's responses and $s$ indexes of subjects. Note here that, due to vignette limitations, all fits are built using only two chains, using more chains in parallel is usually more efficient.
+Once the data is prepared we can fit the Bayesian models, the input data comes in the form of three vectors, $x$ stores indexes of the measurements, $y$ subject's responses and $s$ indexes of subjects. Note here that, due to vignette limitations, all fits are built using only one chain, using more chains in parallel is usually more efficient. Also to increase the building speed of vignettes we greatly reduced the amount of iterations, use an appropriate amount of iterations when executing actual analyses!
 
 ```{r, message=FALSE, warning=FALSE}
 fit1 <- b_linear(x=group1_part2$sequence,
                  y=group1_part2$response,
                  s=group1_part2$subject,
-                 iter=2000, warmup=500, chains=2)
+                 iter=500, warmup=100, chains=1)
 
 fit2 <- b_linear(x=group2_part2$sequence,
                  y=group2_part2$response,
                  s=group2_part2$subject,
-                 iter=2000, warmup=500, chains=2)
+                 iter=500, warmup=100, chains=1)
 ```
 
 The fitting process is always followed by the quality analysis.

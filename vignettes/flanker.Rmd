@@ -17,9 +17,6 @@
 # knitr options
 knitr::opts_chunk$set(fig.width=6, fig.height=4.5)
 options(width=800)
-
-# vignettes support only 2 cores
-options(mc.cores=2)
 ```
 
 # Introduction
@@ -56,17 +53,17 @@ The model requires subjects to be indexed from $1$ to $n$. Control group subject
 control_rt$subject <- control_rt$subject - 21
 ```
 
-Now we are ready to fit the Bayesian reaction time model for both groups. The model function requires two parameters -- a vector of reaction times $t$ and the vector of subject indexes $s$. Note here that, due to vignette limitations, all fits are built using only two chains, using more chains in parallel is usually more efficient.
+Now we are ready to fit the Bayesian reaction time model for both groups. The model function requires two parameters -- a vector of reaction times $t$ and the vector of subject indexes $s$. Note here that, due to vignette limitations, all fits are built using only one chain, using more chains in parallel is usually more efficient. Also to increase the building speed of vignettes we greatly reduced the amount of iterations, use an appropriate amount of iterations when executing actual analyses!
 
 ```{r, message=FALSE, warning=FALSE, results = 'hide'}
 # fit
 rt_control_fit <- b_reaction_time(t=control_rt$rt,
                                   s=control_rt$subject,
-                                  chains=2)
+                                  chains=1, iter=500, warmup=100)
 
 rt_test_fit <- b_reaction_time(t=test_rt$rt,
                                s=test_rt$subject,
-                                  chains=2)
+                                  chains=1, iter=500, warmup=10)
 ```
 
 Before we interpret the results, we check MCMC diagnostics and model fit.
@@ -175,12 +172,12 @@ priors <- list(c("p", p_prior))
 sr_control_fit <- b_success_rate(r=control_sr$result_numeric,
                                  s=control_sr$subject,
                                  priors=priors,
-                                 iter=4000, chains=2)
+                                 chains=1, iter=500, warmup=100)
 
 sr_test_fit <- b_success_rate(r=test_sr$result_numeric,
                               s=test_sr$subject,
                               priors=priors,
-                              iter=4000, chains=2)
+                              chains=1, iter=500, warmup=100)
 ```
 
 The process for inspecting Bayesian fits is the same as above. When visually inspecting the quality of the fit (the **plot** function) we can set the **subjects** parameter to **FALSE**, which visualizes the fit on the group level. This offers a quicker, but less detailed method of inspection. Again one of the commands is commented out for the sake of brevity.

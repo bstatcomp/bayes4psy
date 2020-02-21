@@ -17,9 +17,6 @@
 # knitr options
 knitr::opts_chunk$set(fig.width=6, fig.height=4.5)
 options(width=800)
-
-# vignettes support only 2 cores
-options(mc.cores=2)
 ```
 
 # Introduction
@@ -42,7 +39,7 @@ data_all <- after_images
 stimuli <- after_images_stimuli
 ```
 
-Once we load required libraries and thata we can start fitting the Bayesian color models. Below is a detailed example of fitting the Bayesian color model for red color stimuli. Note here that, due to vignette limitations, all fits are built using only two chains, using more chains in parallel is usually more efficient.
+Once we load required libraries and thata we can start fitting the Bayesian color models. Below is a detailed example of fitting the Bayesian color model for red color stimuli. Note here that, due to vignette limitations, all fits are built using only one chain, using more chains in parallel is usually more efficient. Also to increase the building speed of vignettes we greatly reduced the amount of iterations, use an appropriate amount of iterations when executing actual analyses!
 
 ```{r, message=FALSE, warning=FALSE}
 # prepare data
@@ -52,7 +49,7 @@ data_red <- data.frame(r=data_red$r,
                        b=data_red$b)
 
 # fit
-fit_red <- b_color(colors=data_red, chains=2)
+fit_red <- b_color(colors=data_red, chains=1, iter=500, warmup=100)
 
 # inspect
 plot_trace(fit_red)
@@ -68,35 +65,35 @@ data_green <- data_all %>% filter(stimuli == "green")
 data_green <- data.frame(r=data_green$r,
                          g=data_green$g,
                          b=data_green$b)
-fit_green <- b_color(colors=data_green, chains=2)
+fit_green <- b_color(colors=data_green, chains=1, iter=500, warmup=100)
 
 # blue
 data_blue <- data_all %>% filter(stimuli == "blue")
 data_blue <- data.frame(r=data_blue$r,
                         g=data_blue$g,
                         b=data_blue$b)
-fit_blue <- b_color(colors=data_blue, chains=2)
+fit_blue <- b_color(colors=data_blue, chains=1, iter=500, warmup=100)
 
 # yellow
 data_yellow <- data_all %>% filter(stimuli == "yellow")
 data_yellow <- data.frame(r=data_yellow$r,
                           g=data_yellow$g,
                           b=data_yellow$b)
-fit_yellow <- b_color(colors=data_yellow, chains=2)
+fit_yellow <- b_color(colors=data_yellow, chains=1, iter=500, warmup=100)
 
 # cyan
 data_cyan <- data_all %>% filter(stimuli == "cyan")
 data_cyan <- data.frame(r=data_cyan$r,
                         g=data_cyan$g,
                         b=data_cyan$b)
-fit_cyan <- b_color(colors=data_cyan, chains=2)
+fit_cyan <- b_color(colors=data_cyan, chains=1, iter=500, warmup=100)
 
 # magenta
 data_magenta <- data_all %>% filter(stimuli == "magenta")
 data_magenta <- data.frame(r=data_magenta$r,
                            g=data_magenta$g,
                            b=data_magenta$b)
-fit_magenta <- b_color(colors=data_magenta, chains=2)
+fit_magenta <- b_color(colors=data_magenta, chains=1, iter=500, warmup=100)
 ```
 
 We start the analysis by loading data about the colors predicted by the trichromatic or the opponent-process theory. We can then use the **plot\_distributions\_hsv** function of the Bayesian color model to produce a visualization of the accuracy of both color coding mechanisms predictions for each stimuli independently. Each graph visualizes the fitted distribution, displayed stimuli and responses predicted by the trichromatic and opponent-process coding. This additional information can be added to the visualization via annotation points and lines.

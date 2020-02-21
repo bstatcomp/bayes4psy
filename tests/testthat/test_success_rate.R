@@ -70,7 +70,7 @@ test_that("success_rate compare_means two fits", {
 # compare_means multiple fits
 test_that("success_rate compare_means multiple fits", {
  o <- capture.output(output <- compare_means(fit1, fits=fit_list))
- expect_equal(output$comparison_matrix[1,], c(NA, 1.00, 0.86), tolerance=tol)
+ expect_equal(output$comparison_matrix[1,], c(NA, 1.00, 0.96), tolerance=tol)
  expect_equal(output$smallest_largest$smallest, c(0, 1, 0), tolerance=tol)
 })
 
@@ -86,6 +86,6 @@ test_that("success_rate compare_distributions two fits", {
 # compare_distributions multiple fits
 test_that("success_rate compare_distributions multiple fits", {
  o <- capture.output(output <- compare_distributions(fit1, fits=fit_list))
- expect_equal(output$comparison_matrix[1,], c(NA, 1, 0.97), tolerance=tol)
+ expect_equal(output$comparison_matrix[1,], c(NA, 1, 1), tolerance=tol)
  expect_equal(output$smallest_largest$smallest, c(0, 1, 0), tolerance=tol)
 })
