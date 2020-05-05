@@ -99,7 +99,6 @@ The fact that the slope for the first group is very likely to be negative (the w
 ```{r, message=FALSE, warning=FALSE}
 plot_distributions(fit1, fit2) +
   labs(title="Part II", x="measurement number", y="") +
-  theme(legend.position=) +
   theme(legend.position="none") +
   scale_x_continuous(limits=c(1, 10), breaks=seq(1:10)) +
   ylim(0, 10)
