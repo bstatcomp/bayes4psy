@@ -1,18 +1,23 @@
-## Revisions
+# Revisions
 
-### CRAN submission 19. 2. 2020
+## CRAN submission 20. 11. 2020
+
+Revised tests to avoid stability issues on Solaris.
+
+
+## CRAN submission 19. 2. 2020
 
 Reran all unit tests manually and corrected all checks.
 
-### CRAN submission 17. 2. 2020
+## CRAN submission 17. 2. 2020
 
 Fixxed errors denoted in the check results report.
 
-### CRAN submission 23. 12. 2019
+## CRAN submission 23. 12. 2019
 
 Everything was OK.
 
-### CRAN submission 19. 6. 2019
+## CRAN submission 19. 6. 2019
 
 1. CRAN: Omit the redundant part "An R Package for" in your title. Please do not start your Description with "This package", package name or similar.
 Response: Done.
@@ -24,15 +29,15 @@ Response: Added function level examples to exported model fitting functions (b_b
 Response: Authors mentioned above are now added into the Authors@R field.
 
 
-## Test environments
-* local OS X Mojave 10.14.5, R 3.5.3
-* local Windows 10, R 3.5.3
+# Test environments
+* local OS X Mojave 10.14.5, R 3.5.4
+* local Windows 10, R 3.5.4
 * win-builder (R-devel)
 * Ubuntu Linux 16.04 LTS (rhub)
 * Fedora Linux, R-devel (rhub)
 
 
-## R CMD check results
+# R CMD check results
 There were no ERRORs or WARNINGs. 
 
 There were 2 NOTES:
@@ -46,5 +51,5 @@ There were 2 NOTES:
     GNU make is a SystemRequirements.
 
 
-## Downstream dependencies
+# Downstream dependencies
 There are currently no downstream dependencies for this package.

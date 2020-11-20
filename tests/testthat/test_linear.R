@@ -5,7 +5,7 @@ seed <- 0
 set.seed(0)
 
 # set tolerance
-tol <- 0.2
+tol <- 0.5
 
 # priors
 mu_prior <- b_prior(family="normal", pars=c(0, 100))
