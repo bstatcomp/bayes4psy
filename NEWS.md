@@ -1,7 +1,7 @@
 # bayes4psy 1.2.4
 
 ## New features and improvements
-More robust unit tests for the purpose of CRAN checks.
+More robust unit tests and vignettes for the purpose of CRAN checks.
 
 # bayes4psy 1.2.3
 
