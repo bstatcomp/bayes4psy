@@ -53,13 +53,14 @@ fit_red <- b_color(colors=data_red, chains=1, iter=500, warmup=100)
 
 # inspect
 plot_trace(fit_red)
-print(fit_red)
 plot_hsv(fit_red)
+# the command below is commented out for the sake of brevity
+#print(fit_red)
 ```
 
 The function **plot\_hsv** was developed specially for the color model. Input data points are visualized with circles, mean of the fit is visualized with a solid line and the 95% HDI of the underlying distribution is visualized as a colored band. If we are satisfied with the fit we repeat the whole process five more times for the remaining five colors of stimuli. For brevity only code for fitting the model is executed here, the inspections of fits are ommited.
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results = 'hide'}
 # green
 data_green <- data_all %>% filter(stimuli == "green")
 data_green <- data.frame(r=data_green$r,

@@ -36,7 +36,7 @@ We are primarily interested in expected task completion times. Since our data is
 
 To execute the Bayesian t-test for dependent samples we first have to calculate the difference between the samples and then perform Bayesian modelling on those differences. The example below compares reading times between neutral and incongruent cases.
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results = 'hide'}
 # libs
 library(bayes4psy)
 library(ggplot2)
@@ -64,7 +64,7 @@ Since the 95\% HDI of means ([2.03, 3.94]) lies above 0 we can confidently claim
 
 The examples that follow are for illustrative purposes only, they analyze the Stroop data under the assumption that the sample are independent. This example is included mainly to explain how we can use this pacakge to compare multiple groups simultaneously. This example also includes priors, we based them on our previous experience with similar tasks -- participants finish the task in approximately 1 minute and the typical standard deviation for a participant is less than 2 minutes.
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results = 'hide'}
 # priors
 mu_prior <- b_prior(family="normal", pars=c(60, 30))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 120))
@@ -99,10 +99,11 @@ Next we perform MCMC diagnostics and visual checks of model fits.
 plot_trace(fit_naming_incongruent)
 
 # check fit
+# the commands below are commented out for the sake of brevity
 #print(fit_reading_neutral)
 #print(fit_reading_incongruent)
 #print(fit_naming_neutral)
-print(fit_naming_incongruent)
+#print(fit_naming_incongruent)
 
 # visual inspection
 #plot(fit_reading_neutral)
