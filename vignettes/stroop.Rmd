@@ -49,7 +49,7 @@ ri_vs_rn <- data$reading_incongruent - data$reading_neutral
 
 # fit
 fit_ri_vs_rn <- b_ttest(ri_vs_rn,
-                        iter=4000, warmup=500)
+                        iter=4000, warmup=500, chains=1)
 ```
 
 Once we fit the Bayesian t-test model to the differences between the reading neutral and reading incongruent conditions, we can compare whether the means differ from 0.
@@ -62,7 +62,7 @@ comparison <- compare_means(fit_ri_vs_rn, mu=0)
 
 Since the 95\% HDI of means ([2.03, 3.94]) lies above 0 we can confidently claim that subject's read neutral stimuli faster than incongruent stimuli. In a similar fashion we can also execute a comparison between other pairs of conditions.
 
-The examples that follow are for illustrative purposes only, they analyze the Stroop data under the assumption that the sample are independent. This example is included mainly to explain how we can use this pacakge to compare multiple groups simultaneously. This example also includes priors, we based them on our previous experience with similar tasks -- participants finish the task in approximately 1 minute and the typical standard deviation for a participant is less than 2 minutes.
+The examples that follow are for illustrative purposes only, they analyze the Stroop data under the assumption that the sample are independent. This example is included mainly to explain how we can use this package to compare multiple groups simultaneously. This example also includes priors, we based them on our previous experience with similar tasks -- participants finish the task in approximately 1 minute and the typical standard deviation for a participant is less than 2 minutes.
 
 ```{r, message=FALSE, warning=FALSE, results = 'hide'}
 # priors
@@ -74,19 +74,19 @@ priors <- list(c("mu", mu_prior),
 # fit
 fit_reading_neutral <- b_ttest(data$reading_neutral,
                                priors=priors,
-                               iter=500, warmup=100, chains=1)
+                               iter=1000, warmup=500, chains=1)
 
 fit_reading_incongruent <- b_ttest(data$reading_incongruent,
                                    priors=priors,
-                                   iter=500, warmup=100, chains=1)
+                                   iter=1000, warmup=500, chains=1)
 
 fit_naming_neutral <- b_ttest(data$naming_neutral,
                               priors=priors,
-                              iter=500, warmup=100, chains=1)
+                              iter=1000, warmup=500, chains=1)
 
 fit_naming_incongruent <- b_ttest(data$naming_incongruent,
                                   priors=priors,
-                                  iter=500, warmup=100, chains=1)
+                                  iter=1000, warmup=500, chains=1)
 ```
 
 Next we perform MCMC diagnostics and visual checks of model fits.
