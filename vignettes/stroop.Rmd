@@ -30,9 +30,13 @@ In our version of the Stroop test participants were faced with four types of con
 * Reading incongruent -- name of the color was printed in incongruent ink, the participant had to read the written name of the color.
 * Naming incongruent -- name of the color was printed in incongruent ink, the participant had to name the ink color.
 
-We are primarily interested in expected task completion times. Every participant had the same number of stimuli in every condition, so we opt for a Bayesian t-test. The data are already split into the four conditions described above, so we only need to specify the priors. We based them on our previous experience with similar tasks -- participants finish the task in approximately 1 minute and the typical standard deviation for a participant is less than 2 minutes. Note here that, due to vignette limitations, all fits are built using only one chain, using more chains in parallel is usually more efficient. Also to increase the building speed of vignettes we greatly reduced the amount of iterations, use an appropriate amount of iterations when executing actual analyses!
+In each of the listed conditions the participants had to name or read 100 stimuli presented on an A4 sheet of paper organized in 5 columns of 20 stimuli as quickly as possible. The specific order of the stimuli was pseudo-random and balanced across the sheet. We recorded the time to complete each sheet. 
 
-```{r, message=FALSE, warning=FALSE}
+We are primarily interested in expected task completion times. Since our data is composed from averaged reading times we can use the Bayesian t-test. The nature of the Stroop test requires the use of t-test for dependent samples. This example first shows how to execute the Bayesian t-test for dependent samples and in the second part for illustrative purposes only also how to execute the Bayesian t-test for independent samples. The example for independent samples also shows how to use \pkg{bayes4psy} to compare multiple groups simultaneously, such a comparison makes sense only when working with independent groups.
+
+To execute the Bayesian t-test for dependent samples we first have to calculate the difference between the samples and then perform Bayesian modelling on those differences. The example below compares reading times between neutral and incongruent cases.
+
+```{r, message=FALSE, warning=FALSE, results = 'hide'}
 # libs
 library(bayes4psy)
 library(ggplot2)
@@ -40,6 +44,27 @@ library(ggplot2)
 # load data
 data <- stroop_simple
 
+# reading incongruent vs reading neutral
+ri_vs_rn <- data$reading_incongruent - data$reading_neutral
+
+# fit
+fit_ri_vs_rn <- b_ttest(ri_vs_rn,
+                        iter=4000, warmup=500, chains=1)
+```
+
+Once we fit the Bayesian t-test model to the differences between the reading neutral and reading incongruent conditions, we can compare whether the means differ from 0.
+
+```{r, message=FALSE, warning=FALSE}
+# libs
+# compare the fit with 0
+comparison <- compare_means(fit_ri_vs_rn, mu=0)
+```
+
+Since the 95\% HDI of means ([2.03, 3.94]) lies above 0 we can confidently claim that subject's read neutral stimuli faster than incongruent stimuli. In a similar fashion we can also execute a comparison between other pairs of conditions.
+
+The examples that follow are for illustrative purposes only, they analyze the Stroop data under the assumption that the sample are independent. This example is included mainly to explain how we can use this package to compare multiple groups simultaneously. This example also includes priors, we based them on our previous experience with similar tasks -- participants finish the task in approximately 1 minute and the typical standard deviation for a participant is less than 2 minutes.
+
+```{r, message=FALSE, warning=FALSE, results = 'hide'}
 # priors
 mu_prior <- b_prior(family="normal", pars=c(60, 30))
 sigma_prior <- b_prior(family="uniform", pars=c(0, 120))
@@ -49,19 +74,19 @@ priors <- list(c("mu", mu_prior),
 # fit
 fit_reading_neutral <- b_ttest(data$reading_neutral,
                                priors=priors,
-                               iter=500, warmup=100, chains=1)
+                               iter=1000, warmup=500, chains=1)
 
 fit_reading_incongruent <- b_ttest(data$reading_incongruent,
                                    priors=priors,
-                                   iter=500, warmup=100, chains=1)
+                                   iter=1000, warmup=500, chains=1)
 
 fit_naming_neutral <- b_ttest(data$naming_neutral,
                               priors=priors,
-                              iter=500, warmup=100, chains=1)
+                              iter=1000, warmup=500, chains=1)
 
 fit_naming_incongruent <- b_ttest(data$naming_incongruent,
                                   priors=priors,
-                                  iter=500, warmup=100, chains=1)
+                                  iter=1000, warmup=500, chains=1)
 ```
 
 Next we perform MCMC diagnostics and visual checks of model fits.
@@ -74,10 +99,11 @@ Next we perform MCMC diagnostics and visual checks of model fits.
 plot_trace(fit_naming_incongruent)
 
 # check fit
+# the commands below are commented out for the sake of brevity
 #print(fit_reading_neutral)
 #print(fit_reading_incongruent)
 #print(fit_naming_neutral)
-print(fit_naming_incongruent)
+#print(fit_naming_incongruent)
 
 # visual inspection
 #plot(fit_reading_neutral)

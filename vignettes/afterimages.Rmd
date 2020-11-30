@@ -21,7 +21,7 @@ options(width=800)
 
 # Introduction
 
-In the afterimages task participants were asked to fix their gaze on a fixation point in the middle of the computer screen. Stimulus -- a colored rectangle -- was then shown above the fixation point. After 20 seconds the rectangle disappeared and a color palette was shown on the right-hand side of the screen. Participants were asked to keep their gaze on the fixation point while using the mouse to select the color that best matches the color of the afterimage that appeared above the fixation point. Then a colored rectangle of the selected color and same size as before was shown below the fixation point. Finally, participants confirmed their selection. For each trial the color of the stimulus rectangle, the response in RGB and the response time were recorded. The goal of this study was to determine which of the two color coding mechanisms (trichromatic or opponent-process), better explains the color of the afterimages. We used six differently colored rectangles: red, green, blue, cyan, magenta, yellow.
+In the afterimages task participants were asked to ﬁx their gaze on a ﬁxation point in the middle of the computer screen. Stimulus -- a colored rectangle -- was then shown above the ﬁxation point. After 20 seconds the rectangle disappeared and a color palette was shown on the right-hand side of the screen. Participants were asked to keep their gaze on the ﬁxation point while using the mouse to select the color that best matched the color of the afterimage that appeared above the ﬁxation point. To help select the correct color, a rectangle of the same size as the adapting stimuli was shown below the ﬁxation point in the color currently under the mouse cursor. Participants conﬁrmed their selection by pressing a mouse button when they were satisfied that color of the rectangle below the fixation point matched the color of the afterimage experienced above the fixation point. For each trial the color of the stimulus rectangle, the subject’s response in RGB and the subject’s response time were recorded. The goal of this study was to determine which of the two color coding mechanisms (trichromatic or opponent-process) better explains the perceived color of the afterimages. We used six differently colored rectangles: red, green, blue, cyan, magenta, yellow.
 
 We start our analysis by loading the experiment and stimuli data. The experiment data include subject index, reaction time, response in RGB format, stimuli name (e.g blue) and stimuli values in RGB and HSV. The stimuli data set includes only the information about stimuli (names, RGB and HSV values).
 
@@ -53,13 +53,14 @@ fit_red <- b_color(colors=data_red, chains=1, iter=500, warmup=100)
 
 # inspect
 plot_trace(fit_red)
-print(fit_red)
 plot_hsv(fit_red)
+# the command below is commented out for the sake of brevity
+#print(fit_red)
 ```
 
 The function **plot\_hsv** was developed specially for the color model. Input data points are visualized with circles, mean of the fit is visualized with a solid line and the 95% HDI of the underlying distribution is visualized as a colored band. If we are satisfied with the fit we repeat the whole process five more times for the remaining five colors of stimuli. For brevity only code for fitting the model is executed here, the inspections of fits are ommited.
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, results = 'hide'}
 # green
 data_green <- data_all %>% filter(stimuli == "green")
 data_green <- data.frame(r=data_green$r,

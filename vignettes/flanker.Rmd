@@ -59,11 +59,11 @@ Now we are ready to fit the Bayesian reaction time model for both groups. The mo
 # fit
 rt_control_fit <- b_reaction_time(t=control_rt$rt,
                                   s=control_rt$subject,
-                                  chains=1, iter=500, warmup=100)
+                                  chains=1, iter=500, warmup=250)
 
 rt_test_fit <- b_reaction_time(t=test_rt$rt,
                                s=test_rt$subject,
-                                  chains=1, iter=500, warmup=10)
+                                  chains=1, iter=500, warmup=250)
 ```
 
 Before we interpret the results, we check MCMC diagnostics and model fit.
@@ -79,10 +79,8 @@ The traceplots gives us no cause for concern regarding MCMC convergence and mixi
 
 
 ```{r, message=FALSE, warning=FALSE}
-# check fit (Rhat and n_eff)
-print(rt_control_fit)
-
-# the command below is commented out for the sake of brevity
+# the commands below are commented out for the sake of brevity
+#print(rt_control_fit)
 #print(rt_test_fit)
 ```
 

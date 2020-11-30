@@ -12,7 +12,7 @@ This readme document provides only a brief overview of the package, a detailed d
 
 ## Models
 
-Bayesian models in the **bayes4psy** package are written with the [Stan](http://mc-stan.org) language. Stan functions required for working with these models are accessed via the **RStan** package. There are currently five models in the package:
+Bayesian models in the **bayes4psy** package are written with the [Stan](https://mc-stan.org) language. Stan functions required for working with these models are accessed via the **RStan** package. There are currently five models in the package:
 
 * a Bayesian t-test (Bayesian alternative to the classic t-test, see John Kruschke -- Doing Bayesian Data Analysis: A Tutorial with R, JAGS, and Stan),
 * a reaction time model (a hierarchical exponentially modified Gaussian model),
