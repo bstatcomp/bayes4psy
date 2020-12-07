@@ -14,32 +14,32 @@ Encoding: UTF-8
 LazyData: true
 ByteCompile: true
 Depends:
-    methods,
-    R (>= 3.5.0),
-    Rcpp (>= 0.12.16)
+    methods (>= 4.0.3),
+    R (>= 4.0.3),
+    Rcpp (>= 1.0.5)
 Imports:
     circular (>= 0.4.93),
-    cowplot (>= 0.9.3),
-    dplyr (>= 0.7.6),
-    emg (>= 1.0.7),
-    ggplot2 (>= 2.2.1),
-    metRology (>= 0.9.28),
-    reshape (>= 0.8.7),
-    rstan (>= 2.17.3),
-    rstantools (>= 1.5.0),
-    mcmcse (>= 1.3.2),
-    stats,
-    utils
+    cowplot (>= 1.1.0),
+    dplyr (>= 1.0.2),
+    emg (>= 1.0.9),
+    ggplot2 (>= 3.3.2),
+    metRology (>= 0.9.28.1),
+    reshape (>= 0.8.8),
+    rstan (>= 2.21.2),
+    rstantools (>= 2.1.1),
+    mcmcse (>= 1.4.1),
+    stats (>= 4.0.3),
+    utils (>= 4.0.3)
 Suggests: 
-    testthat,
-    rmarkdown,
-    knitr
+    testthat (>= 3.0.0),
+    rmarkdown (>= 2.5.0),
+    knitr (>= 1.30.0)
 LinkingTo:
-    StanHeaders (>= 2.17.2),
-    rstan (>= 2.17.3),
-    BH (>= 1.66.0-1),
-    Rcpp (>= 0.12.16),
-    RcppEigen (>= 0.3.3.4.0)
+    StanHeaders (>= 2.21.0.6),
+    rstan (>= 2.21.2),
+    BH (>= 1.72.0.3),
+    Rcpp (>= 1.0.5),
+    RcppEigen (>= 0.3.3.7.0)
 SystemRequirements: GNU make
 VignetteBuilder: knitr
 NeedsCompilation: yes
