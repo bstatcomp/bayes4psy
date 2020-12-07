@@ -56,14 +56,22 @@ control_rt$subject <- control_rt$subject - 21
 Now we are ready to fit the Bayesian reaction time model for both groups. The model function requires two parameters -- a vector of reaction times $t$ and the vector of subject indexes $s$. Note here that, due to vignette limitations, all fits are built using only one chain, using more chains in parallel is usually more efficient. Also to increase the building speed of vignettes we greatly reduced the amount of iterations, use an appropriate amount of iterations when executing actual analyses!
 
 ```{r, message=FALSE, warning=FALSE, results = 'hide'}
+# prior
+uniform_prior <- b_prior(family="uniform", pars=c(0, 3))
+
+# attach priors to relevant parameters
+priors <- list(c("mu_m", uniform_prior))
+
 # fit
 rt_control_fit <- b_reaction_time(t=control_rt$rt,
                                   s=control_rt$subject,
-                                  chains=1, iter=500, warmup=250)
+                                  priors=priors,
+                                  chains=1, iter=200, warmup=100)
 
 rt_test_fit <- b_reaction_time(t=test_rt$rt,
                                s=test_rt$subject,
-                                  chains=1, iter=500, warmup=250)
+                               priors=priors,
+                               chains=1, iter=200, warmup=100)
 ```
 
 Before we interpret the results, we check MCMC diagnostics and model fit.
@@ -71,7 +79,6 @@ Before we interpret the results, we check MCMC diagnostics and model fit.
 ```{r, message=FALSE, warning=FALSE}
 # plot trace
 plot_trace(rt_control_fit)
-
 plot_trace(rt_test_fit)
 ```
 
@@ -170,12 +177,12 @@ priors <- list(c("p", p_prior))
 sr_control_fit <- b_success_rate(r=control_sr$result_numeric,
                                  s=control_sr$subject,
                                  priors=priors,
-                                 chains=1, iter=500, warmup=100)
+                                 chains=1, iter=200, warmup=100)
 
 sr_test_fit <- b_success_rate(r=test_sr$result_numeric,
                               s=test_sr$subject,
                               priors=priors,
-                              chains=1, iter=500, warmup=100)
+                              chains=1, iter=200, warmup=100)
 ```
 
 The process for inspecting Bayesian fits is the same as above. When visually inspecting the quality of the fit (the **plot** function) we can set the **subjects** parameter to **FALSE**, which visualizes the fit on the group level. This offers a quicker, but less detailed method of inspection. Again one of the commands is commented out for the sake of brevity.
