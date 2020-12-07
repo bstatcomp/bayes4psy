@@ -1,3 +1,9 @@
+# bayes4psy 1.2.5
+
+## New features and improvements
+Optimized vignettes for faster compilation.
+
+
 # bayes4psy 1.2.4
 
 ## New features and improvements

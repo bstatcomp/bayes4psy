@@ -53,12 +53,12 @@ Once the data is prepared we can fit the Bayesian models, the input data comes i
 fit1 <- b_linear(x=group1_part2$sequence,
                  y=group1_part2$response,
                  s=group1_part2$subject,
-                 iter=500, warmup=250, chains=1)
+                 iter=200, warmup=100, chains=1)
 
 fit2 <- b_linear(x=group2_part2$sequence,
                  y=group2_part2$response,
                  s=group2_part2$subject,
-                 iter=500, warmup=250, chains=1)
+                 iter=200, warmup=100, chains=1)
 ```
 
 The fitting process is always followed by the quality analysis.

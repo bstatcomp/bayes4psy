@@ -1,5 +1,9 @@
 # Revisions
 
+## CRAN submission 7. 12. 2020
+
+Vignettes are now optimized to enable faster package compilation.
+
 ## CRAN submission 20. 11. 2020
 
 Revised tests to avoid stability issues on Solaris.
