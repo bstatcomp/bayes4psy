@@ -1,5 +1,9 @@
 # Revisions
 
+## CRAN submission 14. 4. 2021
+
+Further vignettes optimization. The package now uses a stable rstan version.
+
 ## CRAN submission 7. 12. 2020
 
 Vignettes are now optimized to enable faster package compilation.
@@ -7,7 +11,6 @@ Vignettes are now optimized to enable faster package compilation.
 ## CRAN submission 20. 11. 2020
 
 Revised tests to avoid stability issues on Solaris.
-
 
 ## CRAN submission 19. 2. 2020
 
@@ -32,17 +35,17 @@ Response: Added function level examples to exported model fitting functions (b_b
 3. CRAN: We are missing some authors and copyright holder in the authors list: author Rasmus Baath, author John Kruschke, Trustees of Columbia University.
 Response: Authors mentioned above are now added into the Authors@R field.
 
+## Test environments
 
-# Test environments
 * local OS X Mojave 10.14.5, R 3.5.4
 * local Windows 10, R 3.5.4
 * win-builder (R-devel)
 * Ubuntu Linux 16.04 LTS (rhub)
 * Fedora Linux, R-devel (rhub)
 
+## R CMD check results
 
-# R CMD check results
-There were no ERRORs or WARNINGs. 
+There were no ERRORs or WARNINGs.
 
 There were 2 NOTES:
 
@@ -54,6 +57,6 @@ There were 2 NOTES:
 * hecking for GNU extensions in Makefiles ... NOTE
     GNU make is a SystemRequirements.
 
+## Downstream dependencies
 
-# Downstream dependencies
 There are currently no downstream dependencies for this package.
