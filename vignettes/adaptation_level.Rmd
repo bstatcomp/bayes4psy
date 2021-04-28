@@ -50,23 +50,15 @@ group2_part2 <- data %>% filter(group == 2 & part == 2)
 Once the data is prepared we can fit the Bayesian models, the input data comes in the form of three vectors, $x$ stores indexes of the measurements, $y$ subject's responses and $s$ indexes of subjects. Note here that, due to vignette limitations, all fits are built using only one chain, using more chains in parallel is usually more efficient. Also to increase the building speed of vignettes we greatly reduced the amount of iterations, use an appropriate amount of iterations when executing actual analyses!
 
 ```{r, message=FALSE, warning=FALSE, results = 'hide'}
-# prior
-beta_prior <- b_prior(family="normal", pars=c(0, 1))
-
-# attach priors to relevant parameters
-priors <- list(c("mu_b", beta_prior))
-
-
+# fit
 fit1 <- b_linear(x=group1_part2$sequence,
                  y=group1_part2$response,
                  s=group1_part2$subject,
-                 priors=priors,
                  iter=200, warmup=100, chains=1)
 
 fit2 <- b_linear(x=group2_part2$sequence,
                  y=group2_part2$response,
                  s=group2_part2$subject,
-                 priors=priors,
                  iter=200, warmup=100, chains=1)
 ```
 
