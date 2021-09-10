@@ -15,7 +15,8 @@
 Example datasets for use in \pkg{rstanarm} examples and vignettes.
 The datasets were extracted from the internal MBLab \url{http://www.mblab.si} repository.
 MBLab is a research lab at the Faculty of Arts, Department of Psychology, University of Ljubljana, Slovenia.}
-\format{\describe{
+\format{
+\describe{
 \item{\code{adaptation_level_small}}{
 Small dataset on subjects picking up weights and determining their weights from 1..10.
 
@@ -154,7 +155,8 @@ Source: Internal MBLab repository.
 \item \code{naming_incongruent} average response time for naming incongruent stimuli.
 }
 }
-}}
+}
+}
 \description{
 Datasets for bayes4psy examples
 Example datasets for use in \pkg{rstanarm} examples and vignettes.
