@@ -30,7 +30,9 @@ Source: Internal MBLab repository.
 }
 \item{\code{adaptation_level}}{
 Data on subjects picking up weights and determining their weights from 1..10.
+
 Source: Internal MBLab repository.
+
 2900 obs. of 6 variables
 \itemize{
 \item \code{subject} subject index.
