@@ -1,5 +1,13 @@
 # Revisions
 
+## CRAN submission 27. 9. 2021
+
+Additional fixes required for newer versions of the RStan package.
+
+## CRAN submission 10. 9. 2021
+
+Support for newer versions of the RStan package.
+
 ## CRAN submission 14. 4. 2021
 
 Further vignettes optimization. The package now uses a stable rstan version.
