@@ -1,8 +1,10 @@
 # bayes4psy change log
 
-## bayes4psy 1.2.7
+## bayes4psy 1.2.8
 
-## New features and improvements
+Additional fixes required for newer versions of RStan.
+
+## bayes4psy 1.2.7
 
 Support for newer versions of RStan.
 
