@@ -1,5 +1,9 @@
 # bayes4psy change log
 
+## bayes4psy 1.2.9
+
+Added funding information.
+
 ## bayes4psy 1.2.8
 
 Additional fixes required for newer versions of RStan.
