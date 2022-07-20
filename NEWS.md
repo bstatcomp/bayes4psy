@@ -1,5 +1,9 @@
 # bayes4psy change log
 
+## bayes4psy 1.2.10
+
+Tidied up the README file.
+
 ## bayes4psy 1.2.9
 
 Added funding information.

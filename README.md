@@ -1,6 +1,13 @@
-# bayes4psy
+# bayes4psy—User Friendly Bayesian Data Analysis for Psychology
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/bayes4psy?color=blue)](https://CRAN.R-project.org/package=bayes4psy)[![Downloads](http://cranlogs.r-pkg.org/badges/bayes4psy?color=blue)](https://CRAN.R-project.org/package=bayes4psy)
+
+## Authors
+
+Jure Demšar, Grega Repovš and Erik Štrubmelj
+
+* Faculty of Computer and Information Science, University of Ljubljana
+* MBLab, Department of Psychology, Faculty of Arts, University of Ljubljana
 
 ## The package
 
