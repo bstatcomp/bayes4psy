@@ -4,7 +4,7 @@
 
 ## Authors
 
-Jure Demšar, Grega Repovš and Erik Štrubmelj
+Jure Demšar, Grega Repovš and Erik Štrumbelj
 
 * Faculty of Computer and Information Science, University of Ljubljana
 * MBLab, Department of Psychology, Faculty of Arts, University of Ljubljana
