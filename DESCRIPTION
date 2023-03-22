@@ -30,8 +30,9 @@ Imports:
     mcmcse (>= 1.4.1),
     scales (>= 1.1.1),
     stats (>= 4.0.0),
-    utils (>= 4.0.0)
-Suggests: 
+    utils (>= 4.0.0),
+    RcppParallel
+Suggests:
     testthat (>= 3.0.0),
     rmarkdown (>= 2.5.0),
     knitr (>= 1.30.0)
@@ -40,10 +41,12 @@ LinkingTo:
     rstan (>= 2.21.0),
     BH (>= 1.72.0.3),
     Rcpp (>= 1.0.5),
-    RcppEigen (>= 0.3.3.7.0)
+    RcppEigen (>= 0.3.3.7.0),
+    RcppParallel
 SystemRequirements: GNU make
 VignetteBuilder: knitr
 NeedsCompilation: yes
-RoxygenNote: 7.2.1
+UseLTO: true
+RoxygenNote: 7.2.3
 URL: https://github.com/bstatcomp/bayes4psy
 BugReports: https://github.com/bstatcomp/bayes4psy/issues
