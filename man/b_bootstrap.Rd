@@ -46,11 +46,11 @@ lm_statistic <- function(data) {
 data <- adaptation_level_small
 
 # bootstrap
-data_bootstrap <- b_bootstrap(data, lm_statistic, n1=1000, n2=1000)
+data_bootstrap <- b_bootstrap(data, lm_statistic, n1 = 1000, n2 = 1000)
 
 }
 \references{
-\url{http://www.sumsar.net/blog/2015/07/easy-bayesian-bootstrap-in-r/}
+\url{https://www.sumsar.net/blog/2015/07/easy-bayesian-bootstrap-in-r/}
 
 Rubin, D. B. (1981). The Bayesian Bootstrap. The annals of statistics, 9(1), 130-134.
 }
