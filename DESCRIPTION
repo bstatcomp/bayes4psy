@@ -28,9 +28,7 @@ Imports:
     rstan (>= 2.21.2),
     rstantools (>= 2.1.1),
     mcmcse (>= 1.4.1),
-    scales (>= 1.1.1),
     stats (>= 4.0.0),
-    utils (>= 4.0.0),
     RcppParallel
 Suggests:
     testthat (>= 3.0.0),

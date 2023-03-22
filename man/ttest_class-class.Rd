@@ -85,27 +85,29 @@ plot_distributions_difference(`ttest_class`, fits=`list`): a visualization of th
 \examples{
 \donttest{
 # priors
-mu_prior <- b_prior(family="normal", pars=c(0, 1000))
-sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
-nu_prior <- b_prior(family="normal", pars=c(2000, 1000))
+mu_prior <- b_prior(family = "normal", pars = c(0, 1000))
+sigma_prior <- b_prior(family = "uniform", pars = c(0, 500))
+nu_prior <- b_prior(family = "normal", pars = c(2000, 1000))
 
 # attach priors to relevant parameters
-priors <- list(c("mu", mu_prior),
-               c("sigma", sigma_prior),
-               c("nu", nu_prior))
+priors <- list(
+  c("mu", mu_prior),
+  c("sigma", sigma_prior),
+  c("nu", nu_prior)
+)
 
 # generate data and fit
-data1 <- rnorm(20, mean=150, sd=20)
-fit1 <- b_ttest(data=data1, priors=priors, chains=1)
+data1 <- rnorm(20, mean = 150, sd = 20)
+fit1 <- b_ttest(data = data1, priors = priors, chains = 1)
 
-data2 <- rnorm(20, mean=200, sd=20)
-fit2 <- b_ttest(data=data2, priors=priors, chains=1)
+data2 <- rnorm(20, mean = 200, sd = 20)
+fit2 <- b_ttest(data = data2, priors = priors, chains = 1)
 
-data3 <- rnorm(20, mean=150, sd=40)
-fit3 <- b_ttest(data=data3, priors=priors, chains=1)
+data3 <- rnorm(20, mean = 150, sd = 40)
+fit3 <- b_ttest(data = data3, priors = priors, chains = 1)
 
-data4 <- rnorm(20, mean=50, sd=10)
-fit4 <- b_ttest(data=data4, priors=priors, chains=1)
+data4 <- rnorm(20, mean = 50, sd = 10)
+fit4 <- b_ttest(data = data4, priors = priors, chains = 1)
 
 # fit list
 fit_list <- list(fit2, fit3, fit4)
@@ -128,86 +130,86 @@ plot_trace(fit1)
 parameters <- get_parameters(fit1)
 
 # compare means between two fits
-compare_means(fit1, fit2=fit2)
+compare_means(fit1, fit2 = fit2)
 
 # compare means between two fits, use a rope interval
-compare_means(fit1, fit2=fit2, rope=2)
+compare_means(fit1, fit2 = fit2, rope = 2)
 
 # compare means between a fit and a constant value
-compare_means(fit1, mu=150)
+compare_means(fit1, mu = 150)
 
 # compare means between a fit and a distribution,
 # sigma is used for calculating Cohen's d
-compare_means(fit1, mu=150, sigma=20)
+compare_means(fit1, mu = 150, sigma = 20)
 
 # compare means between multiple fits
-compare_means(fit1, fits=fit_list)
+compare_means(fit1, fits = fit_list)
 
 # visualize difference in means between two fits,
 # specify number of histogram bins
-plot_means_difference(fit1, fit2=fit2, bins=20)
+plot_means_difference(fit1, fit2 = fit2, bins = 20)
 
 # visualize difference in means between a fit and a constant value
-plot_means_difference(fit1, mu=150)
+plot_means_difference(fit1, mu = 150)
 
 # visualize difference in means between multiple fits, use a rope interval
-plot_means_difference(fit1, fits=fit_list, rope=2)
+plot_means_difference(fit1, fits = fit_list, rope = 2)
 
 # visualize means of a single fit
 plot_means(fit1)
 
 # visualize means of two fits
-plot_means(fit1, fit2=fit2)
+plot_means(fit1, fit2 = fit2)
 
 # visualize means of a fit and a constant value
-plot_means(fit1, mu=150)
+plot_means(fit1, mu = 150)
 
 # visualize means of multiple fits
-plot_means(fit1, fits=fit_list)
+plot_means(fit1, fits = fit_list)
 
 # draw samples from distributions underlying two fits and compare them
-compare_distributions(fit1, fit2=fit2)
+compare_distributions(fit1, fit2 = fit2)
 
 # draw samples from a distribution underlying the fit
 # and compare them with a constant, use a rope interval
-compare_distributions(fit1, mu=150, rope=2)
+compare_distributions(fit1, mu = 150, rope = 2)
 
 # draw samples from a distribution underlying the fit and
 # compare them with a user defined distribution
-compare_distributions(fit1, mu=150, sigma=20)
+compare_distributions(fit1, mu = 150, sigma = 20)
 
 # draw samples from distributions underlying multiple fits and compare them
-compare_distributions(fit1, fits=fit_list)
+compare_distributions(fit1, fits = fit_list)
 
 # visualize the distribution underlying a fit
 plot_distributions(fit1)
 
 # visualize distributions underlying two fits
-plot_distributions(fit1, fit2=fit2)
+plot_distributions(fit1, fit2 = fit2)
 
 # visualize the distribution underlying a fit and a constant value
-plot_distributions(fit1, mu=150)
+plot_distributions(fit1, mu = 150)
 
 # visualize the distribution underlying a fit and a user defined distribution
-plot_distributions(fit1, mu=150, sigma=20)
+plot_distributions(fit1, mu = 150, sigma = 20)
 
 # visualize distributions underlying multiple fits
-plot_distributions(fit1, fits=fit_list)
+plot_distributions(fit1, fits = fit_list)
 
 # visualize difference between distributions underlying two fits,
 # use a rope interval
-plot_distributions_difference(fit1, fit2=fit2, rope=2)
+plot_distributions_difference(fit1, fit2 = fit2, rope = 2)
 
 # visualize difference between a distribution underlying the fit
 # and a constant value
-plot_distributions_difference(fit1, mu=150)
+plot_distributions_difference(fit1, mu = 150)
 
 # visualize difference between a distribution underlying the fits
 # and a user defined distribution
-plot_distributions_difference(fit1, mu=150, sigma=20)
+plot_distributions_difference(fit1, mu = 150, sigma = 20)
 
 # visualize difference between distributions underlying multiple fits
-plot_distributions_difference(fit1, fits=fit_list)
+plot_distributions_difference(fit1, fits = fit_list)
 }
 
 }

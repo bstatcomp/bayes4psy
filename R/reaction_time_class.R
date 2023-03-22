@@ -485,7 +485,7 @@ setMethod(f="compare_means", signature(object="reaction_time_class"), definition
     # provided a list of fits
     i <- 2
     for (fit in arguments$fits) {
-      if (class(fit) != "reaction_time_class") {
+      if (!("reaction_time_class" %in% class(fit))) {
         stop("One of the fits in the fits list is not a valid reaction_time_class object.")
       }
 
@@ -608,7 +608,7 @@ setMethod(f="plot_means_difference", signature(object="reaction_time_class"), de
   } else if (!is.null(arguments$fits)) {
     i <- 2
     for (fit in arguments$fits) {
-      if (class(fit) != "reaction_time_class") {
+      if (!("reaction_time_class" %in% class(fit))) {
         stop("One of the fits in the fits list is not a valid reaction_time_class object.")
       }
 
@@ -737,7 +737,7 @@ setMethod(f="plot_means", signature(object="reaction_time_class"), definition=fu
     } else if (!is.null(arguments$fits)) {
       i <- 2
       for (fit in arguments$fits) {
-        if (class(fit) != "reaction_time_class") {
+        if (!("reaction_time_class" %in% class(fit))) {
           stop("One of the fits in the fits list is not a valid reaction_time_class object.")
         }
 
@@ -836,7 +836,7 @@ setMethod(f="compare_distributions", signature(object="reaction_time_class"), de
     # provided a list of fits
     i <- 2
     for (fit in arguments$fits) {
-      if (class(fit) != "reaction_time_class") {
+      if (!("reaction_time_class" %in% class(fit))) {
         stop("One of the fits in the fits list is not a valid reaction_time_class object.")
       }
 
@@ -927,7 +927,7 @@ setMethod(f="plot_distributions", signature(object="reaction_time_class"), defin
     } else if (!is.null(arguments$fits)) {
       i <- 2
       for (fit in arguments$fits) {
-        if (class(fit) != "reaction_time_class") {
+        if (!("reaction_time_class" %in% class(fit))) {
           stop("One of the fits in the fits list is not a valid reaction_time_class object.")
         }
 
@@ -1040,7 +1040,7 @@ setMethod(f="plot_distributions_difference", signature(object="reaction_time_cla
   } else if (!is.null(arguments$fits)) {
     i <- 2
     for (fit in arguments$fits) {
-      if (class(fit) != "reaction_time_class") {
+      if (!("reaction_time_class" %in% class(fit))) {
         stop("One of the fits in the fits list is not a valid reaction_time_class object.")
       }
 

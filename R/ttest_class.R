@@ -73,27 +73,29 @@
 #' @examples
 #' \donttest{
 #' # priors
-#' mu_prior <- b_prior(family="normal", pars=c(0, 1000))
-#' sigma_prior <- b_prior(family="uniform", pars=c(0, 500))
-#' nu_prior <- b_prior(family="normal", pars=c(2000, 1000))
+#' mu_prior <- b_prior(family = "normal", pars = c(0, 1000))
+#' sigma_prior <- b_prior(family = "uniform", pars = c(0, 500))
+#' nu_prior <- b_prior(family = "normal", pars = c(2000, 1000))
 #'
 #' # attach priors to relevant parameters
-#' priors <- list(c("mu", mu_prior),
-#'                c("sigma", sigma_prior),
-#'                c("nu", nu_prior))
+#' priors <- list(
+#'   c("mu", mu_prior),
+#'   c("sigma", sigma_prior),
+#'   c("nu", nu_prior)
+#' )
 #'
 #' # generate data and fit
-#' data1 <- rnorm(20, mean=150, sd=20)
-#' fit1 <- b_ttest(data=data1, priors=priors, chains=1)
+#' data1 <- rnorm(20, mean = 150, sd = 20)
+#' fit1 <- b_ttest(data = data1, priors = priors, chains = 1)
 #'
-#' data2 <- rnorm(20, mean=200, sd=20)
-#' fit2 <- b_ttest(data=data2, priors=priors, chains=1)
+#' data2 <- rnorm(20, mean = 200, sd = 20)
+#' fit2 <- b_ttest(data = data2, priors = priors, chains = 1)
 #'
-#' data3 <- rnorm(20, mean=150, sd=40)
-#' fit3 <- b_ttest(data=data3, priors=priors, chains=1)
+#' data3 <- rnorm(20, mean = 150, sd = 40)
+#' fit3 <- b_ttest(data = data3, priors = priors, chains = 1)
 #'
-#' data4 <- rnorm(20, mean=50, sd=10)
-#' fit4 <- b_ttest(data=data4, priors=priors, chains=1)
+#' data4 <- rnorm(20, mean = 50, sd = 10)
+#' fit4 <- b_ttest(data = data4, priors = priors, chains = 1)
 #'
 #' # fit list
 #' fit_list <- list(fit2, fit3, fit4)
@@ -116,92 +118,92 @@
 #' parameters <- get_parameters(fit1)
 #'
 #' # compare means between two fits
-#' compare_means(fit1, fit2=fit2)
+#' compare_means(fit1, fit2 = fit2)
 #'
 #' # compare means between two fits, use a rope interval
-#' compare_means(fit1, fit2=fit2, rope=2)
+#' compare_means(fit1, fit2 = fit2, rope = 2)
 #'
 #' # compare means between a fit and a constant value
-#' compare_means(fit1, mu=150)
+#' compare_means(fit1, mu = 150)
 #'
 #' # compare means between a fit and a distribution,
 #' # sigma is used for calculating Cohen's d
-#' compare_means(fit1, mu=150, sigma=20)
+#' compare_means(fit1, mu = 150, sigma = 20)
 #'
 #' # compare means between multiple fits
-#' compare_means(fit1, fits=fit_list)
+#' compare_means(fit1, fits = fit_list)
 #'
 #' # visualize difference in means between two fits,
 #' # specify number of histogram bins
-#' plot_means_difference(fit1, fit2=fit2, bins=20)
+#' plot_means_difference(fit1, fit2 = fit2, bins = 20)
 #'
 #' # visualize difference in means between a fit and a constant value
-#' plot_means_difference(fit1, mu=150)
+#' plot_means_difference(fit1, mu = 150)
 #'
 #' # visualize difference in means between multiple fits, use a rope interval
-#' plot_means_difference(fit1, fits=fit_list, rope=2)
+#' plot_means_difference(fit1, fits = fit_list, rope = 2)
 #'
 #' # visualize means of a single fit
 #' plot_means(fit1)
 #'
 #' # visualize means of two fits
-#' plot_means(fit1, fit2=fit2)
+#' plot_means(fit1, fit2 = fit2)
 #'
 #' # visualize means of a fit and a constant value
-#' plot_means(fit1, mu=150)
+#' plot_means(fit1, mu = 150)
 #'
 #' # visualize means of multiple fits
-#' plot_means(fit1, fits=fit_list)
+#' plot_means(fit1, fits = fit_list)
 #'
 #' # draw samples from distributions underlying two fits and compare them
-#' compare_distributions(fit1, fit2=fit2)
+#' compare_distributions(fit1, fit2 = fit2)
 #'
 #' # draw samples from a distribution underlying the fit
 #' # and compare them with a constant, use a rope interval
-#' compare_distributions(fit1, mu=150, rope=2)
+#' compare_distributions(fit1, mu = 150, rope = 2)
 #'
 #' # draw samples from a distribution underlying the fit and
 #' # compare them with a user defined distribution
-#' compare_distributions(fit1, mu=150, sigma=20)
+#' compare_distributions(fit1, mu = 150, sigma = 20)
 #'
 #' # draw samples from distributions underlying multiple fits and compare them
-#' compare_distributions(fit1, fits=fit_list)
+#' compare_distributions(fit1, fits = fit_list)
 #'
 #' # visualize the distribution underlying a fit
 #' plot_distributions(fit1)
 #'
 #' # visualize distributions underlying two fits
-#' plot_distributions(fit1, fit2=fit2)
+#' plot_distributions(fit1, fit2 = fit2)
 #'
 #' # visualize the distribution underlying a fit and a constant value
-#' plot_distributions(fit1, mu=150)
+#' plot_distributions(fit1, mu = 150)
 #'
 #' # visualize the distribution underlying a fit and a user defined distribution
-#' plot_distributions(fit1, mu=150, sigma=20)
+#' plot_distributions(fit1, mu = 150, sigma = 20)
 #'
 #' # visualize distributions underlying multiple fits
-#' plot_distributions(fit1, fits=fit_list)
+#' plot_distributions(fit1, fits = fit_list)
 #'
 #' # visualize difference between distributions underlying two fits,
 #' # use a rope interval
-#' plot_distributions_difference(fit1, fit2=fit2, rope=2)
+#' plot_distributions_difference(fit1, fit2 = fit2, rope = 2)
 #'
 #' # visualize difference between a distribution underlying the fit
 #' # and a constant value
-#' plot_distributions_difference(fit1, mu=150)
+#' plot_distributions_difference(fit1, mu = 150)
 #'
 #' # visualize difference between a distribution underlying the fits
 #' # and a user defined distribution
-#' plot_distributions_difference(fit1, mu=150, sigma=20)
+#' plot_distributions_difference(fit1, mu = 150, sigma = 20)
 #'
 #' # visualize difference between distributions underlying multiple fits
-#' plot_distributions_difference(fit1, fits=fit_list)
+#' plot_distributions_difference(fit1, fits = fit_list)
 #' }
 #'
 ttest_class <- setClass(
   "ttest_class",
   slots = c(
-    extract  = "list",
+    extract = "list",
     fit = "stanfit",
     data = "numeric"
   ),
@@ -219,7 +221,7 @@ ttest_class <- setClass(
 #' # along with an example of how to use this function
 #' ?ttest_class
 #'
-setMethod(f="summary", signature(object="ttest_class"), definition=function(object) {
+setMethod(f = "summary", signature(object = "ttest_class"), definition = function(object) {
   # get means
   mu <- mean(object@extract$mu)
   sigma <- mean(object@extract$sigma)
@@ -231,12 +233,18 @@ setMethod(f="summary", signature(object="ttest_class"), definition=function(obje
   nu_hdi <- mcmc_hdi(object@extract$nu)
 
   # print)
-  cat(sprintf("mu:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
-              mu, mcmcse::mcse(object@extract$mu)$se, mu_hdi[1], mu_hdi[2]))
-  cat(sprintf("sigma:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
-              sigma, mcmcse::mcse(object@extract$sigma)$se, sigma_hdi[1], sigma_hdi[2]))
-  cat(sprintf("nu:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n", nu,
-              mcmcse::mcse(object@extract$nu)$se, nu_hdi[1], nu_hdi[2]))
+  cat(sprintf(
+    "mu:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
+    mu, mcmcse::mcse(object@extract$mu)$se, mu_hdi[1], mu_hdi[2]
+  ))
+  cat(sprintf(
+    "sigma:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n",
+    sigma, mcmcse::mcse(object@extract$sigma)$se, sigma_hdi[1], sigma_hdi[2]
+  ))
+  cat(sprintf(
+    "nu:\t\t%.2f +/- %.5f\t95%% HDI: [%.2f, %.2f]\n", nu,
+    mcmcse::mcse(object@extract$nu)$se, nu_hdi[1], nu_hdi[2]
+  ))
 })
 
 
@@ -251,7 +259,7 @@ setMethod(f="summary", signature(object="ttest_class"), definition=function(obje
 #' # along with an example of how to use this function
 #' ?ttest_class
 #'
-setMethod(f="show", signature(object="ttest_class"), definition=function(object) {
+setMethod(f = "show", signature(object = "ttest_class"), definition = function(object) {
   # print
   show(object@fit)
 })
@@ -268,8 +276,8 @@ setMethod(f="show", signature(object="ttest_class"), definition=function(object)
 #' # along with an example of how to use this function
 #' ?ttest_class
 #'
-setMethod(f="plot", signature(x="ttest_class", y="missing"), definition=function(x) {
-  return(plot_fit(object=x))
+setMethod(f = "plot", signature(x = "ttest_class", y = "missing"), definition = function(x) {
+  return(plot_fit(object = x))
 })
 
 
@@ -286,29 +294,29 @@ setMethod(f="plot", signature(x="ttest_class", y="missing"), definition=function
 #' # along with an example of how to use this function
 #' ?ttest_class
 #'
-setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(object) {
+setMethod(f = "plot_fit", signature(object = "ttest_class"), definition = function(object) {
   # init local varibales for CRAN check
   value <- NULL
 
-  df_data <- data.frame(value=object@data)
+  df_data <- data.frame(value = object@data)
 
   nu <- mean(object@extract$nu)
   mu <- mean(object@extract$mu)
   sigma <- mean(object@extract$sigma)
 
   # get x range
-  x_min <- min(mu - 4*sigma, df_data$value)
-  x_max <- max(mu + 4*sigma, df_data$value)
+  x_min <- min(mu - 4 * sigma, df_data$value)
+  x_max <- max(mu + 4 * sigma, df_data$value)
 
   diff <- x_max - x_min
-  x_min <- x_min - 0.1*diff
-  x_max <- x_max + 0.1*diff
+  x_min <- x_min - 0.1 * diff
+  x_max <- x_max + 0.1 * diff
 
-  df_x <- data.frame(x=c(x_min, x_max))
+  df_x <- data.frame(x = c(x_min, x_max))
 
-  graph <- ggplot(data=df_x) +
-    geom_density(data=df_data, aes(x=value), fill="#3182bd", alpha=0.4, color=NA) +
-    stat_function(fun=metRology::dt.scaled, n=10000, args=list(df=nu, mean=mu, sd=sigma), colour="#3182bd", size=1) +
+  graph <- ggplot(data = df_x) +
+    geom_density(data = df_data, aes(x = value), fill = "#3182bd", alpha = 0.4, color = NA) +
+    stat_function(fun = metRology::dt.scaled, n = 10000, args = list(df = nu, mean = mu, sd = sigma), colour = "#3182bd", size = 1) +
     xlab("value") +
     xlim(x_min, x_max)
 
@@ -329,8 +337,8 @@ setMethod(f="plot_fit", signature(object="ttest_class"), definition=function(obj
 #' # along with an example of how to use this function
 #' ?ttest_class
 #'
-setMethod(f="plot_trace", signature(object="ttest_class"), definition=function(object) {
-  traceplot(object@fit, pars=c("mu", "sigma", "nu"), inc_warmup=TRUE)
+setMethod(f = "plot_trace", signature(object = "ttest_class"), definition = function(object) {
+  traceplot(object@fit, pars = c("mu", "sigma", "nu"), inc_warmup = TRUE)
 })
 
 
@@ -347,10 +355,12 @@ setMethod(f="plot_trace", signature(object="ttest_class"), definition=function(o
 #' # along with an example of how to use this function
 #' ?ttest_class
 #'
-setMethod(f="get_parameters", signature(object="ttest_class"), definition=function(object) {
-  df <- data.frame(mu=object@extract$mu,
-                   sigma=object@extract$sigma,
-                   nu=object@extract$nu)
+setMethod(f = "get_parameters", signature(object = "ttest_class"), definition = function(object) {
+  df <- data.frame(
+    mu = object@extract$mu,
+    sigma = object@extract$sigma,
+    nu = object@extract$nu
+  )
 
   return(df)
 })
@@ -370,7 +380,7 @@ setMethod(f="get_parameters", signature(object="ttest_class"), definition=functi
 #' # along with an example of how to use this function
 #' ?ttest_class
 #'
-setMethod(f="compare_means", signature(object="ttest_class"), definition=function(object, ...) {
+setMethod(f = "compare_means", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
   wrong_arguments <- "The provided arguments for the compare_means function are invalid, compare_means(ttest_class, fit2=ttest_class), compare_means(ttest_class, mu=numeric), compare_means(ttest_class, mu=numeric, sigma=numeric) or compare_means(ttest_class, fits=list) is required! You provide the rope parameter, e.g. compare_means(ttest_class, fit2=ttest_class, rope=numeric) or execute the comparison through the sigma or nu parameter, e.g. compare_means(ttest_class, fit2=ttest_class, par=\"sigma\")."
@@ -437,7 +447,7 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
     sigma2 <- mean(fit2@extract$sigma)
   } else if (!is.null(arguments$mu) && par == "mu") {
     # provided mu
-    y[[2]] <- arguments$mu;
+    y[[2]] <- arguments$mu
 
     # provided also sigma?
     if (!is.null(arguments$sigma)) {
@@ -445,13 +455,13 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
     }
   } else if (!is.null(arguments$sigma) && par == "sigma") {
     # provided sigma
-    y[[2]] <- arguments$sigma;
+    y[[2]] <- arguments$sigma
     sigma2 <- arguments$sigma
   } else if (!is.null(arguments$fits)) {
     # provided a list of fits
     i <- 2
     for (fit in arguments$fits) {
-      if (class(fit) != "ttest_class") {
+      if (!("ttest_class" %in% class(fit))) {
         stop("One of the fits in the fits list is not a valid ttest_class object.")
       }
 
@@ -471,12 +481,12 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
 
   n <- length(y)
   comparison_matrix <- matrix(nrow = n, ncol = n)
-  for (i in 1:(n-1)) {
-    for (j in (i+1):n) {
+  for (i in 1:(n - 1)) {
+    for (j in (i + 1):n) {
       cat(sprintf("\n---------- Group %d vs Group %d ----------\n", i, j))
-      result <- difference(y1=y[[i]], y2=y[[j]], rope=rope, group1=i, group2=j)
-      comparison_matrix[j,i] <- result[1]
-      comparison_matrix[i,j] <- result[2]
+      result <- difference(y1 = y[[i]], y2 = y[[j]], rope = rope, group1 = i, group2 = j)
+      comparison_matrix[j, i] <- result[1]
+      comparison_matrix[i, j] <- result[2]
       cat("\n")
     }
   }
@@ -484,7 +494,7 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
   # add Cohen's d if 2 groups are provided
   if (!is.null(sigma2)) {
     diff <- mean(y[[1]]) - mean(y[[2]])
-    cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
+    cohens_d <- diff / sqrt((n * sigma1^2 + n * sigma2^2) / (n + n - 2))
     cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
   }
 
@@ -492,10 +502,10 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
   if (n > 2) {
     cat("-----------------------------------------")
     cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
-    smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
+    smallest_largest <- is_smallest_or_largest(data = y, rope = rope)
     print(smallest_largest)
     cat("\n\n")
-    return(list(comparison_matrix=comparison_matrix, smallest_largest=smallest_largest))
+    return(list(comparison_matrix = comparison_matrix, smallest_largest = smallest_largest))
   } else {
     return(comparison_matrix)
   }
@@ -516,7 +526,7 @@ setMethod(f="compare_means", signature(object="ttest_class"), definition=functio
 #' # along with an example of how to use this function
 #' ?ttest_class
 #'
-setMethod(f="plot_means_difference", signature(object="ttest_class"), definition=function(object, ...) {
+setMethod(f = "plot_means_difference", signature(object = "ttest_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
 
@@ -582,13 +592,13 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
       y[[2]] <- fit2@extract$nu
     }
   } else if (!is.null(arguments$mu) && par == "mu") {
-    y[[2]] <- arguments$mu;
+    y[[2]] <- arguments$mu
   } else if (!is.null(arguments$sigma) && par == "sigma") {
-    y[[2]] <- arguments$sigma;
+    y[[2]] <- arguments$sigma
   } else if (!is.null(arguments$fits)) {
     i <- 2
     for (fit in arguments$fits) {
-      if (class(fit) != "ttest_class") {
+      if (!("ttest_class" %in% class(fit))) {
         stop("One of the fits in the fits list is not a valid ttest_class object.")
       }
 
@@ -619,12 +629,12 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
   # if no list is provided
   if (is.null(arguments$fits)) {
     # call plot difference shared function
-    graph <- plot_difference(y1=y[[1]], y2=y[[2]], rope=rope, bins=bins)
+    graph <- plot_difference(y1 = y[[1]], y2 = y[[2]], rope = rope, bins = bins)
     return(graph)
   } else {
     diff <- x_max - x_min
-    x_min <- x_min - 0.1*diff
-    x_max <- x_max + 0.1*diff
+    x_min <- x_min - 0.1 * diff
+    x_max <- x_max + 0.1 * diff
 
     graphs <- list()
     n <- length(y)
@@ -632,24 +642,24 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
       for (j in i:n) {
         # if both are equal plot means, else plot difference
         if (i == j) {
-          df <- data.frame(value=y[[i]])
-          index <- (i-1)*n + i
+          df <- data.frame(value = y[[i]])
+          index <- (i - 1) * n + i
           graphs[[index]] <- ggplot() +
-            geom_density(data=df, aes(x=value), fill="#3182bd", color=NA, alpha=0.4) +
+            geom_density(data = df, aes(x = value), fill = "#3182bd", color = NA, alpha = 0.4) +
             xlab("value") +
             xlim(x_min, x_max)
         } else {
-          index1 <- (i-1)*n + j
-          graphs[[index1]] <- plot_difference(y1=y[[i]], y2=y[[j]], rope=rope, bins=bins, nrow=n)
+          index1 <- (i - 1) * n + j
+          graphs[[index1]] <- plot_difference(y1 = y[[i]], y2 = y[[j]], rope = rope, bins = bins, nrow = n)
 
-          index2 <- (j-1)*n + i
-          graphs[[index2]] <- plot_difference(y1=y[[j]], y2=y[[i]], rope=rope, bins=bins, nrow=n)
+          index2 <- (j - 1) * n + i
+          graphs[[index2]] <- plot_difference(y1 = y[[j]], y2 = y[[i]], rope = rope, bins = bins, nrow = n)
         }
       }
     }
 
     # cowplot
-    graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
+    graph <- suppressWarnings(cowplot::plot_grid(plotlist = graphs, nrow = n, ncol = n, scale = 0.9))
     return(graph)
   }
 })
@@ -669,7 +679,7 @@ setMethod(f="plot_means_difference", signature(object="ttest_class"), definition
 #' # along with an example of how to use this function
 #' ?ttest_class
 #'
-setMethod(f="plot_means", signature(object="ttest_class"), definition=function(object, ...) {
+setMethod(f = "plot_means", signature(object = "ttest_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
   group <- value <- NULL
 
@@ -691,11 +701,11 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
   # first group data
   df <- NULL
   if (par == "mu") {
-    df <- data.frame(value=object@extract$mu, group="1")
+    df <- data.frame(value = object@extract$mu, group = "1")
   } else if (par == "sigma") {
-    df <- data.frame(value=object@extract$sigma, group="1")
+    df <- data.frame(value = object@extract$sigma, group = "1")
   } else if (par == "nu") {
-    df <- data.frame(value=object@extract$nu, group="1")
+    df <- data.frame(value = object@extract$nu, group = "1")
   }
 
   # second group data
@@ -711,32 +721,31 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
       }
 
       if (par == "mu") {
-        df <- rbind(df, data.frame(value=fit2@extract$mu, group="2"))
+        df <- rbind(df, data.frame(value = fit2@extract$mu, group = "2"))
       } else if (par == "sigma") {
-        df <- rbind(df, data.frame(value=fit2@extract$sigma, group="2"))
+        df <- rbind(df, data.frame(value = fit2@extract$sigma, group = "2"))
       } else if (par == "nu") {
-        df <- rbind(df, data.frame(value=fit2@extract$nu, group="2"))
+        df <- rbind(df, data.frame(value = fit2@extract$nu, group = "2"))
       }
-
     } else if (!is.null(arguments$mu) && par == "mu") {
       # provided mu and sigma
-      par2 <- arguments$mu;
+      par2 <- arguments$mu
     } else if (!is.null(arguments$sigma) && par == "sigma") {
       # provided mu and sigma
-      par2 <- arguments$sigma;
+      par2 <- arguments$sigma
     } else if (!is.null(arguments$fits)) {
       i <- 2
       for (fit in arguments$fits) {
-        if (class(fit) != "ttest_class") {
+        if (!("ttest_class" %in% class(fit))) {
           stop("One of the fits in the fits list is not a valid ttest_class object.")
         }
 
         if (par == "mu") {
-          df <- rbind(df, data.frame(value=fit@extract$mu, group=as.factor(i)))
+          df <- rbind(df, data.frame(value = fit@extract$mu, group = as.factor(i)))
         } else if (par == "sigma") {
-          df <- rbind(df, data.frame(value=fit@extract$sigma, group=as.factor(i)))
+          df <- rbind(df, data.frame(value = fit@extract$sigma, group = as.factor(i)))
         } else if (par == "nu") {
-          df <- rbind(df, data.frame(value=fit@extract$nu, group=as.factor(i)))
+          df <- rbind(df, data.frame(value = fit@extract$nu, group = as.factor(i)))
         }
 
         i <- i + 1
@@ -746,13 +755,13 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
 
   # plot
   graph <- ggplot() +
-    geom_density(data=df, aes(x=value, fill=group), color=NA, alpha=0.4) +
+    geom_density(data = df, aes(x = value, fill = group), color = NA, alpha = 0.4) +
     xlab("value")
 
   n_groups <- max(as.numeric(df$group))
   if (n_groups == 2) {
     graph <- graph +
-      scale_fill_manual(values=c("#3182bd", "#ff4e3f"))
+      scale_fill_manual(values = c("#3182bd", "#ff4e3f"))
   } else if (n_groups > 2) {
     graph <- graph +
       scale_fill_hue()
@@ -760,14 +769,14 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
     y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
     graph <- graph +
-      geom_segment(aes(x=par2, xend=par2, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
-      geom_text(aes(label=sprintf("%.2f", par2), x=par2, y=y_max[2]*1.08), size=4) +
-      scale_fill_manual(values=c("#3182bd")) +
-      theme(legend.position="none")
+      geom_segment(aes(x = par2, xend = par2, y = 0, yend = y_max[2] * 1.05), size = 1.5, color = "#ff4e3f", alpha = 0.4) +
+      geom_text(aes(label = sprintf("%.2f", par2), x = par2, y = y_max[2] * 1.08), size = 4) +
+      scale_fill_manual(values = c("#3182bd")) +
+      theme(legend.position = "none")
   } else {
     graph <- graph +
-      scale_fill_manual(values=c("#3182bd")) +
-      theme(legend.position="none")
+      scale_fill_manual(values = c("#3182bd")) +
+      theme(legend.position = "none")
   }
 
   # limits
@@ -782,8 +791,8 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
   }
 
   diff <- x_max - x_min
-  x_min <- x_min - 0.1*diff
-  x_max <- x_max + 0.1*diff
+  x_min <- x_min - 0.1 * diff
+  x_max <- x_max + 0.1 * diff
 
   graph <- graph + xlim(x_min, x_max)
 
@@ -805,7 +814,7 @@ setMethod(f="plot_means", signature(object="ttest_class"), definition=function(o
 #' # along with an example of how to use this function
 #' ?ttest_class
 #'
-setMethod(f="compare_distributions", signature(object="ttest_class"), definition=function(object, ...) {
+setMethod(f = "compare_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
   arguments <- list(...)
 
   wrong_arguments <- "The provided arguments for the compare_distributions function are invalid, compare_distributions(ttest_class, fit2=ttest_class), compare_distributions(ttest_class, fits=list), compare_distributions(ttest_class, mu=numeric) or compare_distributions(ttest_class, mu=numeric, sigma=numeric) is required! You can also provide the rope parameter, e.g. compare_distributions(ttest_class, fit2=ttest_class, rope=numeric)."
@@ -826,9 +835,10 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
   y <- NULL
   sigma1 <- mean(object@extract$sigma)
   y[[1]] <- metRology::rt.scaled(n,
-                                 df=mean(object@extract$nu),
-                                 mean=mean(object@extract$mu),
-                                 sd=sigma1)
+    df = mean(object@extract$nu),
+    mean = mean(object@extract$mu),
+    sd = sigma1
+  )
 
   # second group data
   sigma2 <- 0
@@ -842,13 +852,14 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
     sigma2 <- mean(fit2@extract$sigma)
 
     y[[2]] <- metRology::rt.scaled(n,
-                                   df=mean(fit2@extract$nu),
-                                   mean=mean(fit2@extract$mu),
-                                   sd=sigma2)
+      df = mean(fit2@extract$nu),
+      mean = mean(fit2@extract$mu),
+      sd = sigma2
+    )
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
     if (!is.null(arguments$sigma)) {
-      sigma2 <- arguments$sigma;
+      sigma2 <- arguments$sigma
       y[[2]] <- stats::rnorm(n, arguments$mu, sigma2)
     } else {
       y[[2]] <- stats::rnorm(n, arguments$mu, 0)
@@ -856,14 +867,15 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
   } else if (!is.null(arguments$fits)) {
     i <- 2
     for (fit in arguments$fits) {
-      if (class(fit) != "ttest_class") {
+      if (!("ttest_class" %in% class(fit))) {
         stop("One of the fits in the fits list is not a valid ttest_class object.")
       }
 
       y[[i]] <- metRology::rt.scaled(n,
-                                     df=mean(fit@extract$nu),
-                                     mean=mean(fit@extract$mu),
-                                     sd=mean(fit@extract$sigma))
+        df = mean(fit@extract$nu),
+        mean = mean(fit@extract$mu),
+        sd = mean(fit@extract$sigma)
+      )
 
       i <- i + 1
     }
@@ -873,12 +885,12 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
 
   n <- length(y)
   comparison_matrix <- matrix(nrow = n, ncol = n)
-  for (i in 1:(n-1)) {
-    for (j in (i+1):n) {
+  for (i in 1:(n - 1)) {
+    for (j in (i + 1):n) {
       cat(sprintf("\n---------- Group %d vs Group %d ----------\n", i, j))
-      result <- difference(y1=y[[i]], y2=y[[j]], rope=rope, group1=i, group2=j)
-      comparison_matrix[j,i] <- result[1]
-      comparison_matrix[i,j] <- result[2]
+      result <- difference(y1 = y[[i]], y2 = y[[j]], rope = rope, group1 = i, group2 = j)
+      comparison_matrix[j, i] <- result[1]
+      comparison_matrix[i, j] <- result[2]
       cat("\n")
     }
   }
@@ -886,7 +898,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
   # add Cohen's d if 2 groups are provided
   if (!is.null(sigma2)) {
     diff <- mean(y[[1]]) - mean(y[[2]])
-    cohens_d <- diff / sqrt((n*sigma1^2 + n*sigma2^2) / (n + n - 2));
+    cohens_d <- diff / sqrt((n * sigma1^2 + n * sigma2^2) / (n + n - 2))
     cat(sprintf("\nCohen's d: %.2f\n", cohens_d))
   }
 
@@ -894,10 +906,10 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
   if (n > 2) {
     cat("-----------------------------------------")
     cat("\nProbabilities that a certain group is\nsmallest/largest or equal to all others:\n\n")
-    smallest_largest <- is_smallest_or_largest(data=y, rope=rope)
+    smallest_largest <- is_smallest_or_largest(data = y, rope = rope)
     print(smallest_largest)
     cat("\n\n")
-    return(list(comparison_matrix=comparison_matrix, smallest_largest=smallest_largest))
+    return(list(comparison_matrix = comparison_matrix, smallest_largest = smallest_largest))
   } else {
     return(comparison_matrix)
   }
@@ -918,7 +930,7 @@ setMethod(f="compare_distributions", signature(object="ttest_class"), definition
 #' # along with an example of how to use this function
 #' ?ttest_class
 #'
-setMethod(f="plot_distributions", signature(object="ttest_class"), definition=function(object, ...) {
+setMethod(f = "plot_distributions", signature(object = "ttest_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
   x <- y <- group <- NULL
 
@@ -947,15 +959,15 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
       sigmas[2] <- mean(fit2@extract$sigma)
     } else if (!is.null(arguments$mu)) {
       # provided mu and/or sigma
-      mu2 <- arguments$mu;
+      mu2 <- arguments$mu
 
       if (!is.null(arguments$sigma)) {
-        sigma2 <- arguments$sigma;
+        sigma2 <- arguments$sigma
       }
     } else if (!is.null(arguments$fits)) {
       i <- 2
       for (fit in arguments$fits) {
-        if (class(fit) != "ttest_class") {
+        if (!("ttest_class" %in% class(fit))) {
           stop("One of the fits in the fits list is not a valid ttest_class object.")
         }
 
@@ -968,43 +980,49 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
   }
 
   # get boundaries
-  x_min <- min(mus - 4*sigmas)
-  x_max <- max(mus + 4*sigmas)
+  x_min <- min(mus - 4 * sigmas)
+  x_max <- max(mus + 4 * sigmas)
 
   if (!is.null(mu2) & !is.null(sigma2)) {
-    x_min <- min(x_min, mu2 - 4*sigma2)
-    x_max <- max(x_max, mu2 + 4*sigma2)
+    x_min <- min(x_min, mu2 - 4 * sigma2)
+    x_max <- max(x_max, mu2 + 4 * sigma2)
   } else if (!is.null(mu2)) {
     if (mu2 < x_min) {
       x_min <- mu2
-      x_min <- x_min - (0.1*(x_max-x_min))
+      x_min <- x_min - (0.1 * (x_max - x_min))
     } else if (mu2 > x_max) {
       x_max <- mu2
-      x_max <- x_max + (0.1*(x_max-x_min))
+      x_max <- x_max + (0.1 * (x_max - x_min))
     }
   }
 
   # calculate data points
   step <- (x_max - x_min) / 1000
-  df <- data.frame(x=numeric(), y=numeric(), group=factor())
+  df <- data.frame(x = numeric(), y = numeric(), group = factor())
   n_groups <- length(mus)
   for (i in 1:n_groups) {
-    df_group <- data.frame(x = seq(x_min, x_max, step),
-                           y = metRology::dt.scaled(seq(x_min, x_max, step),
-                                                   df = nus[i],
-                                                   mean = mus[i],
-                                                   sd = sigmas[i]),
-                           group=as.factor(i))
+    df_group <- data.frame(
+      x = seq(x_min, x_max, step),
+      y = metRology::dt.scaled(seq(x_min, x_max, step),
+        df = nus[i],
+        mean = mus[i],
+        sd = sigmas[i]
+      ),
+      group = as.factor(i)
+    )
 
     df <- rbind(df, df_group)
   }
 
   if (!is.null(mu2) & !is.null(sigma2)) {
-    df_group <- data.frame(x = seq(x_min, x_max, step),
-                           y = stats::dnorm(seq(x_min, x_max, step),
-                                                    mean = mu2,
-                                                    sd = sigma2),
-                           group="2")
+    df_group <- data.frame(
+      x = seq(x_min, x_max, step),
+      y = stats::dnorm(seq(x_min, x_max, step),
+        mean = mu2,
+        sd = sigma2
+      ),
+      group = "2"
+    )
 
     df <- rbind(df, df_group)
 
@@ -1013,13 +1031,13 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
 
   # plot
   graph <- ggplot() +
-    geom_area(data=df, aes(x=x, y=y, fill=group), alpha=0.4, position="identity") +
+    geom_area(data = df, aes(x = x, y = y, fill = group), alpha = 0.4, position = "identity") +
     xlab("value") +
     ylab("density")
 
   if (n_groups == 2) {
     graph <- graph +
-      scale_fill_manual(values=c("#3182bd", "#ff4e3f"))
+      scale_fill_manual(values = c("#3182bd", "#ff4e3f"))
   } else if (n_groups > 2) {
     graph <- graph +
       scale_fill_hue()
@@ -1027,14 +1045,14 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
     y_max <- ggplot_build(graph)$layout$panel_scales_y[[1]]$range$range
 
     graph <- graph +
-      geom_segment(aes(x=mu2, xend=mu2, y=0, yend=y_max[2]*1.05), size=1.5, color="#ff4e3f", alpha=0.4) +
-      geom_text(aes(label=sprintf("%.2f", mu2), x=mu2, y=y_max[2]*1.08), size=4) +
-      scale_fill_manual(values=c("#3182bd")) +
-      theme(legend.position="none")
+      geom_segment(aes(x = mu2, xend = mu2, y = 0, yend = y_max[2] * 1.05), size = 1.5, color = "#ff4e3f", alpha = 0.4) +
+      geom_text(aes(label = sprintf("%.2f", mu2), x = mu2, y = y_max[2] * 1.08), size = 4) +
+      scale_fill_manual(values = c("#3182bd")) +
+      theme(legend.position = "none")
   } else {
     graph <- graph +
-      scale_fill_manual(values=c("#3182bd")) +
-      theme(legend.position="none")
+      scale_fill_manual(values = c("#3182bd")) +
+      theme(legend.position = "none")
   }
 
   return(suppressWarnings(graph))
@@ -1055,7 +1073,7 @@ setMethod(f="plot_distributions", signature(object="ttest_class"), definition=fu
 #' # along with an example of how to use this function
 #' ?ttest_class
 #'
-setMethod(f="plot_distributions_difference", signature(object="ttest_class"), definition=function(object, ...) {
+setMethod(f = "plot_distributions_difference", signature(object = "ttest_class"), definition = function(object, ...) {
   # init local varibales for CRAN check
   value <- NULL
 
@@ -1078,9 +1096,10 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
   y <- list()
   n <- 100000
   y[[1]] <- metRology::rt.scaled(n,
-                                 df=mean(object@extract$nu),
-                                 mean=mean(object@extract$mu),
-                                 sd=mean(object@extract$sigma))
+    df = mean(object@extract$nu),
+    mean = mean(object@extract$mu),
+    sd = mean(object@extract$sigma)
+  )
 
   # limits
   x_min <- min(y[[1]])
@@ -1095,9 +1114,10 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
       fit2 <- arguments[[1]]
     }
     y[[2]] <- metRology::rt.scaled(n,
-                                   df=mean(fit2@extract$nu),
-                                   mean=mean(fit2@extract$mu),
-                                   sd=mean(fit2@extract$sigma))
+      df = mean(fit2@extract$nu),
+      mean = mean(fit2@extract$mu),
+      sd = mean(fit2@extract$sigma)
+    )
   } else if (!is.null(arguments$mu)) {
     # provided mu and sigma
     sigma2 <- 0
@@ -1110,14 +1130,15 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
   } else if (!is.null(arguments$fits)) {
     i <- 2
     for (fit in arguments$fits) {
-      if (class(fit) != "ttest_class") {
+      if (!("ttest_class" %in% class(fit))) {
         stop("One of the fits in the fits list is not a valid ttest_class object.")
       }
 
       y[[i]] <- metRology::rt.scaled(n,
-                                     df=mean(fit@extract$nu),
-                                     mean=mean(fit@extract$mu),
-                                     sd=mean(fit@extract$sigma))
+        df = mean(fit@extract$nu),
+        mean = mean(fit@extract$mu),
+        sd = mean(fit@extract$sigma)
+      )
 
       # limits
       x_min <- min(x_min, y[[i]])
@@ -1138,12 +1159,12 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
   # if no list is provided
   if (is.null(arguments$fits)) {
     # call plot difference shared function
-    graph <- plot_difference(y1=y[[1]], y2=y[[2]], rope=rope, bins=bins)
+    graph <- plot_difference(y1 = y[[1]], y2 = y[[2]], rope = rope, bins = bins)
     return(graph)
   } else {
     diff <- x_max - x_min
-    x_min <- x_min - 0.1*diff
-    x_max <- x_max + 0.1*diff
+    x_min <- x_min - 0.1 * diff
+    x_max <- x_max + 0.1 * diff
 
     graphs <- list()
     n <- length(y)
@@ -1151,24 +1172,24 @@ setMethod(f="plot_distributions_difference", signature(object="ttest_class"), de
       for (j in i:n) {
         # if both are equal plot samples, else plot difference
         if (i == j) {
-          df <- data.frame(value=y[[i]])
-          index <- (i-1)*n + i
+          df <- data.frame(value = y[[i]])
+          index <- (i - 1) * n + i
           graphs[[index]] <- ggplot() +
-            geom_density(data=df, aes(x=value), fill="#3182bd", color=NA, alpha=0.4) +
+            geom_density(data = df, aes(x = value), fill = "#3182bd", color = NA, alpha = 0.4) +
             xlab("value") +
             xlim(x_min, x_max)
         } else {
-          index1 <- (i-1)*n + j
-          graphs[[index1]] <- plot_difference(y1=y[[i]], y2=y[[j]], rope=rope, bins=bins, nrow=n)
+          index1 <- (i - 1) * n + j
+          graphs[[index1]] <- plot_difference(y1 = y[[i]], y2 = y[[j]], rope = rope, bins = bins, nrow = n)
 
-          index2 <- (j-1)*n + i
-          graphs[[index2]] <- plot_difference(y1=y[[j]], y2=y[[i]], rope=rope, bins=bins, nrow=n)
+          index2 <- (j - 1) * n + i
+          graphs[[index2]] <- plot_difference(y1 = y[[j]], y2 = y[[i]], rope = rope, bins = bins, nrow = n)
         }
       }
     }
 
     # cowplot
-    graph <- suppressWarnings(cowplot::plot_grid(plotlist=graphs, nrow=n, ncol=n, scale=0.9))
+    graph <- suppressWarnings(cowplot::plot_grid(plotlist = graphs, nrow = n, ncol = n, scale = 0.9))
     return(graph)
   }
 })
