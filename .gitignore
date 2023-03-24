@@ -41,6 +41,5 @@ vignettes/*.pdf
 *.o
 *.so
 *.cc
-*.hpp
 doc
 Meta

@@ -8,7 +8,8 @@
 #' @useDynLib bayes4psy, .registration = TRUE
 #' @import methods
 #' @import Rcpp
-#' @import rstantools
+#' @importFrom rstantools rstan_config
+#' @importFrom RcppParallel RcppParallelLibs
 #' @importFrom rstan sampling
 #'
 #' @references

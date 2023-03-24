@@ -1,6 +1,9 @@
 # bayes4psy—User Friendly Bayesian Data Analysis for Psychology
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/bstatcomp/bayes4psy/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bstatcomp/bayes4psy/actions/workflows/R-CMD-check.yaml)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/bayes4psy?color=blue)](https://CRAN.R-project.org/package=bayes4psy)[![Downloads](http://cranlogs.r-pkg.org/badges/bayes4psy?color=blue)](https://CRAN.R-project.org/package=bayes4psy)
+<!-- badges: end -->
 
 ## Authors
 
