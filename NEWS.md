@@ -1,5 +1,9 @@
 # bayes4psy change log
 
+## bayes4psy 1.2.12
+
+RStan updates and optimizations.
+
 ## bayes4psy 1.2.11
 
 Optimized building of RStan models.

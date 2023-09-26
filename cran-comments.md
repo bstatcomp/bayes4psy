@@ -1,5 +1,9 @@
 # Revisions
 
+## CRAN submission 26. 9. 2023
+
+RStan optimizations and updates.
+
 ## CRAN submission 16. 3. 2023
 
 Optimized building of RStan models.
