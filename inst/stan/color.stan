@@ -1,17 +1,17 @@
 data {
 	int<lower=0> n; // number of data entries
 	// rgb
-	real<lower=0,upper=255> r[n];
-	real<lower=0,upper=255> g[n];
-	real<lower=0,upper=255> b[n];
+	array[n] real<lower=0,upper=255> r;
+	array[n] real<lower=0,upper=255> g;
+	array[n] real<lower=0,upper=255> b;
 	// hsv
-	real<lower=0,upper=2*pi()> h[n];
-	real<lower=0,upper=1> s[n];
-	real<lower=0,upper=1> v[n];
+	array[n] real<lower=0,upper=2*pi()> h;
+	array[n] real<lower=0,upper=1> s;
+	array[n] real<lower=0,upper=1> v;
 
 	// priors
-	int<lower=0> p_ids[12];
-	real p_values[24];
+	array[12] int<lower=0> p_ids;
+	array[24] real p_values;
 }
 
 parameters {

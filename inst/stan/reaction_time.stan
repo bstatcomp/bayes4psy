@@ -2,11 +2,11 @@ data {
   int<lower=0> n; // total number of measurements
   int<lower=0> m; // number of subjects
   vector<lower=0>[n] t; // reaction times
-  int<lower=0> s[n]; // subject ids
+  array[n] int<lower=0> s; // subject ids
 
   // priors
-  int p_ids[6];
-  real p_values[12];
+  array[6] int p_ids;
+  array[12] real p_values;
 }
 
 parameters {

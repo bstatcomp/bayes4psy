@@ -1,12 +1,12 @@
 data {
   int<lower=0> n; // total number of measurements
   int<lower=0> m; // number of subjects
-  int<lower=0,upper=1> r[n]; // results - success or fail
-  int<lower=0> s[n]; // subject ids
+  array[n] int<lower=0,upper=1> r; // results - success or fail
+  array[n] int<lower=0> s; // subject ids
 
   // priors
-  int<lower=0> p_ids[2];
-  real<lower=0> p_values[4];
+  array[2] int<lower=0> p_ids;
+  array[4] real<lower=0> p_values;
 }
 
 parameters {
