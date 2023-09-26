@@ -6,7 +6,7 @@ data {
 
   // priors
   array[6] int p_ids;
-  array[12] real p_values;
+  vector[12] p_values;
 }
 
 parameters {
