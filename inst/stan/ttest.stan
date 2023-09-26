@@ -1,10 +1,10 @@
 data {
   int<lower=0> n; // number of samples
-  real y[n];
+  array[n] real y;
 
   // priors
-  int<lower=0> p_ids[3];
-  real p_values[6];
+  array[3] int<lower=0> p_ids;
+  array[6] real p_values;
 }
 
 parameters {

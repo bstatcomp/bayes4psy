@@ -3,11 +3,11 @@ data {
   int<lower=0> m; // number of subjects
   vector[n] x; // sequence/time
   vector[n] y; // response
-  int<lower=0> s[n]; // subject ids
+  array[n] int<lower=0> s; // subject ids
 
   // priors
-  int<lower=0> p_ids[6];
-  real p_values[12];
+  array[6] int<lower=0> p_ids;
+  array[12] real p_values;
 }
 
 parameters {
