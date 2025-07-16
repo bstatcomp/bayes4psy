@@ -1,5 +1,9 @@
 # bayes4psy change log
 
+## bayes4psy 1.2.13
+
+Fixed inconistent age for subjects in one of the datasets.
+
 ## bayes4psy 1.2.12
 
 RStan updates and optimizations.
