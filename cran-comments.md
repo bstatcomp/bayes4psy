@@ -1,5 +1,9 @@
 # Revisions
 
+## CRAN submission 16. 7. 2025
+
+Fixed a bug in a test dataset
+
 ## CRAN submission 26. 9. 2023
 
 RStan optimizations and updates.
